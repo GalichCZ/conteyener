@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        role:{
+            type: String,
+            default: "moderator"
+        },
         is_activated:{
             type: Boolean,
             default: false

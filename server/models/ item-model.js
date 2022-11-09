@@ -10,6 +10,10 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    container: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Container",
+    },
     store: {
       type: String,
     },

@@ -4,6 +4,7 @@ const ContainerSchema = new mongoose.Schema(
   {
     number: {
       type: String,
+      unique: true,
     },
     type: {
       type: String,

@@ -1,20 +1,24 @@
 const ProviderSchema = require("../models/provider-model");
 
-class ContainerService {
-  async createProvider(name, container) {
+class ProviderService {
+  async createProvider(names, container) {
     try {
-      const doc = new ProviderSchema({
-        name,
-        container,
+      const providers = names.map(async (provider) => {
+        const doc = new ProviderSchema({
+          name: provider.name,
+          container,
+        });
+        const docs = await doc.save();
+        return docs;
       });
 
-      const provider = await doc.save();
-
-      return provider;
+      return Promise.all(providers).then((res) => {
+        return res;
+      });
     } catch (error) {
       console.log(error);
     }
   }
 }
 
-module.exports = new ContainerService();
+module.exports = new ProviderService();

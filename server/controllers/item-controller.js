@@ -1,6 +1,7 @@
 const ContainerSchema = require("../models/container-model");
 const ContainerService = require("../service/container-service");
 const ProviderService = require("../service/provider-service");
+const ImporterService = require("../service/importer-service");
 class ItemController {
   async itemCreate(req, res) {
     try {
@@ -13,13 +14,12 @@ class ItemController {
           req.body.type
         );
 
-      const provider = req.body.providers.map((provider) => {
-        return ProviderService.createProvider(provider.name, container._id);
-      });
+      const provider = await ProviderService.createProvider(
+        req.body.providers,
+        container._id
+      );
 
-      Promise.all(provider).then((providers) => {
-        res.json({ container, providers });
-      });
+      res.json({ container, provider });
     } catch (error) {
       console.log(error);
     }

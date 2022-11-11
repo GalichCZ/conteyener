@@ -1,16 +1,42 @@
 const ImporterSchema = require("../models/importer-model");
 
 class ImporterService {
-  async createImporter(name, container) {
+  async createImporter(names, container) {
     try {
-      const doc = new ImporterSchema({
-        name,
-        container,
+      const importers = names.map(async (provider) => {
+        const doc = new ImporterSchema({
+          name: provider.name,
+          container,
+        });
+        const docs = await doc.save();
+        return docs;
       });
 
-      const provider = await doc.save();
+      return Promise.all(importers).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-      return provider;
+  async getImporters(items) {
+    try {
+      const importers = items.map(async (importer) => {
+        return await ImporterSchema.find({ container: importer.container });
+      });
+
+      return Promise.all(importers).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteImporters(items) {
+    try {
+      await ImporterSchema.deleteMany({ container: items.container });
     } catch (error) {
       console.log(error);
     }

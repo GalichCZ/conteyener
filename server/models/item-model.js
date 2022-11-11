@@ -2,20 +2,18 @@ const mongoose = require("mongoose");
 
 const ItemSchema = new mongoose.Schema(
   {
-    date_create: {
-      type: Date,
-      required: true,
-    },
     invoice_number: {
       type: String,
       required: true,
+      unique: true,
     },
     container: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Container",
     },
     store: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Store",
     },
     conditions: {
       type: String,
@@ -33,7 +31,7 @@ const ItemSchema = new mongoose.Schema(
       type: String,
     },
     bid: {
-      type: String,
+      type: Number,
     },
     delivery_method: {
       type: String,
@@ -48,10 +46,10 @@ const ItemSchema = new mongoose.Schema(
       type: Date,
     },
     arrive_date: {
-      type: String,
+      type: Date,
     },
     date_do: {
-      type: String,
+      type: Date,
     },
     is_ds: {
       type: Boolean,
@@ -78,13 +76,22 @@ const ItemSchema = new mongoose.Schema(
       type: String,
     },
     km_to_dist: {
-      type: String,
+      type: Number,
     },
     store_arrive_date: {
       type: Date,
     },
     note: {
       type: String,
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    updator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {

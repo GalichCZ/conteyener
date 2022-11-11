@@ -4,7 +4,6 @@ const ImporterSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      // unique: true,
     },
     container: {
       type: mongoose.Schema.Types.ObjectId,

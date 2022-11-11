@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 const ContainerSchema = new mongoose.Schema(
   {
-    number: {
+    container_number: {
       type: String,
+      unique: true,
     },
-    type: {
+    container_type: {
       type: String,
     },
   },

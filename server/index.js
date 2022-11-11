@@ -18,13 +18,15 @@ app.get("/", (req, res) => {
 
 app.get("/activate/:link", userController.activate);
 app.get("/users", userController.getUsers);
-app.get("/profile", userController.getMe);
+app.get("/user", userController.getMe);
 app.post("/auth/signin", userController.registration);
 app.post("/auth/login", userController.login);
 app.patch("/role", userController.roleChange);
 app.delete("/user", userController.deleteUser);
 
 app.post("/item", itemController.itemCreate);
+app.get("/item", itemController.getItems);
+app.patch("/item", itemController.updateItem);
 
 const start = async () => {
   try {

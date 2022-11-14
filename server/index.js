@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userController = require("./controllers/user-controller");
-const itemController = require("./controllers/item-controller");
+const UserController = require("./controllers/user-controller");
+const ItemController = require("./controllers/item-controller");
+const CheckAuth = require("./utils/check-auth");
 
 const url =
   "mongodb+srv://root:root@conteyener.w3d0tne.mongodb.net/?retryWrites=true&w=majority";
@@ -12,22 +13,23 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/", CheckAuth.checkToken, (req, res) => {
+  console.log(req.userId);
   res.send("HELLO");
 });
 
-app.get("/activate/:link", userController.activate);
-app.get("/users", userController.getUsers);
-app.get("/user", userController.getMe);
-app.post("/auth/signin", userController.registration);
-app.post("/auth/login", userController.login);
-app.patch("/role", userController.roleChange);
-app.delete("/user", userController.deleteUser);
+app.get("/activate/:link", UserController.activate);
+app.get("/users", UserController.getUsers);
+app.get("/user", UserController.getMe);
+app.post("/auth/signin", UserController.registration);
+app.post("/auth/login", UserController.login);
+app.patch("/role", UserController.roleChange);
+app.delete("/user", UserController.deleteUser);
 
-app.post("/item", itemController.itemCreate);
-app.get("/item", itemController.getItems);
-app.patch("/item", itemController.updateItem);
-app.delete("/item", itemController.deleteItem);
+app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
+app.get("/item", ItemController.getItems);
+app.patch("/item", ItemController.updateItem);
+app.delete("/item", ItemController.deleteItem);
 
 const start = async () => {
   try {

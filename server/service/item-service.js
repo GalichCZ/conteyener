@@ -1,12 +1,14 @@
 const ItemSchema = require("../models/item-model");
 
 class ItemService {
-  async createItem(req, store, container) {
+  async createItem(req, store, container, provider, importer) {
     try {
       const doc = new ItemSchema({
         invoice_number: req.body.invoice_number,
         container,
         store,
+        providers: provider,
+        importers: importer,
         conditions: req.body.conditions,
         line: req.body.line,
         agent: req.body.agent,

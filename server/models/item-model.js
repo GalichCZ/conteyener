@@ -15,6 +15,12 @@ const ItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Store",
     },
+    providers: {
+      type: Array,
+    },
+    importers: {
+      type: Array,
+    },
     conditions: {
       type: String,
     },
@@ -87,7 +93,7 @@ const ItemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
     updator: {
       type: mongoose.Schema.Types.ObjectId,

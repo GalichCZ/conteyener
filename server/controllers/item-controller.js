@@ -26,9 +26,15 @@ class ItemController {
         req.body.store_contact
       );
 
-      const item = await ItemService.createItem(req, store, container);
+      const item = await ItemService.createItem(
+        req,
+        store,
+        container,
+        provider,
+        importer
+      );
 
-      res.json({ item, provider, importer });
+      res.json(item);
     } catch (error) {
       console.log(error);
     }
@@ -36,24 +42,25 @@ class ItemController {
 
   async getItems(req, res) {
     const items = await ItemService.getItems();
-    const importers = await ImporterService.getImporters(items);
-    const providers = await ProviderService.getProviders(items);
     const stores = await StoreService.getStores(items);
 
-    res.json({ items, importers, providers, stores });
+    res.json({
+      items,
+      stores,
+    });
   }
 
   async updateItem(req, res) {
     try {
       const item = await ItemSchema.findById({ _id: req.body._id });
 
-      const updatedItem = await ItemService.updateItem(item._id, req);
-      const updatedContainer = await ContainerService.updateContainer(
-        item,
-        req
-      );
+      await ItemService.updateItem(item._id, req);
+      await ContainerService.updateContainer(item, req);
+      await StoreService.updateStore(item, req);
+      await ProviderService.updateProviders(item, req);
+      await ImporterService.updateImporters(item, req);
 
-      res.json({ updatedItem, updatedContainer });
+      res.json(await ItemSchema.findById({ _id: req.body._id }));
     } catch (error) {
       console.log(error);
     }
@@ -61,11 +68,15 @@ class ItemController {
 
   async deleteItem(req, res) {
     try {
-      const item = await ItemSchema.findById({ _id: req.body._id });
+      const item = await ItemSchema.findById(req.body._id).exec();
 
-      await ItemService.deleteItem(item._id);
+      await ItemService.deleteItem(req.body._id);
       await ImporterService.deleteImporters(item);
       await ContainerService.deleteContainer(item);
+      await StoreService.deleteStore(item);
+      await ProviderService.deleteProviders(item);
+
+      res.json(200);
     } catch (error) {
       console.log(error);
     }

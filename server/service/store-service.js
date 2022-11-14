@@ -30,6 +30,21 @@ class StoreService {
     }
   }
 
+  async updateStore(item, req) {
+    try {
+      return await StoreSchema.updateOne(
+        {
+          _id: item.store,
+        },
+        {
+          name: req.body.store_name,
+          address: req.body.store_address,
+          contact: req.body.store_contact,
+        }
+      );
+    } catch (error) {}
+  }
+
   async deleteStore(item) {
     try {
       await StoreSchema.deleteOne({ _id: item.store });

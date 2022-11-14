@@ -41,7 +41,9 @@ class ContainerService {
           container_type: req.body.container_type,
         }
       );
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async deleteContainer(item) {

@@ -1,4 +1,5 @@
 const ImporterSchema = require("../models/importer-model");
+const ItemSchema = require("../models/item-model");
 
 class ImporterService {
   async createImporter(names, container) {
@@ -34,9 +35,27 @@ class ImporterService {
     }
   }
 
-  async deleteImporters(items) {
+  async updateImporters(item, req) {
     try {
-      await ImporterSchema.deleteMany({ container: items.container });
+      const doc = await ItemSchema.findOne({
+        _id: item._id,
+      });
+
+      const importers = await this.createImporter(
+        req.body.importers,
+        item.container
+      );
+
+      doc.importers = importers;
+      await doc.save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteImporters(item) {
+    try {
+      await ImporterSchema.deleteMany({ container: item.container });
     } catch (error) {
       console.log(error);
     }

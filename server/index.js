@@ -27,6 +27,7 @@ app.delete("/user", userController.deleteUser);
 app.post("/item", itemController.itemCreate);
 app.get("/item", itemController.getItems);
 app.patch("/item", itemController.updateItem);
+app.delete("/item", itemController.deleteItem);
 
 const start = async () => {
   try {

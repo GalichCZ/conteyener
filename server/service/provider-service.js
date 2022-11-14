@@ -1,4 +1,5 @@
 const ProviderSchema = require("../models/provider-model");
+const ItemSchema = require("../models/item-model");
 
 class ProviderService {
   async createProvider(names, container) {
@@ -29,6 +30,32 @@ class ProviderService {
       return Promise.all(providers).then((res) => {
         return res;
       });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateProviders(item, req) {
+    try {
+      const doc = await ItemSchema.findOne({
+        _id: item._id,
+      });
+
+      const providers = await this.createProvider(
+        req.body.providers,
+        item.container
+      );
+
+      doc.providers = providers;
+      await doc.save();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteProviders(item) {
+    try {
+      await ProviderSchema.deleteMany({ container: item.container });
     } catch (error) {
       console.log(error);
     }

@@ -5,9 +5,15 @@ const StoreService = require("../service/store-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
+const UserSchema = require("../models/user-model");
+
 class ItemController {
   async itemCreate(req, res) {
     try {
+      const creator = await UserSchema.findById(req.userId);
+
+      if (!creator) return res.status(403).json({ message: "Bad Request" });
+
       const container = await ContainerService.getContainer(req);
 
       const provider = await ProviderService.createProvider(
@@ -31,7 +37,8 @@ class ItemController {
         store,
         container,
         provider,
-        importer
+        importer,
+        creator
       );
 
       res.json(item);

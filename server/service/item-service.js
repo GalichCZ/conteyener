@@ -1,7 +1,7 @@
 const ItemSchema = require("../models/item-model");
 
 class ItemService {
-  async createItem(req, store, container, provider, importer) {
+  async createItem(req, store, container, provider, importer, creator) {
     try {
       const doc = new ItemSchema({
         invoice_number: req.body.invoice_number,
@@ -32,6 +32,7 @@ class ItemService {
         km_to_dist: req.body.km_to_dist,
         store_arrive_date: req.body.store_arrive_date,
         note: req.body.note,
+        creator: creator,
       });
 
       const item = await doc.save();

@@ -1,0 +1,17 @@
+.activation-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgb(40, 40, 114);
+  flex-direction: column;
+}
+.activation-page h3 {
+  color: white;
+  font-weight: 700;
+  font-size: 2rem;
+}
+.activation-page p {
+  color: white;
+  font-size: 1.5rem;
+}

@@ -26,8 +26,8 @@ app.post("/auth/login", UserController.login);
 app.patch("/role", UserController.roleChange);
 app.delete("/user", UserController.deleteUser);
 
-app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.get("/item", ItemController.getItems);
+app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/item", ItemController.updateItem);
 app.delete("/item", ItemController.deleteItem);
 

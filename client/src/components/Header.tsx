@@ -7,13 +7,14 @@ export const Header = () => {
   return (
     <header className="header">
       <Link to="/">Conteyener</Link>
-      {authCtx.isLoggedIn ? (
+      {!authCtx.isLoggedIn ? (
         <Link to="/login">Log In</Link>
       ) : (
         <Link onClick={authCtx.logout} to="/login">
           Log Out
         </Link>
       )}
+      <Link to="/table">Table</Link>
     </header>
   );
 };

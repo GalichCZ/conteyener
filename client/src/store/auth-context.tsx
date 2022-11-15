@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 
 export type AuthContextInterface = {
   token: string | null;
@@ -23,6 +23,10 @@ export const AuthContextProvider = (props: any) => {
     const token = window.localStorage.getItem("token");
     setToken(token);
   };
+
+  useEffect(() => {
+    loginHandler();
+  }, []);
 
   const logoutHandler = () => {
     setToken("");

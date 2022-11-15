@@ -4,6 +4,7 @@ import App from "./App";
 import "./assets/css/loginPage.css";
 import "./assets/css/signupPage.css";
 import "./assets/css/mainPage.css";
+import "./assets/css/tablePage.css";
 import "./assets/css/activationPage.css";
 import "./assets/css/header.css";
 import { AuthContextProvider } from "./store/auth-context";

@@ -49,11 +49,9 @@ class ItemController {
 
   async getItems(req, res) {
     const items = await ItemService.getItems();
-    const stores = await StoreService.getStores(items);
 
     res.json({
       items,
-      stores,
     });
   }
 

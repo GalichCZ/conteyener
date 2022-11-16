@@ -15,4 +15,4 @@ const ContainerSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Caontainer", ContainerSchema);
+module.exports = mongoose.model("Container", ContainerSchema);

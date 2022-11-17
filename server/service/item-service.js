@@ -4,11 +4,12 @@ class ItemService {
   async createItem(req, store, container, provider, importer, creator) {
     try {
       const doc = new ItemSchema({
+        request_date: req.body.request_date,
         invoice_number: req.body.invoice_number,
         container,
-        store,
         providers: provider,
         importers: importer,
+        store,
         conditions: req.body.conditions,
         line: req.body.line,
         agent: req.body.agent,
@@ -60,6 +61,7 @@ class ItemService {
           _id,
         },
         {
+          request_date: req.body.request_date,
           invoice_number: req.body.invoice_number,
           conditions: req.body.conditions,
           line: req.body.line,

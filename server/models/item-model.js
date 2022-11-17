@@ -2,24 +2,25 @@ const mongoose = require("mongoose");
 
 const ItemSchema = new mongoose.Schema(
   {
+    request_date: {
+      type: Date,
+    },
     invoice_number: {
       type: String,
       required: true,
       unique: true,
     },
     container: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Container",
+      type: Object,
     },
-    store: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Store",
+    importers: {
+      type: Array,
     },
     providers: {
       type: Array,
     },
-    importers: {
-      type: Array,
+    store: {
+      type: Object,
     },
     conditions: {
       type: String,

@@ -1,5 +1,5 @@
 export * from "./LoginForm";
 export * from "./SignupForm";
 export * from "./Header";
-export * from "./Table";
+export * from "./Table/Table";
 export * from "./TableItemCreate";

@@ -33,7 +33,7 @@ class ItemService {
         km_to_dist: req.body.km_to_dist,
         store_arrive_date: req.body.store_arrive_date,
         note: req.body.note,
-        creator: creator,
+        // creator: creator,
       });
 
       const item = await doc.save();

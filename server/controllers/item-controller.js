@@ -10,9 +10,10 @@ const UserSchema = require("../models/user-model");
 class ItemController {
   async itemCreate(req, res) {
     try {
-      const creator = await UserSchema.findById(req.userId);
+      // const creator = await UserSchema.findById(req.userId);
 
-      if (!creator) return res.status(403).json({ message: "Bad Request" });
+      // if (!creator)
+      //   return res.status(403).json({ message: "NO CREATOR FOUND !" });
 
       const container = await ContainerService.getContainer(req);
 
@@ -37,8 +38,8 @@ class ItemController {
         store,
         container,
         provider,
-        importer,
-        creator
+        importer
+        // creator
       );
 
       res.json(item);

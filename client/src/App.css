@@ -10,3 +10,7 @@
   padding: 35px 60px 0px 45px !important;
   border-radius: 10px;
 }
+
+.ant-modal {
+  width: fit-content !important;
+}

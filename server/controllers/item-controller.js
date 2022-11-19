@@ -9,43 +9,42 @@ const UserSchema = require("../models/user-model");
 
 class ItemController {
   async itemCreate(req, res) {
-    try {
-      // const creator = await UserSchema.findById(req.userId);
+    const creator = await UserSchema.findById(req.userId);
 
-      // if (!creator)
-      //   return res.status(403).json({ message: "NO CREATOR FOUND !" });
+    if (!creator)
+      return res.status(403).json({ message: "NO CREATOR FOUND !" });
 
-      const container = await ContainerService.getContainer(req);
+    const container = await ContainerService.getContainer(req);
 
-      const provider = await ProviderService.createProvider(
-        req.body.providers,
-        container._id
-      );
+    const provider = await ProviderService.createProvider(
+      req.body.providers,
+      container._id
+    );
 
-      const importer = await ImporterService.createImporter(
-        req.body.importers,
-        container._id
-      );
+    const importer = await ImporterService.createImporter(
+      req.body.importers,
+      container._id
+    );
 
-      const store = await StoreService.createStore(
-        req.body.store_name,
-        req.body.store_address,
-        req.body.store_contact
-      );
+    const store = await StoreService.createStore(
+      req.body.store_name,
+      req.body.store_address,
+      req.body.store_contact
+    );
 
-      const item = await ItemService.createItem(
-        req,
-        store,
-        container,
-        provider,
-        importer
-        // creator
-      );
+    const item = await ItemService.createItem(
+      req,
+      res,
+      store,
+      container,
+      provider,
+      importer,
+      creator
+    );
 
-      res.json(item);
-    } catch (error) {
-      console.log(error);
-    }
+    if ("code" in item) return res.json({ error: "duplicated key" });
+
+    res.json(item);
   }
 
   async getItems(req, res) {

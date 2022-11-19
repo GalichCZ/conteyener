@@ -38,7 +38,27 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   column-gap: 1rem;
+  padding: 0 !important;
 }
 .table-form div {
   min-width: 200px;
+}
+
+.required-form {
+  font-weight: 600;
+}
+.required-form label {
+  color: blue;
+}
+.table-legend {
+  display: flex;
+  position: absolute;
+  font-weight: 600;
+}
+.table-legend div {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  border: black 2px solid;
+  background: blue;
 }

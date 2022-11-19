@@ -1,7 +1,7 @@
 const ItemSchema = require("../models/item-model");
 
 class ItemService {
-  async createItem(req, store, container, provider, importer, creator) {
+  async createItem(req, res, store, container, provider, importer, creator) {
     try {
       const doc = new ItemSchema({
         request_date: req.body.request_date,
@@ -33,14 +33,14 @@ class ItemService {
         km_to_dist: req.body.km_to_dist,
         store_arrive_date: req.body.store_arrive_date,
         note: req.body.note,
-        // creator: creator,
+        creator: creator,
       });
 
       const item = await doc.save();
 
       return item;
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 

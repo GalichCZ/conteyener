@@ -53,7 +53,7 @@ export type TableProps = {
 };
 
 export type NewItem = {
-  request_date: String;
+  request_date: Date | null;
   invoice_number: String;
   container_number: String;
   container_type: String;
@@ -67,22 +67,22 @@ export type NewItem = {
   agent: String;
   fraht: String;
   expeditor: String;
-  bid: String;
+  bid: Number | null;
   delivery_method: String;
   place_of_dispatch: String;
   arrive_place: String;
-  dispatch_date: String;
-  arrive_date: String;
-  date_do: String;
-  is_ds: String;
-  is_docs: String;
-  declaration_submit_date: String;
+  dispatch_date: Date | null;
+  arrive_date: Date | null;
+  date_do: Date | null;
+  is_ds: Boolean | null;
+  is_docs: Boolean | null;
+  declaration_submit_date: Date | null;
   declaration_number: String;
-  declaration_issue_date: String;
-  train_dispatch_date: String;
-  train_arrive_date: String;
+  declaration_issue_date: Date | null;
+  train_dispatch_date: Date | null;
+  train_arrive_date: Date | null;
   destination_station: String;
   km_to_dist: String;
-  store_arrive_date: String;
+  store_arrive_date: Date | null;
   note: String;
 };

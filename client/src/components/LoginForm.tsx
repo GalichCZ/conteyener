@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input } from "antd";
-import React, { useState, useContext } from "react";
+import { Button, Checkbox, Form, Input, message } from "antd";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { User } from "../functions/userFuncs";
 import AuthContext from "../store/auth-context";
@@ -10,15 +10,27 @@ export const LoginForm = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
+  const [err, setErr] = useState<string | null>();
   const [loginValues, setLoginValues] = useState<object>({
     email: "",
     password: "",
   });
 
+  useEffect(() => {
+    setTimeout(() => {
+      setErr(null);
+    }, 5000);
+  }, [err]);
+
   const loginHandler = async () => {
     const data = await UserFuncs.login(loginValues);
 
-    console.log(data);
+    // console.log(data);
+
+    if ("message" in data) {
+      console.log(data.message);
+      setErr(data.message);
+    }
 
     if (data.token) {
       window.localStorage.setItem("token", data.token);
@@ -32,6 +44,7 @@ export const LoginForm = () => {
   return (
     <>
       <Form
+        className="login-form"
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
@@ -62,14 +75,6 @@ export const LoginForm = () => {
           />
         </Form.Item>
 
-        {/* <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item> */}
-
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button onClick={loginHandler} type="primary" htmlType="submit">
             Submit
@@ -81,6 +86,12 @@ export const LoginForm = () => {
             No account ? <Link to="/signup">Sign Up</Link>
           </p>
         </Form.Item>
+
+        {err && (
+          <Form.Item wrapperCol={{ offset: 3, span: 25 }}>
+            <p className="login-err">{err}</p>
+          </Form.Item>
+        )}
       </Form>
     </>
   );

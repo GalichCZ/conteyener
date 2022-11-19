@@ -55,21 +55,17 @@ export class Item {
   }
 
   async createItem(itemValues: object) {
-    console.log(item);
     const response = await fetch(URL + "/item", {
       method: "POST",
-      body: JSON.stringify(item),
+      body: JSON.stringify(itemValues),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       },
     })
-      .then((response) => {
-        console.log(response);
-        response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         return data;
       })
       .catch((error) => {

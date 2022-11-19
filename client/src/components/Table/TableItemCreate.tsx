@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Input, DatePicker } from "antd";
-import { NewItem } from "./Table/Types";
-import { Item } from "../functions/itemFuncs";
+import { NewItem } from "./Types";
+import { Item } from "../../functions/itemFuncs";
 
 const ItemFuncs = new Item();
 
 export const TableItemCreate = () => {
   const [open, setOpen] = useState(false);
+  const [err, setErr] = useState<string | null>();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [importersArr, setImportersArr] = useState<string[] | undefined>();
   const [providersArr, setProvidersArr] = useState<string[] | undefined>();
   const [item, setItem] = useState<NewItem>({
-    request_date: "",
+    request_date: null,
     invoice_number: "",
     container_number: "",
     container_type: "",
@@ -25,23 +26,23 @@ export const TableItemCreate = () => {
     agent: "",
     fraht: "",
     expeditor: "",
-    bid: "",
+    bid: null,
     delivery_method: "",
     place_of_dispatch: "",
     arrive_place: "",
-    dispatch_date: "",
-    arrive_date: "",
-    date_do: "",
-    is_ds: "",
-    is_docs: "",
-    declaration_submit_date: "",
+    dispatch_date: null,
+    arrive_date: null,
+    date_do: null,
+    is_ds: null,
+    is_docs: null,
+    declaration_submit_date: null,
     declaration_number: "",
-    declaration_issue_date: "",
-    train_dispatch_date: "",
-    train_arrive_date: "",
+    declaration_issue_date: null,
+    train_dispatch_date: null,
+    train_arrive_date: null,
     destination_station: "",
     km_to_dist: "",
-    store_arrive_date: "",
+    store_arrive_date: null,
     note: "",
   });
 
@@ -49,39 +50,28 @@ export const TableItemCreate = () => {
     setOpen(true);
   };
 
-  const createItem = async (itemValues: object) => {
-    console.log(itemValues);
-    const response = await fetch(URL + "/item", {
-      method: "POST",
-      body: JSON.stringify(item),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      mode: "no-cors",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    return response;
-  };
-
   const handleOk = async () => {
     setConfirmLoading(true);
-    await ItemFuncs.createItem(item);
+    const response = await ItemFuncs.createItem(item);
+    if ("error" in response) setErr(response.error);
+    console.log(response);
     setTimeout(() => {
-      // setOpen(false);
+      setOpen(false);
       setConfirmLoading(false);
     }, 2000);
   };
+
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErr(null);
+    }, 5000);
+  }, [err]);
+
   return (
     <>
       <Button
@@ -101,16 +91,17 @@ export const TableItemCreate = () => {
         onCancel={handleCancel}
       >
         <div className="">
+          {err && <p className="login-err">{err}</p>}
           <Form className="table-form" layout="vertical">
-            <Form.Item label="Дата заявки">
+            <Form.Item className="required-form" label="Дата заявки">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, request_date: dateString });
+                  setItem({ ...item, request_date: new Date(dateString) });
                 }}
                 placeholder="Дата заявки"
               />
             </Form.Item>
-            <Form.Item label="№ инвойса и проформы">
+            <Form.Item className="required-form" label="№ инвойса и проформы">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, invoice_number: e.target.value });
@@ -134,7 +125,7 @@ export const TableItemCreate = () => {
                 placeholder="Тип контейнера"
               />
             </Form.Item>
-            <Form.Item label="Импортер">
+            <Form.Item className="required-form" label="Импортер">
               <Input
                 // onChange={(e) => {
                 //   importersArr?.push(e.target.value);
@@ -146,7 +137,7 @@ export const TableItemCreate = () => {
                 placeholder="Импортер"
               />
             </Form.Item>
-            <Form.Item label="Поставщик">
+            <Form.Item className="required-form" label="Поставщик">
               <Input
                 // onChange={(e) => {
                 //   providersArr?.push(e.target.value);
@@ -158,7 +149,7 @@ export const TableItemCreate = () => {
                 placeholder="Поставщик"
               />
             </Form.Item>
-            <Form.Item label="Наименование склада">
+            <Form.Item className="required-form" label="Наименование склада">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, store_name: e.target.value });
@@ -166,7 +157,7 @@ export const TableItemCreate = () => {
                 placeholder="Наименование склада"
               />
             </Form.Item>
-            <Form.Item label="Адрес склада">
+            <Form.Item className="required-form" label="Адрес склада">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, store_address: e.target.value });
@@ -174,7 +165,7 @@ export const TableItemCreate = () => {
                 placeholder="Адрес склада"
               />
             </Form.Item>
-            <Form.Item label="Контакт склада">
+            <Form.Item className="required-form" label="Контакт склада">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, store_contact: e.target.value });
@@ -182,7 +173,7 @@ export const TableItemCreate = () => {
                 placeholder="Контакт склада"
               />
             </Form.Item>
-            <Form.Item label="Условия поставки">
+            <Form.Item className="required-form" label="Условия поставки">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, conditions: e.target.value });
@@ -198,7 +189,7 @@ export const TableItemCreate = () => {
                 placeholder="Линия"
               />
             </Form.Item>
-            <Form.Item label="Агент">
+            <Form.Item className="required-form" label="Агент">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, agent: e.target.value });
@@ -225,7 +216,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Ставка">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, bid: e.target.value });
+                  setItem({ ...item, bid: parseInt(e.target.value) });
                 }}
                 placeholder="Ставка"
               />
@@ -238,7 +229,7 @@ export const TableItemCreate = () => {
                 placeholder="Способ доставки (маршрут)"
               />
             </Form.Item>
-            <Form.Item label="Место отправки">
+            <Form.Item className="required-form" label="Место отправки">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, place_of_dispatch: e.target.value });
@@ -257,7 +248,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата отправки/выхода">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, dispatch_date: dateString });
+                  setItem({ ...item, dispatch_date: new Date(dateString) });
                 }}
                 placeholder="Дата отправки/выхода"
               />
@@ -265,7 +256,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата прибытия">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, arrive_date: dateString });
+                  setItem({ ...item, arrive_date: new Date(dateString) });
                 }}
                 placeholder="Дата прибытия"
               />
@@ -273,7 +264,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата «ДО»">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, date_do: dateString });
+                  setItem({ ...item, date_do: new Date(dateString) });
                 }}
                 placeholder="Дата «ДО»"
               />
@@ -281,7 +272,10 @@ export const TableItemCreate = () => {
             <Form.Item label="ДС для подачи">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, is_ds: e.target.value });
+                  setItem({
+                    ...item,
+                    is_ds: e.target.value === "" ? false : true,
+                  });
                 }}
                 placeholder="ДС для подачи"
               />
@@ -289,7 +283,10 @@ export const TableItemCreate = () => {
             <Form.Item label="Документы для подачи">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, is_docs: e.target.value });
+                  setItem({
+                    ...item,
+                    is_docs: e.target.value === "" ? false : true,
+                  });
                 }}
                 placeholder="Документы для подачи"
               />
@@ -297,7 +294,10 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата подачи декларации">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, declaration_submit_date: dateString });
+                  setItem({
+                    ...item,
+                    declaration_submit_date: new Date(dateString),
+                  });
                 }}
                 placeholder="Дата подачи декларации"
               />
@@ -313,7 +313,10 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата выпуска декларации">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, declaration_issue_date: dateString });
+                  setItem({
+                    ...item,
+                    declaration_issue_date: new Date(dateString),
+                  });
                 }}
                 placeholder="Дата выпуска декларации"
               />
@@ -321,7 +324,10 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата отправки по ЖД">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, train_dispatch_date: dateString });
+                  setItem({
+                    ...item,
+                    train_dispatch_date: new Date(dateString),
+                  });
                 }}
                 placeholder="Дата отправки по ЖД"
               />
@@ -329,7 +335,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата прибытия по ЖД">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, train_arrive_date: dateString });
+                  setItem({ ...item, train_arrive_date: new Date(dateString) });
                 }}
                 placeholder="Дата прибытия по ЖД"
               />
@@ -353,7 +359,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата прибытия на склад">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, store_arrive_date: dateString });
+                  setItem({ ...item, store_arrive_date: new Date(dateString) });
                 }}
                 placeholder="Дата прибытия на склад"
               />
@@ -367,6 +373,10 @@ export const TableItemCreate = () => {
               />
             </Form.Item>
           </Form>
+        </div>
+        <div className="table-legend">
+          <div></div>
+          <p>Обязательное поле</p>
         </div>
       </Modal>
     </>

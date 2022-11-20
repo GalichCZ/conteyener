@@ -7,17 +7,17 @@ const ItemFuncs = new Item();
 
 export const TableItemCreate = () => {
   const [open, setOpen] = useState(false);
+  const [inputFields, setInputFields] = useState<any>([{ id: 0 }]);
+  const [inputFields2, setInputFields2] = useState<any>([{ id: 0 }]);
   const [err, setErr] = useState<string | null>();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [importersArr, setImportersArr] = useState<string[] | undefined>();
-  const [providersArr, setProvidersArr] = useState<string[] | undefined>();
   const [item, setItem] = useState<NewItem>({
     request_date: null,
     invoice_number: "",
     container_number: "",
     container_type: "",
-    providers: ["qwe"],
-    importers: ["qwe"],
+    providers: [],
+    importers: [],
     store_name: "",
     store_address: "",
     store_contact: "",
@@ -64,6 +64,24 @@ export const TableItemCreate = () => {
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
+  };
+
+  const addFields = () => {
+    let newField = { id: inputFields.length };
+    setInputFields([...inputFields, newField]);
+  };
+
+  const addFields2 = () => {
+    let newField = { id: inputFields2.length };
+    setInputFields2([...inputFields2, newField]);
+  };
+
+  const importerHandler = (importer: string) => {
+    if (importer !== "") item.importers?.push({ name: importer });
+  };
+
+  const providerHandler = (provider: string) => {
+    if (provider !== "") item.providers?.push({ name: provider });
   };
 
   useEffect(() => {
@@ -126,28 +144,36 @@ export const TableItemCreate = () => {
               />
             </Form.Item>
             <Form.Item className="required-form" label="Импортер">
-              <Input
-                // onChange={(e) => {
-                //   importersArr?.push(e.target.value);
-                //   setItem({
-                //     ...item,
-                //     importers: importersArr,
-                //   });
-                // }}
-                placeholder="Импортер"
-              />
+              {inputFields.map((input: { id: string | undefined }) => {
+                return (
+                  <Input
+                    key={input.id}
+                    placeholder="Импортер"
+                    id={input.id}
+                    onBlur={(e) => {
+                      importerHandler(e.target.value);
+                      console.log(item.importers);
+                    }}
+                  />
+                );
+              })}
+              <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
             <Form.Item className="required-form" label="Поставщик">
-              <Input
-                // onChange={(e) => {
-                //   providersArr?.push(e.target.value);
-                //   setItem({
-                //     ...item,
-                //     importers: importersArr,
-                //   });
-                // }}
-                placeholder="Поставщик"
-              />
+              {inputFields2.map((input: { id: string | undefined }) => {
+                return (
+                  <Input
+                    key={input.id}
+                    placeholder="Поставщик"
+                    id={input.id}
+                    onBlur={(e) => {
+                      providerHandler(e.target.value);
+                      console.log(item.importers);
+                    }}
+                  />
+                );
+              })}
+              <Button onClick={addFields2}>Добавить поле</Button>
             </Form.Item>
             <Form.Item className="required-form" label="Наименование склада">
               <Input

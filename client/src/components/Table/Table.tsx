@@ -27,7 +27,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                 {" "}
                 Порт прибытия <br /> / станция назначения{" "}
               </td>
-              <td> Дата отправки/выхода </td>
+              <td> Дата отправки / выхода </td>
               <td> Дата прибытия </td>
               <td> Дата «ДО» </td>
               <td> ДС для подачи </td>
@@ -85,8 +85,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td>{item.arrive_place}</td>
                   <td>{item.arrive_date}</td>
                   <td>{item.date_do}</td>
-                  <td>{item.is_ds}</td>
-                  <td>{item.is_docs}</td>
+                  <td>{item.is_ds ? "V" : ""}</td>
+                  <td>{item.is_docs ? "V" : ""}</td>
                   <td>{item.declaration_submit_date}</td>
                   <td>{item.declaration_number}</td>
                   <td>{item.declaration_issue_date}</td>

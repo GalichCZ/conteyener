@@ -1,34 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal } from "antd";
 
 interface TableStoreProps {
-  opened: boolean;
+  opened: boolean | undefined;
+  store_name: string | undefined;
+  store_address: string | undefined;
+  store_contact: string | undefined;
+  setOpen: (c: any) => any;
 }
 
-export const TableStore = ({ opened }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
+export const TableStore: React.FC<TableStoreProps> = ({
+  opened,
+  store_name,
+  store_address,
+  store_contact,
+  setOpen,
+}) => {
   const handleOk = () => {
-    setIsModalOpen(false);
+    setOpen(false);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setOpen(false);
   };
   return (
     <Modal
-      title="Basic Modal"
-      open={isModalOpen}
+      className="table-store_modal"
+      title="Склад"
+      open={opened}
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <p>Наименование склада: {store_name}</p>
+      <p>Адрес: {store_address}</p>
+      <p>Контактное лицо: {store_contact}</p>
     </Modal>
   );
 };

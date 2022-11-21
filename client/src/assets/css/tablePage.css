@@ -62,3 +62,6 @@
   border: black 2px solid;
   background: blue;
 }
+.table-store_modal {
+  min-width: 500px;
+}

@@ -7,9 +7,15 @@ type Importers = {
   name: string;
   _id: string;
 };
+type NewImporters = {
+  name: string;
+};
 type Providers = {
   name: string;
   _id: string;
+};
+type NewProviders = {
+  name: string;
 };
 type Store = {
   name: string;
@@ -57,8 +63,8 @@ export type NewItem = {
   invoice_number: String;
   container_number: String;
   container_type: String;
-  importers: String[] | undefined;
-  providers: String[] | undefined;
+  importers: NewImporters[] | null;
+  providers: NewProviders[] | null;
   store_name: String;
   store_address: String;
   store_contact: String;

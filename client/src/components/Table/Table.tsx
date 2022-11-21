@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { TableStore } from "./TableStore";
 import * as Types from "./Types";
 
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
+  const [isModal, setIsModal] = useState<boolean>();
+  const [store_name, setStore_name] = useState<string>();
+  const [store_address, setStore_address] = useState<string>();
+  const [store_contact, setStore_contact] = useState<string>();
+
   return (
     <>
+      <TableStore
+        opened={isModal}
+        store_address={store_address}
+        store_contact={store_contact}
+        store_name={store_name}
+        setOpen={setIsModal}
+      />
       <div className="table-page_table">
         <table>
           <thead>
@@ -27,7 +40,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                 {" "}
                 Порт прибытия <br /> / станция назначения{" "}
               </td>
-              <td> Дата отправки/выхода </td>
+              <td> Дата отправки / выхода </td>
               <td> Дата прибытия </td>
               <td> Дата «ДО» </td>
               <td> ДС для подачи </td>
@@ -73,7 +86,17 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       </tbody>
                     </table>
                   </td>
-                  <td>Склад</td>
+                  <td
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setIsModal(true);
+                      setStore_address(item.store.address);
+                      setStore_contact(item.store.contact);
+                      setStore_name(item.store.name);
+                    }}
+                  >
+                    Склад
+                  </td>
                   <td>{item.conditions}</td>
                   <td>{item.line}</td>
                   <td>{item.agent}</td>
@@ -85,8 +108,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td>{item.arrive_place}</td>
                   <td>{item.arrive_date}</td>
                   <td>{item.date_do}</td>
-                  <td>{item.is_ds}</td>
-                  <td>{item.is_docs}</td>
+                  <td>{item.is_ds ? "V" : ""}</td>
+                  <td>{item.is_docs ? "V" : ""}</td>
                   <td>{item.declaration_submit_date}</td>
                   <td>{item.declaration_number}</td>
                   <td>{item.declaration_issue_date}</td>

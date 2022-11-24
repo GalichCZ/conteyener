@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
+const TestController = require("./controllers/test-controller");
 const CheckAuth = require("./utils/check-auth");
 
 const url =
@@ -29,7 +30,14 @@ app.delete("/user", UserController.deleteUser);
 app.get("/item", ItemController.getItems);
 app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/item", ItemController.updateItem);
-app.delete("/item", ItemController.deleteItem);
+app.delete("/item/:_id", ItemController.deleteItem);
+
+app.post("/test/declaration", TestController.testDeclaration);
+app.post("/test/product", TestController.testProduct);
+app.get(
+  "/test/declaration/:declaration_number",
+  TestController.getTestDeclaration
+);
 
 const start = async () => {
   try {

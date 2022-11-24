@@ -2,15 +2,11 @@ const mongoose = require("mongoose");
 
 const StoreSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    contact: {
-      type: String,
-    },
+    receiver: String,
+    name: String,
+    address: String,
+    contact: String,
+    note: String,
   },
   { timestamps: true }
 );

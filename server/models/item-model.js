@@ -4,93 +4,78 @@ const ItemSchema = new mongoose.Schema(
   {
     request_date: {
       type: Date,
+      required: true,
     },
-    invoice_number: {
+    order_number: {
       type: String,
       required: true,
       unique: true,
     },
     container: {
       type: Object,
+      required: true,
     },
-    importers: {
+    simple_product_name: String,
+    product: {
       type: Array,
+      required: true,
     },
     providers: {
       type: Array,
+      required: true,
     },
-    store: {
-      type: Object,
+    importers: {
+      type: Array,
+      required: true,
     },
     conditions: {
       type: String,
+      required: true,
+    },
+    store: {
+      type: Object,
+      required: true,
+    },
+    agent: {
+      type: String,
+      required: true,
+    },
+    place_of_dispatch: {
+      type: String,
+      required: true,
     },
     line: {
       type: String,
     },
-    agent: {
-      type: String,
-    },
+    ready_date: Date,
+    load_date: Date,
+    etd: Date,
+    eta: Date,
+    release: Date,
+    bl_smgs_cmr: Boolean,
+    td: Boolean,
+    date_do: Date,
+    port: String,
+    is_ds: Boolean,
+    is_docs: Boolean,
+    declaration_number: String,
+    declaration_issue_date: Date,
+    declaration_status: Array,
+    availability_of_ob: Boolean,
+    answer_of_ob: Boolean,
+    expeditor: String,
+    destination_station: String,
+    km_to_dist: Number,
+    train_arrive_date: Date,
+    pickup: String,
+    store_arrive_date: Date,
     fraht: {
-      type: String,
-    },
-    expeditor: {
       type: String,
     },
     bid: {
       type: Number,
     },
-    delivery_method: {
-      type: String,
-    },
-    place_of_dispatch: {
-      type: String,
-    },
-    arrive_place: {
-      type: String,
-    },
-    distpatch_date: {
-      type: Date,
-    },
-    arrive_date: {
-      type: Date,
-    },
-    date_do: {
-      type: Date,
-    },
-    is_ds: {
-      type: Boolean,
-    },
-    is_docs: {
-      type: Boolean,
-    },
-    declaration_submit_date: {
-      type: Date,
-    },
-    declaration_number: {
-      type: String,
-    },
-    declaration_issue_date: {
-      type: Date,
-    },
-    train_dispatch_date: {
-      type: Date,
-    },
-    train_arrive_date: {
-      type: Date,
-    },
-    destination_station: {
-      type: String,
-    },
-    km_to_dist: {
-      type: Number,
-    },
-    store_arrive_date: {
-      type: Date,
-    },
-    note: {
-      type: String,
-    },
+    note: String,
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

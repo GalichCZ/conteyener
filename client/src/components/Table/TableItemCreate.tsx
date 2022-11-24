@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Input, DatePicker } from "antd";
 import { NewItem } from "./Types";
 import { Item } from "../../functions/itemFuncs";
+import { CloseOutlined } from "@ant-design/icons";
 
 const ItemFuncs = new Item();
 
 export const TableItemCreate = () => {
   const [open, setOpen] = useState(false);
-  const [inputFields, setInputFields] = useState<any>([{ id: 0 }]);
-  const [inputFields2, setInputFields2] = useState<any>([{ id: 0 }]);
+  const [inputFields, setInputFields] = useState<any>([]);
+  const [inputFields2, setInputFields2] = useState<any>([]);
   const [err, setErr] = useState<string | null>();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [item, setItem] = useState<NewItem>({
     request_date: null,
-    invoice_number: "",
+    order_number: "",
     container_number: "",
     container_type: "",
     providers: [],
@@ -27,22 +28,22 @@ export const TableItemCreate = () => {
     fraht: "",
     expeditor: "",
     bid: null,
-    delivery_method: "",
+    port: "",
     place_of_dispatch: "",
     arrive_place: "",
-    dispatch_date: null,
-    arrive_date: null,
+    etd: null,
+    eta: null,
     date_do: null,
     is_ds: null,
     is_docs: null,
     declaration_submit_date: null,
     declaration_number: "",
     declaration_issue_date: null,
-    train_dispatch_date: null,
+    train_etd: null,
     train_arrive_date: null,
     destination_station: "",
     km_to_dist: "",
-    store_arrive_date: null,
+    store_eta: null,
     note: "",
   });
 
@@ -58,11 +59,11 @@ export const TableItemCreate = () => {
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
+      if (response._id) window.location.reload();
     }, 2000);
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
@@ -79,9 +80,41 @@ export const TableItemCreate = () => {
   const importerHandler = (importer: string) => {
     if (importer !== "") item.importers?.push({ name: importer });
   };
+  const deleteImporter = (importer: any, field: any) => {
+    let arr = inputFields;
+    const fieldIndex = arr.indexOf(field);
+    arr.splice(fieldIndex, 1);
+    console.log(arr);
+    setInputFields(arr);
+    const importerIndex = item.importers.indexOf(importer);
+    item.importers.splice(importerIndex, 1);
+  };
 
   const providerHandler = (provider: string) => {
     if (provider !== "") item.providers?.push({ name: provider });
+  };
+
+  const drawImporters = () => {
+    return inputFields.map((input: { id: any }) => {
+      return (
+        <div style={{ display: "flex" }}>
+          <Input
+            key={input.id}
+            placeholder="Импортер"
+            id={input.id}
+            onBlur={(e) => {
+              importerHandler(e.target.value);
+              console.log(item.importers);
+            }}
+          />
+          <CloseOutlined
+            onClick={() => {
+              deleteImporter(item.importers[input.id], inputFields[input.id]);
+            }}
+          />
+        </div>
+      );
+    });
   };
 
   useEffect(() => {
@@ -89,6 +122,10 @@ export const TableItemCreate = () => {
       setErr(null);
     }, 5000);
   }, [err]);
+
+  useEffect(() => {
+    drawImporters();
+  }, [deleteImporter, inputFields]);
 
   return (
     <>
@@ -122,7 +159,7 @@ export const TableItemCreate = () => {
             <Form.Item className="required-form" label="№ инвойса и проформы">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, invoice_number: e.target.value });
+                  setItem({ ...item, order_number: e.target.value });
                 }}
                 placeholder="№ инвойса и проформы"
               />
@@ -144,26 +181,14 @@ export const TableItemCreate = () => {
               />
             </Form.Item>
             <Form.Item className="required-form" label="Импортер">
-              {inputFields.map((input: { id: string | undefined }) => {
-                return (
-                  <Input
-                    key={input.id}
-                    placeholder="Импортер"
-                    id={input.id}
-                    onBlur={(e) => {
-                      importerHandler(e.target.value);
-                      console.log(item.importers);
-                    }}
-                  />
-                );
-              })}
+              {drawImporters()}
               <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
             <Form.Item className="required-form" label="Поставщик">
-              {inputFields2.map((input: { id: string | undefined }) => {
+              {inputFields2.map((input: { id: any }, key: number) => {
                 return (
                   <Input
-                    key={input.id}
+                    key={key}
                     placeholder="Поставщик"
                     id={input.id}
                     onBlur={(e) => {
@@ -250,7 +275,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Способ доставки (маршрут)">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, delivery_method: e.target.value });
+                  setItem({ ...item, port: e.target.value });
                 }}
                 placeholder="Способ доставки (маршрут)"
               />
@@ -274,7 +299,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата отправки/выхода">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, dispatch_date: new Date(dateString) });
+                  setItem({ ...item, etd: new Date(dateString) });
                 }}
                 placeholder="Дата отправки/выхода"
               />
@@ -282,7 +307,7 @@ export const TableItemCreate = () => {
             <Form.Item label="Дата прибытия">
               <DatePicker
                 onChange={(date, dateString) => {
-                  setItem({ ...item, arrive_date: new Date(dateString) });
+                  setItem({ ...item, eta: new Date(dateString) });
                 }}
                 placeholder="Дата прибытия"
               />
@@ -352,7 +377,7 @@ export const TableItemCreate = () => {
                 onChange={(date, dateString) => {
                   setItem({
                     ...item,
-                    train_dispatch_date: new Date(dateString),
+                    train_etd: new Date(dateString),
                   });
                 }}
                 placeholder="Дата отправки по ЖД"

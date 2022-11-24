@@ -41,13 +41,15 @@ class ImporterService {
         _id: item._id,
       });
 
-      const importers = await this.createImporter(
-        req.body.importers,
-        item.container
-      );
+      if (req.body.importers) {
+        const importers = await this.createImporter(
+          req.body.importers,
+          item.container
+        );
 
-      doc.importers = importers;
-      await doc.save();
+        doc.importers = importers;
+        await doc.save();
+      } else return;
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +57,8 @@ class ImporterService {
 
   async deleteImporters(item) {
     try {
-      await ImporterSchema.deleteMany({ container: item.container });
+      if (item.container !== undefined)
+        await ImporterSchema.deleteMany({ container: item.container });
     } catch (error) {
       console.log(error);
     }

@@ -1,12 +1,18 @@
+import { Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { TableStore } from "./TableStore";
+import { TableStore, TableItemUpdate } from "../index";
 import * as Types from "./Types";
+import { Item } from "../../functions/itemFuncs";
 
+const ItemFuncs = new Item();
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [isModal, setIsModal] = useState<boolean>();
   const [store_name, setStore_name] = useState<string>();
   const [store_address, setStore_address] = useState<string>();
   const [store_contact, setStore_contact] = useState<string>();
+
+  const [updateModal, setUpdateModal] = useState<any>();
+  const [item, setItem] = useState<any>();
 
   return (
     <>
@@ -17,51 +23,79 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         store_name={store_name}
         setOpen={setIsModal}
       />
+      <TableItemUpdate
+        opened={updateModal}
+        setOpen={setUpdateModal}
+        item={item}
+      />
       <div className="table-page_table">
         <table>
           <thead>
             <tr>
+              <td></td>
               <td> Дата заявки </td>
-              <td> № инвойса и проформы </td>
-              <td> Контейнер </td>
-              <td> Тип контейнера </td>
-              <td> Импортер </td>
+              <td> Номер заказа </td>
+              <td> Номер контейнера </td>
+              <td> Товар </td>
               <td> Поставщик </td>
-              <td> Склад </td>
+              <td> Импортер </td>
               <td> Условия поставки </td>
-              <td> Линия </td>
+              <td> Склад </td>
               <td> Агент </td>
-              <td> Фрахт </td>
-              <td> Экспедитор </td>
-              <td> Ставка </td>
-              <td> Способ доставки (маршрут) </td>
+              <td> Тип контейенра </td>
               <td> Место отправки </td>
-              <td>
-                {" "}
-                Порт прибытия <br /> / станция назначения{" "}
-              </td>
-              <td> Дата отправки / выхода </td>
-              <td> Дата прибытия </td>
+              <td> Линия </td>
+              <td> Дата готовности </td>
+              <td> Дата загрузки </td>
+              <td> ETD </td>
+              <td> ETA </td>
+              <td> Релиз </td>
+              <td> BL/СМГС/CMR </td>
+              <td> ТД </td>
               <td> Дата «ДО» </td>
-              <td> ДС для подачи </td>
+              <td> Порт </td>
+              <td> Д/С для подачи </td>
               <td> Документы для подачи </td>
-              <td> Дата подачи декларации </td>
               <td> № декларации </td>
               <td> Дата выпуска декларации </td>
-              <td> Дата отправки по ЖД </td>
-              <td> Дата прибытия по ЖД </td>
-              <td> Станция назначения </td>
+              <td> Наличие ОБ </td>
+              <td> Ответ ОБ </td>
+              <td> Экспедитор </td>
+              <td> Станци прибытия </td>
               <td> Км. до станции назначения </td>
+              <td> Дата прибытия по ЖД </td>
+              <td> Автовывоз </td>
               <td> Дата прибытия на склад </td>
-              <td> Примечание </td>
+              <td> Комментарий </td>
+              <td> Фрахт </td>
+              <td> Ставка </td>
+              <td> Примечания </td>
             </tr>
           </thead>
           <tbody>
             {data?.map((item, key) => {
               return (
                 <tr key={item._id}>
-                  <td>{item.request_date}</td>
-                  <td>{item.invoice_number}</td>
+                  <td>
+                    <Button
+                      onClick={async () => {
+                        const response = await ItemFuncs.deleteItem(item._id);
+                        if (response === 200) window.location.reload();
+                      }}
+                    >
+                      Удалить запись
+                    </Button>
+                  </td>
+                  <td
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setUpdateModal(true);
+                      setItem(item);
+                    }}
+                  >
+                    {item.request_date}
+                  </td>
+                  <td>{item.order_number}</td>
                   <td>{item.container.container_number}</td>
                   <td>{item.container.container_type}</td>
                   <td>
@@ -103,17 +137,18 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td>{item.fraht}</td>
                   <td>{item.expeditor}</td>
                   <td>{item.bid}</td>
-                  <td>{item.delivery_method}</td>
+                  <td>{item.port}</td>
                   <td>{item.place_of_dispatch}</td>
                   <td>{item.arrive_place}</td>
-                  <td>{item.arrive_date}</td>
+                  <td>{item.etd}</td>
+                  <td>{item.eta}</td>
                   <td>{item.date_do}</td>
                   <td>{item.is_ds ? "V" : ""}</td>
                   <td>{item.is_docs ? "V" : ""}</td>
                   <td>{item.declaration_submit_date}</td>
                   <td>{item.declaration_number}</td>
                   <td>{item.declaration_issue_date}</td>
-                  <td>{item.train_dispatch_date}</td>
+                  <td>{item.train_etd}</td>
                   <td>{item.train_arrive_date}</td>
                   <td>{item.destination_station}</td>
                   <td>{item.km_to_dist}</td>

@@ -41,13 +41,15 @@ class ProviderService {
         _id: item._id,
       });
 
-      const providers = await this.createProvider(
-        req.body.providers,
-        item.container
-      );
+      if (req.body.providers) {
+        const providers = await this.createProvider(
+          req.body.providers,
+          item.container
+        );
 
-      doc.providers = providers;
-      await doc.save();
+        doc.providers = providers;
+        await doc.save();
+      } else return;
     } catch (error) {
       console.log(error);
     }

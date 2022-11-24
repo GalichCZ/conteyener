@@ -44,7 +44,7 @@ class ItemController {
 
     if ("code" in item) return res.json({ error: "duplicated key" });
 
-    res.json(item);
+    res.status(200).json(item);
   }
 
   async getItems(req, res) {
@@ -73,9 +73,9 @@ class ItemController {
 
   async deleteItem(req, res) {
     try {
-      const item = await ItemSchema.findById(req.body._id).exec();
+      const item = await ItemSchema.findById(req.params._id).exec();
 
-      await ItemService.deleteItem(req.body._id);
+      await ItemService.deleteItem(req.params._id);
       await ImporterService.deleteImporters(item);
       await ContainerService.deleteContainer(item);
       await StoreService.deleteStore(item);

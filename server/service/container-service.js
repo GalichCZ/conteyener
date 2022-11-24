@@ -48,7 +48,8 @@ class ContainerService {
 
   async deleteContainer(item) {
     try {
-      await ContainerSchema.deleteOne({ _id: item.container });
+      if (item.container)
+        await ContainerSchema.deleteOne({ _id: item.container });
     } catch (error) {
       console.log(error);
     }

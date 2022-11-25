@@ -1,6 +1,8 @@
+const DeclarationService = require("../service/declaration-service");
 const ContainerService = require("../service/container-service");
 const ProviderService = require("../service/provider-service");
 const ImporterService = require("../service/importer-service");
+const ProductService = require("../service/product-service");
 const StoreService = require("../service/store-service");
 const ItemService = require("../service/item-service");
 
@@ -26,6 +28,13 @@ class ItemController {
       container._id
     );
 
+    const product = await ProductService.createProduct(
+      req.body.products,
+      container
+    );
+
+    const declaration = await DeclarationService.createDeclarationStatus(req);
+
     const store = await StoreService.createStore(
       req.body.store_name,
       req.body.store_address,
@@ -34,12 +43,13 @@ class ItemController {
 
     const item = await ItemService.createItem(
       req,
-      res,
       store,
       container,
       provider,
       importer,
-      creator
+      creator,
+      declaration,
+      product
     );
 
     if ("code" in item) return res.json({ error: "duplicated key" });

@@ -38,9 +38,8 @@ const uploadFiles = (req, res) => {
   res.json({ message: "Successfully uploaded files" });
 };
 
-app.post("/test/file", FileWare, TestController.testFile);
 app.post("/test/declaration", TestController.testDeclaration);
-app.post("/test/product", TestController.testProduct);
+app.post("/test/product", FileWare, TestController.testProduct);
 app.get(
   "/test/declaration/:declaration_number",
   TestController.getTestDeclaration

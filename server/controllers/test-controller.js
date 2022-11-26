@@ -18,15 +18,10 @@ class TestController {
   }
 
   async testProduct(req, res) {
-    const response = await ProductService.createProduct(req.body.products);
+    const products = await FileService.createFile(req.file.path);
+    const response = await ProductService.createProduct(products);
 
     res.json(response);
-  }
-
-  async testFile(req, res) {
-    const response = await FileService.createFile(req.file.path);
-
-    res.json(200);
   }
 }
 

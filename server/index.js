@@ -1,10 +1,11 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
 const CheckAuth = require("./utils/check-auth");
+const FileWare = require("./utils/file-ware");
 
 const url =
   "mongodb+srv://root:root@conteyener.w3d0tne.mongodb.net/?retryWrites=true&w=majority";
@@ -32,8 +33,13 @@ app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/item", ItemController.updateItem);
 app.delete("/item/:_id", ItemController.deleteItem);
 
+const uploadFiles = (req, res) => {
+  console.log(req.file.path);
+  res.json({ message: "Successfully uploaded files" });
+};
+
 app.post("/test/declaration", TestController.testDeclaration);
-app.post("/test/product", TestController.testProduct);
+app.post("/test/product", FileWare, TestController.testProduct);
 app.get(
   "/test/declaration/:declaration_number",
   TestController.getTestDeclaration

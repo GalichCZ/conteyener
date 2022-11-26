@@ -44,9 +44,7 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    line: {
-      type: String,
-    },
+    line: String,
     ready_date: Date,
     load_date: Date,
     etd: Date,
@@ -69,12 +67,8 @@ const ItemSchema = new mongoose.Schema(
     train_arrive_date: Date,
     pickup: String,
     store_arrive_date: Date,
-    fraht: {
-      type: String,
-    },
-    bid: {
-      type: Number,
-    },
+    fraht: String,
+    bid: Number,
     note: String,
     creator: {
       type: mongoose.Schema.Types.ObjectId,

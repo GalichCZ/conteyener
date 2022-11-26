@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { TableStore, TableItemUpdate } from "../index";
 import * as Types from "./Types";
 import { Item } from "../../functions/itemFuncs";

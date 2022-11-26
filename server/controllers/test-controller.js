@@ -1,6 +1,6 @@
 const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
-
+const FileService = require("../service/file-service");
 class TestController {
   async testDeclaration(req, res) {
     const response = await DeclarationService.createDeclarationStatus(req);
@@ -18,7 +18,8 @@ class TestController {
   }
 
   async testProduct(req, res) {
-    const response = await ProductService.createProduct(req.body.products);
+    const products = await FileService.createFile(req.file.path);
+    const response = await ProductService.createProduct(products);
 
     res.json(response);
   }

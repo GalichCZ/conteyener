@@ -32,9 +32,9 @@ class DeclarationService {
       const doc = await DeclarationSchema.find({ declaration_number });
 
       if (doc) return doc;
-      else return;
     } catch (error) {
       console.log(error);
+      return { message: "not found" };
     }
   }
 }

@@ -67,6 +67,7 @@ const ItemSchema = new mongoose.Schema(
     train_arrive_date: Date,
     pickup: String,
     store_arrive_date: Date,
+    comment: String,
     fraht: String,
     bid: Number,
     note: String,

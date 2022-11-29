@@ -1,19 +1,16 @@
 import React from "react";
 import { Modal } from "antd";
+import { Store } from "./Types";
 
 interface TableStoreProps {
   opened: boolean | undefined;
-  store_name: string | undefined;
-  store_address: string | undefined;
-  store_contact: string | undefined;
+  storeData: Store | undefined;
   setOpen: (c: any) => any;
 }
 
 export const TableStore: React.FC<TableStoreProps> = ({
   opened,
-  store_name,
-  store_address,
-  store_contact,
+  storeData,
   setOpen,
 }) => {
   const handleOk = () => {
@@ -31,9 +28,11 @@ export const TableStore: React.FC<TableStoreProps> = ({
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      <p>Наименование склада: {store_name}</p>
-      <p>Адрес: {store_address}</p>
-      <p>Контактное лицо: {store_contact}</p>
+      <p>Получатель: {storeData?.receiver}</p>
+      <p>Наименование склада: {storeData?.name}</p>
+      <p>Адрес: {storeData?.address}</p>
+      <p>Контактное лицо: {storeData?.contact}</p>
+      <p>Примечание: {storeData?.note}</p>
     </Modal>
   );
 };

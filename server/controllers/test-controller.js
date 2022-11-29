@@ -23,6 +23,15 @@ class TestController {
 
     res.json(response);
   }
+
+  async testUpdateProduct(req, res) {
+    await ProductService.deleteProduct("637ce24055d01524f399e853");
+
+    const products = await FileService.createFile(req.file.path);
+    const response = await ProductService.createProduct(products);
+
+    res.json(response);
+  }
 }
 
 module.exports = new TestController();

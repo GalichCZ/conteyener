@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
+const DeclarationController = require("./controllers/declaration-controller");
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
 
@@ -20,30 +21,32 @@ app.get("/", CheckAuth.checkToken, (req, res) => {
   res.send("HELLO");
 });
 
-app.get("/activate/:link", UserController.activate);
-app.get("/users", UserController.getUsers);
 app.get("/user", UserController.getMe);
-app.post("/auth/signin", UserController.registration);
+app.get("/users", UserController.getUsers);
 app.post("/auth/login", UserController.login);
 app.patch("/role", UserController.roleChange);
 app.delete("/user", UserController.deleteUser);
+app.get("/activate/:link", UserController.activate);
+app.post("/auth/signin", UserController.registration);
 
 app.get("/item", ItemController.getItems);
-app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/item", ItemController.updateItem);
 app.delete("/item/:_id", ItemController.deleteItem);
+app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
 
-const uploadFiles = (req, res) => {
-  console.log(req.file.path);
-  res.json({ message: "Successfully uploaded files" });
-};
+app.get(
+  "/declaration/:declaration_number",
+  DeclarationController.declarationStatusGet
+);
+app.post("/declaration", DeclarationController.declarationStatusCreate);
 
-app.post("/test/declaration", TestController.testDeclaration);
-app.post("/test/product", FileWare, TestController.testProduct);
 app.get(
   "/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
+app.patch("/test/product", TestController.testUpdateProduct);
+app.post("/test/declaration", TestController.testDeclaration);
+app.post("/test/product", FileWare, TestController.testProduct);
 
 const start = async () => {
   try {

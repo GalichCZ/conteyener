@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
+const ProductController = require("./controllers/product-controller");
 const DeclarationController = require("./controllers/declaration-controller");
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
@@ -28,6 +29,9 @@ app.patch("/role", UserController.roleChange);
 app.delete("/user", UserController.deleteUser);
 app.get("/activate/:link", UserController.activate);
 app.post("/auth/signin", UserController.registration);
+
+app.post("/product/:container", FileWare, ProductController.createProduct);
+app.get("/product/:container", ProductController.getProduct);
 
 app.get("/item", ItemController.getItems);
 app.patch("/item", ItemController.updateItem);

@@ -66,3 +66,19 @@
 .table-store_modal {
   min-width: 500px;
 }
+.declaration-modal {
+  width: 80% !important;
+}
+.declaration-modal form {
+  display: flex;
+  width: 100%;
+  padding: 0 !important;
+}
+.declaration-modal table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.declaration-modal td {
+  border: 1px black solid;
+  padding: 5px;
+}

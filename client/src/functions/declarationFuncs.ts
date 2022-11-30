@@ -1,7 +1,7 @@
 const URL = "http://localhost:4444";
 
 export class Declaration {
-  async getDeclarationStatus(declaration_number: string) {
+  async getDeclarationStatus(declaration_number: string | undefined) {
     const response = await fetch(URL + `/declaration/${declaration_number}`)
       .then((res) => res.json())
       .then((data) => {
@@ -12,7 +12,8 @@ export class Declaration {
   }
 
   async createDeclarationStatus(declarationData: object) {
-    const response = await fetch(URL + "/item", {
+    console.log(declarationData);
+    const response = await fetch(URL + "/declaration", {
       method: "POST",
       body: JSON.stringify(declarationData),
       headers: {

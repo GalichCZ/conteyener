@@ -189,3 +189,28 @@ export interface UpdatedItem {
   store_arrive_date: string | null;
   note: string | null;
 }
+
+export interface Writes {
+  _id: string;
+  declaration_number: string;
+  declaration_status: string;
+  declaration_status_date: string;
+  declaration_status_message: string;
+}
+
+export interface Products {
+  _id: string;
+  hs_code: number;
+  article: string;
+  trade_mark: string;
+  model: string;
+  product_name: string;
+  quantity_pieces: number;
+  quantity_places: number;
+  piece_price: number;
+  total_price: number;
+  weight_net: number;
+  weight_gross: number;
+  cbm: number;
+  container: string;
+}

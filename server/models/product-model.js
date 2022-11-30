@@ -14,11 +14,7 @@ const ProductSchema = new mongoose.Schema(
     weight_net: Number,
     weight_gross: Number,
     cbm: Number,
-    container: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Container",
-      // required: true,
-    },
+    container: String,
   },
   {
     timestamps: true,

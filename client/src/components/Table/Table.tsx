@@ -5,6 +5,7 @@ import {
   TableItemUpdate,
   TableDeclStatus,
   TableColNames,
+  TableUploadModal,
 } from "../index";
 import * as Types from "./Types";
 import { Item } from "../../functions/itemFuncs";
@@ -20,6 +21,9 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [declarationModal, setDeclarationModal] = useState<boolean>();
   const [declarationNumber, setDeclarationNumber] = useState<string>();
 
+  const [uploadModal, setUploadModal] = useState<boolean>();
+  const [uploadContainer, setUploadContainer] = useState<any>();
+
   return (
     <>
       <TableDeclStatus
@@ -33,9 +37,15 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         setOpen={setUpdateModal}
         item={item}
       />
+      <TableUploadModal
+        opened={uploadModal}
+        setOpen={setUploadModal}
+        container={uploadContainer}
+      />
       <div className="table-page_table">
         <table>
           <TableColNames />
+
           <tbody>
             {data?.map((item) => {
               return (
@@ -61,7 +71,14 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   </td>
                   <td> {item.order_number} </td>
                   <td> {item.container.container_number} </td>
-                  <td> {item.simple_product_name} </td>
+                  <td
+                    onClick={() => {
+                      setUploadModal(true);
+                      setUploadContainer(item.container.container_number);
+                    }}
+                  >
+                    {item.simple_product_name}
+                  </td>
                   <td>
                     <table className="table-importers">
                       <tbody>

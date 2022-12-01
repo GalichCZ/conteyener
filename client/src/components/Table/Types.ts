@@ -3,20 +3,25 @@ type Container = {
   container_type: string;
   _id: string;
 };
+
 type Importers = {
   name: string;
   _id: string;
 };
+
 type NewImporters = {
   name: string;
 };
+
 type Providers = {
   name: string;
   _id: string;
 };
+
 type NewProviders = {
   name: string;
 };
+
 export type Store = {
   receiver: string;
   name: string;
@@ -24,6 +29,7 @@ export type Store = {
   contact: string;
   note: string;
 };
+
 export type TableProps = {
   data:
     | {
@@ -71,7 +77,7 @@ export type TableProps = {
 };
 
 export type NewItem = {
-  request_date: Date;
+  request_date: Date | null;
   order_number: string;
   container_number: string;
   simple_product_name: string;
@@ -85,31 +91,33 @@ export type NewItem = {
   agent: string;
   container_type: string;
   place_of_dispatch: string;
+  arrive_place: string;
   line: string;
-  ready_date: Date;
-  load_date: Date;
-  etd: string;
-  eta: string;
-  release: string;
-  bl_smgs_cmr: boolean;
-  td: boolean;
-  date_do: Date;
+  ready_date: Date | null;
+  load_date: Date | null;
+  etd: Date | null;
+  eta: Date | null;
+  release: Date | null;
+  bl_smgs_cmr: boolean | null;
+  td: boolean | null;
+  date_do: Date | null;
   port: string;
-  is_ds: boolean;
-  is_docs: boolean;
+  is_ds: boolean | null;
+  is_docs: boolean | null;
   declaration_number: string;
-  declaration_issue_date: Date;
-  availability_of_ob: boolean;
-  answer_of_ob: boolean;
+  declaration_issue_date: Date | null;
+  availability_of_ob: boolean | null;
+  answer_of_ob: boolean | null;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number;
-  train_arrive_date: Date;
-  bid: number;
+  km_to_dist: number | null;
+  train_arrive_date: Date | null;
+  bid: number | null;
   pickup: string;
-  store_arrive_date: Date;
+  store_arrive_date: Date | null;
   comment: string;
   note: string;
+  fraht: string;
 };
 
 export type SingleItem = {
@@ -119,35 +127,47 @@ export type SingleItem = {
     | any
     | {
         _id: string;
-        request_date: string;
+        request_date: Date | null;
         order_number: string;
-        container: Container;
-        importers: NewImporters[] | null;
-        providers: NewProviders[] | null;
-        store: Store;
+        container_number: string;
+        simple_product_name: string;
+        providers: NewProviders[];
+        importers: NewImporters[];
         conditions: string;
-        line: string;
+        store_receiver: string;
+        store_name: string;
+        store_address: string;
+        store_contact: string;
         agent: string;
-        fraht: string;
-        expeditor: string;
-        bid: number;
-        port: string;
+        container_type: string;
         place_of_dispatch: string;
         arrive_place: string;
-        etd: string;
-        eta: string;
-        date_do: string;
-        is_ds: boolean;
-        is_docs: boolean;
-        declaration_submit_date: string;
+        line: string;
+        ready_date: Date | null;
+        load_date: Date | null;
+        etd: Date | null;
+        eta: Date | null;
+        release: Date | null;
+        bl_smgs_cmr: boolean | null;
+        td: boolean | null;
+        date_do: Date | null;
+        port: string;
+        is_ds: boolean | null;
+        is_docs: boolean | null;
         declaration_number: string;
-        declaration_issue_date: string;
-        train_etd: string;
-        train_arrive_date: string;
+        declaration_issue_date: Date | null;
+        availability_of_ob: boolean | null;
+        answer_of_ob: boolean | null;
+        expeditor: string;
         destination_station: string;
-        km_to_dist: number;
-        store_arrive_date: string;
+        km_to_dist: number | null;
+        train_arrive_date: Date | null;
+        bid: number | null;
+        pickup: string;
+        store_arrive_date: Date | null;
+        comment: string;
         note: string;
+        fraht: string;
       };
 };
 
@@ -160,34 +180,44 @@ export interface UpdatedItem {
     container_number: string;
     container_type: string;
   };
-  importers: NewImporters[] | null;
-  providers: NewProviders[] | null;
-  store_name: String | null;
-  store_address: String | null;
-  store_contact: String | null;
-  conditions: string | null;
-  line: string | null;
-  agent: string | null;
-  fraht: string | null;
-  expeditor: string | null;
-  bid: number | null;
-  port: string | null;
-  place_of_dispatch: string | null;
-  arrive_place: string | null;
-  etd: string | null;
-  eta: string | null;
-  date_do: string | null;
+  simple_product_name: string;
+  providers: NewProviders[];
+  importers: NewImporters[];
+  conditions: string;
+  store_receiver: string;
+  store_name: string;
+  store_address: string;
+  store_contact: string;
+  agent: string;
+  container_type: string;
+  place_of_dispatch: string;
+  arrive_place: string;
+  line: string;
+  ready_date: Date | null;
+  load_date: Date | null;
+  etd: Date | null;
+  eta: Date | null;
+  release: Date | null;
+  bl_smgs_cmr: boolean | null;
+  td: boolean | null;
+  date_do: Date | null;
+  port: string;
   is_ds: boolean | null;
   is_docs: boolean | null;
-  declaration_submit_date: string | null;
-  declaration_number: string | null;
-  declaration_issue_date: string | null;
-  train_etd: string | null;
-  train_arrive_date: string | null;
-  destination_station: string | null;
+  declaration_number: string;
+  declaration_issue_date: Date | null;
+  availability_of_ob: boolean | null;
+  answer_of_ob: boolean | null;
+  expeditor: string;
+  destination_station: string;
   km_to_dist: number | null;
-  store_arrive_date: string | null;
-  note: string | null;
+  train_arrive_date: Date | null;
+  bid: number | null;
+  pickup: string;
+  store_arrive_date: Date | null;
+  comment: string;
+  note: string;
+  fraht: string;
 }
 
 export interface Writes {

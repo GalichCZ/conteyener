@@ -16,35 +16,44 @@ export const TableItemCreate = () => {
     request_date: null,
     order_number: "",
     container_number: "",
-    container_type: "",
+    simple_product_name: "",
     providers: [],
     importers: [],
+    conditions: "",
+    store_receiver: "",
     store_name: "",
     store_address: "",
     store_contact: "",
-    conditions: "",
-    line: "",
     agent: "",
-    fraht: "",
-    expeditor: "",
-    bid: null,
-    port: "",
+    container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
+    line: "",
+    ready_date: null,
+    load_date: null,
     etd: null,
     eta: null,
+    release: null,
+    bl_smgs_cmr: null,
+    td: null,
     date_do: null,
+    port: "",
     is_ds: null,
     is_docs: null,
-    declaration_submit_date: null,
     declaration_number: "",
     declaration_issue_date: null,
-    train_etd: null,
-    train_arrive_date: null,
+    availability_of_ob: null,
+    answer_of_ob: null,
+    expeditor: "",
     destination_station: "",
-    km_to_dist: "",
-    store_eta: null,
+    km_to_dist: null,
+    train_arrive_date: null,
+    bid: null,
+    pickup: "",
+    store_arrive_date: null,
+    comment: "",
     note: "",
+    fraht: "",
   });
 
   const showModal = () => {
@@ -80,6 +89,7 @@ export const TableItemCreate = () => {
   const importerHandler = (importer: string) => {
     if (importer !== "") item.importers?.push({ name: importer });
   };
+
   const deleteImporter = (importer: any, field: any) => {
     let arr = inputFields;
     const fieldIndex = arr.indexOf(field);
@@ -156,33 +166,29 @@ export const TableItemCreate = () => {
                 placeholder="Дата заявки"
               />
             </Form.Item>
-            <Form.Item className="required-form" label="№ инвойса и проформы">
+            <Form.Item className="required-form" label="№ заказа">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, order_number: e.target.value });
                 }}
-                placeholder="№ инвойса и проформы"
+                placeholder="№ заказа"
               />
             </Form.Item>
-            <Form.Item label="Контейнер">
+            <Form.Item label="Номер контейнера">
               <Input
                 onChange={(e) => {
                   setItem({ ...item, container_number: e.target.value });
                 }}
-                placeholder="Контейнер"
+                placeholder="Номер контейнера"
               />
             </Form.Item>
-            <Form.Item label="Тип контейнера">
+            <Form.Item label="Товар">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, container_type: e.target.value });
+                  setItem({ ...item, simple_product_name: e.target.value });
                 }}
-                placeholder="Тип контейнера"
+                placeholder="Товар"
               />
-            </Form.Item>
-            <Form.Item className="required-form" label="Импортер">
-              {drawImporters()}
-              <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
             <Form.Item className="required-form" label="Поставщик">
               {inputFields2.map((input: { id: any }, key: number) => {
@@ -199,6 +205,26 @@ export const TableItemCreate = () => {
                 );
               })}
               <Button onClick={addFields2}>Добавить поле</Button>
+            </Form.Item>
+            <Form.Item className="required-form" label="Импортер">
+              {drawImporters()}
+              <Button onClick={addFields}>Добавить поле</Button>
+            </Form.Item>
+            <Form.Item className="required-form" label="Условия поставки">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, conditions: e.target.value });
+                }}
+                placeholder="Условия поставки"
+              />
+            </Form.Item>
+            <Form.Item className="required-form" label="Получатель">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, store_receiver: e.target.value });
+                }}
+                placeholder="Получатель"
+              />
             </Form.Item>
             <Form.Item className="required-form" label="Наименование склада">
               <Input
@@ -224,22 +250,6 @@ export const TableItemCreate = () => {
                 placeholder="Контакт склада"
               />
             </Form.Item>
-            <Form.Item className="required-form" label="Условия поставки">
-              <Input
-                onChange={(e) => {
-                  setItem({ ...item, conditions: e.target.value });
-                }}
-                placeholder="Условия поставки"
-              />
-            </Form.Item>
-            <Form.Item label="Линия">
-              <Input
-                onChange={(e) => {
-                  setItem({ ...item, line: e.target.value });
-                }}
-                placeholder="Линия"
-              />
-            </Form.Item>
             <Form.Item className="required-form" label="Агент">
               <Input
                 onChange={(e) => {
@@ -248,36 +258,12 @@ export const TableItemCreate = () => {
                 placeholder="Агент"
               />
             </Form.Item>
-            <Form.Item label="Фрахт">
+            <Form.Item label="Тип контейнера">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, fraht: e.target.value });
+                  setItem({ ...item, container_type: e.target.value });
                 }}
-                placeholder="Фрахт"
-              />
-            </Form.Item>
-            <Form.Item label="Экспедитор">
-              <Input
-                onChange={(e) => {
-                  setItem({ ...item, expeditor: e.target.value });
-                }}
-                placeholder="Экспедитор"
-              />
-            </Form.Item>
-            <Form.Item label="Ставка">
-              <Input
-                onChange={(e) => {
-                  setItem({ ...item, bid: parseInt(e.target.value) });
-                }}
-                placeholder="Ставка"
-              />
-            </Form.Item>
-            <Form.Item label="Способ доставки (маршрут)">
-              <Input
-                onChange={(e) => {
-                  setItem({ ...item, port: e.target.value });
-                }}
-                placeholder="Способ доставки (маршрут)"
+                placeholder="Тип контейнера"
               />
             </Form.Item>
             <Form.Item className="required-form" label="Место отправки">
@@ -296,20 +282,74 @@ export const TableItemCreate = () => {
                 placeholder="Порт прибытия/станция назначения"
               />
             </Form.Item>
-            <Form.Item label="Дата отправки/выхода">
+            <Form.Item label="Линия">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, line: e.target.value });
+                }}
+                placeholder="Линия"
+              />
+            </Form.Item>
+            <Form.Item label="Дата готовности">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, ready_date: new Date(dateString) });
+                }}
+                placeholder="Дата готовности"
+              />
+            </Form.Item>
+            <Form.Item label="Дата загрузки">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, load_date: new Date(dateString) });
+                }}
+                placeholder="Дата загрузки"
+              />
+            </Form.Item>
+            <Form.Item label="ETD">
               <DatePicker
                 onChange={(date, dateString) => {
                   setItem({ ...item, etd: new Date(dateString) });
                 }}
-                placeholder="Дата отправки/выхода"
+                placeholder="ETD"
               />
             </Form.Item>
-            <Form.Item label="Дата прибытия">
+            <Form.Item label="ETA">
               <DatePicker
                 onChange={(date, dateString) => {
                   setItem({ ...item, eta: new Date(dateString) });
                 }}
-                placeholder="Дата прибытия"
+                placeholder="ETA"
+              />
+            </Form.Item>
+            <Form.Item label="Релиз">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, release: new Date(dateString) });
+                }}
+                placeholder="Релиз"
+              />
+            </Form.Item>
+            <Form.Item label="BL/СМГС/CMR">
+              <Input
+                onChange={(e) => {
+                  setItem({
+                    ...item,
+                    bl_smgs_cmr: e.target.value === "" ? false : true,
+                  });
+                }}
+                placeholder="BL/СМГС/CMR"
+              />
+            </Form.Item>
+            <Form.Item label="ТД">
+              <Input
+                onChange={(e) => {
+                  setItem({
+                    ...item,
+                    td: e.target.value === "" ? false : true,
+                  });
+                }}
+                placeholder="ТД"
               />
             </Form.Item>
             <Form.Item label="Дата «ДО»">
@@ -318,6 +358,14 @@ export const TableItemCreate = () => {
                   setItem({ ...item, date_do: new Date(dateString) });
                 }}
                 placeholder="Дата «ДО»"
+              />
+            </Form.Item>
+            <Form.Item label="Порт">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, port: e.target.value });
+                }}
+                placeholder="Порт"
               />
             </Form.Item>
             <Form.Item label="ДС для подачи">
@@ -342,17 +390,6 @@ export const TableItemCreate = () => {
                 placeholder="Документы для подачи"
               />
             </Form.Item>
-            <Form.Item label="Дата подачи декларации">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({
-                    ...item,
-                    declaration_submit_date: new Date(dateString),
-                  });
-                }}
-                placeholder="Дата подачи декларации"
-              />
-            </Form.Item>
             <Form.Item label="№ декларации">
               <Input
                 onChange={(e) => {
@@ -372,23 +409,34 @@ export const TableItemCreate = () => {
                 placeholder="Дата выпуска декларации"
               />
             </Form.Item>
-            <Form.Item label="Дата отправки по ЖД">
-              <DatePicker
-                onChange={(date, dateString) => {
+            <Form.Item label="Наличие ОБ">
+              <Input
+                onChange={(e) => {
                   setItem({
                     ...item,
-                    train_etd: new Date(dateString),
+                    bl_smgs_cmr: e.target.value === "" ? false : true,
                   });
                 }}
-                placeholder="Дата отправки по ЖД"
+                placeholder="Наличие ОБ"
               />
             </Form.Item>
-            <Form.Item label="Дата прибытия по ЖД">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, train_arrive_date: new Date(dateString) });
+            <Form.Item label="Ответ ОБ">
+              <Input
+                onChange={(e) => {
+                  setItem({
+                    ...item,
+                    bl_smgs_cmr: e.target.value === "" ? false : true,
+                  });
                 }}
-                placeholder="Дата прибытия по ЖД"
+                placeholder="Ответ ОБ"
+              />
+            </Form.Item>
+            <Form.Item label="Экспедитор">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, expeditor: e.target.value });
+                }}
+                placeholder="Экспедитор"
               />
             </Form.Item>
             <Form.Item label="Станция назначения">
@@ -402,9 +450,33 @@ export const TableItemCreate = () => {
             <Form.Item label="Км. до станции назначения">
               <Input
                 onChange={(e) => {
-                  setItem({ ...item, km_to_dist: e.target.value });
+                  setItem({ ...item, km_to_dist: parseInt(e.target.value) });
                 }}
                 placeholder="Км. до станции назначения"
+              />
+            </Form.Item>
+            <Form.Item label="Дата прибытия по ЖД">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, train_arrive_date: new Date(dateString) });
+                }}
+                placeholder="Дата прибытия по ЖД"
+              />
+            </Form.Item>
+            <Form.Item label="Ставка">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, bid: parseInt(e.target.value) });
+                }}
+                placeholder="Ставка"
+              />
+            </Form.Item>
+            <Form.Item label="Автовывоз">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, pickup: e.target.value });
+                }}
+                placeholder="Автовывоз"
               />
             </Form.Item>
             <Form.Item label="Дата прибытия на склад">
@@ -415,6 +487,23 @@ export const TableItemCreate = () => {
                 placeholder="Дата прибытия на склад"
               />
             </Form.Item>
+            <Form.Item label="Комментарий">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, comment: e.target.value });
+                }}
+                placeholder="Комментарий"
+              />
+            </Form.Item>
+            <Form.Item label="Фрахт">
+              <Input
+                onChange={(e) => {
+                  setItem({ ...item, fraht: e.target.value });
+                }}
+                placeholder="Фрахт"
+              />
+            </Form.Item>
+
             <Form.Item label="Примечание">
               <Input
                 onChange={(e) => {

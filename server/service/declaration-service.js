@@ -37,6 +37,14 @@ class DeclarationService {
       return { message: "not found" };
     }
   }
+
+  async deleteDeclarationStatus(declaration_number) {
+    try {
+      await DeclarationSchema.deleteMany({ declaration_number });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = new DeclarationService();

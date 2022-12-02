@@ -9,6 +9,7 @@ import {
 } from "../index";
 import * as Types from "./Types";
 import { Item } from "../../functions/itemFuncs";
+import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
@@ -24,6 +25,9 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [uploadModal, setUploadModal] = useState<boolean>();
   const [uploadContainer, setUploadContainer] = useState<any>();
 
+  const timeConvert = (time: string) => {
+    return dayjs(time).format("DD/MM/YYYY");
+  };
   return (
     <>
       <TableDeclStatus
@@ -67,7 +71,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       setItem(item);
                     }}
                   >
-                    {item.request_date}
+                    {timeConvert(item.request_date)}
                   </td>
                   <td> {item.order_number} </td>
                   <td> {item.container.container_number} </td>
@@ -125,14 +129,14 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.container.container_type} </td>
                   <td> {item.place_of_dispatch} </td>
                   <td> {item.line} </td>
-                  <td> {item.ready_date} </td>
-                  <td> {item.load_date} </td>
-                  <td> {item.etd} </td>
-                  <td> {item.eta} </td>
-                  <td> {item.release} </td>
+                  <td> {timeConvert(item.ready_date)} </td>
+                  <td> {timeConvert(item.load_date)} </td>
+                  <td> {timeConvert(item.etd)} </td>
+                  <td> {timeConvert(item.eta)} </td>
+                  <td> {timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
                   <td> {item.td ? "+" : "-"} </td>
-                  <td> {item.date_do} </td>
+                  <td> {timeConvert(item.date_do)} </td>
                   <td> {item.port} </td>
                   <td> {item.is_ds ? "+" : "-"} </td>
                   <td> {item.is_docs ? "+" : "-"} </td>
@@ -146,15 +150,15 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     {" "}
                     {item.declaration_number}{" "}
                   </td>
-                  <td>{item.declaration_issue_date} </td>
+                  <td> {timeConvert(item.declaration_issue_date)} </td>
                   <td> {item.availability_of_ob ? "+" : "-"} </td>
                   <td> {item.answer_of_ob ? "+" : "-"} </td>
                   <td> {item.expeditor} </td>
                   <td> {item.destination_station} </td>
                   <td> {item.km_to_dist} </td>
-                  <td> {item.train_arrive_date} </td>
+                  <td> {timeConvert(item.train_arrive_date)} </td>
                   <td> {item.pickup} </td>
-                  <td> {item.store_arrive_date} </td>
+                  <td> {timeConvert(item.store_arrive_date)} </td>
                   <td> {item.comment} </td>
                   <td> {item.fraht} </td>
                   <td> {item.bid} </td>

@@ -173,7 +173,7 @@ export type SingleItem = {
 
 export interface UpdatedItem {
   _id: string | null;
-  request_date: string | null;
+  request_date: Date | null;
   order_number: string | null;
   container: {
     _id: string;

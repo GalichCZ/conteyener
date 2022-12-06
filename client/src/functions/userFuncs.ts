@@ -39,5 +39,14 @@ export class User {
     return response;
   }
 
-  async getMe(token: string) {}
+  async getMe(userId: string | null) {
+    const response = await fetch(URL + `/user/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => console.log(err));
+    console.log(response);
+    return response;
+  }
 }

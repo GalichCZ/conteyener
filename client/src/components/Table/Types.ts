@@ -35,7 +35,7 @@ export type TableProps = {
     | {
         _id: string;
         request_date: string;
-        order_number: string;
+        order_number: string[];
         container: Container;
         simple_product_name: string;
         providers: Providers[];

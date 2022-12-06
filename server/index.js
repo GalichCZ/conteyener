@@ -22,7 +22,7 @@ app.get("/", CheckAuth.checkToken, (req, res) => {
   res.send("HELLO");
 });
 
-app.get("/user", UserController.getMe);
+app.get("/user/:userId", UserController.getMe);
 app.get("/users", UserController.getUsers);
 app.post("/auth/login", UserController.login);
 app.patch("/role", UserController.roleChange);

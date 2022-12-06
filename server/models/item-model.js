@@ -7,7 +7,7 @@ const ItemSchema = new mongoose.Schema(
       required: true,
     },
     order_number: {
-      type: String,
+      type: Array,
       required: true,
       unique: true,
     },

@@ -82,7 +82,7 @@ class UserController {
 
   async getMe(req, res) {
     try {
-      const user = await UserSchema.findById(req.body.userId);
+      const user = await UserSchema.findById(req.params.userId);
 
       if (!user) return res.status(404).json({ message: "not found" });
 
@@ -90,12 +90,12 @@ class UserController {
 
       res.json({
         success: true,
-        userData,
+        ...userData,
       });
     } catch (error) {
       console.log(error);
       res.status(500).json({
-        message: "Something goes wrong",
+        message: "Something goes wrong in get me",
       });
     }
   }

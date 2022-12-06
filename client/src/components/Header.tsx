@@ -10,11 +10,23 @@ export const Header = () => {
       {!authCtx.isLoggedIn ? (
         <Link to="/login">Log In</Link>
       ) : (
-        <Link onClick={authCtx.logout} to="/login">
-          Log Out
-        </Link>
+        <>
+          {!authCtx.isActivated ? (
+            <>
+              <Link onClick={authCtx.logout} to="/login">
+                Log Out
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/table">Table</Link>
+              <Link onClick={authCtx.logout} to="/login">
+                Log Out
+              </Link>
+            </>
+          )}
+        </>
       )}
-      <Link to="/table">Table</Link>
     </header>
   );
 };

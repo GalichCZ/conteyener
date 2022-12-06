@@ -51,9 +51,9 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
           <TableColNames />
 
           <tbody>
-            {data?.map((item) => {
+            {data?.map((item, key) => {
               return (
-                <tr key={item._id}>
+                <tr key={key}>
                   <td>
                     <Button
                       onClick={async () => {
@@ -73,7 +73,17 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {timeConvert(item.request_date)}
                   </td>
-                  <td> {item.order_number} </td>
+                  <td>
+                    <table className="table-importers">
+                      <tbody>
+                        <tr>
+                          {item.order_number.map((num, key) => {
+                            return <td key={key}>{num}</td>;
+                          })}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
                   <td> {item.container.container_number} </td>
                   <td
                     onClick={() => {

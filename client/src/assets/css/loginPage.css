@@ -5,11 +5,15 @@
   height: 100vh;
   background-color: rgb(40, 40, 114);
 }
-.login-from {
+.login-form {
+  position: relative !important;
   transition: 0.3s !important;
 }
 .login-err {
   color: red;
+  position: absolute;
+  bottom: -3px;
+  left: calc(50% - 80px);
   animation: err 0.5s ease;
 }
 

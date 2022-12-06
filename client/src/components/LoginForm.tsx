@@ -16,26 +16,31 @@ export const LoginForm = () => {
     password: "",
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setErr(null);
-    }, 5000);
-  }, [err]);
+  // useEffect(() => {
+  // setTimeout(() => {
+  // setErr(null);
+  // }, 5000);
+  // }, [err]);
 
   const loginHandler = async () => {
     const data = await UserFuncs.login(loginValues);
 
-    // console.log(data);
+    console.log(data);
 
     if ("message" in data) {
       console.log(data.message);
-      setErr(data.message);
+      return setErr(data.message);
+    }
+
+    if (data._id) {
+      window.localStorage.setItem("_id", data._id);
     }
 
     if (data.token) {
       window.localStorage.setItem("token", data.token);
       authCtx.login();
     }
+
     if (!data.is_activated) {
       return navigate("/activate");
     } else return navigate("/");
@@ -87,11 +92,7 @@ export const LoginForm = () => {
           </p>
         </Form.Item>
 
-        {err && (
-          <Form.Item wrapperCol={{ offset: 3, span: 25 }}>
-            <p className="login-err">{err}</p>
-          </Form.Item>
-        )}
+        {err && <p className="login-err">{err}</p>}
       </Form>
     </>
   );

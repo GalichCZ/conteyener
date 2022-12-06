@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import AuthContext from "./store/auth-context";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import {
   LoginPage,
@@ -12,6 +13,7 @@ import "./App.css";
 import "antd/dist/antd.css";
 
 function App() {
+  const authCtx = useContext(AuthContext);
   return (
     <>
       <BrowserRouter>

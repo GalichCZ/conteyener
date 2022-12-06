@@ -22,6 +22,10 @@ type NewProviders = {
   name: string;
 };
 
+interface NewOrderNumber {
+  number: string;
+}
+
 export type Store = {
   receiver: string;
   name: string;
@@ -76,9 +80,9 @@ export type TableProps = {
     | undefined;
 };
 
-export type NewItem = {
+export interface NewItem {
   request_date: Date | null;
-  order_number: string;
+  order_number: NewOrderNumber[];
   container_number: string;
   simple_product_name: string;
   providers: NewProviders[];
@@ -118,7 +122,7 @@ export type NewItem = {
   comment: string;
   note: string;
   fraht: string;
-};
+}
 
 export type SingleItem = {
   opened: boolean;
@@ -175,11 +179,7 @@ export interface UpdatedItem {
   _id: string | null;
   request_date: Date | null;
   order_number: string | null;
-  container: {
-    _id: string;
-    container_number: string;
-    container_type: string;
-  };
+  container: Container;
   simple_product_name: string;
   providers: NewProviders[];
   importers: NewImporters[];

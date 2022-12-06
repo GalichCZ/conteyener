@@ -12,11 +12,12 @@ export const TableItemCreate = () => {
   const [open, setOpen] = useState(false);
   const [inputFields, setInputFields] = useState<any>([]);
   const [inputFields2, setInputFields2] = useState<any>([]);
+  const [inputFields3, setInputFields3] = useState<any>([]);
   const [err, setErr] = useState<string | null>();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [item, setItem] = useState<NewItem>({
     request_date: null,
-    order_number: "",
+    order_number: [],
     container_number: "",
     simple_product_name: "",
     providers: [],
@@ -88,6 +89,11 @@ export const TableItemCreate = () => {
     setInputFields2([...inputFields2, newField]);
   };
 
+  const addFields3 = () => {
+    let newField = { id: inputFields3.length };
+    setInputFields3([...inputFields3, newField]);
+  };
+
   const importerHandler = (importer: string) => {
     if (importer !== "") item.importers?.push({ name: importer });
   };
@@ -106,6 +112,10 @@ export const TableItemCreate = () => {
     if (provider !== "") item.providers?.push({ name: provider });
   };
 
+  const orderHandler = (order: string) => {
+    if (order !== "") item.order_number.push({ number: order });
+  };
+
   const drawImporters = () => {
     return inputFields.map((input: { id: any }) => {
       return (
@@ -122,6 +132,23 @@ export const TableItemCreate = () => {
           <CloseOutlined
             onClick={() => {
               deleteImporter(item.importers[input.id], inputFields[input.id]);
+            }}
+          />
+        </div>
+      );
+    });
+  };
+
+  const drawOrders = () => {
+    return inputFields3.map((input: { id: string }, key: string) => {
+      return (
+        <div style={{ display: "flex" }}>
+          <Input
+            key={key}
+            placeholder="Номер заказа"
+            id={input.id}
+            onBlur={(e) => {
+              orderHandler(e.target.value);
             }}
           />
         </div>
@@ -178,6 +205,10 @@ export const TableItemCreate = () => {
                 setItem({ ...item, order_number: e.target.value });
               }}
             />
+            <Form.Item label="Номер заказа">
+              {drawOrders()}
+              <Button onClick={addFields3}>Добавить поле</Button>
+            </Form.Item>
             <MyInput
               datePicker={false}
               label="Номер контейнера"
@@ -192,7 +223,6 @@ export const TableItemCreate = () => {
                 setItem({ ...item, simple_product_name: e.target.value });
               }}
             />
-
             <Form.Item className="required-form" label="Поставщик">
               {inputFields2.map((input: { id: any }, key: number) => {
                 return (
@@ -213,7 +243,6 @@ export const TableItemCreate = () => {
               {drawImporters()}
               <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
-
             <MyInput
               datePicker={false}
               label="Условия поставки"

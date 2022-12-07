@@ -22,12 +22,12 @@ app.get("/", CheckAuth.checkToken, (req, res) => {
   res.send("HELLO");
 });
 
-app.get("/user/:userId", UserController.getMe);
-app.get("/users", UserController.getUsers);
 app.post("/auth/login", UserController.login);
 app.patch("/role", UserController.roleChange);
-app.delete("/user", UserController.deleteUser);
+app.get("/user/:userId", UserController.getMe);
+app.get("/users/:_id", UserController.getUsers);
 app.get("/activate/:link", UserController.activate);
+app.delete("/user/:email", UserController.deleteUser);
 app.post("/auth/signin", UserController.registration);
 
 app.post("/product/:container", FileWare, ProductController.createProduct);

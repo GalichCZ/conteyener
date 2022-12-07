@@ -42,6 +42,8 @@ class ImporterService {
       });
 
       if (req.body.importers) {
+        await this.deleteImporters(item);
+
         const importers = await this.createImporter(
           req.body.importers,
           item.container
@@ -49,7 +51,10 @@ class ImporterService {
 
         doc.importers = importers;
         await doc.save();
-      } else return;
+      } else {
+        doc.importers = [];
+        await doc.save();
+      }
     } catch (error) {
       console.log(error);
     }

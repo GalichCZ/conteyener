@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Input } from "antd";
-import { NewItem } from "./Types";
+import { NewItem } from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import { MyInput } from "../index";
@@ -197,13 +197,6 @@ export const TableItemCreate = () => {
               onChangeDate={(date: any, dateString: string | number | Date) =>
                 setItem({ ...item, request_date: new Date(dateString) })
               }
-            />
-            <MyInput
-              datePicker={false}
-              label="№ заказа"
-              onChange={(e: { target: { value: any } }) => {
-                setItem({ ...item, order_number: e.target.value });
-              }}
             />
             <Form.Item label="Номер заказа">
               {drawOrders()}

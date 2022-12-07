@@ -3,7 +3,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
 import { Product } from "../../functions/productFuncs";
-import { Products } from "./Types";
+import { Products } from "../../Types/Types";
 
 interface TableUploadProps {
   opened: boolean | undefined;

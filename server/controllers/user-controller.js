@@ -104,7 +104,13 @@ class UserController {
     try {
       const users = await UserSchema.find();
 
-      res.json(users);
+      const me = await UserSchema.findById(req.params._id);
+
+      const newUsers = users.filter(
+        (user) => user._id.toString() !== me._id.toString()
+      );
+
+      res.json(newUsers);
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -127,7 +133,7 @@ class UserController {
 
   async deleteUser(req, res) {
     try {
-      await UserSchema.deleteOne({ email: req.body.email });
+      await UserSchema.deleteOne({ email: req.params.email });
       res.sendStatus(200);
     } catch (error) {
       console.log(error);

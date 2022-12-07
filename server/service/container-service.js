@@ -30,17 +30,18 @@ class ContainerService {
     }
   }
 
-  async updateContainer(item, req) {
+  async updateContainer(_id, req) {
     try {
-      return await ContainerSchema.updateOne(
+      await ContainerSchema.updateOne(
         {
-          _id: item.container,
+          _id,
         },
         {
-          container_number: req.body.container_number,
-          container_type: req.body.container_type,
+          container_number: req.body.container.container_number,
+          container_type: req.body.container.container_type,
         }
       );
+      return await ContainerSchema.findById(_id);
     } catch (error) {
       console.log(error);
     }

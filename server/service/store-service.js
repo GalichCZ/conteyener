@@ -32,11 +32,11 @@ class StoreService {
     }
   }
 
-  async updateStore(item, req) {
+  async updateStore(_id, req) {
     try {
-      return await StoreSchema.updateOne(
+      await StoreSchema.updateOne(
         {
-          _id: item.store,
+          _id,
         },
         {
           receiver: req.body.store_receiver,
@@ -46,7 +46,10 @@ class StoreService {
           note: req.body.store_note,
         }
       );
-    } catch (error) {}
+      return await StoreSchema.findById(_id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async deleteStore(item) {

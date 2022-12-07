@@ -39,7 +39,7 @@ export type TableProps = {
     | {
         _id: string;
         request_date: string;
-        order_number: string[];
+        order_number: NewOrderNumber[];
         container: Container;
         simple_product_name: string;
         providers: Providers[];
@@ -178,7 +178,7 @@ export type SingleItem = {
 export interface UpdatedItem {
   _id: string | null;
   request_date: Date | null;
-  order_number: string | null;
+  order_number: NewOrderNumber[] | null;
   container: Container;
   simple_product_name: string;
   providers: NewProviders[];
@@ -243,4 +243,15 @@ export interface Products {
   weight_gross: number;
   cbm: number;
   container: string;
+}
+
+export interface UserData {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string;
+  is_activated: boolean;
+  activation_link: string;
+  createdAt: Date;
 }

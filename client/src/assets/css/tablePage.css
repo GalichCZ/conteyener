@@ -3,22 +3,22 @@
   align-items: flex-start;
   justify-content: flex-start;
   height: 100vh;
-  background-color: rgb(40, 40, 114);
+  background-color: rgb(220, 222, 252);
   flex-direction: column;
   padding: 90px 20px 0 20px;
 }
 .table-page table {
-  color: white;
+  color: black;
 }
 .table-page_table {
   width: 100%;
   overflow-x: scroll;
 }
 .table-page table tr {
-  border: 1px solid white;
+  border: 1px solid black;
 }
 .table-page table td {
-  border: 1px solid white;
+  border: 1px solid black;
   padding: 5px;
   min-width: 120px;
   text-align: center;

@@ -72,7 +72,7 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req) {
+  async updateItem(_id, req, container, store) {
     try {
       return await ItemSchema.updateOne(
         {
@@ -81,6 +81,8 @@ class ItemService {
         {
           request_date: req.body.request_date,
           order_number: req.body.order_number,
+          container,
+          store,
           simple_product_name: req.body.simple_product_name,
           conditions: req.body.conditions,
           agent: req.body.agent,
@@ -99,7 +101,6 @@ class ItemService {
           is_docs: req.body.is_docs,
           declaration_number: req.body.declaration_number,
           declaration_issue_date: req.body.declaration_issue_date,
-          declaration_status: declaration,
           availability_of_ob: req.body.availability_of_ob,
           answer_of_ob: req.body.answer_of_ob,
           expeditor: req.body.expeditor,

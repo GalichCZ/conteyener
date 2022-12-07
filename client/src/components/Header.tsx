@@ -23,6 +23,7 @@ export const Header = () => {
               <Link onClick={authCtx.logout} to="/login">
                 Log Out
               </Link>
+              {authCtx.role === "moderator" && <Link to="/users">Users</Link>}
             </>
           )}
         </>

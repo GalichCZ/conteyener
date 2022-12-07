@@ -7,6 +7,7 @@ export type AuthContextInterface = {
   token: string | null;
   isLoggedIn: boolean;
   isActivated: boolean;
+  role: string;
   login: () => void;
   logout: () => void;
 };
@@ -15,12 +16,14 @@ const AuthContext = createContext<AuthContextInterface>({
   token: "",
   isLoggedIn: false,
   isActivated: false,
+  role: "",
   login: () => {},
   logout: () => {},
 });
 
 export const AuthContextProvider = (props: any) => {
   const [token, setToken] = useState<string | null>("");
+  const [role, setRole] = useState<string>("");
   const [isActivated, setIsActivated] = useState<boolean>(false);
 
   const userIsLoggedIn: boolean = !!token;
@@ -35,6 +38,7 @@ export const AuthContextProvider = (props: any) => {
     if (_id !== null) {
       const response = await UserFuncs.getMe(_id);
       setIsActivated(response?.is_activated);
+      setRole(response?.role);
     }
   };
 
@@ -52,6 +56,7 @@ export const AuthContextProvider = (props: any) => {
     token,
     isLoggedIn: userIsLoggedIn,
     isActivated,
+    role,
     login: loginHandler,
     logout: logoutHandler,
   };

@@ -49,4 +49,14 @@ export class User {
     console.log(response);
     return response;
   }
+
+  async getUsers() {
+    const response = await fetch(URL + "/users")
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    console.log(response);
+    return response;
+  }
 }

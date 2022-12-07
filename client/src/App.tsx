@@ -7,6 +7,7 @@ import {
   SignUpPage,
   ActivatePage,
   TablePage,
+  Users,
 } from "./pages/index";
 import { Header } from "./components/index";
 import "./App.css";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/activate" element={<ActivatePage />} />
           <Route path="/table" element={<TablePage />} />
+          <Route path="/users" element={<Users />} />
         </Routes>
       </BrowserRouter>
     </>

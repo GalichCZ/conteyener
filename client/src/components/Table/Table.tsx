@@ -7,7 +7,7 @@ import {
   TableColNames,
   TableUploadModal,
 } from "../index";
-import * as Types from "./Types";
+import * as Types from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
 import dayjs from "dayjs";
 
@@ -78,7 +78,19 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       <tbody>
                         <tr>
                           {item.order_number.map((num, key) => {
-                            return <td key={key}>{num}</td>;
+                            return (
+                              <td
+                                style={{
+                                  borderBottom: `${
+                                    key !== item.order_number.length - 1 &&
+                                    "1px solid black"
+                                  }`,
+                                }}
+                                key={key}
+                              >
+                                {num.number}
+                              </td>
+                            );
                           })}
                         </tr>
                       </tbody>
@@ -93,6 +105,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {item.simple_product_name}
                   </td>
+                  <td> {item.delivery_method} </td>
                   <td>
                     <table className="table-importers">
                       <tbody>
@@ -157,8 +170,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       setDeclarationNumber(item.declaration_number);
                     }}
                   >
-                    {" "}
-                    {item.declaration_number}{" "}
+                    {item.declaration_number}
                   </td>
                   <td> {timeConvert(item.declaration_issue_date)} </td>
                   <td> {item.availability_of_ob ? "+" : "-"} </td>

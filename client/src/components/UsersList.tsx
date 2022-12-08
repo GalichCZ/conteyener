@@ -1,43 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Divider, List, Skeleton } from "antd";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { List, Select } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import { User } from "../functions/userFuncs";
+import { UserData } from "../Types/Types";
+import { useContext } from "react";
+import AuthContext from "../store/auth-context";
 
-interface DataType {
-  gender: string;
-  name: {
-    title: string;
-    first: string;
-    last: string;
-  };
-  email: string;
-  picture: {
-    large: string;
-    medium: string;
-    thumbnail: string;
-  };
-  nat: string;
-}
+const UserFuncs = new User();
 
 export const UsersList = () => {
+  const authCtx = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<UserData[]>([]);
 
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
+  const loadMoreData = async () => {
+    const _id = window.localStorage.getItem("_id");
+    const response = await UserFuncs.getUsers(_id);
+    console.log(response);
+    setData(response);
+  };
+
+  const handleChange = async (value: string, email: string) => {
     setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    const response = await UserFuncs.changeRole(email, value);
+    if (response === 200) setLoading(false);
+  };
+
+  const handleDelete = async (email: string) => {
+    const response = await UserFuncs.deleteUser(email);
+    if (response === 200) loadMoreData();
   };
 
   useEffect(() => {
@@ -46,28 +37,47 @@ export const UsersList = () => {
 
   return (
     <div className="users-list">
-      <InfiniteScroll
-        dataLength={data.length}
-        next={loadMoreData}
-        hasMore={data.length < 50}
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-        endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item key={item.email}>
-              <List.Item.Meta
-                avatar={<Avatar src={item.picture.large} />}
-                title={<a href="https://ant.design">{item.name.last}</a>}
-                description={item.email}
+      <List
+        dataSource={data}
+        renderItem={(item) => (
+          <List.Item key={item.email}>
+            <List.Item.Meta
+              title={
+                <p>
+                  {item.first_name} {item.last_name}
+                </p>
+              }
+              description={item.email}
+            />
+            <Select
+              defaultValue={item.role}
+              style={{ width: 120 }}
+              onChange={(e) => handleChange(e, item.email)}
+              loading={loading}
+              options={[
+                {
+                  value: "moderator",
+                  label: "Модератор",
+                },
+                {
+                  value: "admin",
+                  label: "Админ",
+                },
+                {
+                  value: "user",
+                  label: "Пользователь",
+                },
+              ]}
+            />
+            {authCtx.role === "admin" && (
+              <CloseOutlined
+                onClick={() => handleDelete(item.email)}
+                style={{ marginLeft: "10px", scale: "1.25" }}
               />
-              <div>Content</div>
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
+            )}
+          </List.Item>
+        )}
+      />
     </div>
   );
 };

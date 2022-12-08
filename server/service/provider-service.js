@@ -42,6 +42,9 @@ class ProviderService {
       });
 
       if (req.body.providers) {
+        console.log(req.body.providers);
+        await this.deleteProviders(item);
+
         const providers = await this.createProvider(
           req.body.providers,
           item.container
@@ -49,7 +52,10 @@ class ProviderService {
 
         doc.providers = providers;
         await doc.save();
-      } else return;
+      } else {
+        doc.providers = [];
+        await doc.save();
+      }
     } catch (error) {
       console.log(error);
     }

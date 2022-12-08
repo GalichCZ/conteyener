@@ -1,3 +1,5 @@
+import { NewItem, UpdatedItem } from "../Types/Types";
+
 const URL = "http://localhost:4444";
 
 export class Item {
@@ -11,7 +13,7 @@ export class Item {
     return response;
   }
 
-  async createItem(itemValues: object) {
+  async createItem(itemValues: NewItem) {
     const response = await fetch(URL + "/item", {
       method: "POST",
       body: JSON.stringify(itemValues),
@@ -27,6 +29,26 @@ export class Item {
       })
       .catch((error) => {
         console.error("Error:", error);
+      });
+    return response;
+  }
+
+  async updateItem(itemValues: UpdatedItem) {
+    const response = await fetch(URL + "/item", {
+      method: "PATCH",
+      body: JSON.stringify(itemValues),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.status)
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return error;
       });
     return response;
   }

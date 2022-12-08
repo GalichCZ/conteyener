@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
-import { SingleItem, UpdatedItem } from "./Types";
+import { Modal, Form, Input, Button, Switch } from "antd";
+import { SingleItem, UpdatedItem } from "../../Types/Types";
+import { Item } from "../../functions/itemFuncs";
+import { CloseOutlined } from "@ant-design/icons";
+
+const ItemFuncs = new Item();
 
 export const TableItemUpdate: React.FC<SingleItem> = ({
   item,
   opened,
   setOpen,
 }) => {
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [err, setErr] = useState<string | null>();
   const [inputFields, setInputFields] = useState<any>();
   const [inputFields2, setInputFields2] = useState<any>();
+  const [inputFields3, setInputFields3] = useState<any>();
   const [singleItem, setSingleItem] = useState<UpdatedItem>({
     _id: "",
     request_date: null,
-    order_number: "",
+    order_number: [],
     container: {
       _id: "",
       container_number: "",
@@ -61,10 +68,18 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   useEffect(() => {
     setInputFields(item?.importers);
     setInputFields2(item?.providers);
+    setInputFields3(item?.order_number);
   }, [item]);
 
-  const handleOk = () => {
-    setOpen(false);
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    const response = await ItemFuncs.updateItem(singleItem);
+    if (response.error) setErr(response.error);
+    if (response === 200) {
+      setConfirmLoading(false);
+      setOpen(false);
+      window.location.reload();
+    }
   };
 
   const handleCancel = () => {
@@ -75,8 +90,45 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     if (importer !== "") item.importers?.push({ name: importer });
   };
 
+  const deleteImporter = (_importer: string) => {
+    const newImporters = singleItem.importers?.filter((importer) => {
+      return importer.name !== _importer;
+    });
+
+    if (newImporters) {
+      setSingleItem({ ...singleItem, importers: newImporters });
+      setInputFields(newImporters);
+    }
+  };
+
   const providerHandler = (provider: string) => {
     if (provider !== "") item.providers?.push({ name: provider });
+  };
+
+  const deleteProvider = (_provider: string) => {
+    const newProviders = singleItem.providers?.filter((provider) => {
+      return provider.name !== _provider;
+    });
+
+    if (newProviders) {
+      setSingleItem({ ...singleItem, providers: newProviders });
+      setInputFields2(newProviders);
+    }
+  };
+
+  const orderHandler = (order: string) => {
+    if (order !== "") item.order_number?.push({ number: order });
+  };
+
+  const deleteOrder = (_order: string) => {
+    const newOrders = singleItem.order_number?.filter((order) => {
+      return order.number !== _order;
+    });
+
+    if (newOrders) {
+      setSingleItem({ ...singleItem, order_number: newOrders });
+      setInputFields3(newOrders);
+    }
   };
 
   const addFields = () => {
@@ -89,20 +141,28 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     setInputFields2([...inputFields2, newField]);
   };
 
-  useEffect(() => {
-    if (opened) setSingleItem(item);
-  }, [opened]);
+  const addFields3 = () => {
+    let newField = { id: inputFields3.length };
+    setInputFields3([...inputFields3, newField]);
+  };
 
   useEffect(() => {
     console.log(singleItem);
   }, [singleItem]);
+
+  useEffect(() => {
+    if (opened) setSingleItem(item);
+  }, [opened]);
 
   return (
     <>
       <Modal
         title="Редактирование записи"
         open={opened}
-        onOk={handleOk}
+        onOk={async () => {
+          await handleOk();
+        }}
+        confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
         <Form className="table-form" layout="vertical">
@@ -121,16 +181,28 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             />
           </Form.Item>
           <Form.Item className="required-form" label="№ заказа">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  order_number: e.target.value,
-                });
-              }}
-              defaultValue={item?.order_number}
-              placeholder="№ заказа"
-            />
+            {inputFields3?.map(
+              (input: { id: string; number: string }, key: string) => {
+                return (
+                  <div key={key} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Номер заказа"
+                      defaultValue={input.number}
+                      id={input.id}
+                      onBlur={(e) => {
+                        orderHandler(e.target.value);
+                      }}
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        deleteOrder(input.number);
+                      }}
+                    />
+                  </div>
+                );
+              }
+            )}
+            <Button onClick={addFields3}>Добавить поле</Button>
           </Form.Item>
           <Form.Item label="Номер контейнера">
             <Input
@@ -155,24 +227,30 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                   simple_product_name: e.target.value,
                 });
               }}
-              defaultValue={item?.order_number}
+              defaultValue={item?.simple_product_name}
               placeholder="Товар"
             />
           </Form.Item>
           <Form.Item className="required-form" label="Поставщик">
             {inputFields2?.map(
-              (input: { id: string | undefined; name: string | undefined }) => {
+              (input: { id: string; name: string }, key: number) => {
                 return (
-                  <Input
-                    key={input.id}
-                    placeholder="Поставщик"
-                    id={input.id}
-                    defaultValue={input.name}
-                    onBlur={(e) => {
-                      providerHandler(e.target.value);
-                      console.log(item.importers);
-                    }}
-                  />
+                  <div key={key} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Поставщик"
+                      id={input.id}
+                      defaultValue={input.name}
+                      onBlur={(e) => {
+                        providerHandler(e.target.value);
+                        console.log(item.importers);
+                      }}
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        deleteProvider(input.name);
+                      }}
+                    />
+                  </div>
                 );
               }
             )}
@@ -180,18 +258,24 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           </Form.Item>
           <Form.Item className="required-form" label="Импортер">
             {inputFields?.map(
-              (input: { id: string | undefined; name: string | undefined }) => {
+              (input: { id: string; name: string }, key: number) => {
                 return (
-                  <Input
-                    key={input.id}
-                    placeholder="Импортер"
-                    id={input.id}
-                    defaultValue={input.name}
-                    onBlur={(e) => {
-                      importerHandler(e.target.value);
-                      console.log(item.importers);
-                    }}
-                  />
+                  <div key={key} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Импортер"
+                      id={input.id}
+                      defaultValue={input.name}
+                      onBlur={(e) => {
+                        importerHandler(e.target.value);
+                        console.log(item.importers);
+                      }}
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        deleteImporter(input.name);
+                      }}
+                    />
+                  </div>
                 );
               }
             )}
@@ -217,6 +301,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           </Form.Item>
           <Form.Item className="required-form" label="Получатель">
             <Input
+              defaultValue={item?.store.receiver}
               onChange={(e) => {
                 setSingleItem({
                   ...singleItem,
@@ -354,15 +439,11 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             />
           </Form.Item>
           <Form.Item label="BL/СМГС/CMR">
-            <Input
+            <Switch
+              style={{ minWidth: "45px" }}
               onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  bl_smgs_cmr: e.target.value === "" ? false : true,
-                });
+                console.log(e.valueOf);
               }}
-              defaultValue={item?.bl_smgs_cmr ? "V" : ""}
-              placeholder="BL/СМГС/CMR"
             />
           </Form.Item>
           <Form.Item label="ТД">
@@ -370,7 +451,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               onChange={(e) => {
                 setSingleItem({
                   ...singleItem,
-                  bl_smgs_cmr: e.target.value === "" ? false : true,
+                  td: e.target.value === "" ? false : true,
                 });
               }}
               defaultValue={item?.bl_smgs_cmr ? "V" : ""}

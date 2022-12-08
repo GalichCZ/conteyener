@@ -3,15 +3,15 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: rgb(40, 40, 114);
+  background-color: rgb(220, 222, 252);
   flex-direction: column;
 }
 .activation-page h3 {
-  color: white;
+  color: black;
   font-weight: 700;
   font-size: 2rem;
 }
 .activation-page p {
-  color: white;
+  color: black;
   font-size: 1.5rem;
 }

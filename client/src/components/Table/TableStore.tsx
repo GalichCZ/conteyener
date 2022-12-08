@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "antd";
-import { Store } from "./Types";
+import { Store } from "../../Types/Types";
 
 interface TableStoreProps {
   opened: boolean | undefined;

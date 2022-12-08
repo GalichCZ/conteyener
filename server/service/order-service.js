@@ -40,6 +40,8 @@ class OrderService {
       const doc = await ItemSchema.findOne({ _id: item._id });
 
       if (req.body.order_number) {
+        await this.deleteOrders(item);
+
         const orders = await this.createOrder(
           req.body.order_number,
           item.container
@@ -47,7 +49,10 @@ class OrderService {
 
         doc.order_number = orders;
         await doc.save();
-      } else return;
+      } else {
+        doc.order_number = [];
+        await doc.save();
+      }
     } catch (error) {
       console.log(error);
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button, Switch } from "antd";
 import { SingleItem, UpdatedItem } from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -301,6 +301,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           </Form.Item>
           <Form.Item className="required-form" label="Получатель">
             <Input
+              defaultValue={item?.store.receiver}
               onChange={(e) => {
                 setSingleItem({
                   ...singleItem,
@@ -438,15 +439,11 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             />
           </Form.Item>
           <Form.Item label="BL/СМГС/CMR">
-            <Input
+            <Switch
+              style={{ minWidth: "45px" }}
               onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  bl_smgs_cmr: e.target.value === "" ? false : true,
-                });
+                console.log(e.valueOf);
               }}
-              defaultValue={item?.bl_smgs_cmr ? "V" : ""}
-              placeholder="BL/СМГС/CMR"
             />
           </Form.Item>
           <Form.Item label="ТД">
@@ -454,7 +451,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               onChange={(e) => {
                 setSingleItem({
                   ...singleItem,
-                  bl_smgs_cmr: e.target.value === "" ? false : true,
+                  td: e.target.value === "" ? false : true,
                 });
               }}
               defaultValue={item?.bl_smgs_cmr ? "V" : ""}

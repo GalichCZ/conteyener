@@ -1,6 +1,7 @@
 const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
 const FileService = require("../service/file-service");
+const FormulaService = require("../service/formula-service");
 class TestController {
   async testDeclaration(req, res) {
     const response = await DeclarationService.createDeclarationStatus(req);
@@ -30,6 +31,14 @@ class TestController {
     const products = await FileService.createFile(req.file.path);
     const response = await ProductService.createProduct(products);
 
+    res.json(response);
+  }
+
+  async testFormula(req, res) {
+    const response = await FormulaService.dateFormula(
+      req.body.delivery_method,
+      req.body.etd
+    );
     res.json(response);
   }
 }

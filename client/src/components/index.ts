@@ -9,4 +9,6 @@ export * from "./Table/TableDeclStatus";
 export * from "./Table/TableColNames";
 export * from "./Table/TableUploadModal";
 export * from "./Table/MyInput";
+export * from "./Table/SelectDelivery";
 export * from "./UsersList";
+export * from "./Table/TableDocsModal";

@@ -105,6 +105,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {item.simple_product_name}
                   </td>
+                  <td> {item.delivery_method} </td>
                   <td>
                     <table className="table-importers">
                       <tbody>

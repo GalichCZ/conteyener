@@ -50,6 +50,7 @@ app.get(
 );
 app.patch("/test/product", TestController.testUpdateProduct);
 app.post("/test/declaration", TestController.testDeclaration);
+app.post("/test/formula", TestController.testFormula);
 app.post("/test/product", FileWare, TestController.testProduct);
 
 const start = async () => {

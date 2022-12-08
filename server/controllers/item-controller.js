@@ -8,6 +8,7 @@ const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
 const UserSchema = require("../models/user-model");
+const OrderService = require("../service/order-service");
 
 class ItemController {
   async itemCreate(req, res) {
@@ -69,6 +70,7 @@ class ItemController {
       const store = await StoreService.updateStore(item.store._id, req);
       await ProviderService.updateProviders(item, req);
       await ImporterService.updateImporters(item, req);
+      await OrderService.updateOrders(item, req);
 
       await ItemService.updateItem(item._id, req, container, store);
 

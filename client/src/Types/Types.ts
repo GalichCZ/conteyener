@@ -42,6 +42,7 @@ export type TableProps = {
         order_number: NewOrderNumber[];
         container: Container;
         simple_product_name: string;
+        delivery_method: string;
         providers: Providers[];
         importers: Importers[];
         conditions: string;
@@ -85,6 +86,7 @@ export interface NewItem {
   order_number: NewOrderNumber[];
   container_number: string;
   simple_product_name: string;
+  delivery_method: string;
   providers: NewProviders[];
   importers: NewImporters[];
   conditions: string;

@@ -14,3 +14,7 @@
 .ant-modal {
   width: fit-content !important;
 }
+
+.ant-switch-handle {
+  min-width: 5px !important;
+}

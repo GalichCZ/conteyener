@@ -3,7 +3,7 @@ import { Modal, Button, Form, Input } from "antd";
 import { NewItem } from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import { MyInput } from "../index";
+import { MyInput, SelectDelivery } from "../index";
 import { Required } from "../../UI/index";
 
 const ItemFuncs = new Item();
@@ -20,6 +20,7 @@ export const TableItemCreate = () => {
     order_number: [],
     container_number: "",
     simple_product_name: "",
+    delivery_method: "",
     providers: [],
     importers: [],
     conditions: "",
@@ -214,6 +215,12 @@ export const TableItemCreate = () => {
               label="Товар"
               onChange={(e) => {
                 setItem({ ...item, simple_product_name: e.target.value });
+              }}
+            />
+            <SelectDelivery
+              onChange={(value) => {
+                console.log(value);
+                setItem({ ...item, delivery_method: value });
               }}
             />
             <Form.Item className="required-form" label="Поставщик">

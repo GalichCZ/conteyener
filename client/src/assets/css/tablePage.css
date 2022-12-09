@@ -82,3 +82,12 @@
   border: 1px black solid;
   padding: 5px;
 }
+.docs-modal {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1.5rem;
+}
+.docs-modal div {
+  display: flex;
+  justify-content: center;
+}

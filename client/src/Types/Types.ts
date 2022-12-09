@@ -32,6 +32,7 @@ export type Store = {
   address: string;
   contact: string;
   note: string;
+  delivery_days: number;
 };
 
 export type TableProps = {
@@ -60,7 +61,7 @@ export type TableProps = {
         date_do: string;
         port: string;
         is_ds: boolean;
-        is_docs: boolean;
+        is_docs: IsDocsType;
         declaration_number: string;
         declaration_issue_date: string;
         declaration_status: string;
@@ -256,4 +257,16 @@ export interface UserData {
   is_activated: boolean;
   activation_link: string;
   createdAt: Date;
+}
+
+export interface IsDocsType {
+  PI: string | null;
+  CI: string | null;
+  PL: string | null;
+  SS_DS: string | null;
+  contract_agrees: string | null;
+  cost_agrees: string | null;
+  instruction: string | null;
+  ED: string | null;
+  bill: string | null;
 }

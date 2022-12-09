@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Button, Switch } from "antd";
-import { SingleItem, UpdatedItem } from "../../Types/Types";
-import { Item } from "../../functions/itemFuncs";
+import { SingleItem, UpdatedItem } from "../../../Types/Types";
+import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 
 const ItemFuncs = new Item();

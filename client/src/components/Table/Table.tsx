@@ -6,6 +6,7 @@ import {
   TableDeclStatus,
   TableColNames,
   TableUploadModal,
+  TableDocsModal,
 } from "../index";
 import * as Types from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
@@ -24,6 +25,25 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
 
   const [uploadModal, setUploadModal] = useState<boolean>();
   const [uploadContainer, setUploadContainer] = useState<any>();
+
+  const [docsModal, setDocsModal] = useState<boolean>();
+  const [docs, setDocs] = useState<Types.IsDocsType>();
+
+  const isAllDocs = (item: Types.IsDocsType) => {
+    if (
+      !item?.CI ||
+      !item?.ED ||
+      !item?.PI ||
+      !item?.PL ||
+      !item?.SS_DS ||
+      !item?.bill ||
+      !item?.contract_agrees ||
+      !item?.cost_agrees ||
+      !item?.instruction
+    )
+      return false;
+    else return true;
+  };
 
   const timeConvert = (time: string) => {
     return dayjs(time).format("DD/MM/YYYY");
@@ -46,6 +66,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         setOpen={setUploadModal}
         container={uploadContainer}
       />
+      <TableDocsModal opened={docsModal} setOpen={setDocsModal} docs={docs} />
       <div className="table-page_table">
         <table>
           <TableColNames />
@@ -143,6 +164,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                         address: item.store.address,
                         contact: item.store.contact,
                         note: item.store.note,
+                        delivery_days: item.store.delivery_days,
                       });
                     }}
                   >
@@ -162,7 +184,15 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {timeConvert(item.date_do)} </td>
                   <td> {item.port} </td>
                   <td> {item.is_ds ? "+" : "-"} </td>
-                  <td> {item.is_docs ? "+" : "-"} </td>
+                  <td
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setDocsModal(true);
+                      setDocs(item.is_docs);
+                    }}
+                  >
+                    {isAllDocs(item.is_docs) ? "+" : "-"}
+                  </td>
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {

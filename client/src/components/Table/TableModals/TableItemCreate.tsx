@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Input } from "antd";
-import { NewItem } from "../../Types/Types";
-import { Item } from "../../functions/itemFuncs";
+import { NewItem } from "../../../Types/Types";
+import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import { MyInput, SelectDelivery } from "../index";
-import { Required } from "../../UI/index";
+import { MyInput, SelectDelivery } from "../../index";
+import { Required } from "../../../UI/index";
 
 const ItemFuncs = new Item();
 

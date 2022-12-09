@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Button, DatePicker } from "antd";
-import { Declaration } from "../../functions/declarationFuncs";
-import { Writes } from "../../Types/Types";
+import { Declaration } from "../../../functions/declarationFuncs";
+import { Writes } from "../../../Types/Types";
 import dayjs from "dayjs";
 
 interface TableDeclStatusProps {

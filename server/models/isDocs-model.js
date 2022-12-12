@@ -10,6 +10,11 @@ const IsDocsSchema = new mongoose.Schema({
   instruction: Boolean,
   ED: Boolean,
   bill: Boolean,
+  container: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Container",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("IsDocs", IsDocsSchema);

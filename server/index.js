@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
+const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
 const DeclarationController = require("./controllers/declaration-controller");
 const CheckAuth = require("./utils/check-auth");
@@ -48,6 +49,9 @@ app.get(
   "/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
+
+app.post("/isdocs/:_id", IsDocsController.updateDocs);
+
 app.patch("/test/product", TestController.testUpdateProduct);
 app.post("/test/declaration", TestController.testDeclaration);
 app.post("/test/formula", TestController.testFormula);

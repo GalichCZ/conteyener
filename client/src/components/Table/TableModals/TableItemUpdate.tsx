@@ -3,6 +3,7 @@ import { Modal, Form, Input, Button, Switch } from "antd";
 import { SingleItem, UpdatedItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
+import { SelectDelivery } from "../TableUI/SelectDelivery";
 
 const ItemFuncs = new Item();
 
@@ -26,6 +27,8 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
       container_type: "",
     },
     simple_product_name: "",
+    delivery_method: "",
+
     providers: [],
     importers: [],
     conditions: "",
@@ -231,6 +234,12 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               placeholder="Товар"
             />
           </Form.Item>
+          <SelectDelivery
+            onChange={(value) => {
+              console.log(value);
+              setSingleItem({ ...singleItem, delivery_method: value });
+            }}
+          />
           <Form.Item className="required-form" label="Поставщик">
             {inputFields2?.map(
               (input: { id: string; name: string }, key: number) => {

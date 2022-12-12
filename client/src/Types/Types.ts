@@ -110,7 +110,7 @@ export interface NewItem {
   date_do: Date | null;
   port: string;
   is_ds: boolean | null;
-  is_docs: boolean | null;
+  is_docs: IsDocsType;
   declaration_number: string;
   declaration_issue_date: Date | null;
   availability_of_ob: boolean | null;
@@ -184,6 +184,7 @@ export interface UpdatedItem {
   order_number: NewOrderNumber[] | null;
   container: Container;
   simple_product_name: string;
+  delivery_method: string;
   providers: NewProviders[];
   importers: NewImporters[];
   conditions: string;
@@ -260,13 +261,13 @@ export interface UserData {
 }
 
 export interface IsDocsType {
-  PI: string | null;
-  CI: string | null;
-  PL: string | null;
-  SS_DS: string | null;
-  contract_agrees: string | null;
-  cost_agrees: string | null;
-  instruction: string | null;
-  ED: string | null;
-  bill: string | null;
+  PI: boolean | null;
+  CI: boolean | null;
+  PL: boolean | null;
+  SS_DS: boolean | null;
+  contract_agrees: boolean | null;
+  cost_agrees: boolean | null;
+  instruction: boolean | null;
+  ED: boolean | null;
+  bill: boolean | null;
 }

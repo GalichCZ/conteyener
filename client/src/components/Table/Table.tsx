@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TableStore,
   TableItemUpdate,
@@ -7,6 +7,7 @@ import {
   TableColNames,
   TableUploadModal,
   TableDocsModal,
+  ShowDelivery,
 } from "../index";
 import * as Types from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
@@ -16,6 +17,8 @@ const ItemFuncs = new Item();
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [isModal, setIsModal] = useState<boolean>();
   const [storeData, setStoreData] = useState<Types.Store>();
+
+  console.log(data);
 
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
@@ -28,6 +31,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
 
   const [docsModal, setDocsModal] = useState<boolean>();
   const [docs, setDocs] = useState<Types.IsDocsType>();
+  const [docsItemId, setDocsItemId] = useState<string>("");
 
   const isAllDocs = (item: Types.IsDocsType) => {
     if (
@@ -40,14 +44,18 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
       !item?.contract_agrees ||
       !item?.cost_agrees ||
       !item?.instruction
-    )
+    ) {
       return false;
-    else return true;
+    } else {
+      return true;
+    }
   };
 
   const timeConvert = (time: string) => {
-    return dayjs(time).format("DD/MM/YYYY");
+    if (time === null) return "";
+    else return dayjs(time).format("DD/MM/YYYY");
   };
+  console.log(docs);
   return (
     <>
       <TableDeclStatus
@@ -66,7 +74,12 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         setOpen={setUploadModal}
         container={uploadContainer}
       />
-      <TableDocsModal opened={docsModal} setOpen={setDocsModal} docs={docs} />
+      <TableDocsModal
+        _id={docsItemId}
+        opened={docsModal}
+        setOpen={setDocsModal}
+        docs={docs}
+      />
       <div className="table-page_table">
         <table>
           <TableColNames />
@@ -99,19 +112,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       <tbody>
                         <tr>
                           {item.order_number.map((num, key) => {
-                            return (
-                              <td
-                                style={{
-                                  borderBottom: `${
-                                    key !== item.order_number.length - 1 &&
-                                    "1px solid black"
-                                  }`,
-                                }}
-                                key={key}
-                              >
-                                {num.number}
-                              </td>
-                            );
+                            return <td key={key}>{num.number}</td>;
                           })}
                         </tr>
                       </tbody>
@@ -126,7 +127,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {item.simple_product_name}
                   </td>
-                  <td> {item.delivery_method} </td>
+                  <ShowDelivery delivery_method={item.delivery_method} />
+                  {/* <td>  {item.delivery_method} </td> */}
                   <td>
                     <table className="table-importers">
                       <tbody>
@@ -189,6 +191,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     onClick={() => {
                       setDocsModal(true);
                       setDocs(item.is_docs);
+                      setDocsItemId(item._id);
                     }}
                   >
                     {isAllDocs(item.is_docs) ? "+" : "-"}

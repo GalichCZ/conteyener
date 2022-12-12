@@ -4,7 +4,7 @@ import { Select, Form } from "antd";
 interface SelectDocs {
   onChange: (value: string) => void;
   label: string;
-  defaultValue: string | undefined | null;
+  defaultValue: boolean | undefined | null;
 }
 
 export const DocsSelect: React.FC<SelectDocs> = ({

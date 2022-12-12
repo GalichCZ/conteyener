@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Form, Input } from "antd";
+import { Modal, Button, Form, Input, DatePicker } from "antd";
 import { NewItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -43,7 +43,17 @@ export const TableItemCreate = () => {
     date_do: null,
     port: "",
     is_ds: null,
-    is_docs: null,
+    is_docs: {
+      PI: false,
+      CI: false,
+      PL: false,
+      SS_DS: false,
+      contract_agrees: false,
+      cost_agrees: false,
+      instruction: false,
+      ED: false,
+      bill: false,
+    },
     declaration_number: "",
     declaration_issue_date: null,
     availability_of_ob: null,
@@ -72,7 +82,6 @@ export const TableItemCreate = () => {
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      if (response._id) window.location.reload();
     }, 2000);
   };
 
@@ -120,9 +129,8 @@ export const TableItemCreate = () => {
   const drawImporters = () => {
     return inputFields.map((input: { id: any }) => {
       return (
-        <div style={{ display: "flex" }}>
+        <div key={input.id} style={{ display: "flex" }}>
           <Input
-            key={input.id}
             placeholder="Импортер"
             id={input.id}
             onBlur={(e) => {
@@ -143,9 +151,8 @@ export const TableItemCreate = () => {
   const drawOrders = () => {
     return inputFields3.map((input: { id: string }, key: string) => {
       return (
-        <div style={{ display: "flex" }}>
+        <div key={key} style={{ display: "flex" }}>
           <Input
-            key={key}
             placeholder="Номер заказа"
             id={input.id}
             onBlur={(e) => {
@@ -192,26 +199,25 @@ export const TableItemCreate = () => {
         <div className="">
           {err && <p className="login-err">{err}</p>}
           <Form className="table-form" layout="vertical">
-            <MyInput
-              datePicker={true}
-              label="Дата заявки"
-              onChangeDate={(date: any, dateString: string | number | Date) =>
-                setItem({ ...item, request_date: new Date(dateString) })
-              }
-            />
-            <Form.Item label="Номер заказа">
+            <Form.Item className="required-form" label="Дата заявки">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, request_date: new Date(dateString) });
+                }}
+                placeholder="Дата заявки"
+              />
+            </Form.Item>
+            <Form.Item className="required-form" label="Номер заказа">
               {drawOrders()}
               <Button onClick={addFields3}>Добавить поле</Button>
             </Form.Item>
             <MyInput
-              datePicker={false}
               label="Номер контейнера"
               onChange={(e) => {
                 setItem({ ...item, container_number: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Товар"
               onChange={(e) => {
                 setItem({ ...item, simple_product_name: e.target.value });
@@ -244,112 +250,110 @@ export const TableItemCreate = () => {
               <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
             <MyInput
-              datePicker={false}
+              className="required-form"
               label="Условия поставки"
               onChange={(e) => {
                 setItem({ ...item, conditions: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Получатель"
               onChange={(e) => {
                 setItem({ ...item, store_receiver: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
+              className="required-form"
               label="Наименование склада"
               onChange={(e) => {
                 setItem({ ...item, store_name: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Адрес склада"
               onChange={(e) => {
                 setItem({ ...item, store_address: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Контакт склада"
               onChange={(e) => {
                 setItem({ ...item, store_contact: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
+              className="required-form"
               label="Агент"
               onChange={(e) => {
                 setItem({ ...item, agent: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Тип контейнера"
               onChange={(e) => {
                 setItem({ ...item, container_type: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
+              className="required-form"
               label="Место отправки"
               onChange={(e) => {
                 setItem({ ...item, place_of_dispatch: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Порт прибытия/станция назначения"
               onChange={(e) => {
                 setItem({ ...item, arrive_place: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Линия"
               onChange={(e) => {
                 setItem({ ...item, line: e.target.value });
               }}
             />
+            <Form.Item label="Дата готовности">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, ready_date: new Date(dateString) });
+                }}
+                placeholder="Дата готовности"
+              />
+            </Form.Item>
+            <Form.Item label="Дата загрузки">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, load_date: new Date(dateString) });
+                }}
+                placeholder="Дата загрузки"
+              />
+            </Form.Item>
+            <Form.Item label="ETD">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, etd: new Date(dateString) });
+                }}
+                placeholder="ETD"
+              />
+            </Form.Item>
+            <Form.Item label="ETA">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, eta: new Date(dateString) });
+                }}
+                placeholder="ETA"
+              />
+            </Form.Item>
+            <Form.Item label="Релиз">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, release: new Date(dateString) });
+                }}
+                placeholder="Релиз"
+              />
+            </Form.Item>
             <MyInput
-              datePicker
-              label="Дата готовности"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, ready_date: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker
-              label="Дата загрузки"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, load_date: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker
-              label="ETD"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, etd: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker
-              label="ETA"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, eta: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker
-              label="Релиз"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, release: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="BL/СМГС/CMR"
               onChange={(e) => {
                 setItem({
@@ -359,7 +363,6 @@ export const TableItemCreate = () => {
               }}
             />
             <MyInput
-              datePicker={false}
               label="ТД"
               onChange={(e) => {
                 setItem({
@@ -368,22 +371,22 @@ export const TableItemCreate = () => {
                 });
               }}
             />
+
+            <Form.Item label="Дата «ДО»">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, date_do: new Date(dateString) });
+                }}
+                placeholder="Дата «ДО»"
+              />
+            </Form.Item>
             <MyInput
-              datePicker
-              label="Дата «ДО»"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, date_do: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="Порт"
               onChange={(e) => {
                 setItem({ ...item, port: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="ДС для подачи"
               onChange={(e) => {
                 setItem({
@@ -393,34 +396,23 @@ export const TableItemCreate = () => {
               }}
             />
             <MyInput
-              datePicker={false}
-              label="Документы для подачи"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  is_docs: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="№ декларации"
               onChange={(e) => {
                 setItem({ ...item, declaration_number: e.target.value });
               }}
             />
+            <Form.Item label="Дата выпуска декларации">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({
+                    ...item,
+                    declaration_issue_date: new Date(dateString),
+                  });
+                }}
+                placeholder="Дата выпуска декларации"
+              />
+            </Form.Item>
             <MyInput
-              datePicker
-              label="Дата выпуска декларации"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({
-                  ...item,
-                  declaration_issue_date: new Date(dateString),
-                });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="Наличие ОБ"
               onChange={(e) => {
                 setItem({
@@ -430,7 +422,6 @@ export const TableItemCreate = () => {
               }}
             />
             <MyInput
-              datePicker={false}
               label="Ответ ОБ"
               onChange={(e) => {
                 setItem({
@@ -440,70 +431,70 @@ export const TableItemCreate = () => {
               }}
             />
             <MyInput
-              datePicker={false}
               label="Экспедитор"
               onChange={(e) => {
                 setItem({ ...item, expeditor: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Станция назначения"
               onChange={(e) => {
                 setItem({ ...item, destination_station: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Км. до станции назначения"
               onChange={(e) => {
                 setItem({ ...item, km_to_dist: parseInt(e.target.value) });
               }}
             />
+            <Form.Item label="Дата прибытия по ЖД">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({
+                    ...item,
+                    train_arrive_date: new Date(dateString),
+                  });
+                }}
+                placeholder="Дата прибытия по ЖД"
+              />
+            </Form.Item>
             <MyInput
-              datePicker
-              label="Дата прибытия по ЖД"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, train_arrive_date: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="Ставка"
               onChange={(e) => {
                 setItem({ ...item, bid: parseInt(e.target.value) });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Автовывоз"
               onChange={(e) => {
                 setItem({ ...item, pickup: e.target.value });
               }}
             />
+            <Form.Item label="Дата прибытия на склад">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({
+                    ...item,
+                    store_arrive_date: new Date(dateString),
+                  });
+                }}
+                placeholder="Дата прибытия на склад"
+              />
+            </Form.Item>
             <MyInput
-              datePicker
-              label="Дата прибытия на склад"
-              onChangeDate={(date: any, dateString: string | number | Date) => {
-                setItem({ ...item, store_arrive_date: new Date(dateString) });
-              }}
-            />
-            <MyInput
-              datePicker={false}
               label="Комментарий"
               onChange={(e) => {
                 setItem({ ...item, comment: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Фрахт"
               onChange={(e) => {
                 setItem({ ...item, fraht: e.target.value });
               }}
             />
             <MyInput
-              datePicker={false}
               label="Примечание"
               onChange={(e) => {
                 setItem({ ...item, note: e.target.value });

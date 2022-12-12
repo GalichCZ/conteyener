@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Select, Form } from "antd";
 
 interface SelectDelivery {
@@ -41,4 +41,12 @@ export const SelectDelivery: React.FC<SelectDelivery> = ({ onChange }) => {
       />
     </Form.Item>
   );
+};
+
+interface ShowDelivery {
+  delivery_method: string;
+}
+
+export const ShowDelivery: React.FC<ShowDelivery> = ({ delivery_method }) => {
+  return <td>{delivery_method === "sea_vld" && "Море ВЛД"}</td>;
 };

@@ -1,12 +1,10 @@
 const StoreSchema = require("../models/store-model");
 
 class StoreService {
-  async createStore(receiver, name, address, contact, note) {
+  async createStore(receiver, contact, note) {
     try {
       const doc = new StoreSchema({
         receiver,
-        name,
-        address,
         contact,
         note,
       });
@@ -40,8 +38,6 @@ class StoreService {
         },
         {
           receiver: req.body.store_receiver,
-          name: req.body.store_name,
-          address: req.body.store_address,
           contact: req.body.store_contact,
           note: req.body.store_note,
         }

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../store/auth-context";
+import { DropDown } from "./DropDown";
 
 export const Header = () => {
   const authCtx = useContext(AuthContext);
@@ -23,7 +24,7 @@ export const Header = () => {
               <Link onClick={authCtx.logout} to="/login">
                 Log Out
               </Link>
-              {authCtx.role === "moderator" && <Link to="/users">Users</Link>}
+              {authCtx.role === "moderator" && <DropDown />}
             </>
           )}
         </>

@@ -18,3 +18,27 @@
 .ant-switch-handle {
   min-width: 5px !important;
 }
+
+.settings-btn {
+  color: white !important;
+  transform: scale(2);
+  margin-left: 10px;
+  transition: 0.3s;
+}
+
+.settings-btn:hover {
+  rotate: -90deg;
+  transition: 0.3s;
+}
+.tech-store_create,
+.tech-store_draw {
+  background-color: white;
+  padding: 15px;
+  border-radius: 20px;
+}
+.tech-store_draw {
+  margin-top: 15px;
+}
+.tech-store_create form {
+  display: flex;
+}

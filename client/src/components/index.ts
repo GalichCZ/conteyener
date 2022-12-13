@@ -1,6 +1,5 @@
 export * from "./LoginForm";
 export * from "./SignupForm";
-export * from "./Header";
 export * from "./Table/Table";
 export * from "./Table/TableModals/TableItemCreate";
 export * from "./Table/TableModals/TableItemUpdate";
@@ -13,3 +12,5 @@ export * from "./Table/TableUI/SelectDelivery";
 export * from "./Table/TableUI/DocsSelect";
 export * from "./UsersList";
 export * from "./Table/TableModals/TableDocsModal";
+export * from "./TechStoreCreate";
+export * from "./TechStoreDraw";

@@ -48,5 +48,14 @@ interface ShowDelivery {
 }
 
 export const ShowDelivery: React.FC<ShowDelivery> = ({ delivery_method }) => {
-  return <td>{delivery_method === "sea_vld" && "Море ВЛД"}</td>;
+  return (
+    <td>
+      {delivery_method === "sea_vld" && "Море ВЛД"}
+      {delivery_method === "sea_spb" && "Море СПБ"}
+      {delivery_method === "sea_new_ros" && "Море Новоросс"}
+      {delivery_method === "sea_riga" && "Море Рига"}
+      {delivery_method === "sea_kotka" && "Море Котка"}
+      {delivery_method === "railway" && "ЖД"}
+    </td>
+  );
 };

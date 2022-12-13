@@ -18,8 +18,6 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [isModal, setIsModal] = useState<boolean>();
   const [storeData, setStoreData] = useState<Types.Store>();
 
-  console.log(data);
-
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
 

@@ -6,7 +6,9 @@ const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
 const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
+const TechStoreController = require("./controllers/techStore-controller");
 const DeclarationController = require("./controllers/declaration-controller");
+
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
 
@@ -45,17 +47,21 @@ app.get(
 );
 app.post("/declaration", DeclarationController.declarationStatusCreate);
 
-app.get(
-  "/test/declaration/:declaration_number",
-  TestController.getTestDeclaration
-);
-
 app.post("/isdocs/:_id", IsDocsController.updateDocs);
+
+app.post("/store/tech", TechStoreController.createTechStore);
+app.get("/store/tech", TechStoreController.getTechStore);
+app.patch("/store/tech", TechStoreController.updateTechStore);
+app.delete("/store/tech/:_id", TechStoreController.deleteTechStore);
 
 app.patch("/test/product", TestController.testUpdateProduct);
 app.post("/test/declaration", TestController.testDeclaration);
 app.post("/test/formula", TestController.testFormula);
 app.post("/test/product", FileWare, TestController.testProduct);
+app.get(
+  "/test/declaration/:declaration_number",
+  TestController.getTestDeclaration
+);
 
 const start = async () => {
   try {

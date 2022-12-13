@@ -1,17 +1,50 @@
-import { useState, useContext } from "react";
+import React, { useContext, lazy } from "react";
 import AuthContext from "./store/auth-context";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import {
-  LoginPage,
-  MainPage,
-  SignUpPage,
-  ActivatePage,
-  TablePage,
-  Users,
-} from "./pages/index";
-import { Header } from "./components/index";
+import { Header } from "./UI/index";
 import "./App.css";
 import "antd/dist/antd.css";
+
+const TablePage = lazy(() =>
+  wait(0).then(() =>
+    import("./pages/TablePage").then(({ TablePage }) => ({
+      default: TablePage,
+    }))
+  )
+);
+const Users = lazy(() =>
+  import("./pages/Users").then(({ Users }) => ({ default: Users }))
+);
+const ActivatePage = lazy(() =>
+  import("./pages/ActivatePage").then(({ ActivatePage }) => ({
+    default: ActivatePage,
+  }))
+);
+const SignUpPage = lazy(() =>
+  import("./pages/SignUpPage").then(({ SignUpPage }) => ({
+    default: SignUpPage,
+  }))
+);
+const MainPage = lazy(() =>
+  import("./pages/MainPage").then(({ MainPage }) => ({
+    default: MainPage,
+  }))
+);
+const LoginPage = lazy(() =>
+  import("./pages/LoginPage").then(({ LoginPage }) => ({
+    default: LoginPage,
+  }))
+);
+const TechStorePage = lazy(() =>
+  import("./pages/TechStorePage").then(({ TechStorePage }) => ({
+    default: TechStorePage,
+  }))
+);
+function wait(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+}
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -25,7 +58,8 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/activate" element={<ActivatePage />} />
           <Route path="/table" element={<TablePage />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="/tech/users" element={<Users />} />
+          <Route path="/tech/store" element={<TechStorePage />} />
         </Routes>
       </BrowserRouter>
     </>

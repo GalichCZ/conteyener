@@ -1,16 +1,6 @@
 const URL = "http://localhost:4444/store/tech";
 
-interface TechStoreData {
-  delivery_time: number;
-  address: string;
-  name: string;
-}
-interface TechStoreDataUpdate {
-  _id: string;
-  delivery_time: number;
-  address: string;
-  name: string;
-}
+import { TechStoreData } from "../Types/Types";
 
 export class TechStore {
   async createTechStore(techStoreData: TechStoreData) {
@@ -39,8 +29,8 @@ export class TechStore {
       });
     return response;
   }
-  async updateTechStore(techStoreDataUpdate: TechStoreDataUpdate) {
-    const response = await fetch(URL + "/role", {
+  async updateTechStore(techStoreDataUpdate: TechStoreData) {
+    const response = await fetch(URL, {
       method: "PATCH",
       body: JSON.stringify(techStoreDataUpdate),
       headers: {
@@ -57,7 +47,7 @@ export class TechStore {
       });
     return response;
   }
-  async deleteTechStore(_id: string) {
+  async deleteTechStore(_id: string | undefined) {
     const response = await fetch(URL + `/${_id}`, {
       method: "DELETE",
     })

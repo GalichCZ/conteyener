@@ -12,5 +12,6 @@ export * from "./Table/TableUI/SelectDelivery";
 export * from "./Table/TableUI/DocsSelect";
 export * from "./UsersList";
 export * from "./Table/TableModals/TableDocsModal";
-export * from "./TechStoreCreate";
-export * from "./TechStoreDraw";
+export * from "./TechStore/TechStoreCreate";
+export * from "./TechStore/TechStoreDraw";
+export * from "./TechStore/TechStoreModal";

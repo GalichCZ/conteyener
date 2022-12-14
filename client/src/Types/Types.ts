@@ -271,3 +271,10 @@ export interface IsDocsType {
   ED: boolean | null;
   bill: boolean | null;
 }
+
+export interface TechStoreData {
+  delivery_time: number;
+  name: string;
+  address: string;
+  _id?: string;
+}

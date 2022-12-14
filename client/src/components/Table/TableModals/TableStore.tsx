@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal } from "antd";
 import { Store } from "../../../Types/Types";
+import { TechStore } from "../../../functions/techStoreFuncs";
 
 interface TableStoreProps {
   opened: boolean | undefined;

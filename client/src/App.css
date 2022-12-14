@@ -41,4 +41,12 @@
 }
 .tech-store_create form {
   display: flex;
+  padding: 5px 45px 0px 45px !important;
+}
+.stores-data {
+  display: flex;
+  font-size: 17px;
+  text-align: center;
+  align-items: center;
+  margin: 0 !important;
 }

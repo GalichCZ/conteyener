@@ -1,12 +1,10 @@
 const StoreSchema = require("../models/store-model");
-
+const ItemSchema = require("../models/item-model");
 class StoreService {
-  async createStore(receiver, contact, note) {
+  async createStore(techStore) {
     try {
       const doc = new StoreSchema({
-        receiver,
-        contact,
-        note,
+        techStore,
       });
       const store = await doc.save();
 
@@ -30,19 +28,27 @@ class StoreService {
     }
   }
 
-  async updateStore(_id, req) {
+  async updateStore(_id, req, itemId) {
     try {
-      await StoreSchema.updateOne(
+      await StoreSchema.findByIdAndUpdate(
         {
           _id,
         },
         {
-          receiver: req.body.store_receiver,
-          contact: req.body.store_contact,
-          note: req.body.store_note,
+          receiver: req.body.updateStore.receiver,
+          contact: req.body.updateStore.contact,
+          note: req.body.updateStore.note,
+          techStore: req.body.updateStore.techStore,
         }
       );
-      return await StoreSchema.findById(_id);
+
+      const newStore = await StoreSchema.findById(_id);
+
+      const doc = await ItemSchema.findById(itemId);
+      doc.store = newStore;
+      await doc.save();
+
+      return newStore;
     } catch (error) {
       console.log(error);
     }

@@ -17,6 +17,7 @@ const ItemFuncs = new Item();
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [isModal, setIsModal] = useState<boolean>();
   const [storeData, setStoreData] = useState<Types.Store>();
+  const [itemId, setItemId] = useState<string>("");
 
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
@@ -30,6 +31,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [docsModal, setDocsModal] = useState<boolean>();
   const [docs, setDocs] = useState<Types.IsDocsType>();
   const [docsItemId, setDocsItemId] = useState<string>("");
+
+  console.log(data);
 
   const isAllDocs = (item: Types.IsDocsType) => {
     if (
@@ -53,7 +56,6 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     if (time === null) return "";
     else return dayjs(time).format("DD/MM/YYYY");
   };
-  console.log(docs);
   return (
     <>
       <TableDeclStatus
@@ -61,7 +63,12 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         opened={declarationModal}
         setOpen={setDeclarationModal}
       />
-      <TableStore opened={isModal} storeData={storeData} setOpen={setIsModal} />
+      <TableStore
+        itemId={itemId}
+        opened={isModal}
+        storeData={storeData}
+        setOpen={setIsModal}
+      />
       <TableItemUpdate
         opened={updateModal}
         setOpen={setUpdateModal}
@@ -126,7 +133,6 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     {item.simple_product_name}
                   </td>
                   <ShowDelivery delivery_method={item.delivery_method} />
-                  {/* <td>  {item.delivery_method} </td> */}
                   <td>
                     <table className="table-importers">
                       <tbody>
@@ -158,17 +164,17 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setIsModal(true);
+                      setItemId(item._id);
                       setStoreData({
+                        _id: item.store._id,
                         receiver: item.store.receiver,
-                        name: item.store.name,
-                        address: item.store.address,
                         contact: item.store.contact,
                         note: item.store.note,
-                        delivery_days: item.store.delivery_days,
+                        techStore: item.store.techStore,
                       });
                     }}
                   >
-                    {item.store.name}
+                    {item.store_name}
                   </td>
                   <td> {item.agent} </td>
                   <td> {item.container.container_type} </td>

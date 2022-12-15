@@ -32,6 +32,7 @@ class ItemService {
         importers: importer,
         conditions: req.body.conditions,
         store,
+        store_name: req.body.store_name,
         agent: req.body.agent,
         place_of_dispatch: req.body.place_of_dispatch,
         line: req.body.line,
@@ -88,7 +89,8 @@ class ItemService {
 
       const formulaRes = FormulaService.dateFormula(
         delivery_method,
-        req.body.etd
+        req.body.etd,
+        req.body.store_delivery_time
       );
       return await ItemSchema.updateOne(
         {

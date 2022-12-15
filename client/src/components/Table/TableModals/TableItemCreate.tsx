@@ -3,10 +3,12 @@ import { Modal, Button, Form, Input, DatePicker } from "antd";
 import { NewItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import { MyInput, SelectDelivery } from "../../index";
+import { MyInput, SelectDelivery, TechStoreSelect } from "../../index";
 import { Required } from "../../../UI/index";
+import { TechStore } from "../../../functions/techStoreFuncs";
 
 const ItemFuncs = new Item();
+const TechStoreFuncs = new TechStore();
 
 export const TableItemCreate = () => {
   const [open, setOpen] = useState(false);
@@ -24,10 +26,8 @@ export const TableItemCreate = () => {
     providers: [],
     importers: [],
     conditions: "",
-    store_receiver: "",
     store_name: "",
-    store_address: "",
-    store_contact: "",
+    tech_store: "",
     agent: "",
     container_type: "",
     place_of_dispatch: "",
@@ -178,6 +178,15 @@ export const TableItemCreate = () => {
     drawImporters();
   }, [deleteImporter, inputFields]);
 
+  const getName = async () => {
+    const response = await TechStoreFuncs.getOneTechStore(item.tech_store);
+
+    setItem({ ...item, store_name: response.name });
+  };
+  useEffect(() => {
+    getName();
+  }, [item.tech_store]);
+
   return (
     <>
       <Button
@@ -256,30 +265,12 @@ export const TableItemCreate = () => {
                 setItem({ ...item, conditions: e.target.value });
               }}
             />
-            <MyInput
-              label="Получатель"
-              onChange={(e) => {
-                setItem({ ...item, store_receiver: e.target.value });
+            <TechStoreSelect
+              onChange={(value) => {
+                setItem({ ...item, tech_store: value });
               }}
-            />
-            <MyInput
+              opened={open}
               className="required-form"
-              label="Наименование склада"
-              onChange={(e) => {
-                setItem({ ...item, store_name: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Адрес склада"
-              onChange={(e) => {
-                setItem({ ...item, store_address: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Контакт склада"
-              onChange={(e) => {
-                setItem({ ...item, store_contact: e.target.value });
-              }}
             />
             <MyInput
               className="required-form"
@@ -337,14 +328,6 @@ export const TableItemCreate = () => {
                 placeholder="ETD"
               />
             </Form.Item>
-            <Form.Item label="ETA">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, eta: new Date(dateString) });
-                }}
-                placeholder="ETA"
-              />
-            </Form.Item>
             <Form.Item label="Релиз">
               <DatePicker
                 onChange={(date, dateString) => {
@@ -371,15 +354,6 @@ export const TableItemCreate = () => {
                 });
               }}
             />
-
-            <Form.Item label="Дата «ДО»">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, date_do: new Date(dateString) });
-                }}
-                placeholder="Дата «ДО»"
-              />
-            </Form.Item>
             <MyInput
               label="Порт"
               onChange={(e) => {
@@ -401,17 +375,6 @@ export const TableItemCreate = () => {
                 setItem({ ...item, declaration_number: e.target.value });
               }}
             />
-            <Form.Item label="Дата выпуска декларации">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({
-                    ...item,
-                    declaration_issue_date: new Date(dateString),
-                  });
-                }}
-                placeholder="Дата выпуска декларации"
-              />
-            </Form.Item>
             <MyInput
               label="Наличие ОБ"
               onChange={(e) => {
@@ -448,17 +411,6 @@ export const TableItemCreate = () => {
                 setItem({ ...item, km_to_dist: parseInt(e.target.value) });
               }}
             />
-            <Form.Item label="Дата прибытия по ЖД">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({
-                    ...item,
-                    train_arrive_date: new Date(dateString),
-                  });
-                }}
-                placeholder="Дата прибытия по ЖД"
-              />
-            </Form.Item>
             <MyInput
               label="Ставка"
               onChange={(e) => {
@@ -471,17 +423,6 @@ export const TableItemCreate = () => {
                 setItem({ ...item, pickup: e.target.value });
               }}
             />
-            <Form.Item label="Дата прибытия на склад">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({
-                    ...item,
-                    store_arrive_date: new Date(dateString),
-                  });
-                }}
-                placeholder="Дата прибытия на склад"
-              />
-            </Form.Item>
             <MyInput
               label="Комментарий"
               onChange={(e) => {

@@ -24,19 +24,12 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
   const [isDocs, setIsDocs] = useState({});
 
   useEffect(() => {
-    console.log(isDocs);
-  }, [isDocs]);
-
-  console.log(_id + " id");
-
-  useEffect(() => {
     if (docs) setIsDocs(docs);
   }, [docs]);
 
   const handleOk = async () => {
     setConfirmLoading(true);
     const response = await DocsFuncs.updateDocs(isDocs, _id);
-    console.log(response);
     if (response.error) setErr(response.error);
     if (response === 200) {
       setConfirmLoading(false);

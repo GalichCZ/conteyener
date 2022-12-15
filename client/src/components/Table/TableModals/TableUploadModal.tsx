@@ -57,10 +57,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
     if (opened) productHandler();
   }, [opened]);
 
-  useEffect(() => {
-    console.log(products);
-  }, [products]);
-
   return (
     <Modal
       className="declaration-modal"

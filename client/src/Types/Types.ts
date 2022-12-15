@@ -27,12 +27,11 @@ interface NewOrderNumber {
 }
 
 export type Store = {
-  receiver: string;
-  name: string;
-  address: string;
+  _id?: string;
+  receiver: string | undefined;
   contact: string;
   note: string;
-  delivery_days: number;
+  techStore: string;
 };
 
 export type TableProps = {
@@ -47,6 +46,7 @@ export type TableProps = {
         providers: Providers[];
         importers: Importers[];
         conditions: string;
+        store_name: string;
         store: Store;
         agent: string;
         place_of_dispatch: string;
@@ -91,10 +91,8 @@ export interface NewItem {
   providers: NewProviders[];
   importers: NewImporters[];
   conditions: string;
-  store_receiver: string;
   store_name: string;
-  store_address: string;
-  store_contact: string;
+  tech_store: string;
   agent: string;
   container_type: string;
   place_of_dispatch: string;

@@ -30,13 +30,10 @@ class ItemController {
       container._id
     );
 
-    const store = await StoreService.createStore(
-      req.body.store_receiver,
-      req.body.store_name,
-      req.body.store_address,
-      req.body.store_contact,
-      req.body.store_note
-    );
+    const store = await StoreService.createStore(req.body.tech_store);
+
+    console.log(req.body.tech_store);
+    console.log(store);
 
     const is_docs = await IsDocsService.createDocs(req, container);
 

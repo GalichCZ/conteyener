@@ -18,6 +18,17 @@ class TechStoreService {
     }
   }
 
+  async getOneTechStore(_id) {
+    try {
+      const techStore = await TechStoreSchema.findById(_id);
+
+      return techStore;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   async getTechStores() {
     try {
       const techStores = await TechStoreSchema.find();

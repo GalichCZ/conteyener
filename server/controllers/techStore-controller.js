@@ -13,6 +13,14 @@ class TechStoreController {
     else res.json(result);
   }
 
+  async getOneTechStore(req, res) {
+    const result = await TechStoreService.getOneTechStore(req.params._id);
+
+    if (result.toString().includes("Error"))
+      res.status(500).json({ message: "Error while creating tech store" });
+    else res.json(result);
+  }
+
   async getTechStore(req, res) {
     const result = await TechStoreService.getTechStores();
 

@@ -1,4 +1,4 @@
-import { NewItem, UpdatedItem } from "../Types/Types";
+import { NewItem, Store, UpdatedItem } from "../Types/Types";
 
 const URL = "http://localhost:4444";
 
@@ -37,6 +37,26 @@ export class Item {
     const response = await fetch(URL + "/item", {
       method: "PATCH",
       body: JSON.stringify(itemValues),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.status)
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return error;
+      });
+    return response;
+  }
+
+  async updateStore(updateStore: Store, itemId: string) {
+    const response = await fetch(URL + "/item/store", {
+      method: "PATCH",
+      body: JSON.stringify({ updateStore, itemId }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

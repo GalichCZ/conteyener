@@ -32,6 +32,7 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    store_name: String,
     store: {
       type: Object,
       required: true,

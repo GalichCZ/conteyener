@@ -1,7 +1,7 @@
 const dayjs = require("dayjs");
 
 class FormulaService {
-  dateFormula(delivery_method, etd) {
+  dateFormula(delivery_method, etd, store_delivery_time) {
     if (delivery_method && etd) {
       const eta = (delivery_method) => {
         if (delivery_method === "sea_vld") {
@@ -31,7 +31,7 @@ class FormulaService {
       };
 
       const store_arrive_date = () => {
-        return dayjs(train_arrive_date()).add(5, "day");
+        return dayjs(train_arrive_date()).add(store_delivery_time, "day");
       };
 
       return {

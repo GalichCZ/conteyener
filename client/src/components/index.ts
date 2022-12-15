@@ -6,6 +6,7 @@ export * from "./Table/TableModals/TableItemUpdate";
 export * from "./Table/TableModals/TableStore";
 export * from "./Table/TableModals/TableDeclStatus";
 export * from "./Table/TableUI/TableColNames";
+export * from "./Table/TableUI/TechStoreSelect";
 export * from "./Table/TableModals/TableUploadModal";
 export * from "./Table/TableUI/MyInput";
 export * from "./Table/TableUI/SelectDelivery";

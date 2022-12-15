@@ -21,6 +21,14 @@ export class TechStore {
       });
     return response;
   }
+  async getOneTechStore(_id: string) {
+    const response = await fetch(URL + `/${_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    return response;
+  }
   async getTechStore() {
     const response = await fetch(URL)
       .then((res) => res.json())

@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
+const StoreController = require("./controllers/store-controller");
 const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
 const TechStoreController = require("./controllers/techStore-controller");
@@ -40,6 +41,7 @@ app.get("/item", ItemController.getItems);
 app.patch("/item", ItemController.updateItem);
 app.delete("/item/:_id", ItemController.deleteItem);
 app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
+app.patch("/item/store", StoreController.updateStore);
 
 app.get(
   "/declaration/:declaration_number",
@@ -49,9 +51,10 @@ app.post("/declaration", DeclarationController.declarationStatusCreate);
 
 app.post("/isdocs/:_id", IsDocsController.updateDocs);
 
-app.post("/store/tech", TechStoreController.createTechStore);
 app.get("/store/tech", TechStoreController.getTechStore);
+app.post("/store/tech", TechStoreController.createTechStore);
 app.patch("/store/tech", TechStoreController.updateTechStore);
+app.get("/store/tech/:_id", TechStoreController.getOneTechStore);
 app.delete("/store/tech/:_id", TechStoreController.deleteTechStore);
 
 app.patch("/test/product", TestController.testUpdateProduct);
@@ -62,6 +65,7 @@ app.get(
   "/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
+app.post("/test/store", TestController.testStoreCreate);
 
 const start = async () => {
   try {

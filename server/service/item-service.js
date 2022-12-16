@@ -1,4 +1,5 @@
 const ItemSchema = require("../models/item-model");
+const TechStoreSchema = require("../models/techStore-model");
 const FormulaService = require("./formula-service");
 class ItemService {
   async createItem(
@@ -83,14 +84,18 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req, container, store) {
+  async updateItem(_id, req, container) {
     try {
       const delivery_method = req.body.delivery_method;
+
+      const techStore = await TechStoreSchema.findById(
+        req.body.store.techStore
+      );
 
       const formulaRes = FormulaService.dateFormula(
         delivery_method,
         req.body.etd,
-        req.body.store_delivery_time
+        techStore.delivery_time
       );
       return await ItemSchema.updateOne(
         {
@@ -100,7 +105,6 @@ class ItemService {
           request_date: req.body.request_date,
           order_number: req.body.order_number,
           container,
-          store,
           simple_product_name: req.body.simple_product_name,
           delivery_method,
           conditions: req.body.conditions,

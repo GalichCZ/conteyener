@@ -27,6 +27,11 @@ export const SignupForm = () => {
 
   const signUpHandler = async () => {
     const data = await UserFunc.signUp(signUpValues);
+
+    if (data._id) {
+      window.localStorage.setItem("_id", data._id);
+    }
+
     if (data.token) {
       window.localStorage.setItem("token", data.token);
       authCtx.login();

@@ -68,12 +68,11 @@ class ItemController {
         item.container._id,
         req
       );
-      const store = await StoreService.updateStore(item.store._id, req);
       await ProviderService.updateProviders(item, req);
       await ImporterService.updateImporters(item, req);
       await OrderService.updateOrders(item, req);
 
-      await ItemService.updateItem(item._id, req, container, store);
+      await ItemService.updateItem(item._id, req, container);
 
       res.json(await ItemSchema.findById({ _id: req.body._id }));
     } catch (error) {

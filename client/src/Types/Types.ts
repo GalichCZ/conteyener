@@ -186,11 +186,9 @@ export interface UpdatedItem {
   providers: NewProviders[];
   importers: NewImporters[];
   conditions: string;
-  store_receiver: string;
-  store_name: string;
-  store_address: string;
-  store_contact: string;
+  tech_store: string;
   agent: string;
+  store_name: string;
   container_type: string;
   place_of_dispatch: string;
   arrive_place: string;

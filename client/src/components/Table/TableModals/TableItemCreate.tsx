@@ -89,6 +89,36 @@ export const TableItemCreate = () => {
     setOpen(false);
   };
 
+  const importerHandler = (importer: string) => {
+    if (importer !== "") item.importers?.push({ name: importer });
+  };
+
+  const deleteImporter = (_importer: string) => {
+    const newImporters = item.importers?.filter((importer) => {
+      return importer.name !== _importer;
+    });
+
+    if (newImporters) {
+      setItem({ ...item, importers: newImporters });
+      setInputFields(newImporters);
+    }
+  };
+
+  const providerHandler = (provider: string) => {
+    if (provider !== "") item.providers?.push({ name: provider });
+  };
+
+  const deleteProvider = (_provider: string) => {
+    const newProviders = item.providers?.filter((provider) => {
+      return provider.name !== _provider;
+    });
+
+    if (newProviders) {
+      setItem({ ...item, providers: newProviders });
+      setInputFields2(newProviders);
+    }
+  };
+
   const addFields = () => {
     let newField = { id: inputFields.length };
     setInputFields([...inputFields, newField]);
@@ -104,30 +134,23 @@ export const TableItemCreate = () => {
     setInputFields3([...inputFields3, newField]);
   };
 
-  const importerHandler = (importer: string) => {
-    if (importer !== "") item.importers?.push({ name: importer });
-  };
-
-  const deleteImporter = (importer: any, field: any) => {
-    let arr = inputFields;
-    const fieldIndex = arr.indexOf(field);
-    arr.splice(fieldIndex, 1);
-    console.log(arr);
-    setInputFields(arr);
-    const importerIndex = item.importers.indexOf(importer);
-    item.importers.splice(importerIndex, 1);
-  };
-
-  const providerHandler = (provider: string) => {
-    if (provider !== "") item.providers?.push({ name: provider });
-  };
-
   const orderHandler = (order: string) => {
     if (order !== "") item.order_number.push({ number: order });
   };
 
+  const deleteOrder = (_order: string) => {
+    const newOrders = item.order_number?.filter((order) => {
+      return order.number !== _order;
+    });
+
+    if (newOrders) {
+      setItem({ ...item, order_number: newOrders });
+      setInputFields3(newOrders);
+    }
+  };
+
   const drawImporters = () => {
-    return inputFields.map((input: { id: any }) => {
+    return inputFields.map((input: { id: any; name: string }) => {
       return (
         <div key={input.id} style={{ display: "flex" }}>
           <Input
@@ -140,7 +163,7 @@ export const TableItemCreate = () => {
           />
           <CloseOutlined
             onClick={() => {
-              deleteImporter(item.importers[input.id], inputFields[input.id]);
+              deleteImporter(input.name);
             }}
           />
         </div>
@@ -149,19 +172,26 @@ export const TableItemCreate = () => {
   };
 
   const drawOrders = () => {
-    return inputFields3.map((input: { id: string }, key: string) => {
-      return (
-        <div key={key} style={{ display: "flex" }}>
-          <Input
-            placeholder="Номер заказа"
-            id={input.id}
-            onBlur={(e) => {
-              orderHandler(e.target.value);
-            }}
-          />
-        </div>
-      );
-    });
+    return inputFields3.map(
+      (input: { id: string; number: string }, key: string) => {
+        return (
+          <div key={key} style={{ display: "flex" }}>
+            <Input
+              placeholder="Номер заказа"
+              id={input.id}
+              onBlur={(e) => {
+                orderHandler(e.target.value);
+              }}
+            />
+            <CloseOutlined
+              onClick={() => {
+                deleteOrder(input.number);
+              }}
+            />
+          </div>
+        );
+      }
+    );
   };
 
   useEffect(() => {
@@ -239,19 +269,28 @@ export const TableItemCreate = () => {
               }}
             />
             <Form.Item className="required-form" label="Поставщик">
-              {inputFields2.map((input: { id: any }, key: number) => {
-                return (
-                  <Input
-                    key={key}
-                    placeholder="Поставщик"
-                    id={input.id}
-                    onBlur={(e) => {
-                      providerHandler(e.target.value);
-                      console.log(item.importers);
-                    }}
-                  />
-                );
-              })}
+              {inputFields2.map(
+                (input: { id: any; name: string }, key: number) => {
+                  return (
+                    <div key={key} style={{ display: "flex" }}>
+                      <Input
+                        key={key}
+                        placeholder="Поставщик"
+                        id={input.id}
+                        onBlur={(e) => {
+                          providerHandler(e.target.value);
+                          console.log(item.importers);
+                        }}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          deleteProvider(input.name);
+                        }}
+                      />
+                    </div>
+                  );
+                }
+              )}
               <Button onClick={addFields2}>Добавить поле</Button>
             </Form.Item>
             <Form.Item className="required-form" label="Импортер">

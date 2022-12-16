@@ -4,6 +4,8 @@ import { SingleItem, UpdatedItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import { SelectDelivery } from "../TableUI/SelectDelivery";
+import { TechStoreSelect } from "../TableUI/TechStoreSelect";
+import { MyInput } from "../TableUI/MyInput";
 
 const ItemFuncs = new Item();
 
@@ -28,15 +30,12 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     },
     simple_product_name: "",
     delivery_method: "",
-
     providers: [],
     importers: [],
     conditions: "",
-    store_receiver: "",
-    store_name: "",
-    store_address: "",
-    store_contact: "",
+    tech_store: "",
     agent: "",
+    store_name: "",
     container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
@@ -68,6 +67,8 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     fraht: "",
   });
 
+  console.log(item);
+
   useEffect(() => {
     setInputFields(item?.importers);
     setInputFields2(item?.providers);
@@ -81,7 +82,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     if (response === 200) {
       setConfirmLoading(false);
       setOpen(false);
-      window.location.reload();
     }
   };
 
@@ -207,33 +207,30 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             )}
             <Button onClick={addFields3}>Добавить поле</Button>
           </Form.Item>
-          <Form.Item label="Номер контейнера">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  container: {
-                    ...singleItem.container,
-                    container_number: e.target.value,
-                  },
-                });
-              }}
-              defaultValue={item?.container.container_number}
-              placeholder="Номер контейнера"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Товар">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  simple_product_name: e.target.value,
-                });
-              }}
-              defaultValue={item?.simple_product_name}
-              placeholder="Товар"
-            />
-          </Form.Item>
+          <MyInput
+            label="Номер контейнера"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                container: {
+                  ...singleItem.container,
+                  container_number: e.target.value,
+                },
+              });
+            }}
+            defaultValue={item?.container.container_number}
+          />
+          <MyInput
+            label="Товар"
+            className="required-form"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                simple_product_name: e.target.value,
+              });
+            }}
+            defaultValue={item?.simple_product_name}
+          />
           <SelectDelivery
             onChange={(value) => {
               console.log(value);
@@ -290,99 +287,61 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             )}
             <Button onClick={addFields}>Добавить поле</Button>
           </Form.Item>
-          <Form.Item className="required-form" label="Условия поставки">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, conditions: e.target.value });
-              }}
-              defaultValue={item?.conditions}
-              placeholder="Условия поставки"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Наименование склада">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, store_name: e.target.value });
-              }}
-              defaultValue={item?.store.name}
-              placeholder="Наименование склада"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Получатель">
-            <Input
-              defaultValue={item?.store.receiver}
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  store_receiver: e.target.value,
-                });
-              }}
-              placeholder="Получатель"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Адрес склада">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, store_address: e.target.value });
-              }}
-              defaultValue={item?.store.address}
-              placeholder="Адрес склада"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Контакт склада">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, store_contact: e.target.value });
-              }}
-              defaultValue={item?.store.contact}
-              placeholder="Контакт склада"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Агент">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, agent: e.target.value });
-              }}
-              defaultValue={item?.agent}
-              placeholder="Агент"
-            />
-          </Form.Item>
-          <Form.Item label="Тип контейнера">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  container: {
-                    ...singleItem.container,
-                    container_type: e.target.value,
-                  },
-                });
-              }}
-              defaultValue={item?.container.container_type}
-              placeholder="Тип контейнера"
-            />
-          </Form.Item>
-          <Form.Item className="required-form" label="Место отправки">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  place_of_dispatch: e.target.value,
-                });
-              }}
-              defaultValue={item?.place_of_dispatch}
-              placeholder="Место отправки"
-            />
-          </Form.Item>
-          <Form.Item label="Линия">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, line: e.target.value });
-              }}
-              defaultValue={item?.line}
-              placeholder="Линия"
-            />
-          </Form.Item>
+          <MyInput
+            className="required-form"
+            label="Условия поставки"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, conditions: e.target.value });
+            }}
+            defaultValue={item?.conditions}
+          />
+          <TechStoreSelect
+            onChange={(value) => {
+              setSingleItem({ ...singleItem, tech_store: value });
+            }}
+            defaultValue={item?.store_name}
+            opened={opened}
+            className="required-form"
+          />
+          <MyInput
+            className="required-form"
+            label="Агент"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, agent: e.target.value });
+            }}
+            defaultValue={item?.agent}
+          />
+          <MyInput
+            label="Тип контейнера"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                container: {
+                  ...singleItem.container,
+                  container_type: e.target.value,
+                },
+              });
+            }}
+            defaultValue={item?.container.container_type}
+          />
+          <MyInput
+            className="required-form"
+            label="Место отправки"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                place_of_dispatch: e.target.value,
+              });
+            }}
+            defaultValue={item?.place_of_dispatch}
+          />
+          <MyInput
+            label="Линия"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, line: e.target.value });
+            }}
+            defaultValue={item?.line}
+          />
           <Form.Item label="Дата готовности">
             <input
               placeholder="Дата готовности"
@@ -422,17 +381,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               defaultValue={item?.etd?.substring(0, 10)}
             />
           </Form.Item>
-          <Form.Item label="ETA">
-            <input
-              placeholder="ETA"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, eta: new Date(e.target.value) });
-              }}
-              defaultValue={item?.eta?.substring(0, 10)}
-            />
-          </Form.Item>
           <Form.Item label="Релиз">
             <input
               placeholder="Релиз"
@@ -455,221 +403,125 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               }}
             />
           </Form.Item>
-          <Form.Item label="ТД">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  td: e.target.value === "" ? false : true,
-                });
-              }}
-              defaultValue={item?.bl_smgs_cmr ? "V" : ""}
-              placeholder="ТД"
-            />
-          </Form.Item>
-          <Form.Item label="Дата «ДО»">
-            <input
-              placeholder="Дата «ДО»"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  date_do: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.date_do?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Порт">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, port: e.target.value });
-              }}
-              defaultValue={item?.port}
-              placeholder="Порт"
-            />
-          </Form.Item>
-          <Form.Item label="ДС для подачи">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  is_ds: e.target.value === "" ? false : true,
-                });
-              }}
-              defaultValue={item?.is_ds ? "V" : ""}
-              placeholder="ДС для подачи"
-            />
-          </Form.Item>
-          <Form.Item label="Документы для подачи">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  is_docs: e.target.value === "" ? false : true,
-                });
-              }}
-              defaultValue={item?.is_docs ? "V" : ""}
-              placeholder="Документы для подачи"
-            />
-          </Form.Item>
-          <Form.Item label="№ декларации">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  declaration_number: e.target.value,
-                });
-              }}
-              defaultValue={item?.declaration_number}
-              placeholder="№ декларации"
-            />
-          </Form.Item>
-          <Form.Item label="Дата выпуска декларации">
-            <input
-              placeholder="Дата выпуска декларации"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  declaration_issue_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.declaration_issue_date?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Наличие ОБ">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  availability_of_ob: e.target.value === "" ? false : true,
-                });
-              }}
-              defaultValue={item?.availability_of_ob ? "V" : ""}
-              placeholder="Наличие ОБ"
-            />
-          </Form.Item>
-          <Form.Item label="Ответ ОБ">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  answer_of_ob: e.target.value === "" ? false : true,
-                });
-              }}
-              defaultValue={item?.answer_of_ob ? "V" : ""}
-              placeholder="Ответ ОБ"
-            />
-          </Form.Item>
-          <Form.Item label="Экспедитор">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, expeditor: e.target.value });
-              }}
-              defaultValue={item?.expeditor}
-              placeholder="Экспедитор"
-            />
-          </Form.Item>
-          <Form.Item label="Станция назначения">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  destination_station: e.target.value,
-                });
-              }}
-              defaultValue={item?.destination_station}
-              placeholder="Станция назначения"
-            />
-          </Form.Item>
-          <Form.Item label="Км. до станции назначения">
-            <Input
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  km_to_dist: parseInt(e.target.value),
-                });
-              }}
-              defaultValue={item?.km_to_dist}
-              placeholder="Км. до станции назначения"
-            />
-          </Form.Item>
-          <Form.Item label="Дата прибытия по ЖД">
-            <input
-              placeholder="Дата прибытия по ЖД"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  train_arrive_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.train_arrive_date?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Ставка">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
-              }}
-              defaultValue={item?.bid}
-              placeholder="Ставка"
-            />
-          </Form.Item>
-          <Form.Item label="Автовывоз">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, pickup: e.target.value });
-              }}
-              defaultValue={item?.pickup}
-              placeholder="Автовывоз"
-            />
-          </Form.Item>
-          <Form.Item label="Дата прибытия на склад">
-            <input
-              placeholder="Дата прибытия на склад"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  store_arrive_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.store_arrive_date?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Комментарий">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, comment: e.target.value });
-              }}
-              defaultValue={item?.comment}
-              placeholder="Комментарий"
-            />
-          </Form.Item>
-          <Form.Item label="Фрахт">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, fraht: e.target.value });
-              }}
-              defaultValue={item?.fraht}
-              placeholder="Фрахт"
-            />
-          </Form.Item>
-          <Form.Item label="Примечание">
-            <Input
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, note: e.target.value });
-              }}
-              defaultValue={item?.note}
-              placeholder="Примечание"
-            />
-          </Form.Item>
+          <MyInput
+            label="ТД"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                td: e.target.value === "" ? false : true,
+              });
+            }}
+            defaultValue={item?.bl_smgs_cmr ? "V" : ""}
+          />
+          <MyInput
+            label="Порт"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, port: e.target.value });
+            }}
+            defaultValue={item?.port}
+          />
+          <MyInput
+            label="ДС для подачи"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                is_ds: e.target.value === "" ? false : true,
+              });
+            }}
+            defaultValue={item?.is_ds ? "V" : ""}
+          />
+          <MyInput
+            label="№ декларации"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                declaration_number: e.target.value,
+              });
+            }}
+            defaultValue={item?.declaration_number}
+          />
+          <MyInput
+            label="Наличие ОБ"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                availability_of_ob: e.target.value === "" ? false : true,
+              });
+            }}
+            defaultValue={item?.availability_of_ob ? "V" : ""}
+          />
+          <MyInput
+            label="Ответ ОБ"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                answer_of_ob: e.target.value === "" ? false : true,
+              });
+            }}
+            defaultValue={item?.answer_of_ob ? "V" : ""}
+          />
+          <MyInput
+            label="Экспедитор"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, expeditor: e.target.value });
+            }}
+            defaultValue={item?.expeditor}
+          />
+          <MyInput
+            label="Станция назначения"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                destination_station: e.target.value,
+              });
+            }}
+            defaultValue={item?.destination_station}
+          />
+          <MyInput
+            label="Км. до станции назначения"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                km_to_dist: parseInt(e.target.value),
+              });
+            }}
+            defaultValue={item?.km_to_dist}
+          />
+          <MyInput
+            label="Ставка"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
+            }}
+            defaultValue={item?.bid}
+          />
+          <MyInput
+            label="Автовывоз"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, pickup: e.target.value });
+            }}
+            defaultValue={item?.pickup}
+          />
+          <MyInput
+            label="Комментарий"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, comment: e.target.value });
+            }}
+            defaultValue={item?.comment}
+          />
+          <MyInput
+            label="Фрахт"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, fraht: e.target.value });
+            }}
+            defaultValue={item?.fraht}
+          />
+          <MyInput
+            label="Примечание"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, note: e.target.value });
+            }}
+            defaultValue={item?.note}
+          />
         </Form>
       </Modal>
     </>

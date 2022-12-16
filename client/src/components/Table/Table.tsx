@@ -125,6 +125,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   </td>
                   <td> {item.container.container_number} </td>
                   <td
+                    style={{ cursor: "pointer" }}
                     onClick={() => {
                       setUploadModal(true);
                       setUploadContainer(item.container.container_number);

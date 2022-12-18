@@ -42,7 +42,6 @@ class ProviderService {
       });
 
       if (req.body.providers) {
-        console.log(req.body.providers);
         await this.deleteProviders(item);
 
         const providers = await this.createProvider(

@@ -16,12 +16,6 @@ export const LoginForm = () => {
     password: "",
   });
 
-  // useEffect(() => {
-  // setTimeout(() => {
-  // setErr(null);
-  // }, 5000);
-  // }, [err]);
-
   const loginHandler = async () => {
     const data = await UserFuncs.login(loginValues);
 

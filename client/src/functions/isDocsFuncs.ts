@@ -1,5 +1,5 @@
 import { IsDocsType } from "../Types/Types";
-const URL = "http://localhost:4444";
+const URL = "http://localhost:4444/api";
 
 class Docs {
   async updateDocs(docs: object, _id: string) {

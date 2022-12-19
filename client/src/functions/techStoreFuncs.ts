@@ -1,4 +1,4 @@
-const URL = "http://localhost:4444/store/tech";
+const URL = "http://localhost:4444/api/store/tech";
 
 import { TechStoreData } from "../Types/Types";
 

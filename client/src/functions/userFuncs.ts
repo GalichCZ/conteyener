@@ -1,4 +1,4 @@
-const URL = "http://localhost:4444";
+const URL = "http://localhost:4444/api";
 
 export class User {
   async signUp(signUpValues: object) {

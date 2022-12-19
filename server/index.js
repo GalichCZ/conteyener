@@ -21,51 +21,51 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", CheckAuth.checkToken, (req, res) => {
+app.get("/api/", CheckAuth.checkToken, (req, res) => {
   console.log(req.userId);
   res.send("HELLO");
 });
 
-app.post("/auth/login", UserController.login);
-app.patch("/role", UserController.roleChange);
-app.get("/user/:userId", UserController.getMe);
-app.get("/users/:_id", UserController.getUsers);
-app.get("/activate/:link", UserController.activate);
-app.delete("/user/:email", UserController.deleteUser);
-app.post("/auth/signin", UserController.registration);
+app.post("/api/auth/login", UserController.login);
+app.patch("/api/role", UserController.roleChange);
+app.get("/api/user/:userId", UserController.getMe);
+app.get("/api/users/:_id", UserController.getUsers);
+app.get("/api/activate/:link", UserController.activate);
+app.delete("/api/user/:email", UserController.deleteUser);
+app.post("/api/auth/signin", UserController.registration);
 
-app.post("/product/:container", FileWare, ProductController.createProduct);
-app.get("/product/:container", ProductController.getProduct);
+app.post("/api/product/:container", FileWare, ProductController.createProduct);
+app.get("/api/product/:container", ProductController.getProduct);
 
-app.get("/item", ItemController.getItems);
-app.patch("/item", ItemController.updateItem);
-app.delete("/item/:_id", ItemController.deleteItem);
-app.post("/item", CheckAuth.checkToken, ItemController.itemCreate);
-app.patch("/item/store", StoreController.updateStore);
+app.get("/api/item", ItemController.getItems);
+app.patch("/api/item", ItemController.updateItem);
+app.delete("/api/item/:_id", ItemController.deleteItem);
+app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
+app.patch("/api/item/store", StoreController.updateStore);
 
 app.get(
-  "/declaration/:declaration_number",
+  "/api/declaration/:declaration_number",
   DeclarationController.declarationStatusGet
 );
-app.post("/declaration", DeclarationController.declarationStatusCreate);
+app.post("/api/declaration", DeclarationController.declarationStatusCreate);
 
-app.post("/isdocs/:_id", IsDocsController.updateDocs);
+app.post("/api/isdocs/:_id", IsDocsController.updateDocs);
 
-app.get("/store/tech", TechStoreController.getTechStore);
-app.post("/store/tech", TechStoreController.createTechStore);
-app.patch("/store/tech", TechStoreController.updateTechStore);
-app.get("/store/tech/:_id", TechStoreController.getOneTechStore);
-app.delete("/store/tech/:_id", TechStoreController.deleteTechStore);
+app.get("/api/store/tech", TechStoreController.getTechStore);
+app.post("/api/store/tech", TechStoreController.createTechStore);
+app.patch("/api/store/tech", TechStoreController.updateTechStore);
+app.get("/api/store/tech/:_id", TechStoreController.getOneTechStore);
+app.delete("/api/store/tech/:_id", TechStoreController.deleteTechStore);
 
-app.patch("/test/product", TestController.testUpdateProduct);
-app.post("/test/declaration", TestController.testDeclaration);
-app.post("/test/formula", TestController.testFormula);
-app.post("/test/product", FileWare, TestController.testProduct);
+app.patch("/api/test/product", TestController.testUpdateProduct);
+app.post("/api/test/declaration", TestController.testDeclaration);
+app.post("/api/test/formula", TestController.testFormula);
+app.post("/api/test/product", FileWare, TestController.testProduct);
 app.get(
-  "/test/declaration/:declaration_number",
+  "/api/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
-app.post("/test/store", TestController.testStoreCreate);
+app.post("/api/test/store", TestController.testStoreCreate);
 
 const start = async () => {
   try {

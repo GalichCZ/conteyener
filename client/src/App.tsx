@@ -20,6 +20,11 @@ const ActivatePage = lazy(() =>
     default: ActivatePage,
   }))
 );
+const ActivationPage = lazy(() =>
+  import("./pages/ActivationPage").then(({ ActivationPage }) => ({
+    default: ActivationPage,
+  }))
+);
 const SignUpPage = lazy(() =>
   import("./pages/SignUpPage").then(({ SignUpPage }) => ({
     default: SignUpPage,
@@ -60,6 +65,7 @@ function App() {
           <Route path="/table" element={<TablePage />} />
           <Route path="/tech/users" element={<Users />} />
           <Route path="/tech/store" element={<TechStorePage />} />
+          <Route path="/activation" element={<ActivationPage />} />
         </Routes>
       </BrowserRouter>
     </>

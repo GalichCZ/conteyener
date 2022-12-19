@@ -92,6 +92,7 @@ class ItemController {
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
       await ProductService.deleteProduct(item.container.container_number);
       await IsDocsService.deleteDocs(item.container);
+      await OrderService.deleteOrders(item);
 
       res.json(200);
     } catch (error) {

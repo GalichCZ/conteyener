@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Modal, Form, Input, Button, Switch } from "antd";
 import { SingleItem, UpdatedItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
@@ -6,6 +6,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { SelectDelivery } from "../TableUI/SelectDelivery";
 import { TechStoreSelect } from "../TableUI/TechStoreSelect";
 import { MyInput } from "../TableUI/MyInput";
+import ReDrawContext from "../../../store/redraw-context";
 
 const ItemFuncs = new Item();
 
@@ -14,6 +15,8 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   opened,
   setOpen,
 }) => {
+  const reDraw = useContext(ReDrawContext);
+
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
   const [inputFields, setInputFields] = useState<any>();
@@ -80,6 +83,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     const response = await ItemFuncs.updateItem(singleItem);
     if (response.error) setErr(response.error);
     if (response === 200) {
+      reDraw.reDrawHandler(true);
       setConfirmLoading(false);
       setOpen(false);
     }

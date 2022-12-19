@@ -6,18 +6,18 @@ class ProductService {
     try {
       const products = file[0].map(async (product) => {
         const doc = new ProductSchema({
-          hs_code: product.HS_CODE,
+          hs_code: product["HS CODE"],
           article: product.ARTICLE,
-          trade_mark: product.TRADE_MARK,
-          product_name: product.NAME_OF_GOODS,
+          trade_mark: product["TRADE MARK"],
+          product_name: product["NAME OF GOODS"],
           model: product.MODEL,
-          quantity_pieces: product.PCS,
+          quantity_pieces: product["QUANTITY, PCS"],
           quantity_places: product.CTNS,
-          piece_price: product.UNIT_PRICE_USD,
-          total_price: product.TOTAL_PRICE_USD,
-          weight_net: product.NET_KG,
-          weight_gross: product.GROSS_KG,
-          cbm: product.CBM,
+          piece_price: product["UNIT PRICE, USD"],
+          total_price: product["TOTAL PRICE, USD"],
+          weight_net: product["NET/KG"],
+          weight_gross: product["GROSS/KG"],
+          cbm: product["M³"],
           container,
         });
         const docs = await doc.save();

@@ -69,6 +69,8 @@ app.post("/test/store", TestController.testStoreCreate);
 
 const start = async () => {
   try {
+    mongoose.set("strictQuery", false);
+
     await app.listen(PORT, () => {
       console.log("Server started on " + PORT);
     });

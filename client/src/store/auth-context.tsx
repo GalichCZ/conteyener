@@ -1,4 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
+import React, { useState, createContext, useEffect, ReactNode } from "react";
 import { User } from "../functions/userFuncs";
 
 const UserFuncs = new User();

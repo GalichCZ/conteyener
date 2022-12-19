@@ -10,11 +10,14 @@ import "./assets/css/activationPage.css";
 import "./assets/css/header.css";
 import { AuthContextProvider } from "./store/auth-context";
 import { Loader } from "./UI/index";
+import { ReDrawContextProvider } from "./store/redraw-context";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <AuthContextProvider>
-    <Suspense fallback={<Loader />}>
-      <App />
-    </Suspense>
+    <ReDrawContextProvider>
+      <Suspense fallback={<Loader />}>
+        <App />
+      </Suspense>
+    </ReDrawContextProvider>
   </AuthContextProvider>
 );

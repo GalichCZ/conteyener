@@ -10,7 +10,13 @@ import { TechStore } from "../../../functions/techStoreFuncs";
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
 
-export const TableItemCreate = () => {
+interface TableItemCreateProps {
+  setLoad: (c: boolean) => void;
+}
+
+export const TableItemCreate: React.FC<TableItemCreateProps> = ({
+  setLoad,
+}) => {
   const [open, setOpen] = useState(false);
   const [inputFields, setInputFields] = useState<any>([]);
   const [inputFields2, setInputFields2] = useState<any>([]);
@@ -78,11 +84,11 @@ export const TableItemCreate = () => {
     setConfirmLoading(true);
     const response = await ItemFuncs.createItem(item);
     if ("error" in response) setErr(response.error);
-    console.log(response);
-    setTimeout(() => {
-      setOpen(false);
+    else {
+      setLoad(true);
       setConfirmLoading(false);
-    }, 2000);
+      setOpen(false);
+    }
   };
 
   const handleCancel = () => {

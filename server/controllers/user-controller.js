@@ -24,7 +24,7 @@ class UserController {
 
       await MailService.sendActivationMail(
         req.body.email,
-        `http://54.93.227.104/activation/${activation_link}`
+        `http://54.93.227.104/activation/?activation=${activation_link}`
       );
 
       const token = jwt.sign(

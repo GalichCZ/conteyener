@@ -1,6 +1,6 @@
 import { NewItem, Store, UpdatedItem } from "../Types/Types";
 
-const URL = "http://localhost:4444";
+const URL = "http://localhost:4444/api";
 
 export class Item {
   async getItems() {

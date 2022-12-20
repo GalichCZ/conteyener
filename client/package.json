@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy-production": "tsc && vite build && scp -r ./dist/* root@161.35.223.6:/var/www/conteyener.com/html"
   },
   "dependencies": {
     "@ant-design/icons": "^4.8.0",

@@ -1,6 +1,6 @@
 import { NewItem, Store, UpdatedItem } from "../Types/Types";
 
-const URL = "http://localhost:4444/api";
+const URL = "https://api-automycka.space/api";
 
 export class Item {
   async getItems() {

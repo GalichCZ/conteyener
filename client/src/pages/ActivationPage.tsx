@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import AuthContext from "../store/auth-context";
 import { useSearchParams, useNavigate } from "react-router-dom";
-const URL = "http://localhost:4444/api";
+const URL = "https://api-automycka.space/api";
 
 export const ActivationPage = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-const URL = "http://localhost:4444/api/store/tech";
+const URL = "https://api-automycka.space/api/store/tech";
 
 import { TechStoreData } from "../Types/Types";
 

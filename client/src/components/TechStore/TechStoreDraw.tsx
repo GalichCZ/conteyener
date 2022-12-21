@@ -24,14 +24,12 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
 
   const getStores = async () => {
     const response = await TechStoreFuncs.getTechStore();
-    console.log(response);
     if ("error" in response) setErr(response.error);
     else setStores(response);
   };
 
   const deleteStore = async (_id: string | undefined) => {
     const response = await TechStoreFuncs.deleteTechStore(_id);
-    console.log(response);
     if (response) await getStores();
   };
 

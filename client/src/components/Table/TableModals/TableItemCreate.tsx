@@ -17,6 +17,7 @@ interface TableItemCreateProps {
 export const TableItemCreate: React.FC<TableItemCreateProps> = ({
   setLoad,
 }) => {
+  const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [inputFields, setInputFields] = useState<any>([]);
   const [inputFields2, setInputFields2] = useState<any>([]);
@@ -82,9 +83,12 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
 
   const handleOk = async () => {
     setConfirmLoading(true);
+    form.resetFields();
     const response = await ItemFuncs.createItem(item);
-    if ("error" in response) setErr(response.error);
-    else {
+    if ("error" in response) {
+      setErr(response.error);
+      setConfirmLoading(false);
+    } else {
       setLoad(true);
       setConfirmLoading(false);
       setOpen(false);
@@ -164,7 +168,6 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
             id={input.id}
             onBlur={(e) => {
               importerHandler(e.target.value);
-              console.log(item.importers);
             }}
           />
           <CloseOutlined
@@ -207,10 +210,6 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
   }, [err]);
 
   useEffect(() => {
-    console.log(item);
-  }, [item]);
-
-  useEffect(() => {
     drawImporters();
   }, [deleteImporter, inputFields]);
 
@@ -243,8 +242,17 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
       >
         <div className="">
           {err && <p className="login-err">{err}</p>}
-          <Form className="table-form" layout="vertical">
-            <Form.Item className="required-form" label="Дата заявки">
+          <Form
+            form={form}
+            id="form-create"
+            className="table-form"
+            layout="vertical"
+          >
+            <Form.Item
+              name="name"
+              className="required-form"
+              label="Дата заявки"
+            >
               <DatePicker
                 onChange={(date, dateString) => {
                   setItem({ ...item, request_date: new Date(dateString) });
@@ -252,29 +260,30 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
                 placeholder="Дата заявки"
               />
             </Form.Item>
-            <Form.Item className="required-form" label="Номер заказа">
+            <Form.Item
+              name="name2"
+              className="required-form"
+              label="Номер заказа"
+            >
               {drawOrders()}
               <Button onClick={addFields3}>Добавить поле</Button>
             </Form.Item>
             <MyInput
-              label="Номер контейнера"
-              onChange={(e) => {
-                setItem({ ...item, container_number: e.target.value });
-              }}
-            />
-            <MyInput
+              name="name3"
+              className="required-form"
               label="Товар"
               onChange={(e) => {
                 setItem({ ...item, simple_product_name: e.target.value });
               }}
             />
             <SelectDelivery
+              name="name4"
+              className="required-form"
               onChange={(value) => {
-                console.log(value);
                 setItem({ ...item, delivery_method: value });
               }}
             />
-            <Form.Item className="required-form" label="Поставщик">
+            <Form.Item name="name5" className="required-form" label="Поставщик">
               {inputFields2.map(
                 (input: { id: any; name: string }, key: number) => {
                   return (
@@ -285,7 +294,6 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
                         id={input.id}
                         onBlur={(e) => {
                           providerHandler(e.target.value);
-                          console.log(item.importers);
                         }}
                       />
                       <CloseOutlined
@@ -299,11 +307,12 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               )}
               <Button onClick={addFields2}>Добавить поле</Button>
             </Form.Item>
-            <Form.Item className="required-form" label="Импортер">
+            <Form.Item name="name6" className="required-form" label="Импортер">
               {drawImporters()}
               <Button onClick={addFields}>Добавить поле</Button>
             </Form.Item>
             <MyInput
+              name="name7"
               className="required-form"
               label="Условия поставки"
               onChange={(e) => {
@@ -311,6 +320,7 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               }}
             />
             <TechStoreSelect
+              name="name8"
               onChange={(value) => {
                 setItem({ ...item, tech_store: value });
               }}
@@ -318,6 +328,7 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               className="required-form"
             />
             <MyInput
+              name="name9"
               className="required-form"
               label="Агент"
               onChange={(e) => {
@@ -325,165 +336,19 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               }}
             />
             <MyInput
+              name="name10"
+              className="required-form"
               label="Тип контейнера"
               onChange={(e) => {
                 setItem({ ...item, container_type: e.target.value });
               }}
             />
             <MyInput
+              name="name11"
               className="required-form"
               label="Место отправки"
               onChange={(e) => {
                 setItem({ ...item, place_of_dispatch: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Порт прибытия/станция назначения"
-              onChange={(e) => {
-                setItem({ ...item, arrive_place: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Линия"
-              onChange={(e) => {
-                setItem({ ...item, line: e.target.value });
-              }}
-            />
-            <Form.Item label="Дата готовности">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, ready_date: new Date(dateString) });
-                }}
-                placeholder="Дата готовности"
-              />
-            </Form.Item>
-            <Form.Item label="Дата загрузки">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, load_date: new Date(dateString) });
-                }}
-                placeholder="Дата загрузки"
-              />
-            </Form.Item>
-            <Form.Item label="ETD">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, etd: new Date(dateString) });
-                }}
-                placeholder="ETD"
-              />
-            </Form.Item>
-            <Form.Item label="Релиз">
-              <DatePicker
-                onChange={(date, dateString) => {
-                  setItem({ ...item, release: new Date(dateString) });
-                }}
-                placeholder="Релиз"
-              />
-            </Form.Item>
-            <MyInput
-              label="BL/СМГС/CMR"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  bl_smgs_cmr: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              label="ТД"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  td: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              label="Порт"
-              onChange={(e) => {
-                setItem({ ...item, port: e.target.value });
-              }}
-            />
-            <MyInput
-              label="ДС для подачи"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  is_ds: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              label="№ декларации"
-              onChange={(e) => {
-                setItem({ ...item, declaration_number: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Наличие ОБ"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  availability_of_ob: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              label="Ответ ОБ"
-              onChange={(e) => {
-                setItem({
-                  ...item,
-                  answer_of_ob: e.target.value === "" ? false : true,
-                });
-              }}
-            />
-            <MyInput
-              label="Экспедитор"
-              onChange={(e) => {
-                setItem({ ...item, expeditor: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Станция назначения"
-              onChange={(e) => {
-                setItem({ ...item, destination_station: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Км. до станции назначения"
-              onChange={(e) => {
-                setItem({ ...item, km_to_dist: parseInt(e.target.value) });
-              }}
-            />
-            <MyInput
-              label="Ставка"
-              onChange={(e) => {
-                setItem({ ...item, bid: parseInt(e.target.value) });
-              }}
-            />
-            <MyInput
-              label="Автовывоз"
-              onChange={(e) => {
-                setItem({ ...item, pickup: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Комментарий"
-              onChange={(e) => {
-                setItem({ ...item, comment: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Фрахт"
-              onChange={(e) => {
-                setItem({ ...item, fraht: e.target.value });
-              }}
-            />
-            <MyInput
-              label="Примечание"
-              onChange={(e) => {
-                setItem({ ...item, note: e.target.value });
               }}
             />
           </Form>

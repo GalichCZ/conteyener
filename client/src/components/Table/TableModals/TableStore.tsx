@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Form, Modal } from "antd";
+import { Form, Input, Modal } from "antd";
 import { Store, TechStoreData } from "../../../Types/Types";
 import { TechStore } from "../../../functions/techStoreFuncs";
 import { Item } from "../../../functions/itemFuncs";
 import { MyInput } from "../TableUI/MyInput";
 import { TechStoreSelect } from "../../index";
+
+const { TextArea } = Input;
 
 const TechStoreFuncs = new TechStore();
 const ItemFuncs = new Item();
@@ -58,7 +60,6 @@ export const TableStore: React.FC<TableStoreProps> = ({
 
   const handleUpdateStore = async (updateStore: Store) => {
     const response = await ItemFuncs.updateStore(updateStore, itemId);
-    console.log(response);
   };
 
   useEffect(() => {
@@ -66,11 +67,6 @@ export const TableStore: React.FC<TableStoreProps> = ({
       setUpdateStore(storeData);
     }
   }, [opened]);
-
-  useEffect(() => {
-    console.log("data for update");
-    console.log(updateStore);
-  }, [updateStore]);
 
   useEffect(() => {
     if (storeData) getOneTechStore(storeData.techStore);
@@ -93,20 +89,7 @@ export const TableStore: React.FC<TableStoreProps> = ({
             setUpdateStore({ ...updateStore, techStore: value });
           }}
         />
-        <MyInput
-          defaultValue={storeData?.contact}
-          onChange={(e) => {
-            setUpdateStore({ ...updateStore, contact: e.target.value });
-          }}
-          label="Контактное лицо"
-        />
-        <MyInput
-          defaultValue={storeData?.note}
-          onChange={(e) => {
-            setUpdateStore({ ...updateStore, note: e.target.value });
-          }}
-          label="Примечание"
-        />
+        <p>Адрес: {data.address}</p>
         <MyInput
           defaultValue={storeData?.receiver}
           onChange={(e) => {
@@ -114,7 +97,24 @@ export const TableStore: React.FC<TableStoreProps> = ({
           }}
           label="Получатель"
         />
-        <p>Адрес: {data.address}</p>
+        <MyInput
+          defaultValue={storeData?.contact}
+          onChange={(e) => {
+            setUpdateStore({ ...updateStore, contact: e.target.value });
+          }}
+          label="Контактное лицо"
+        />
+        <Form.Item label="Примечание">
+          <TextArea
+            defaultValue={storeData?.note}
+            onChange={(e) => {
+              setUpdateStore({ ...updateStore, note: e.target.value });
+            }}
+            rows={4}
+            placeholder="Примечание"
+          />
+        </Form.Item>
+
         <p>Время доставки: {data.delivery_time}</p>
       </Form>
     </Modal>

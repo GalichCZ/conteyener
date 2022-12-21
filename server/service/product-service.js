@@ -11,6 +11,7 @@ class ProductService {
           trade_mark: product["TRADE MARK"],
           product_name: product["NAME OF GOODS"],
           model: product.MODEL,
+          modification: product.MODIFICATION,
           quantity_pieces: product["QUANTITY, PCS"],
           quantity_places: product.CTNS,
           piece_price: product["UNIT PRICE, USD"],

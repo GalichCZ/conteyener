@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form } from "antd";
 import { IsDocsType } from "../../../Types/Types";
 import { DocsSelect } from "../../index";
 import Docs from "../../../functions/isDocsFuncs";
+import ReDrawContext from "../../../store/redraw-context";
 
 interface TableDocsProps {
   opened: boolean | undefined;
@@ -19,6 +20,7 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
   setOpen,
   _id,
 }) => {
+  const reDraw = useContext(ReDrawContext);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
   const [isDocs, setIsDocs] = useState({});
@@ -34,7 +36,7 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
     if (response === 200) {
       setConfirmLoading(false);
       setOpen(false);
-      window.location.reload();
+      reDraw.reDrawHandler(true);
     }
   };
 

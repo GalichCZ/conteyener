@@ -25,6 +25,7 @@ class UserController {
       await MailService.sendActivationMail(
         req.body.email,
         `https://www.conteyener.com/activation/?activation=${activation_link}`
+        // `http://localhost:5173/activation/?activation=${activation_link}`
       );
 
       const token = jwt.sign(

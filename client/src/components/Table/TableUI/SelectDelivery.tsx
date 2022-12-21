@@ -2,14 +2,22 @@ import React, { useState } from "react";
 import { Select, Form } from "antd";
 
 interface SelectDelivery {
+  className?: string;
+  name?: string;
   onChange: (value: string) => void;
+  defaultValue?: string;
 }
 
-export const SelectDelivery: React.FC<SelectDelivery> = ({ onChange }) => {
+export const SelectDelivery: React.FC<SelectDelivery> = ({
+  className,
+  name,
+  onChange,
+  defaultValue,
+}) => {
   return (
-    <Form.Item label="Способ Доставки">
+    <Form.Item name={name} className={className} label="Способ Доставки">
       <Select
-        defaultValue="Способ доставки"
+        defaultValue={defaultValue}
         style={{ width: 120 }}
         onChange={onChange}
         options={[

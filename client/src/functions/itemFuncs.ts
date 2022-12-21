@@ -1,6 +1,7 @@
-import { NewItem, Store, UpdatedItem } from "../Types/Types";
+import { Comment, NewItem, Store, UpdatedItem } from "../Types/Types";
 
-const URL = "https://api-automycka.space/api";
+// const URL = "https://api-automycka.space/api";
+const URL = "http://localhost:4444/api";
 
 export class Item {
   async getItems() {
@@ -53,6 +54,26 @@ export class Item {
     return response;
   }
 
+  async updateComment(commentUpdate: Comment) {
+    const response = await fetch(URL + "/item/comment", {
+      method: "PATCH",
+      body: JSON.stringify(commentUpdate),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.status)
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return error;
+      });
+    return response;
+  }
+
   async updateStore(updateStore: Store, itemId: string) {
     const response = await fetch(URL + "/item/store", {
       method: "PATCH",
@@ -84,8 +105,6 @@ export class Item {
       .catch((error) => {
         console.error("Error:", error);
       });
-
-    console.log(response);
 
     return response;
   }

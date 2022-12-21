@@ -65,8 +65,8 @@ export type TableProps = {
         declaration_number: string;
         declaration_issue_date: string;
         declaration_status: string;
-        availability_of_ob: boolean;
-        answer_of_ob: boolean;
+        availability_of_ob: string;
+        answer_of_ob: string;
         expeditor: string;
         destination_station: string;
         km_to_dist: number;
@@ -111,8 +111,8 @@ export interface NewItem {
   is_docs: IsDocsType;
   declaration_number: string;
   declaration_issue_date: Date | null;
-  availability_of_ob: boolean | null;
-  answer_of_ob: boolean | null;
+  availability_of_ob: Date | null;
+  answer_of_ob: Date | null;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
@@ -161,8 +161,8 @@ export type SingleItem = {
         is_docs: boolean | null;
         declaration_number: string;
         declaration_issue_date: Date | null;
-        availability_of_ob: boolean | null;
-        answer_of_ob: boolean | null;
+        availability_of_ob: Date | null;
+        answer_of_ob: Date | null;
         expeditor: string;
         destination_station: string;
         km_to_dist: number | null;
@@ -175,6 +175,11 @@ export type SingleItem = {
         fraht: string;
       };
 };
+
+export interface Comment {
+  comment: string;
+  _id: string;
+}
 
 export interface UpdatedItem {
   _id: string | null;
@@ -206,8 +211,8 @@ export interface UpdatedItem {
   is_docs: boolean | null;
   declaration_number: string;
   declaration_issue_date: Date | null;
-  availability_of_ob: boolean | null;
-  answer_of_ob: boolean | null;
+  availability_of_ob: Date | null;
+  answer_of_ob: Date | null;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
@@ -234,6 +239,7 @@ export interface Products {
   article: string;
   trade_mark: string;
   model: string;
+  modification: string;
   product_name: string;
   quantity_pieces: number;
   quantity_places: number;

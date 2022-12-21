@@ -4,7 +4,6 @@ export const TableColNames = () => {
   return (
     <thead>
       <tr>
-        <td></td>
         <td>Дата заявки</td>
         <td>Номер заказа</td>
         <td>Номер контейнера</td>
@@ -40,9 +39,9 @@ export const TableColNames = () => {
         <td>Автовывоз</td>
         <td>Дата прибытия на склад</td>
         <td>Комментарий</td>
-        <td>Фрахт</td>
+        {/* <td>Фрахт</td>
         <td>Ставка</td>
-        <td>Примечания</td>
+        <td>Примечания</td> */}
       </tr>
     </thead>
   );

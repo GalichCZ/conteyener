@@ -84,6 +84,20 @@ class ItemService {
     }
   }
 
+  async updateComment(_id, req) {
+    try {
+      return await ItemSchema.updateOne(
+        { _id },
+        {
+          comment: req.body.comment,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   async updateItem(_id, req, container) {
     try {
       const delivery_method = req.body.delivery_method;
@@ -91,6 +105,8 @@ class ItemService {
       const techStore = await TechStoreSchema.findById(
         req.body.store.techStore
       );
+
+      console.log(_id);
 
       const formulaRes = FormulaService.dateFormula(
         delivery_method,

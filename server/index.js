@@ -42,11 +42,9 @@ app.patch("/api/item", ItemController.updateItem);
 app.delete("/api/item/:_id", ItemController.deleteItem);
 app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/api/item/store", StoreController.updateStore);
+app.patch("/api/item/comment", ItemController.updateComment);
 
-app.get(
-  "/api/declaration/:declaration_number",
-  DeclarationController.declarationStatusGet
-);
+app.post("/api/declaration/get", DeclarationController.declarationStatusGet);
 app.post("/api/declaration", DeclarationController.declarationStatusCreate);
 
 app.post("/api/isdocs/:_id", IsDocsController.updateDocs);

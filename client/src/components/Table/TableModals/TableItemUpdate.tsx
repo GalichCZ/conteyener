@@ -7,6 +7,7 @@ import { SelectDelivery } from "../TableUI/SelectDelivery";
 import { TechStoreSelect } from "../TableUI/TechStoreSelect";
 import { MyInput } from "../TableUI/MyInput";
 import ReDrawContext from "../../../store/redraw-context";
+import { DatePickerUpdate } from "../TableUI/DatePickerUpdate";
 
 const ItemFuncs = new Item();
 
@@ -69,8 +70,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     note: "",
     fraht: "",
   });
-
-  console.log(item);
 
   useEffect(() => {
     setInputFields(item?.importers);
@@ -154,10 +153,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   };
 
   useEffect(() => {
-    console.log(singleItem);
-  }, [singleItem]);
-
-  useEffect(() => {
     if (opened) setSingleItem(item);
   }, [opened]);
 
@@ -172,21 +167,30 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
+        <Button
+          className="delete-btn"
+          onClick={async () => {
+            const response = await ItemFuncs.deleteItem(item._id);
+            if (response === 200) {
+              setOpen(false);
+              reDraw.reDrawHandler(true);
+            }
+          }}
+        >
+          Удалить запись
+        </Button>
         <Form className="table-form" layout="vertical">
-          <Form.Item className="required-form" label="Дата заявки">
-            <input
-              className="ant-input"
-              placeholder="Дата заявки"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  request_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.request_date?.substring(0, 10)}
-            />
-          </Form.Item>
+          <DatePickerUpdate
+            className="required-form"
+            label="Дата заявки"
+            defaultValue={item?.request_date?.substring(0, 10)}
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                request_date: new Date(e.target.value),
+              });
+            }}
+          />
           <Form.Item className="required-form" label="№ заказа">
             {inputFields3?.map(
               (input: { id: string; number: string }, key: string) => {
@@ -222,7 +226,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            defaultValue={item?.container.container_number}
+            defaultValue={item?.container?.container_number}
           />
           <MyInput
             label="Товар"
@@ -236,8 +240,8 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             defaultValue={item?.simple_product_name}
           />
           <SelectDelivery
+            defaultValue={item?.delivery_method}
             onChange={(value) => {
-              console.log(value);
               setSingleItem({ ...singleItem, delivery_method: value });
             }}
           />
@@ -252,7 +256,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                       defaultValue={input.name}
                       onBlur={(e) => {
                         providerHandler(e.target.value);
-                        console.log(item.importers);
+                        item.importers;
                       }}
                     />
                     <CloseOutlined
@@ -277,7 +281,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                       defaultValue={input.name}
                       onBlur={(e) => {
                         importerHandler(e.target.value);
-                        console.log(item.importers);
+                        item.importers;
                       }}
                     />
                     <CloseOutlined
@@ -326,7 +330,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            defaultValue={item?.container.container_type}
+            defaultValue={item?.container?.container_type}
           />
           <MyInput
             className="required-form"
@@ -346,64 +350,48 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             }}
             defaultValue={item?.line}
           />
-          <Form.Item label="Дата готовности">
-            <input
-              placeholder="Дата готовности"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  ready_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.ready_date?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Дата загрузки">
-            <input
-              placeholder="Дата загрузки"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  load_date: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.load_date?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="ETD">
-            <input
-              placeholder="ETD"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({ ...singleItem, etd: new Date(e.target.value) });
-              }}
-              defaultValue={item?.etd?.substring(0, 10)}
-            />
-          </Form.Item>
-          <Form.Item label="Релиз">
-            <input
-              placeholder="Релиз"
-              className="ant-input"
-              type="date"
-              onChange={(e) => {
-                setSingleItem({
-                  ...singleItem,
-                  release: new Date(e.target.value),
-                });
-              }}
-              defaultValue={item?.release?.substring(0, 10)}
-            />
-          </Form.Item>
+          <DatePickerUpdate
+            label="Дата готовности"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                ready_date: new Date(e.target.value),
+              });
+            }}
+            defaultValue={item?.ready_date?.substring(0, 10)}
+          />
+          <DatePickerUpdate
+            label="Дата загрузки"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                load_date: new Date(e.target.value),
+              });
+            }}
+            defaultValue={item?.load_date?.substring(0, 10)}
+          />
+          <DatePickerUpdate
+            label="ETD"
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, etd: new Date(e.target.value) });
+            }}
+            defaultValue={item?.etd?.substring(0, 10)}
+          />
+          <DatePickerUpdate
+            label="Релиз"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                release: new Date(e.target.value),
+              });
+            }}
+            defaultValue={item?.release?.substring(0, 10)}
+          />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
               style={{ minWidth: "45px" }}
               onChange={(e) => {
-                console.log(e.valueOf);
+                setSingleItem({ ...singleItem, bl_smgs_cmr: e.valueOf() });
               }}
             />
           </Form.Item>
@@ -444,25 +432,35 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             }}
             defaultValue={item?.declaration_number}
           />
-          <MyInput
+          <DatePickerUpdate
             label="Наличие ОБ"
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                availability_of_ob: e.target.value === "" ? false : true,
+                availability_of_ob: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.availability_of_ob ? "V" : ""}
+            defaultValue={item?.availability_of_ob?.substring(0, 10)}
           />
-          <MyInput
+          <DatePickerUpdate
             label="Ответ ОБ"
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                answer_of_ob: e.target.value === "" ? false : true,
+                answer_of_ob: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.answer_of_ob ? "V" : ""}
+            defaultValue={item?.answer_of_ob?.substring(0, 10)}
+          />
+          <DatePickerUpdate
+            label="Ответ ОБ"
+            onChange={(e) => {
+              setSingleItem({
+                ...singleItem,
+                answer_of_ob: new Date(e.target.value),
+              });
+            }}
+            defaultValue={item?.answer_of_ob?.substring(0, 10)}
           />
           <MyInput
             label="Экспедитор"

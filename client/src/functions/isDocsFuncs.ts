@@ -1,5 +1,5 @@
-import { IsDocsType } from "../Types/Types";
 const URL = "https://api-automycka.space/api";
+// const URL = "http://localhost:4444/api";
 
 class Docs {
   async updateDocs(docs: object, _id: string) {
@@ -9,7 +9,6 @@ class Docs {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       },
     })
       .then((response) => response.status)

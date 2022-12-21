@@ -19,10 +19,7 @@ export const LoginForm = () => {
   const loginHandler = async () => {
     const data = await UserFuncs.login(loginValues);
 
-    console.log(data);
-
     if ("message" in data) {
-      console.log(data.message);
       return setErr(data.message);
     }
 

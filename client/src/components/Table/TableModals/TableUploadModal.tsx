@@ -36,7 +36,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
 
   const props: UploadProps = {
     name: "file",
-    action: `http://localhost:4444/product/${container}`,
+    action: `https://api-automycka.space/api/product/${container}`,
     headers: {
       authorization: "authorization-text",
     },
@@ -73,7 +73,8 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
             <td>Артикул</td>
             <td>Торговая марка</td>
             <td>Наименование товара</td>
-            <td>Модель</td>
+            <td>Модель/Серия(Тип)</td>
+            <td>Модификация</td>
             <td>Кол-во штук</td>
             <td>Кол-во мест</td>
             <td>Цена за еденицу</td>
@@ -93,6 +94,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
                 <td>{product.trade_mark}</td>
                 <td>{product.product_name}</td>
                 <td>{product.model}</td>
+                <td>{product.modification}</td>
                 <td>{product.quantity_pieces}</td>
                 <td>{product.quantity_places}</td>
                 <td>{product.piece_price}</td>

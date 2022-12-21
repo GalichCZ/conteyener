@@ -9,9 +9,8 @@ class DeclarationController {
 
   async declarationStatusGet(req, res) {
     const response = await DeclarationService.getDeclarationStatus(
-      req.params.declaration_number
+      req.body.declaration_number
     );
-
     res.json(response);
   }
 }

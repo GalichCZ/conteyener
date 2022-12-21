@@ -7,6 +7,7 @@ interface MyInputInterface {
   label: string;
   defaultValue?: string | number;
   onChange?: (e: { target: { value: any } }) => void;
+  name?: string;
 }
 
 export const MyInput: React.FC<MyInputInterface> = ({
@@ -15,9 +16,10 @@ export const MyInput: React.FC<MyInputInterface> = ({
   onChange,
   style,
   defaultValue,
+  name,
 }) => {
   return (
-    <Form.Item style={style} className={className} label={label}>
+    <Form.Item name={name} style={style} className={className} label={label}>
       <Input
         onChange={onChange}
         defaultValue={defaultValue}

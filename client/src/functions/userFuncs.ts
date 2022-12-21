@@ -1,4 +1,5 @@
 const URL = "https://api-automycka.space/api";
+// const URL = "http://localhost:4444/api";
 
 export class User {
   async signUp(signUpValues: object) {
@@ -59,7 +60,6 @@ export class User {
   }
 
   async deleteUser(email: string) {
-    console.log(email);
     const response = await fetch(URL + `/user/${email}`, {
       method: "DELETE",
     })

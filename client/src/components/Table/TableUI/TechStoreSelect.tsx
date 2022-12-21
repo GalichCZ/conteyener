@@ -10,6 +10,7 @@ interface TechStoreSelectProps {
   className?: string;
   defaultValue?: string;
   onChange: (value: string) => void;
+  name?: string;
 }
 
 export const TechStoreSelect: React.FC<TechStoreSelectProps> = ({
@@ -17,6 +18,7 @@ export const TechStoreSelect: React.FC<TechStoreSelectProps> = ({
   className,
   defaultValue,
   onChange,
+  name,
 }) => {
   const [stores, setStores] = useState<TechStoreData[]>();
   const [err, setErr] = useState<string | null>();
@@ -32,7 +34,7 @@ export const TechStoreSelect: React.FC<TechStoreSelectProps> = ({
   }, [opened]);
 
   return (
-    <Form.Item className={className} label="Склад">
+    <Form.Item name={name} className={className} label="Склад">
       <Select
         defaultValue={defaultValue}
         placeholder="Выберите склад"

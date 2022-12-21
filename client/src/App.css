@@ -50,3 +50,17 @@
   align-items: center;
   margin: 0 !important;
 }
+
+.delete-btn {
+  position: absolute !important;
+  bottom: 10px;
+}
+
+.formula-date {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.comment-modal {
+  min-width: 700px;
+}

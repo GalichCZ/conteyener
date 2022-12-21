@@ -65,8 +65,8 @@ export type TableProps = {
         declaration_number: string;
         declaration_issue_date: string;
         declaration_status: string;
-        availability_of_ob: boolean;
-        answer_of_ob: boolean;
+        availability_of_ob: string;
+        answer_of_ob: string;
         expeditor: string;
         destination_station: string;
         km_to_dist: number;
@@ -102,24 +102,29 @@ export interface NewItem {
   load_date: Date | null;
   etd: Date | null;
   eta: Date | null;
+  eta_update: boolean;
   release: Date | null;
   bl_smgs_cmr: boolean | null;
   td: boolean | null;
   date_do: Date | null;
+  date_do_update: boolean;
   port: string;
   is_ds: boolean | null;
   is_docs: IsDocsType;
   declaration_number: string;
   declaration_issue_date: Date | null;
-  availability_of_ob: boolean | null;
-  answer_of_ob: boolean | null;
+  declaration_issue_date_update: boolean;
+  availability_of_ob: Date | null;
+  answer_of_ob: Date | null;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
   train_arrive_date: Date | null;
+  train_arrive_date_update: Boolean;
   bid: number | null;
   pickup: string;
   store_arrive_date: Date | null;
+  store_arrive_date_update: Boolean;
   comment: string;
   note: string;
   fraht: string;
@@ -161,8 +166,8 @@ export type SingleItem = {
         is_docs: boolean | null;
         declaration_number: string;
         declaration_issue_date: Date | null;
-        availability_of_ob: boolean | null;
-        answer_of_ob: boolean | null;
+        availability_of_ob: Date | null;
+        answer_of_ob: Date | null;
         expeditor: string;
         destination_station: string;
         km_to_dist: number | null;
@@ -175,6 +180,11 @@ export type SingleItem = {
         fraht: string;
       };
 };
+
+export interface Comment {
+  comment: string;
+  _id: string;
+}
 
 export interface UpdatedItem {
   _id: string | null;
@@ -206,8 +216,8 @@ export interface UpdatedItem {
   is_docs: boolean | null;
   declaration_number: string;
   declaration_issue_date: Date | null;
-  availability_of_ob: boolean | null;
-  answer_of_ob: boolean | null;
+  availability_of_ob: Date | null;
+  answer_of_ob: Date | null;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
@@ -234,6 +244,7 @@ export interface Products {
   article: string;
   trade_mark: string;
   model: string;
+  modification: string;
   product_name: string;
   quantity_pieces: number;
   quantity_places: number;
@@ -273,4 +284,18 @@ export interface TechStoreData {
   name: string;
   address: string;
   _id?: string;
+}
+
+export interface FormulaDateUpdate {
+  eta?: Date | string;
+  date_do?: Date | string;
+  declaration_issue_date?: Date | string;
+  train_arrive_date?: Date | string;
+  store_arrive_date?: Date | string;
+  _id: string;
+  eta_update?: boolean;
+  date_do_update?: boolean;
+  declaration_issue_date_update?: boolean;
+  train_arrive_date_update?: boolean;
+  store_arrive_date_update?: boolean;
 }

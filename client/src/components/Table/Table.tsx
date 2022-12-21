@@ -1,5 +1,4 @@
-import { Button } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   TableStore,
   TableItemUpdate,
@@ -8,16 +7,24 @@ import {
   TableUploadModal,
   TableDocsModal,
   ShowDelivery,
+  TableComment,
+  TableFormulaDate,
 } from "../index";
 import * as Types from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
 import dayjs from "dayjs";
 
-const ItemFuncs = new Item();
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [isModal, setIsModal] = useState<boolean>();
   const [storeData, setStoreData] = useState<Types.Store>();
   const [itemId, setItemId] = useState<string>("");
+
+  const [docsModal, setDocsModal] = useState<boolean>();
+  const [docs, setDocs] = useState<Types.IsDocsType>();
+  const [docsItemId, setDocsItemId] = useState<string>("");
+
+  const [commentModal, setCommentModal] = useState<boolean>();
+  const [commentModalValue, setCommentModalValue] = useState<string>("");
 
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
@@ -28,28 +35,26 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [uploadModal, setUploadModal] = useState<boolean>();
   const [uploadContainer, setUploadContainer] = useState<any>();
 
-  const [docsModal, setDocsModal] = useState<boolean>();
-  const [docs, setDocs] = useState<Types.IsDocsType>();
-  const [docsItemId, setDocsItemId] = useState<string>("");
+  const [formulaDateModal, setFormulaDateModal] = useState<boolean>(false);
+  const [formulaDateType, setFormulaDateType] = useState<number>(0);
+  const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
 
   console.log(data);
 
-  const isAllDocs = (item: Types.IsDocsType) => {
-    if (
-      !item?.CI ||
-      !item?.ED ||
-      !item?.PI ||
-      !item?.PL ||
-      !item?.SS_DS ||
-      !item?.bill ||
-      !item?.contract_agrees ||
-      !item?.cost_agrees ||
-      !item?.instruction
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  const docsCount = (item: Types.IsDocsType) => {
+    let a = 0;
+    const values = Object.values(item);
+    if (values[0] === true) a += 1;
+    if (values[1] === true) a += 1;
+    if (values[2] === true) a += 1;
+    if (values[3] === true) a += 1;
+    if (values[4] === true) a += 1;
+    if (values[5] === true) a += 1;
+    if (values[6] === true) a += 1;
+    if (values[7] === true) a += 1;
+    if (values[8] === true) a += 1;
+    if (a === 9) return "+";
+    return a;
   };
 
   const timeConvert = (time: string) => {
@@ -58,6 +63,19 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   };
   return (
     <>
+      <TableFormulaDate
+        defaultValue={formulaDateDefault}
+        _id={itemId}
+        setOpen={setFormulaDateModal}
+        opened={formulaDateModal}
+        dateType={formulaDateType}
+      />
+      <TableComment
+        defaultValue={commentModalValue}
+        setOpen={setCommentModal}
+        opened={commentModal}
+        _id={itemId}
+      />
       <TableDeclStatus
         declaration_number={declarationNumber}
         opened={declarationModal}
@@ -93,16 +111,6 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
             {data?.map((item, key) => {
               return (
                 <tr key={key}>
-                  <td>
-                    <Button
-                      onClick={async () => {
-                        const response = await ItemFuncs.deleteItem(item._id);
-                        if (response === 200) window.location.reload();
-                      }}
-                    >
-                      Удалить запись
-                    </Button>
-                  </td>
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -123,12 +131,12 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       </tbody>
                     </table>
                   </td>
-                  <td> {item.container.container_number} </td>
+                  <td> {item.container?.container_number} </td>
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setUploadModal(true);
-                      setUploadContainer(item.container.container_number);
+                      setUploadContainer(item.container?.container_number);
                     }}
                   >
                     {item.simple_product_name}
@@ -178,17 +186,43 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     {item.store_name}
                   </td>
                   <td> {item.agent} </td>
-                  <td> {item.container.container_type} </td>
+                  <td> {item.container?.container_type} </td>
                   <td> {item.place_of_dispatch} </td>
                   <td> {item.line} </td>
                   <td> {timeConvert(item.ready_date)} </td>
                   <td> {timeConvert(item.load_date)} </td>
                   <td> {timeConvert(item.etd)} </td>
-                  <td> {timeConvert(item.eta)} </td>
+                  <td
+                    className="formula-date"
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(1);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                  >
+                    {" "}
+                    {timeConvert(item.eta)}{" "}
+                  </td>
                   <td> {timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
                   <td> {item.td ? "+" : "-"} </td>
-                  <td> {timeConvert(item.date_do)} </td>
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(2);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.date_do);
+                      }
+                    }}
+                    className="formula-date"
+                  >
+                    {" "}
+                    {timeConvert(item.date_do)}{" "}
+                  </td>
                   <td> {item.port} </td>
                   <td> {item.is_ds ? "+" : "-"} </td>
                   <td
@@ -199,7 +233,14 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       setDocsItemId(item._id);
                     }}
                   >
-                    {isAllDocs(item.is_docs) ? "+" : "-"}
+                    {docsCount(item.is_docs) === "+" ? (
+                      docsCount(item.is_docs)
+                    ) : (
+                      <>
+                        {docsCount(item.is_docs)}
+                        /9
+                      </>
+                    )}
                   </td>
                   <td
                     style={{ cursor: "pointer" }}
@@ -210,19 +251,64 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {item.declaration_number}
                   </td>
-                  <td> {timeConvert(item.declaration_issue_date)} </td>
-                  <td> {item.availability_of_ob ? "+" : "-"} </td>
-                  <td> {item.answer_of_ob ? "+" : "-"} </td>
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(3);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.declaration_issue_date);
+                      }
+                    }}
+                    className="formula-date"
+                  >
+                    {timeConvert(item.declaration_issue_date)}
+                  </td>
+                  <td> {timeConvert(item.availability_of_ob)} </td>
+                  <td> {timeConvert(item.answer_of_ob)} </td>
                   <td> {item.expeditor} </td>
                   <td> {item.destination_station} </td>
                   <td> {item.km_to_dist} </td>
-                  <td> {timeConvert(item.train_arrive_date)} </td>
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(4);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                    className="formula-date"
+                  >
+                    {timeConvert(item.train_arrive_date)}
+                  </td>
                   <td> {item.pickup} </td>
-                  <td> {timeConvert(item.store_arrive_date)} </td>
-                  <td> {item.comment} </td>
-                  <td> {item.fraht} </td>
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(5);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                    className="formula-date"
+                  >
+                    {timeConvert(item.store_arrive_date)}
+                  </td>
+                  <td
+                    onClick={() => {
+                      setCommentModalValue(item.comment);
+                      setCommentModal(true);
+                      setItemId(item._id);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {item.comment.substring(0, 10)}...
+                  </td>
+                  {/* <td> {item.fraht} </td>
                   <td> {item.bid} </td>
-                  <td> {item.note} </td>
+                  <td> {item.note} </td> */}
                 </tr>
               );
             })}

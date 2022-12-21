@@ -50,6 +50,8 @@ class FormulaService {
         store_arrive_date: null,
       };
   }
+
+  updateDateFormulaEta(eta)
 }
 
 module.exports = new FormulaService();

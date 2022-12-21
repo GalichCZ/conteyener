@@ -1,0 +1,156 @@
+            {/*<MyInput
+              label="Порт прибытия/станция назначения"
+              onChange={(e) => {
+                setItem({ ...item, arrive_place: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Линия"
+              onChange={(e) => {
+                setItem({ ...item, line: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Номер контейнера"
+              onChange={(e) => {
+                setItem({ ...item, container_number: e.target.value });
+              }}
+            />
+            <Form.Item label="Дата готовности">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, ready_date: new Date(dateString) });
+                }}
+                placeholder="Дата готовности"
+              />
+            </Form.Item>
+            <Form.Item label="Дата загрузки">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, load_date: new Date(dateString) });
+                }}
+                placeholder="Дата загрузки"
+              />
+            </Form.Item>
+            <Form.Item label="ETD">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, etd: new Date(dateString) });
+                }}
+                placeholder="ETD"
+              />
+            </Form.Item>
+            <Form.Item label="Релиз">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, release: new Date(dateString) });
+                }}
+                placeholder="Релиз"
+              />
+            </Form.Item>
+            <MyInput
+              label="BL/СМГС/CMR"
+              onChange={(e) => {
+                setItem({
+                  ...item,
+                  bl_smgs_cmr: e.target.value === "" ? false : true,
+                });
+              }}
+            />
+            <MyInput
+              label="ТД"
+              onChange={(e) => {
+                setItem({
+                  ...item,
+                  td: e.target.value === "" ? false : true,
+                });
+              }}
+            />
+            <MyInput
+              label="Порт"
+              onChange={(e) => {
+                setItem({ ...item, port: e.target.value });
+              }}
+            />
+            <MyInput
+              label="ДС для подачи"
+              onChange={(e) => {
+                setItem({
+                  ...item,
+                  is_ds: e.target.value === "" ? false : true,
+                });
+              }}
+            />
+            <MyInput
+              label="№ декларации"
+              onChange={(e) => {
+                setItem({ ...item, declaration_number: e.target.value });
+              }}
+            />
+            <Form.Item label="Наличие ОБ">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({
+                    ...item,
+                    availability_of_ob: new Date(dateString),
+                  });
+                }}
+                placeholder="Наличие ОБ"
+              />
+            </Form.Item>
+            <Form.Item label="Ответ ОБ">
+              <DatePicker
+                onChange={(date, dateString) => {
+                  setItem({ ...item, answer_of_ob: new Date(dateString) });
+                }}
+                placeholder="Ответ ОБ"
+              />
+            </Form.Item>
+            <MyInput
+              label="Экспедитор"
+              onChange={(e) => {
+                setItem({ ...item, expeditor: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Станция назначения"
+              onChange={(e) => {
+                setItem({ ...item, destination_station: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Км. до станции назначения"
+              onChange={(e) => {
+                setItem({ ...item, km_to_dist: parseInt(e.target.value) });
+              }}
+            />
+            <MyInput
+              label="Ставка"
+              onChange={(e) => {
+                setItem({ ...item, bid: parseInt(e.target.value) });
+              }}
+            />
+            <MyInput
+              label="Автовывоз"
+              onChange={(e) => {
+                setItem({ ...item, pickup: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Комментарий"
+              onChange={(e) => {
+                setItem({ ...item, comment: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Фрахт"
+              onChange={(e) => {
+                setItem({ ...item, fraht: e.target.value });
+              }}
+            />
+            <MyInput
+              label="Примечание"
+              onChange={(e) => {
+                setItem({ ...item, note: e.target.value });
+              }}
+            />*/}

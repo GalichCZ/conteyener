@@ -8,6 +8,7 @@ import {
   TableDocsModal,
   ShowDelivery,
   TableComment,
+  TableFormulaDate,
 } from "../index";
 import * as Types from "../../Types/Types";
 import { Item } from "../../functions/itemFuncs";
@@ -34,6 +35,10 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [uploadModal, setUploadModal] = useState<boolean>();
   const [uploadContainer, setUploadContainer] = useState<any>();
 
+  const [formulaDateModal, setFormulaDateModal] = useState<boolean>(false);
+  const [formulaDateType, setFormulaDateType] = useState<number>(0);
+  const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
+
   console.log(data);
 
   const docsCount = (item: Types.IsDocsType) => {
@@ -58,6 +63,13 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   };
   return (
     <>
+      <TableFormulaDate
+        defaultValue={formulaDateDefault}
+        _id={itemId}
+        setOpen={setFormulaDateModal}
+        opened={formulaDateModal}
+        dateType={formulaDateType}
+      />
       <TableComment
         defaultValue={commentModalValue}
         setOpen={setCommentModal}
@@ -124,7 +136,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setUploadModal(true);
-                      setUploadContainer(item.container.container_number);
+                      setUploadContainer(item.container?.container_number);
                     }}
                   >
                     {item.simple_product_name}
@@ -180,11 +192,34 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {timeConvert(item.ready_date)} </td>
                   <td> {timeConvert(item.load_date)} </td>
                   <td> {timeConvert(item.etd)} </td>
-                  <td className="formula-date"> {timeConvert(item.eta)} </td>
+                  <td
+                    className="formula-date"
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(1);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                  >
+                    {" "}
+                    {timeConvert(item.eta)}{" "}
+                  </td>
                   <td> {timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
                   <td> {item.td ? "+" : "-"} </td>
-                  <td className="formula-date">
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(2);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.date_do);
+                      }
+                    }}
+                    className="formula-date"
+                  >
                     {" "}
                     {timeConvert(item.date_do)}{" "}
                   </td>
@@ -216,7 +251,17 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {item.declaration_number}
                   </td>
-                  <td className="formula-date">
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(3);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.declaration_issue_date);
+                      }
+                    }}
+                    className="formula-date"
+                  >
                     {timeConvert(item.declaration_issue_date)}
                   </td>
                   <td> {timeConvert(item.availability_of_ob)} </td>
@@ -224,11 +269,31 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.expeditor} </td>
                   <td> {item.destination_station} </td>
                   <td> {item.km_to_dist} </td>
-                  <td className="formula-date">
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(4);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                    className="formula-date"
+                  >
                     {timeConvert(item.train_arrive_date)}
                   </td>
                   <td> {item.pickup} </td>
-                  <td className="formula-date">
+                  <td
+                    onClick={() => {
+                      if (item.store_arrive_date !== null) {
+                        setFormulaDateModal(true);
+                        setFormulaDateType(5);
+                        setItemId(item._id);
+                        setFormulaDateDefault(item.eta);
+                      }
+                    }}
+                    className="formula-date"
+                  >
                     {timeConvert(item.store_arrive_date)}
                   </td>
                   <td

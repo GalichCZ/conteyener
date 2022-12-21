@@ -156,6 +156,8 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     if (opened) setSingleItem(item);
   }, [opened]);
 
+  console.log(item?.request_date);
+
   return (
     <>
       <Modal

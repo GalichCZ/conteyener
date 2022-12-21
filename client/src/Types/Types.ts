@@ -102,24 +102,29 @@ export interface NewItem {
   load_date: Date | null;
   etd: Date | null;
   eta: Date | null;
+  eta_update: boolean;
   release: Date | null;
   bl_smgs_cmr: boolean | null;
   td: boolean | null;
   date_do: Date | null;
+  date_do_update: boolean;
   port: string;
   is_ds: boolean | null;
   is_docs: IsDocsType;
   declaration_number: string;
   declaration_issue_date: Date | null;
+  declaration_issue_date_update: boolean;
   availability_of_ob: Date | null;
   answer_of_ob: Date | null;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
   train_arrive_date: Date | null;
+  train_arrive_date_update: Boolean;
   bid: number | null;
   pickup: string;
   store_arrive_date: Date | null;
+  store_arrive_date_update: Boolean;
   comment: string;
   note: string;
   fraht: string;
@@ -279,4 +284,18 @@ export interface TechStoreData {
   name: string;
   address: string;
   _id?: string;
+}
+
+export interface FormulaDateUpdate {
+  eta?: Date | string;
+  date_do?: Date | string;
+  declaration_issue_date?: Date | string;
+  train_arrive_date?: Date | string;
+  store_arrive_date?: Date | string;
+  _id: string;
+  eta_update?: boolean;
+  date_do_update?: boolean;
+  declaration_issue_date_update?: boolean;
+  train_arrive_date_update?: boolean;
+  store_arrive_date_update?: boolean;
 }

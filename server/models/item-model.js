@@ -13,7 +13,7 @@ const ItemSchema = new mongoose.Schema(
     },
     container: {
       type: Object,
-      required: true,
+      // required: true,
     },
     simple_product_name: String,
     product: {
@@ -51,15 +51,27 @@ const ItemSchema = new mongoose.Schema(
     load_date: Date,
     etd: Date,
     eta: Date,
+    eta_update: {
+      type: Boolean,
+      default: false,
+    },
     release: Date,
     bl_smgs_cmr: Boolean,
     td: Boolean,
     date_do: Date,
+    date_do_update: {
+      type: Boolean,
+      default: false,
+    },
     port: String,
     is_ds: Boolean,
     is_docs: Object,
     declaration_number: String,
     declaration_issue_date: Date,
+    declaration_issue_date_update: {
+      type: Boolean,
+      default: false,
+    },
     declaration_status: Array,
     availability_of_ob: Date,
     answer_of_ob: Date,
@@ -67,8 +79,16 @@ const ItemSchema = new mongoose.Schema(
     destination_station: String,
     km_to_dist: Number,
     train_arrive_date: Date,
+    train_arrive_date_update: {
+      type: Boolean,
+      default: false,
+    },
     pickup: String,
     store_arrive_date: Date,
+    store_arrive_date_update: {
+      type: Boolean,
+      default: false,
+    },
     comment: String,
     fraht: String,
     bid: Number,

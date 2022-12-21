@@ -60,6 +60,13 @@ class ItemController {
     });
   }
 
+  async updateFormulaDates(req, res) {
+    const result = await ItemService.updateFormulaDates(req.body._id, req);
+
+    if (result) res.sendStatus(200);
+    else res.sendStatus(500).json({ message: "server error" });
+  }
+
   async updateComment(req, res) {
     await ItemService.updateComment(req.body._id, req);
 

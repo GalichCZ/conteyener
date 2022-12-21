@@ -1,5 +1,5 @@
-// const URL = "https://api-automycka.space/api";
-const URL = "http://localhost:4444/api";
+const URL = "https://api-automycka.space/api";
+// const URL = "http://localhost:4444/api";
 
 export class User {
   async signUp(signUpValues: object) {

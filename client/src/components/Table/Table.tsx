@@ -38,6 +38,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [formulaDateModal, setFormulaDateModal] = useState<boolean>(false);
   const [formulaDateType, setFormulaDateType] = useState<number>(0);
   const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
+  const [techStoreId, setTechStoreId] = useState<string>("");
 
   console.log(data);
 
@@ -57,6 +58,21 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     return a;
   };
 
+  const dateChangeHandler = (
+    dateType: number,
+    _itemId: string,
+    _defValue: string,
+    _techStoreId: string
+  ) => {
+    if (_defValue !== null) {
+      setFormulaDateModal(true);
+      setFormulaDateType(dateType);
+      setItemId(_itemId);
+      setFormulaDateDefault(_defValue);
+      setTechStoreId(_techStoreId);
+    }
+  };
+
   const timeConvert = (time: string) => {
     if (time === null) return "";
     else return dayjs(time).format("DD/MM/YYYY");
@@ -64,6 +80,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   return (
     <>
       <TableFormulaDate
+        techStore={techStoreId}
         defaultValue={formulaDateDefault}
         _id={itemId}
         setOpen={setFormulaDateModal}
@@ -95,7 +112,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
       <TableUploadModal
         opened={uploadModal}
         setOpen={setUploadModal}
-        container={uploadContainer}
+        item_id={itemId}
       />
       <TableDocsModal
         _id={docsItemId}
@@ -136,7 +153,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setUploadModal(true);
-                      setUploadContainer(item.container?.container_number);
+                      setItemId(item._id);
                     }}
                   >
                     {item.simple_product_name}
@@ -193,14 +210,16 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {timeConvert(item.load_date)} </td>
                   <td> {timeConvert(item.etd)} </td>
                   <td
-                    className="formula-date"
+                    className={
+                      item.eta_update ? "formula-date_update" : "formula-date"
+                    }
                     onClick={() => {
-                      if (item.store_arrive_date !== null) {
-                        setFormulaDateModal(true);
-                        setFormulaDateType(1);
-                        setItemId(item._id);
-                        setFormulaDateDefault(item.eta);
-                      }
+                      dateChangeHandler(
+                        1,
+                        item._id,
+                        item.eta,
+                        item.store?.techStore
+                      );
                     }}
                   >
                     {" "}
@@ -211,14 +230,18 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.td ? "+" : "-"} </td>
                   <td
                     onClick={() => {
-                      if (item.store_arrive_date !== null) {
-                        setFormulaDateModal(true);
-                        setFormulaDateType(2);
-                        setItemId(item._id);
-                        setFormulaDateDefault(item.date_do);
-                      }
+                      dateChangeHandler(
+                        2,
+                        item._id,
+                        item.date_do,
+                        item.store?.techStore
+                      );
                     }}
-                    className="formula-date"
+                    className={
+                      item.date_do_update
+                        ? "formula-date_update"
+                        : "formula-date"
+                    }
                   >
                     {" "}
                     {timeConvert(item.date_do)}{" "}
@@ -253,14 +276,18 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   </td>
                   <td
                     onClick={() => {
-                      if (item.store_arrive_date !== null) {
-                        setFormulaDateModal(true);
-                        setFormulaDateType(3);
-                        setItemId(item._id);
-                        setFormulaDateDefault(item.declaration_issue_date);
-                      }
+                      dateChangeHandler(
+                        3,
+                        item._id,
+                        item.declaration_issue_date,
+                        item.store?.techStore
+                      );
                     }}
-                    className="formula-date"
+                    className={
+                      item.declaration_issue_date_update
+                        ? "formula-date_update"
+                        : "formula-date"
+                    }
                   >
                     {timeConvert(item.declaration_issue_date)}
                   </td>
@@ -271,28 +298,36 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.km_to_dist} </td>
                   <td
                     onClick={() => {
-                      if (item.store_arrive_date !== null) {
-                        setFormulaDateModal(true);
-                        setFormulaDateType(4);
-                        setItemId(item._id);
-                        setFormulaDateDefault(item.eta);
-                      }
+                      dateChangeHandler(
+                        4,
+                        item._id,
+                        item.train_arrive_date,
+                        item.store?.techStore
+                      );
                     }}
-                    className="formula-date"
+                    className={
+                      item.train_arrive_date_update
+                        ? "formula-date_update"
+                        : "formula-date"
+                    }
                   >
                     {timeConvert(item.train_arrive_date)}
                   </td>
                   <td> {item.pickup} </td>
                   <td
                     onClick={() => {
-                      if (item.store_arrive_date !== null) {
-                        setFormulaDateModal(true);
-                        setFormulaDateType(5);
-                        setItemId(item._id);
-                        setFormulaDateDefault(item.eta);
-                      }
+                      dateChangeHandler(
+                        5,
+                        item._id,
+                        item.store_arrive_date,
+                        item.store?.techStore
+                      );
                     }}
-                    className="formula-date"
+                    className={
+                      item.store_arrive_date_update
+                        ? "formula-date_update"
+                        : "formula-date"
+                    }
                   >
                     {timeConvert(item.store_arrive_date)}
                   </td>

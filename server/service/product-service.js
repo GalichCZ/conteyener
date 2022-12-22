@@ -2,7 +2,7 @@ const ProductSchema = require("../models/product-model");
 const FileService = require("./file-service");
 
 class ProductService {
-  async createProduct(file, container) {
+  async createProduct(file, item_id) {
     try {
       const products = file[0].map(async (product) => {
         const doc = new ProductSchema({
@@ -19,7 +19,7 @@ class ProductService {
           weight_net: product["NET/KG"],
           weight_gross: product["GROSS/KG"],
           cbm: product["M³"],
-          container,
+          item_id,
         });
         const docs = await doc.save();
         return docs;
@@ -32,9 +32,9 @@ class ProductService {
     }
   }
 
-  async updateProduct(container, file) {
+  async updateProduct(item_id, file) {
     try {
-      await this.deleteProduct(container);
+      await this.deleteProduct(item_id);
 
       const products = await FileService.createFile(file);
 
@@ -44,9 +44,9 @@ class ProductService {
     }
   }
 
-  async getProduct(container) {
+  async getProduct(item_id) {
     try {
-      const products = await ProductSchema.find({ container });
+      const products = await ProductSchema.find({ item_id });
 
       return products;
     } catch (error) {
@@ -54,9 +54,9 @@ class ProductService {
     }
   }
 
-  async deleteProduct(container) {
+  async deleteProduct(item_id) {
     try {
-      await ProductSchema.deleteMany({ container });
+      await ProductSchema.deleteMany({ item_id });
     } catch (error) {
       console.log(error);
     }

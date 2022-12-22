@@ -55,15 +55,18 @@ export type TableProps = {
         load_date: string;
         etd: string;
         eta: string;
+        eta_update: boolean;
         release: string;
         bl_smgs_cmr: boolean;
         td: string;
         date_do: string;
+        date_do_update: boolean;
         port: string;
         is_ds: boolean;
         is_docs: IsDocsType;
         declaration_number: string;
         declaration_issue_date: string;
+        declaration_issue_date_update: boolean;
         declaration_status: string;
         availability_of_ob: string;
         answer_of_ob: string;
@@ -71,8 +74,10 @@ export type TableProps = {
         destination_station: string;
         km_to_dist: number;
         train_arrive_date: string;
+        train_arrive_date_update: boolean;
         pickup: string;
         store_arrive_date: string;
+        store_arrive_date_update: boolean;
         comment: string;
         fraht: string;
         bid: number;
@@ -293,6 +298,7 @@ export interface FormulaDateUpdate {
   train_arrive_date?: Date | string;
   store_arrive_date?: Date | string;
   _id: string;
+  delivery_time: number;
   eta_update?: boolean;
   date_do_update?: boolean;
   declaration_issue_date_update?: boolean;

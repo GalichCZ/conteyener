@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form } from "antd";
 import { DatePickerUpdate } from "../TableUI/DatePickerUpdate";
 import { FormulaDateUpdate } from "../../../Types/Types";
-
+import { TechStore } from "../../../functions/techStoreFuncs";
+import { Item } from "../../../functions/itemFuncs";
+import ReDrawContext from "../../../store/redraw-context";
 interface TableFormulaDateProps {
   opened: boolean;
   setOpen: (c: boolean) => void;
   _id: string;
   dateType: number;
   defaultValue: string;
+  techStore: string;
 }
+
+const TechStoreFuncs = new TechStore();
+const ItemFuncs = new Item();
 
 export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   opened,
@@ -17,19 +23,51 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   _id,
   dateType,
   defaultValue,
+  techStore,
 }) => {
-  const [data, setData] = useState<FormulaDateUpdate>({ _id: "" });
+  const reDraw = useContext(ReDrawContext);
 
-  const handleOk = () => {
-    setOpen(false);
+  const [err, setErr] = useState<string>("");
+  const [data, setData] = useState<FormulaDateUpdate>({
+    _id: "",
+    delivery_time: 0,
+  });
+
+  const handleOk = async () => {
+    getOneTechStore(techStore);
+    // if (data.delivery_time !== 0) updateFormulaDate();
   };
 
   const handleCancel = () => {
     setOpen(false);
   };
 
+  const updateFormulaDate = async () => {
+    const response = await ItemFuncs.updateFormulaDates(data);
+    console.log(response);
+    if (response === 200) {
+      setData({ _id: "", delivery_time: 0 });
+      setOpen(false);
+    }
+    reDraw.reDrawHandler(true);
+  };
+
+  const getOneTechStore = async (_id: string) => {
+    const response = await TechStoreFuncs.getOneTechStore(_id);
+    if ("error" in response) setErr(response.error);
+    else {
+      setData({ ...data, delivery_time: response.delivery_time });
+    }
+  };
+
   useEffect(() => {
-    if (opened) setData({ ...data, _id: _id });
+    if (data.delivery_time !== 0) updateFormulaDate();
+  }, [data]);
+
+  useEffect(() => {
+    if (opened) {
+      setData({ ...data, _id });
+    }
   }, [opened]);
 
   useEffect(() => {

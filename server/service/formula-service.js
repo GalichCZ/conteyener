@@ -51,7 +51,79 @@ class FormulaService {
       };
   }
 
-  updateDateFormulaEta(eta)
+  updateDateFormulaEta(eta, _store_delivery_time) {
+    const store_delivery_time = _store_delivery_time;
+    const date_do = () => {
+      return dayjs(eta).add(5, "day");
+    };
+
+    const declaration_issue_date = () => {
+      return dayjs(date_do()).add(5, "day");
+    };
+
+    const train_arrive_date = () => {
+      return dayjs(declaration_issue_date()).add(14, "day");
+    };
+    console.log(train_arrive_date()["$d"]);
+    const store_arrive_date = () => {
+      return dayjs(train_arrive_date()).add(store_delivery_time, "day");
+    };
+    console.log(store_arrive_date()["$d"]);
+
+    return {
+      date_do: date_do(),
+      declaration_issue_date: declaration_issue_date(),
+      train_arrive_date: train_arrive_date(),
+      store_arrive_date: store_arrive_date(),
+    };
+  }
+
+  updateDateFormulaDateDo(date_do, store_delivery_time) {
+    const declaration_issue_date = () => {
+      return dayjs(date_do).add(5, "day");
+    };
+
+    const train_arrive_date = () => {
+      return dayjs(declaration_issue_date()).add(14, "day");
+    };
+    console.log(train_arrive_date()["$d"]);
+    const store_arrive_date = () => {
+      return dayjs(train_arrive_date()).add(store_delivery_time, "day");
+    };
+    console.log(store_arrive_date());
+
+    return {
+      declaration_issue_date: declaration_issue_date(),
+      train_arrive_date: train_arrive_date(),
+      store_arrive_date: store_arrive_date(),
+    };
+  }
+
+  updateDateFormulaDeclaration(declaration_issue_date, store_delivery_time) {
+    const train_arrive_date = () => {
+      return dayjs(declaration_issue_date).add(14, "day");
+    };
+    console.log(train_arrive_date()["$d"]);
+
+    const store_arrive_date = () => {
+      return dayjs(train_arrive_date()).add(store_delivery_time, "day");
+    };
+
+    return {
+      train_arrive_date: train_arrive_date(),
+      store_arrive_date: store_arrive_date(),
+    };
+  }
+
+  updateDateFormulaDateTrain(train_arrive_date, store_delivery_time) {
+    console.log(train_arrive_date + " " + store_delivery_time);
+    const store_arrive_date = () => {
+      return dayjs(train_arrive_date).add(store_delivery_time, "day");
+    };
+    return {
+      store_arrive_date: store_arrive_date(),
+    };
+  }
 }
 
 module.exports = new FormulaService();

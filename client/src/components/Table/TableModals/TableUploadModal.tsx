@@ -7,7 +7,7 @@ import { Products } from "../../../Types/Types";
 
 interface TableUploadProps {
   opened: boolean | undefined;
-  container: any | undefined;
+  item_id: string;
   setOpen: (c: any) => any;
 }
 
@@ -15,7 +15,7 @@ const ProductFuncs = new Product();
 
 export const TableUploadModal: React.FC<TableUploadProps> = ({
   opened,
-  container,
+  item_id,
   setOpen,
 }) => {
   const [products, setProducts] = useState<Products[]>();
@@ -29,14 +29,17 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
   };
 
   const productHandler = async () => {
-    const response = await ProductFuncs.getProducts(container);
+    const response = await ProductFuncs.getProducts(item_id);
 
     setProducts(response);
   };
 
+  console.log(item_id);
+
   const props: UploadProps = {
     name: "file",
-    action: `https://api-automycka.space/api/product/${container}`,
+    action: `https://api-automycka.space/api/product/${item_id}`,
+    // action: `http://localhost:4444/api/product/${item_id}`,
     headers: {
       authorization: "authorization-text",
     },

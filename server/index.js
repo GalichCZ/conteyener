@@ -34,8 +34,8 @@ app.get("/api/activate/:link", UserController.activate);
 app.delete("/api/user/:email", UserController.deleteUser);
 app.post("/api/auth/signin", UserController.registration);
 
-app.post("/api/product/:container", FileWare, ProductController.createProduct);
-app.get("/api/product/:container", ProductController.getProduct);
+app.post("/api/product/:item_id", FileWare, ProductController.createProduct);
+app.get("/api/product/:item_id", ProductController.getProduct);
 
 app.get("/api/item", ItemController.getItems);
 app.patch("/api/item", ItemController.updateItem);
@@ -43,6 +43,7 @@ app.delete("/api/item/:_id", ItemController.deleteItem);
 app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/api/item/store", StoreController.updateStore);
 app.patch("/api/item/comment", ItemController.updateComment);
+app.patch("/api/item/date", ItemController.updateFormulaDates);
 
 app.post("/api/declaration/get", DeclarationController.declarationStatusGet);
 app.post("/api/declaration", DeclarationController.declarationStatusCreate);

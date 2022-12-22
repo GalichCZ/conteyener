@@ -32,9 +32,6 @@ class ItemController {
 
     const store = await StoreService.createStore(req.body.tech_store);
 
-    console.log(req.body.tech_store);
-    console.log(store);
-
     const is_docs = await IsDocsService.createDocs(req, container);
 
     const item = await ItemService.createItem(
@@ -77,8 +74,6 @@ class ItemController {
     try {
       const item = await ItemSchema.findById({ _id: req.body._id });
 
-      console.log(req.body);
-
       const container = await ContainerService.updateContainer(
         item.container._id,
         req
@@ -105,7 +100,7 @@ class ItemController {
       await StoreService.deleteStore(item);
       await ProviderService.deleteProviders(item);
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
-      await ProductService.deleteProduct(item.container.container_number);
+      await ProductService.deleteProduct(item._id);
       await IsDocsService.deleteDocs(item.container);
       await OrderService.deleteOrders(item);
 

@@ -15,7 +15,7 @@ const ProductSchema = new mongoose.Schema(
     weight_net: Number,
     weight_gross: Number,
     cbm: Number,
-    container: String,
+    item_id: String,
   },
   {
     timestamps: true,

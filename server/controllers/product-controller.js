@@ -6,14 +6,14 @@ class ProductController {
     const products = await FileService.createFile(req.file.path);
     const response = await ProductService.createProduct(
       products,
-      req.params.container
+      req.params.item_id
     );
 
     res.json(response);
   }
 
   async getProduct(req, res) {
-    const response = await ProductService.getProduct(req.params.container);
+    const response = await ProductService.getProduct(req.params.item_id);
 
     res.json(response);
   }

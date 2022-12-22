@@ -391,6 +391,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
+              defaultChecked={item?.bl_smgs_cmr ? true : false}
               style={{ minWidth: "45px" }}
               onChange={(e) => {
                 setSingleItem({ ...singleItem, bl_smgs_cmr: e.valueOf() });
@@ -405,7 +406,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 td: e.target.value === "" ? false : true,
               });
             }}
-            defaultValue={item?.bl_smgs_cmr ? "V" : ""}
+            defaultValue={item?.td ? "V" : ""}
           />
           <MyInput
             label="Порт"
@@ -443,16 +444,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               });
             }}
             defaultValue={item?.availability_of_ob?.substring(0, 10)}
-          />
-          <DatePickerUpdate
-            label="Ответ ОБ"
-            onChange={(e) => {
-              setSingleItem({
-                ...singleItem,
-                answer_of_ob: new Date(e.target.value),
-              });
-            }}
-            defaultValue={item?.answer_of_ob?.substring(0, 10)}
           />
           <DatePickerUpdate
             label="Ответ ОБ"
@@ -504,27 +495,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               setSingleItem({ ...singleItem, pickup: e.target.value });
             }}
             defaultValue={item?.pickup}
-          />
-          <MyInput
-            label="Комментарий"
-            onChange={(e) => {
-              setSingleItem({ ...singleItem, comment: e.target.value });
-            }}
-            defaultValue={item?.comment}
-          />
-          <MyInput
-            label="Фрахт"
-            onChange={(e) => {
-              setSingleItem({ ...singleItem, fraht: e.target.value });
-            }}
-            defaultValue={item?.fraht}
-          />
-          <MyInput
-            label="Примечание"
-            onChange={(e) => {
-              setSingleItem({ ...singleItem, note: e.target.value });
-            }}
-            defaultValue={item?.note}
           />
         </Form>
       </Modal>

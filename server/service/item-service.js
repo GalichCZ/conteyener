@@ -87,23 +87,97 @@ class ItemService {
 
   async updateFormulaDates(_id, req) {
     try {
-      const result = await ItemSchema.updateOne(
-        { _id },
-        {
-          eta: req.body.eta,
-          eta_update: req.body.eta_update,
-          date_do: req.body.date_do,
-          date_do_update: req.body.date_do_update,
-          declaration_issue_date: req.body.declaration_issue_date,
-          declaration_issue_date_update: req.body.declaration_issue_date_update,
-          train_arrive_date: req.body.train_arrive_date,
-          train_arrive_date_update: req.body.train_arrive_date_update,
-          store_arrive_date: req.body.store_arrive_date,
-          store_arrive_date_update: req.body.store_arrive_date_update,
-        }
-      );
-      if (req.body.eta) await formulaService.dateFormula();
-      if (result) return true;
+      if (req.body.eta) {
+        const dates = formulaService.updateDateFormulaEta(
+          req.body.eta,
+          req.body.delivery_time
+        );
+
+        const result = await ItemSchema.updateOne(
+          { _id },
+          {
+            eta: req.body.eta,
+            eta_update: req.body.eta_update,
+            date_do: dates.date_do,
+            declaration_issue_date: dates.declaration_issue_date,
+            train_arrive_date: dates.train_arrive_date,
+            store_arrive_date: dates.store_arrive_date,
+          }
+        );
+
+        if (result) return true;
+      }
+
+      if (req.body.date_do) {
+        const dates = formulaService.updateDateFormulaDateDo(
+          req.body.date_do,
+          req.body.delivery_time
+        );
+
+        const result = await ItemSchema.updateOne(
+          { _id },
+          {
+            date_do: req.body.date_do,
+            date_do_update: req.body.date_do_update,
+            declaration_issue_date: dates.declaration_issue_date,
+            train_arrive_date: dates.train_arrive_date,
+            store_arrive_date: dates.store_arrive_date,
+          }
+        );
+
+        if (result) return true;
+      }
+
+      if (req.body.declaration_issue_date) {
+        const dates = formulaService.updateDateFormulaDeclaration(
+          req.body.declaration_issue_date,
+          req.body.delivery_time
+        );
+
+        const result = await ItemSchema.updateOne(
+          { _id },
+          {
+            declaration_issue_date: req.body.declaration_issue_date,
+            declaration_issue_date_update:
+              req.body.declaration_issue_date_update,
+            train_arrive_date: dates.train_arrive_date,
+            store_arrive_date: dates.store_arrive_date,
+          }
+        );
+
+        if (result) return true;
+      }
+
+      if (req.body.train_arrive_date) {
+        console.log(req.body.delivery_time + " delivery time");
+        const dates = formulaService.updateDateFormulaDateTrain(
+          req.body.train_arrive_date,
+          req.body.delivery_time
+        );
+
+        const result = await ItemSchema.updateOne(
+          { _id },
+          {
+            train_arrive_date: req.body.train_arrive_date,
+            train_arrive_date_update: req.body.train_arrive_date_update,
+            store_arrive_date: dates.store_arrive_date,
+          }
+        );
+
+        if (result) return true;
+      }
+
+      if (req.body.store_arrive_date) {
+        const result = await ItemSchema.updateOne(
+          { _id },
+          {
+            store_arrive_date: req.body.store_arrive_date,
+            store_arrive_date_update: req.body.store_arrive_date_update,
+          }
+        );
+
+        if (result) return true;
+      }
     } catch (error) {
       console.log(error);
       return error;
@@ -131,8 +205,6 @@ class ItemService {
       const techStore = await TechStoreSchema.findById(
         req.body.store.techStore
       );
-
-      console.log(_id);
 
       const formulaRes = FormulaService.dateFormula(
         delivery_method,

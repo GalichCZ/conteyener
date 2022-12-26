@@ -30,6 +30,17 @@ class ContainerService {
     }
   }
 
+  async getContainerOnce(number, type) {
+    const doc = await ContainerSchema.findOne({
+      container_number: number,
+    });
+    if (doc) {
+      return doc;
+    } else {
+      return await this.createContainer(number, type);
+    }
+  }
+
   async updateContainer(_id, req) {
     try {
       await ContainerSchema.updateOne(

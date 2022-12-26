@@ -9,6 +9,7 @@ const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
 const TechStoreController = require("./controllers/techStore-controller");
 const DeclarationController = require("./controllers/declaration-controller");
+const UploadOnceController = require("./controllers/uploadOnce-controller");
 
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
@@ -65,6 +66,8 @@ app.get(
   TestController.getTestDeclaration
 );
 app.post("/api/test/store", TestController.testStoreCreate);
+
+app.post("/uploadOnce", FileWare, UploadOnceController.uploadItems);
 
 const start = async () => {
   try {

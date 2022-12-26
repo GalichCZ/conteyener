@@ -34,8 +34,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
     setProducts(response);
   };
 
-  console.log(item_id);
-
   const props: UploadProps = {
     name: "file",
     action: `https://api-automycka.space/api/product/${item_id}`,

@@ -17,7 +17,26 @@ class OrderService {
         return res;
       });
     } catch (error) {
-      console.log(error);
+      console.log("order error: " + error);
+    }
+  }
+
+  async createOrderOnce(numbers, container) {
+    try {
+      const orders = numbers.map(async (order) => {
+        const doc = new OrderSchema({
+          number: order,
+          container,
+        });
+        const docs = await doc.save();
+        return docs;
+      });
+
+      return Promise.all(orders).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      console.log("order error: " + error);
     }
   }
 

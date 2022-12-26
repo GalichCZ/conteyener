@@ -4,7 +4,7 @@ const ProviderSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      // unique: true,
+      unique: true,
     },
     container: {
       type: mongoose.Schema.Types.ObjectId,

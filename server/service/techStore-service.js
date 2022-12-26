@@ -29,6 +29,15 @@ class TechStoreService {
     }
   }
 
+  async getTechStoreByName(name) {
+    try {
+      const techStore = await TechStoreSchema.find({ name }).exec();
+      if (techStore) return techStore[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getTechStores() {
     try {
       const techStores = await TechStoreSchema.find();

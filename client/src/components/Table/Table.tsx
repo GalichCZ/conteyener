@@ -44,17 +44,19 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
 
   const docsCount = (item: Types.IsDocsType) => {
     let a = 0;
-    const values = Object.values(item);
-    if (values[0] === true) a += 1;
-    if (values[1] === true) a += 1;
-    if (values[2] === true) a += 1;
-    if (values[3] === true) a += 1;
-    if (values[4] === true) a += 1;
-    if (values[5] === true) a += 1;
-    if (values[6] === true) a += 1;
-    if (values[7] === true) a += 1;
-    if (values[8] === true) a += 1;
-    if (a === 9) return "+";
+    if (item) {
+      const values = Object.values(item);
+      if (values[0] === true) a += 1;
+      if (values[1] === true) a += 1;
+      if (values[2] === true) a += 1;
+      if (values[3] === true) a += 1;
+      if (values[4] === true) a += 1;
+      if (values[5] === true) a += 1;
+      if (values[6] === true) a += 1;
+      if (values[7] === true) a += 1;
+      if (values[8] === true) a += 1;
+      if (a === 9) return "+";
+    }
     return a;
   };
 
@@ -92,6 +94,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
         setOpen={setCommentModal}
         opened={commentModal}
         _id={itemId}
+        setId={setItemId}
       />
       <TableDeclStatus
         declaration_number={declarationNumber}
@@ -339,7 +342,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     }}
                     style={{ cursor: "pointer" }}
                   >
-                    {item.comment.substring(0, 10)}...
+                    {item.comment?.substring(0, 10)}...
                   </td>
                   {/* <td> {item.fraht} </td>
                   <td> {item.bid} </td>

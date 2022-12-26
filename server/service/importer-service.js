@@ -21,6 +21,25 @@ class ImporterService {
     }
   }
 
+  async createImporterOnce(names, container) {
+    try {
+      const importers = names.map(async (provider) => {
+        const doc = new ImporterSchema({
+          name: provider,
+          container,
+        });
+        const docs = await doc.save();
+        return docs;
+      });
+
+      return Promise.all(importers).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getImporters(items) {
     try {
       const importers = items.map(async (importer) => {

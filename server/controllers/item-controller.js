@@ -32,6 +32,11 @@ class ItemController {
 
     const store = await StoreService.createStore(req.body.tech_store);
 
+    const orders = await OrderService.createOrder(
+      req.body.order_number,
+      container
+    );
+
     const is_docs = await IsDocsService.createDocs(req, container);
 
     const item = await ItemService.createItem(
@@ -40,6 +45,7 @@ class ItemController {
       container,
       provider,
       importer,
+      orders,
       creator,
       is_docs
     );

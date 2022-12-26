@@ -11,6 +11,7 @@ interface TabeCommentProps {
   setOpen: (c: boolean) => void;
   _id: string;
   defaultValue: string;
+  setId: (c: string) => void;
 }
 
 export const TableComment: React.FC<TabeCommentProps> = ({
@@ -18,6 +19,7 @@ export const TableComment: React.FC<TabeCommentProps> = ({
   setOpen,
   _id,
   defaultValue,
+  setId,
 }) => {
   const reDraw = useContext(ReDrawContext);
   const [data, setData] = useState<Comment>({ comment: "", _id });
@@ -29,16 +31,18 @@ export const TableComment: React.FC<TabeCommentProps> = ({
     if (response === 200) {
       reDraw.reDrawHandler(true);
       setOpen(false);
+      setId("");
     }
   };
 
-  useEffect(() => {
-    if (opened) setData({ ...data, _id: _id });
-  }, [opened]);
-
   const handleCancel = () => {
     setOpen(false);
+    setId("");
   };
+
+  useEffect(() => {
+    if (opened) setData({ ...data, _id: _id, comment: defaultValue });
+  }, [opened]);
 
   return (
     <Modal
@@ -49,10 +53,10 @@ export const TableComment: React.FC<TabeCommentProps> = ({
       className="comment-modal"
     >
       <Form layout="vertical">
+        <p>{defaultValue}</p>
         <Form.Item label="Комментарий">
           <Input.TextArea
-            defaultValue={defaultValue}
-            placeholder="Комментарий"
+            placeholder="Измените Комментарий"
             onChange={(e) => {
               setData({ ...data, comment: e.target.value });
             }}

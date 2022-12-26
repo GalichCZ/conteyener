@@ -1,5 +1,6 @@
 const StoreSchema = require("../models/store-model");
 const ItemSchema = require("../models/item-model");
+const TechStoreService = require("../service/techStore-service");
 class StoreService {
   async createStore(techStore) {
     try {
@@ -8,6 +9,19 @@ class StoreService {
       });
       const store = await doc.save();
 
+      return store;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async createStoreUpload(name) {
+    try {
+      const techStore = await TechStoreService.getTechStoreByName(name);
+      const doc = new StoreSchema({
+        techStore,
+      });
+      const store = await doc.save();
       return store;
     } catch (error) {
       console.log(error);

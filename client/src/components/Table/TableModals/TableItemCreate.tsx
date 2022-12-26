@@ -225,6 +225,7 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
   };
   useEffect(() => {
     getName();
+    console.log(item.tech_store);
   }, [item.tech_store]);
 
   return (

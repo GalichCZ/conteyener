@@ -30,7 +30,7 @@ const ItemSchema = new mongoose.Schema(
     },
     conditions: {
       type: String,
-      required: true,
+      // required: true,
     },
     store_name: String,
     store: {
@@ -39,7 +39,7 @@ const ItemSchema = new mongoose.Schema(
     },
     agent: {
       type: String,
-      required: true,
+      // required: true,
     },
     place_of_dispatch: {
       type: String,

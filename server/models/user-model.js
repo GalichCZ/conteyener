@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
     },
     is_activated: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     activation_link: {
       type: String,

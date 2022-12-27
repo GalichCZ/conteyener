@@ -3,24 +3,25 @@ import { Form } from "antd";
 
 interface DatePickerUpdateProps {
   label: string;
-  defaultValue: string;
+  value: string;
   className?: string;
   onChange: (e: { target: { value: string } }) => void;
 }
 
 export const DatePickerUpdate: React.FC<DatePickerUpdateProps> = ({
   label,
-  defaultValue,
+  value,
   onChange,
   className,
 }) => {
   return (
     <Form.Item className={className} label={label}>
+      <p style={{ margin: "0" }}>{value ? value : "Не внесено"}</p>
       <input
         placeholder={label}
         className="ant-input"
         type="date"
-        defaultValue={defaultValue}
+        // value={value}
         onChange={onChange}
       />
     </Form.Item>

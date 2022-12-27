@@ -57,34 +57,34 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
       <Form layout="vertical" className="docs-modal">
         <DocsSelect
           label="PI"
-          defaultValue={docs?.PI}
+          value={docs?.PI}
           onChange={(value) =>
             setIsDocs({ ...isDocs, PI: value === "+" ? true : false })
           }
         />
         <DocsSelect
           label="CI"
-          defaultValue={docs?.CI}
+          value={docs?.CI}
           onChange={(value) =>
             setIsDocs({ ...isDocs, CI: value === "+" ? true : false })
           }
         />
         <DocsSelect
           label="PL"
-          defaultValue={docs?.PL}
+          value={docs?.PL}
           onChange={(value) =>
             setIsDocs({ ...isDocs, PL: value === "+" ? true : false })
           }
         />
         <DocsSelect
           label="СС/ДС"
-          defaultValue={docs?.SS_DS}
+          value={docs?.SS_DS}
           onChange={(value) =>
             setIsDocs({ ...isDocs, SS_DS: value === "+" ? true : false })
           }
         />
         <DocsSelect
-          defaultValue={docs?.contract_agrees}
+          value={docs?.contract_agrees}
           label="Контракт и действующие доп. соглашения"
           onChange={(value) =>
             setIsDocs({
@@ -94,28 +94,28 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
           }
         />
         <DocsSelect
-          defaultValue={docs?.cost_agrees}
+          value={docs?.cost_agrees}
           label="Стоимостные доп. соглашения"
           onChange={(value) =>
             setIsDocs({ ...isDocs, cost_agrees: value === "+" ? true : false })
           }
         />
         <DocsSelect
-          defaultValue={docs?.instruction}
+          value={docs?.instruction}
           label="Инструкция"
           onChange={(value) =>
             setIsDocs({ ...isDocs, instruction: value === "+" ? true : false })
           }
         />
         <DocsSelect
-          defaultValue={docs?.ED}
+          value={docs?.ED}
           label="ED"
           onChange={(value) =>
             setIsDocs({ ...isDocs, ED: value === "+" ? true : false })
           }
         />
         <DocsSelect
-          defaultValue={docs?.bill}
+          value={docs?.bill}
           label="Счет"
           onChange={(value) =>
             setIsDocs({ ...isDocs, bill: value === "+" ? true : false })

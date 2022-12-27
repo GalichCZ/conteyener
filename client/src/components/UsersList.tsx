@@ -50,7 +50,7 @@ export const UsersList = () => {
               description={item.email}
             />
             <Select
-              defaultValue={item.role}
+              value={item.role}
               style={{ width: 120 }}
               onChange={(e) => handleChange(e, item.email)}
               loading={loading}

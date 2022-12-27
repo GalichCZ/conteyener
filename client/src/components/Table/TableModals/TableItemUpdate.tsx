@@ -17,7 +17,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   setOpen,
 }) => {
   const reDraw = useContext(ReDrawContext);
-
+  console.log(item);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
   const [inputFields, setInputFields] = useState<any>();
@@ -156,8 +156,6 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     if (opened) setSingleItem(item);
   }, [opened]);
 
-  console.log(item?.request_date);
-
   return (
     <>
       <Modal
@@ -185,7 +183,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           <DatePickerUpdate
             className="required-form"
             label="Дата заявки"
-            defaultValue={item?.request_date?.substring(0, 10)}
+            value={item?.request_date?.substring(0, 10)}
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
@@ -197,20 +195,25 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             {inputFields3?.map(
               (input: { id: string; number: string }, key: string) => {
                 return (
-                  <div key={key} style={{ display: "flex" }}>
-                    <Input
-                      placeholder="Номер заказа"
-                      defaultValue={input.number}
-                      id={input.id}
-                      onBlur={(e) => {
-                        orderHandler(e.target.value);
-                      }}
-                    />
-                    <CloseOutlined
-                      onClick={() => {
-                        deleteOrder(input.number);
-                      }}
-                    />
+                  <div key={key}>
+                    <p style={{ margin: "0" }}>
+                      {input.number ? input.number : "Не внесено"}
+                    </p>
+                    <div key={key} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Номер заказа"
+                        id={input.id}
+                        // value={input.number}
+                        onBlur={(e) => {
+                          orderHandler(e.target.value);
+                        }}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          deleteOrder(input.number);
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               }
@@ -228,7 +231,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            defaultValue={item?.container?.container_number}
+            value={item?.container?.container_number}
           />
           <MyInput
             label="Товар"
@@ -239,10 +242,10 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 simple_product_name: e.target.value,
               });
             }}
-            defaultValue={item?.simple_product_name}
+            value={item?.simple_product_name}
           />
           <SelectDelivery
-            defaultValue={item?.delivery_method}
+            value={item?.delivery_method}
             onChange={(value) => {
               setSingleItem({ ...singleItem, delivery_method: value });
             }}
@@ -251,21 +254,25 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             {inputFields2?.map(
               (input: { id: string; name: string }, key: number) => {
                 return (
-                  <div key={key} style={{ display: "flex" }}>
-                    <Input
-                      placeholder="Поставщик"
-                      id={input.id}
-                      defaultValue={input.name}
-                      onBlur={(e) => {
-                        providerHandler(e.target.value);
-                        item.importers;
-                      }}
-                    />
-                    <CloseOutlined
-                      onClick={() => {
-                        deleteProvider(input.name);
-                      }}
-                    />
+                  <div key={key}>
+                    <p style={{ margin: "0" }}>
+                      {input.name ? input.name : "Не внесено"}
+                    </p>
+                    <div style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Поставщик"
+                        id={input.id}
+                        onBlur={(e) => {
+                          providerHandler(e.target.value);
+                          item.importers;
+                        }}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          deleteProvider(input.name);
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               }
@@ -276,21 +283,25 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             {inputFields?.map(
               (input: { id: string; name: string }, key: number) => {
                 return (
-                  <div key={key} style={{ display: "flex" }}>
-                    <Input
-                      placeholder="Импортер"
-                      id={input.id}
-                      defaultValue={input.name}
-                      onBlur={(e) => {
-                        importerHandler(e.target.value);
-                        item.importers;
-                      }}
-                    />
-                    <CloseOutlined
-                      onClick={() => {
-                        deleteImporter(input.name);
-                      }}
-                    />
+                  <div key={key}>
+                    <p style={{ margin: "0" }}>
+                      {input.name ? input.name : "Не внесено"}
+                    </p>
+                    <div style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Импортер"
+                        id={input.id}
+                        onBlur={(e) => {
+                          importerHandler(e.target.value);
+                          item.importers;
+                        }}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          deleteImporter(input.name);
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               }
@@ -303,13 +314,13 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             onChange={(e) => {
               setSingleItem({ ...singleItem, conditions: e.target.value });
             }}
-            defaultValue={item?.conditions}
+            value={item?.conditions}
           />
           <TechStoreSelect
             onChange={(value) => {
               setSingleItem({ ...singleItem, tech_store: value });
             }}
-            defaultValue={item?.store_name}
+            value={item?.store_name}
             opened={opened}
             className="required-form"
           />
@@ -319,7 +330,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             onChange={(e) => {
               setSingleItem({ ...singleItem, agent: e.target.value });
             }}
-            defaultValue={item?.agent}
+            value={item?.agent}
           />
           <MyInput
             label="Тип контейнера"
@@ -332,7 +343,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            defaultValue={item?.container?.container_type}
+            value={item?.container?.container_type}
           />
           <MyInput
             className="required-form"
@@ -343,14 +354,14 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 place_of_dispatch: e.target.value,
               });
             }}
-            defaultValue={item?.place_of_dispatch}
+            value={item?.place_of_dispatch}
           />
           <MyInput
             label="Линия"
             onChange={(e) => {
               setSingleItem({ ...singleItem, line: e.target.value });
             }}
-            defaultValue={item?.line}
+            value={item?.line}
           />
           <DatePickerUpdate
             label="Дата готовности"
@@ -360,7 +371,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 ready_date: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.ready_date?.substring(0, 10)}
+            value={item?.ready_date?.substring(0, 10)}
           />
           <DatePickerUpdate
             label="Дата загрузки"
@@ -370,14 +381,14 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 load_date: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.load_date?.substring(0, 10)}
+            value={item?.load_date?.substring(0, 10)}
           />
           <DatePickerUpdate
             label="ETD"
             onChange={(e) => {
               setSingleItem({ ...singleItem, etd: new Date(e.target.value) });
             }}
-            defaultValue={item?.etd?.substring(0, 10)}
+            value={item?.etd?.substring(0, 10)}
           />
           <DatePickerUpdate
             label="Релиз"
@@ -387,7 +398,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 release: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.release?.substring(0, 10)}
+            value={item?.release?.substring(0, 10)}
           />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
@@ -406,14 +417,14 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 td: e.target.value === "" ? false : true,
               });
             }}
-            defaultValue={item?.td ? "V" : ""}
+            value={item?.td ? "V" : ""}
           />
           <MyInput
             label="Порт"
             onChange={(e) => {
               setSingleItem({ ...singleItem, port: e.target.value });
             }}
-            defaultValue={item?.port}
+            value={item?.port}
           />
           <MyInput
             label="ДС для подачи"
@@ -423,7 +434,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 is_ds: e.target.value === "" ? false : true,
               });
             }}
-            defaultValue={item?.is_ds ? "V" : ""}
+            value={item?.is_ds ? "V" : ""}
           />
           <MyInput
             label="№ декларации"
@@ -433,7 +444,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 declaration_number: e.target.value,
               });
             }}
-            defaultValue={item?.declaration_number}
+            value={item?.declaration_number}
           />
           <DatePickerUpdate
             label="Наличие ОБ"
@@ -443,7 +454,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 availability_of_ob: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.availability_of_ob?.substring(0, 10)}
+            value={item?.availability_of_ob?.substring(0, 10)}
           />
           <DatePickerUpdate
             label="Ответ ОБ"
@@ -453,14 +464,14 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 answer_of_ob: new Date(e.target.value),
               });
             }}
-            defaultValue={item?.answer_of_ob?.substring(0, 10)}
+            value={item?.answer_of_ob?.substring(0, 10)}
           />
           <MyInput
             label="Экспедитор"
             onChange={(e) => {
               setSingleItem({ ...singleItem, expeditor: e.target.value });
             }}
-            defaultValue={item?.expeditor}
+            value={item?.expeditor}
           />
           <MyInput
             label="Станция назначения"
@@ -470,7 +481,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 destination_station: e.target.value,
               });
             }}
-            defaultValue={item?.destination_station}
+            value={item?.destination_station}
           />
           <MyInput
             label="Км. до станции назначения"
@@ -480,21 +491,21 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 km_to_dist: parseInt(e.target.value),
               });
             }}
-            defaultValue={item?.km_to_dist}
+            value={item?.km_to_dist}
           />
           <MyInput
             label="Ставка"
             onChange={(e) => {
               setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
             }}
-            defaultValue={item?.bid}
+            value={item?.bid}
           />
           <MyInput
             label="Автовывоз"
             onChange={(e) => {
               setSingleItem({ ...singleItem, pickup: e.target.value });
             }}
-            defaultValue={item?.pickup}
+            value={item?.pickup}
           />
         </Form>
       </Modal>

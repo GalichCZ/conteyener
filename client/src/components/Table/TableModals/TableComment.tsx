@@ -10,7 +10,7 @@ interface TabeCommentProps {
   opened: boolean | undefined;
   setOpen: (c: boolean) => void;
   _id: string;
-  defaultValue: string;
+  value: string;
   setId: (c: string) => void;
 }
 
@@ -18,7 +18,7 @@ export const TableComment: React.FC<TabeCommentProps> = ({
   opened,
   setOpen,
   _id,
-  defaultValue,
+  value,
   setId,
 }) => {
   const reDraw = useContext(ReDrawContext);
@@ -41,7 +41,7 @@ export const TableComment: React.FC<TabeCommentProps> = ({
   };
 
   useEffect(() => {
-    if (opened) setData({ ...data, _id: _id, comment: defaultValue });
+    if (opened) setData({ ...data, _id: _id, comment: value });
   }, [opened]);
 
   return (
@@ -53,7 +53,7 @@ export const TableComment: React.FC<TabeCommentProps> = ({
       className="comment-modal"
     >
       <Form layout="vertical">
-        <p>{defaultValue}</p>
+        <p>{value}</p>
         <Form.Item label="Комментарий">
           <Input.TextArea
             placeholder="Измените Комментарий"

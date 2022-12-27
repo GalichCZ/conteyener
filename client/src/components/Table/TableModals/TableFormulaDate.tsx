@@ -10,7 +10,7 @@ interface TableFormulaDateProps {
   setOpen: (c: boolean) => void;
   _id: string;
   dateType: number;
-  defaultValue: string;
+  value: string;
   techStore: string;
 }
 
@@ -22,7 +22,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   setOpen,
   _id,
   dateType,
-  defaultValue,
+  value,
   techStore,
 }) => {
   const reDraw = useContext(ReDrawContext);
@@ -83,7 +83,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
     >
       {dateType === 1 && (
         <DatePickerUpdate
-          defaultValue={defaultValue.substring(0, 10)}
+          value={value.substring(0, 10)}
           label="ETA"
           onChange={(e) => {
             setData({ ...data, eta: e.target.value, eta_update: true });
@@ -92,7 +92,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
       )}
       {dateType === 2 && (
         <DatePickerUpdate
-          defaultValue={defaultValue.substring(0, 10)}
+          value={value.substring(0, 10)}
           label="Дата ДО"
           onChange={(e) => {
             setData({ ...data, date_do: e.target.value, date_do_update: true });
@@ -101,7 +101,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
       )}
       {dateType === 3 && (
         <DatePickerUpdate
-          defaultValue={defaultValue.substring(0, 10)}
+          value={value.substring(0, 10)}
           label="Дата выпуска декларации"
           onChange={(e) => {
             setData({
@@ -114,7 +114,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
       )}
       {dateType === 4 && (
         <DatePickerUpdate
-          defaultValue={defaultValue.substring(0, 10)}
+          value={value.substring(0, 10)}
           label="Дата прибытия по ЖД"
           onChange={(e) => {
             setData({
@@ -127,7 +127,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
       )}
       {dateType === 5 && (
         <DatePickerUpdate
-          defaultValue={defaultValue.substring(0, 10)}
+          value={value.substring(0, 10)}
           label="Дата прибытия на склад"
           onChange={(e) => {
             setData({

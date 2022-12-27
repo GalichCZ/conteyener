@@ -30,6 +30,9 @@
   rotate: -90deg;
   transition: 0.3s;
 }
+.tech-store_create {
+  margin-top: 5rem;
+}
 .tech-store_create,
 .tech-store_draw {
   background-color: white;

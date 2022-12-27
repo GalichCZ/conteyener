@@ -25,7 +25,7 @@ export const TableStore: React.FC<TableStoreProps> = ({
   itemId,
 }) => {
   const [err, setErr] = useState<string | null>();
-  const [defaultValue, setDefaulValue] = useState<string>("");
+  const [value, setDefaulValue] = useState<string>("");
   const [data, setData] = useState<TechStoreData>({
     address: "",
     delivery_time: 0,
@@ -82,7 +82,7 @@ export const TableStore: React.FC<TableStoreProps> = ({
     >
       <Form>
         <TechStoreSelect
-          defaultValue={defaultValue}
+          value={value}
           opened={opened}
           onChange={(value: string) => {
             getOneTechStore(value);
@@ -91,14 +91,14 @@ export const TableStore: React.FC<TableStoreProps> = ({
         />
         <p>Адрес: {data.address}</p>
         <MyInput
-          defaultValue={storeData?.receiver}
+          value={storeData?.receiver}
           onChange={(e) => {
             setUpdateStore({ ...updateStore, receiver: e.target.value });
           }}
           label="Получатель"
         />
         <MyInput
-          defaultValue={storeData?.contact}
+          value={storeData?.contact}
           onChange={(e) => {
             setUpdateStore({ ...updateStore, contact: e.target.value });
           }}
@@ -106,7 +106,7 @@ export const TableStore: React.FC<TableStoreProps> = ({
         />
         <Form.Item label="Примечание">
           <TextArea
-            defaultValue={storeData?.note}
+            value={storeData?.note}
             onChange={(e) => {
               setUpdateStore({ ...updateStore, note: e.target.value });
             }}

@@ -5,19 +5,20 @@ interface SelectDelivery {
   className?: string;
   name?: string;
   onChange: (value: string) => void;
-  defaultValue?: string;
+  value?: string;
 }
 
 export const SelectDelivery: React.FC<SelectDelivery> = ({
   className,
   name,
   onChange,
-  defaultValue,
+  value,
 }) => {
   return (
     <Form.Item name={name} className={className} label="Способ Доставки">
+      <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
       <Select
-        defaultValue={defaultValue}
+        // value={value}
         style={{ width: 120 }}
         onChange={onChange}
         options={[

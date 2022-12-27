@@ -58,21 +58,21 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
         <Form.Item label="Дней на доставку">
           <InputNumber
             min={1}
-            defaultValue={dataStore.delivery_time}
+            value={dataStore.delivery_time}
             onChange={onChange}
           />
         </Form.Item>
         <MyInput
           style={{ margin: "0 15px" }}
           label="Название"
-          defaultValue={dataStore.name}
+          value={dataStore.name}
           onChange={(e) => {
             setData({ ...data, name: e.target.value });
           }}
         />
         <MyInput
           label="Адрес"
-          defaultValue={dataStore.address}
+          value={dataStore.address}
           onChange={(e) => {
             setData({ ...data, address: e.target.value });
           }}

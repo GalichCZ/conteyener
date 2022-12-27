@@ -40,7 +40,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
   const [techStoreId, setTechStoreId] = useState<string>("");
 
-  console.log(data);
+  // console.log(data);
 
   const docsCount = (item: Types.IsDocsType) => {
     let a = 0;
@@ -83,14 +83,14 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     <>
       <TableFormulaDate
         techStore={techStoreId}
-        defaultValue={formulaDateDefault}
+        value={formulaDateDefault}
         _id={itemId}
         setOpen={setFormulaDateModal}
         opened={formulaDateModal}
         dateType={formulaDateType}
       />
       <TableComment
-        defaultValue={commentModalValue}
+        value={commentModalValue}
         setOpen={setCommentModal}
         opened={commentModal}
         _id={itemId}
@@ -209,9 +209,9 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.container?.container_type} </td>
                   <td> {item.place_of_dispatch} </td>
                   <td> {item.line} </td>
-                  <td> {timeConvert(item.ready_date)} </td>
-                  <td> {timeConvert(item.load_date)} </td>
-                  <td> {timeConvert(item.etd)} </td>
+                  <td> {item.ready_date && timeConvert(item.ready_date)} </td>
+                  <td> {item.load_date && timeConvert(item.load_date)} </td>
+                  <td> {item.etd && timeConvert(item.etd)} </td>
                   <td
                     className={
                       item.eta_update ? "formula-date_update" : "formula-date"
@@ -228,7 +228,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                     {" "}
                     {timeConvert(item.eta)}{" "}
                   </td>
-                  <td> {timeConvert(item.release)} </td>
+                  <td> {item.release && timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
                   <td> {item.td ? "+" : "-"} </td>
                   <td
@@ -294,8 +294,15 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   >
                     {timeConvert(item.declaration_issue_date)}
                   </td>
-                  <td> {timeConvert(item.availability_of_ob)} </td>
-                  <td> {timeConvert(item.answer_of_ob)} </td>
+                  <td>
+                    {" "}
+                    {item.availability_of_ob &&
+                      timeConvert(item.availability_of_ob)}{" "}
+                  </td>
+                  <td>
+                    {" "}
+                    {item.answer_of_ob && timeConvert(item.answer_of_ob)}{" "}
+                  </td>
                   <td> {item.expeditor} </td>
                   <td> {item.destination_station} </td>
                   <td> {item.km_to_dist} </td>

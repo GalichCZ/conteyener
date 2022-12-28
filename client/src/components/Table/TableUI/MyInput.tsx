@@ -5,7 +5,7 @@ interface MyInputInterface {
   className?: string;
   style?: object;
   label: string;
-  value?: string | number;
+  value?: string | number | null;
   onChange?: (e: { target: { value: any } }) => void;
   name?: string;
 }

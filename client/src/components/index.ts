@@ -18,3 +18,5 @@ export * from "./Table/TableModals/TableDocsModal";
 export * from "./TechStore/TechStoreCreate";
 export * from "./TechStore/TechStoreDraw";
 export * from "./TechStore/TechStoreModal";
+export * from "./ModalTest";
+export * from "./AllModals";

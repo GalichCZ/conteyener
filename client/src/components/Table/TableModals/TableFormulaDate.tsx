@@ -5,27 +5,20 @@ import { FormulaDateUpdate } from "../../../Types/Types";
 import { TechStore } from "../../../functions/techStoreFuncs";
 import { Item } from "../../../functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
-interface TableFormulaDateProps {
-  opened: boolean;
-  setOpen: (c: boolean) => void;
-  _id: string;
-  dateType: number;
-  value: string;
-  techStore: string;
-}
-
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setOpenFormula } from "../../../store/slices/tableFormulaDateSlice";
 const TechStoreFuncs = new TechStore();
 const ItemFuncs = new Item();
 
-export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
-  opened,
-  setOpen,
-  _id,
-  dateType,
-  value,
-  techStore,
-}) => {
+export const TableFormulaDate = ({}) => {
   const reDraw = useContext(ReDrawContext);
+
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.tableFormulaDate.open);
+  const techStore = useAppSelector((state) => state.tableFormulaDate.techStore);
+  const _id = useAppSelector((state) => state.tableFormulaDate._id);
+  const dateType = useAppSelector((state) => state.tableFormulaDate.dateType);
+  const value = useAppSelector((state) => state.tableFormulaDate.value);
 
   const [err, setErr] = useState<string>("");
   const [data, setData] = useState<FormulaDateUpdate>({
@@ -39,7 +32,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenFormula());
   };
 
   const updateFormulaDate = async () => {
@@ -47,7 +40,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
     console.log(response);
     if (response === 200) {
       setData({ _id: "", delivery_time: 0 });
-      setOpen(false);
+      dispatch(setOpenFormula());
     }
     reDraw.reDrawHandler(true);
   };
@@ -65,10 +58,10 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   }, [data]);
 
   useEffect(() => {
-    if (opened) {
+    if (open) {
       setData({ ...data, _id });
     }
-  }, [opened]);
+  }, [open]);
 
   useEffect(() => {
     console.log(data);
@@ -77,7 +70,7 @@ export const TableFormulaDate: React.FC<TableFormulaDateProps> = ({
   return (
     <Modal
       title="Изменение даты"
-      open={opened}
+      open={open}
       onOk={handleOk}
       onCancel={handleCancel}
     >

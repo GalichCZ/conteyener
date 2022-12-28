@@ -9,6 +9,11 @@ type Importers = {
   _id: string;
 };
 
+type OrderNumber = {
+  name: string;
+  _id: string;
+};
+
 type NewImporters = {
   name: string;
 };
@@ -136,54 +141,51 @@ export interface NewItem {
 }
 
 export type SingleItem = {
-  opened: boolean;
-  setOpen: (c: any) => any;
-  item:
-    | any
-    | {
-        _id: string;
-        request_date: Date | null;
-        order_number: string;
-        container_number: string;
-        simple_product_name: string;
-        providers: NewProviders[];
-        importers: NewImporters[];
-        conditions: string;
-        store_receiver: string;
-        store_name: string;
-        store_address: string;
-        store_contact: string;
-        agent: string;
-        container_type: string;
-        place_of_dispatch: string;
-        arrive_place: string;
-        line: string;
-        ready_date: Date | null;
-        load_date: Date | null;
-        etd: Date | null;
-        eta: Date | null;
-        release: Date | null;
-        bl_smgs_cmr: boolean | null;
-        td: boolean | null;
-        date_do: Date | null;
-        port: string;
-        is_ds: boolean | null;
-        is_docs: boolean | null;
-        declaration_number: string;
-        declaration_issue_date: Date | null;
-        availability_of_ob: Date | null;
-        answer_of_ob: Date | null;
-        expeditor: string;
-        destination_station: string;
-        km_to_dist: number | null;
-        train_arrive_date: Date | null;
-        bid: number | null;
-        pickup: string;
-        store_arrive_date: Date | null;
-        comment: string;
-        note: string;
-        fraht: string;
-      };
+  _id: string;
+  request_date: string | null | Date;
+  order_number: OrderNumber[];
+  container_number: string;
+  container: Container;
+  delivery_method: string;
+  tech_store: string;
+  simple_product_name: string;
+  providers: NewProviders[];
+  importers: NewImporters[];
+  conditions: string;
+  store_receiver: string;
+  store_name: string;
+  store_address: string;
+  store_contact: string;
+  agent: string;
+  container_type: string;
+  place_of_dispatch: string;
+  arrive_place: string;
+  line: string;
+  ready_date: string | null;
+  load_date: string | null;
+  etd: string | null;
+  eta: string | null;
+  release: string | null;
+  bl_smgs_cmr: boolean | null;
+  td: boolean | null;
+  date_do: string | null;
+  port: string;
+  is_ds: boolean | null;
+  is_docs: boolean | null;
+  declaration_number: string;
+  declaration_issue_date: string | null;
+  availability_of_ob: string | null;
+  answer_of_ob: string | null;
+  expeditor: string;
+  destination_station: string;
+  km_to_dist: number | null;
+  train_arrive_date: string | null;
+  bid: number | null;
+  pickup: string;
+  store_arrive_date: string | null;
+  comment: string;
+  note: string;
+  fraht: string;
 };
 
 export interface Comment {

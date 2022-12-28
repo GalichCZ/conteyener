@@ -8,16 +8,17 @@ import { TechStoreSelect } from "../TableUI/TechStoreSelect";
 import { MyInput } from "../TableUI/MyInput";
 import ReDrawContext from "../../../store/redraw-context";
 import { DatePickerUpdate } from "../TableUI/DatePickerUpdate";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 
 const ItemFuncs = new Item();
 
-export const TableItemUpdate: React.FC<SingleItem> = ({
-  item,
-  opened,
-  setOpen,
-}) => {
+export const TableItemUpdate = ({}) => {
   const reDraw = useContext(ReDrawContext);
-  console.log(item);
+
+  const dispatch = useAppDispatch();
+  const item = useAppSelector((state) => state.tableItemUpdate.item);
+  const open = useAppSelector((state) => state.tableItemUpdate.open);
+
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
   const [inputFields, setInputFields] = useState<any>();
@@ -84,16 +85,16 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
     if (response === 200) {
       reDraw.reDrawHandler(true);
       setConfirmLoading(false);
-      setOpen(false);
+      // setOpen(false);
     }
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    // setOpen(false);
   };
 
   const importerHandler = (importer: string) => {
-    if (importer !== "") item.importers?.push({ name: importer });
+    if (importer !== "") item?.importers?.push({ name: importer });
   };
 
   const deleteImporter = (_importer: string) => {
@@ -108,7 +109,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   };
 
   const providerHandler = (provider: string) => {
-    if (provider !== "") item.providers?.push({ name: provider });
+    if (provider !== "") item?.providers?.push({ name: provider });
   };
 
   const deleteProvider = (_provider: string) => {
@@ -123,7 +124,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   };
 
   const orderHandler = (order: string) => {
-    if (order !== "") item.order_number?.push({ number: order });
+    if (order !== "") singleItem.order_number?.push({ number: order });
   };
 
   const deleteOrder = (_order: string) => {
@@ -153,14 +154,14 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
   };
 
   useEffect(() => {
-    if (opened) setSingleItem(item);
-  }, [opened]);
+    if (open && item !== null) setSingleItem(item);
+  }, [open]);
 
   return (
     <>
       <Modal
         title="Редактирование записи"
-        open={opened}
+        open={open}
         onOk={async () => {
           await handleOk();
         }}
@@ -170,10 +171,12 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
         <Button
           className="delete-btn"
           onClick={async () => {
-            const response = await ItemFuncs.deleteItem(item._id);
-            if (response === 200) {
-              setOpen(false);
-              reDraw.reDrawHandler(true);
+            if (item) {
+              const response = await ItemFuncs.deleteItem(item._id);
+              if (response === 200) {
+                // setOpen(false);
+                reDraw.reDrawHandler(true);
+              }
             }
           }}
         >
@@ -183,7 +186,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
           <DatePickerUpdate
             className="required-form"
             label="Дата заявки"
-            value={item?.request_date?.substring(0, 10)}
+            // value={item?.request_date?.substring(0, 10)}
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
@@ -231,7 +234,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            value={item?.container?.container_number}
+            value={singleItem?.container?.container_number}
           />
           <MyInput
             label="Товар"
@@ -245,7 +248,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
             value={item?.simple_product_name}
           />
           <SelectDelivery
-            value={item?.delivery_method}
+            value={singleItem?.delivery_method}
             onChange={(value) => {
               setSingleItem({ ...singleItem, delivery_method: value });
             }}
@@ -264,7 +267,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                         id={input.id}
                         onBlur={(e) => {
                           providerHandler(e.target.value);
-                          item.importers;
+                          item?.importers;
                         }}
                       />
                       <CloseOutlined
@@ -293,7 +296,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                         id={input.id}
                         onBlur={(e) => {
                           importerHandler(e.target.value);
-                          item.importers;
+                          item?.importers;
                         }}
                       />
                       <CloseOutlined
@@ -321,7 +324,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
               setSingleItem({ ...singleItem, tech_store: value });
             }}
             value={item?.store_name}
-            opened={opened}
+            opened={open}
             className="required-form"
           />
           <MyInput
@@ -343,7 +346,7 @@ export const TableItemUpdate: React.FC<SingleItem> = ({
                 },
               });
             }}
-            value={item?.container?.container_type}
+            value={singleItem?.container?.container_type}
           />
           <MyInput
             className="required-form"

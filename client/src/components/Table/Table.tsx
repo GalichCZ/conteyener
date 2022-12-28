@@ -1,44 +1,80 @@
 import React, { useState } from "react";
-import {
-  TableStore,
-  TableItemUpdate,
-  TableDeclStatus,
-  TableColNames,
-  TableUploadModal,
-  TableDocsModal,
-  ShowDelivery,
-  TableComment,
-  TableFormulaDate,
-} from "../index";
+import { TableColNames, ShowDelivery } from "../index";
 import * as Types from "../../Types/Types";
-import { Item } from "../../functions/itemFuncs";
 import dayjs from "dayjs";
+import { useAppDispatch } from "../../hooks/hooks";
+import {
+  setOpenDeclStatus,
+  setDeclNumber,
+} from "../../store/slices/tableDeclStatusSlice";
+import {
+  setOpenTableStore,
+  setItemId,
+  setStoreData,
+} from "../../store/slices/tableStoreSlice";
+import {
+  setCommentId,
+  setCommentValue,
+  setOpenComment,
+} from "../../store/slices/tableCommentSlice";
+import {
+  setOpenUpload,
+  setUploadItemId,
+} from "../../store/slices/tableUploadSlice";
+import {
+  setFormulaDateType,
+  setFormulaId,
+  setFormulaTechStore,
+  setFormulaValue,
+  setOpenFormula,
+} from "../../store/slices/tableFormulaDateSlice";
 
 export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
-  const [isModal, setIsModal] = useState<boolean>();
-  const [storeData, setStoreData] = useState<Types.Store>();
-  const [itemId, setItemId] = useState<string>("");
+  const dispatch = useAppDispatch();
+
+  const declStatusHandler = (declaration_number: string) => {
+    dispatch(setOpenDeclStatus());
+    dispatch(setDeclNumber(declaration_number));
+  };
+
+  const tableStoreHandler = (itemId: string, storeData: Types.Store) => {
+    dispatch(setOpenTableStore());
+    dispatch(setItemId(itemId));
+    dispatch(setStoreData(storeData));
+  };
+
+  const tableCommentHandler = (_id: string, value: string) => {
+    dispatch(setOpenComment());
+    dispatch(setCommentId(_id));
+    dispatch(setCommentValue(value));
+  };
+
+  const uploadHandler = (item_id: string) => {
+    dispatch(setOpenUpload());
+    dispatch(setUploadItemId(item_id));
+  };
+
+  const dateChangeHandler = (
+    dateType: number,
+    _itemId: string,
+    _defValue: string,
+    _techStoreId: string
+  ) => {
+    if (_defValue !== null) {
+      dispatch(setOpenFormula());
+      dispatch(setFormulaId(_itemId));
+      dispatch(setFormulaTechStore(_techStoreId));
+      dispatch(setFormulaValue(_defValue));
+      dispatch(setFormulaDateType(dateType));
+    }
+  };
 
   const [docsModal, setDocsModal] = useState<boolean>();
   const [docs, setDocs] = useState<Types.IsDocsType>();
   const [docsItemId, setDocsItemId] = useState<string>("");
 
-  const [commentModal, setCommentModal] = useState<boolean>();
-  const [commentModalValue, setCommentModalValue] = useState<string>("");
-
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
-
-  const [declarationModal, setDeclarationModal] = useState<boolean>();
-  const [declarationNumber, setDeclarationNumber] = useState<string>();
-
-  const [uploadModal, setUploadModal] = useState<boolean>();
-  const [uploadContainer, setUploadContainer] = useState<any>();
-
-  const [formulaDateModal, setFormulaDateModal] = useState<boolean>(false);
-  const [formulaDateType, setFormulaDateType] = useState<number>(0);
-  const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
-  const [techStoreId, setTechStoreId] = useState<string>("");
 
   // console.log(data);
 
@@ -60,69 +96,25 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     return a;
   };
 
-  const dateChangeHandler = (
-    dateType: number,
-    _itemId: string,
-    _defValue: string,
-    _techStoreId: string
-  ) => {
-    if (_defValue !== null) {
-      setFormulaDateModal(true);
-      setFormulaDateType(dateType);
-      setItemId(_itemId);
-      setFormulaDateDefault(_defValue);
-      setTechStoreId(_techStoreId);
-    }
-  };
-
   const timeConvert = (time: string) => {
     if (time === null) return "";
     else return dayjs(time).format("DD/MM/YYYY");
   };
+
   return (
     <>
-      <TableFormulaDate
-        techStore={techStoreId}
-        value={formulaDateDefault}
-        _id={itemId}
-        setOpen={setFormulaDateModal}
-        opened={formulaDateModal}
-        dateType={formulaDateType}
-      />
-      <TableComment
-        value={commentModalValue}
-        setOpen={setCommentModal}
-        opened={commentModal}
-        _id={itemId}
-        setId={setItemId}
-      />
-      <TableDeclStatus
-        declaration_number={declarationNumber}
-        opened={declarationModal}
-        setOpen={setDeclarationModal}
-      />
-      <TableStore
-        itemId={itemId}
-        opened={isModal}
-        storeData={storeData}
-        setOpen={setIsModal}
-      />
+      {/* 
       <TableItemUpdate
         opened={updateModal}
         setOpen={setUpdateModal}
         item={item}
-      />
-      <TableUploadModal
-        opened={uploadModal}
-        setOpen={setUploadModal}
-        item_id={itemId}
       />
       <TableDocsModal
         _id={docsItemId}
         opened={docsModal}
         setOpen={setDocsModal}
         docs={docs}
-      />
+      /> */}
       <div className="table-page_table">
         <table>
           <TableColNames />
@@ -155,8 +147,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setUploadModal(true);
-                      setItemId(item._id);
+                      uploadHandler(item._id);
                     }}
                   >
                     {item.simple_product_name}
@@ -192,9 +183,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setIsModal(true);
-                      setItemId(item._id);
-                      setStoreData({
+                      tableStoreHandler(item._id, {
                         _id: item.store._id,
                         receiver: item.store.receiver,
                         contact: item.store.contact,
@@ -271,8 +260,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setDeclarationModal(true);
-                      setDeclarationNumber(item.declaration_number);
+                      declStatusHandler(item.declaration_number);
                     }}
                   >
                     {item.declaration_number}
@@ -343,17 +331,12 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   </td>
                   <td
                     onClick={() => {
-                      setCommentModalValue(item.comment);
-                      setCommentModal(true);
-                      setItemId(item._id);
+                      tableCommentHandler(item._id, item.comment);
                     }}
                     style={{ cursor: "pointer" }}
                   >
                     {item.comment?.substring(0, 10)}...
                   </td>
-                  {/* <td> {item.fraht} </td>
-                  <td> {item.bid} </td>
-                  <td> {item.note} </td> */}
                 </tr>
               );
             })}

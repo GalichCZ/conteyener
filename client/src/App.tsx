@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header } from "./UI/index";
 import "./App.css";
 import "antd/dist/antd.css";
+import { AllModals } from "./components/index";
 
 const TablePage = lazy(() =>
   wait(0).then(() =>
@@ -57,6 +58,7 @@ function App() {
     <>
       <BrowserRouter>
         <Header />
+        <AllModals />
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />

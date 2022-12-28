@@ -11,13 +11,17 @@ import "./assets/css/header.css";
 import { AuthContextProvider } from "./store/auth-context";
 import { Loader } from "./UI/index";
 import { ReDrawContextProvider } from "./store/redraw-context";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <AuthContextProvider>
-    <ReDrawContextProvider>
-      <Suspense fallback={<Loader />}>
-        <App />
-      </Suspense>
-    </ReDrawContextProvider>
-  </AuthContextProvider>
+  <Provider store={store}>
+    <AuthContextProvider>
+      <ReDrawContextProvider>
+        <Suspense fallback={<Loader />}>
+          <App />
+        </Suspense>
+      </ReDrawContextProvider>
+    </AuthContextProvider>
+  </Provider>
 );

@@ -3,20 +3,18 @@ import { Modal, Form, Input, Button, DatePicker } from "antd";
 import { Declaration } from "../../../functions/declarationFuncs";
 import { Writes } from "../../../Types/Types";
 import dayjs from "dayjs";
-
-interface TableDeclStatusProps {
-  opened: boolean | undefined;
-  declaration_number: string | undefined;
-  setOpen: (c: any) => any;
-}
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setOpenDeclStatus } from "../../../store/slices/tableDeclStatusSlice";
 
 const DeclarationFuncs = new Declaration();
 
-export const TableDeclStatus: React.FC<TableDeclStatusProps> = ({
-  opened,
-  declaration_number,
-  setOpen,
-}) => {
+export const TableDeclStatus = () => {
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.tableDeclStatus.open);
+  const declaration_number = useAppSelector(
+    (state) => state.tableDeclStatus.declaration_number
+  );
+
   const [writes, setWrites] = useState<Writes[]>();
   const [declarationData, setDeclarationData] = useState<object>({
     declaration_status_date: "",
@@ -26,11 +24,11 @@ export const TableDeclStatus: React.FC<TableDeclStatusProps> = ({
   });
 
   const handleOk = () => {
-    setOpen(false);
+    dispatch(setOpenDeclStatus());
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenDeclStatus());
   };
 
   const createHandler = async () => {
@@ -67,19 +65,20 @@ export const TableDeclStatus: React.FC<TableDeclStatusProps> = ({
       ...declarationData,
       declaration_number: declaration_number,
     });
-  }, [opened]);
+  }, [open]);
 
   useEffect(() => {
-    if (opened) getHandler();
-  }, [opened]);
+    if (open) getHandler();
+  }, [open]);
 
   return (
     <Modal
       title="Статус декларации"
-      open={opened}
+      open={open}
       onOk={handleOk}
       onCancel={handleCancel}
       className="declaration-modal"
+      destroyOnClose
     >
       <table>
         <thead>

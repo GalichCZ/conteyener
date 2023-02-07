@@ -271,8 +271,10 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               className="required-form"
               label="Номер заказа"
             >
-              {drawOrders()}
-              <Button onClick={addFields3}>Добавить поле</Button>
+              <>
+                {drawOrders()}
+                <Button onClick={addFields3}>Добавить поле</Button>
+              </>
             </Form.Item>
             <MyInput
               name="name3"
@@ -290,32 +292,36 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
               }}
             />
             <Form.Item name="name5" className="required-form" label="Поставщик">
-              {inputFields2.map(
-                (input: { id: any; name: string }, key: number) => {
-                  return (
-                    <div key={key} style={{ display: "flex" }}>
-                      <Input
-                        key={key}
-                        placeholder="Поставщик"
-                        id={input.id}
-                        onBlur={(e) => {
-                          providerHandler(e.target.value);
-                        }}
-                      />
-                      <CloseOutlined
-                        onClick={() => {
-                          deleteProvider(input.name);
-                        }}
-                      />
-                    </div>
-                  );
-                }
-              )}
-              <Button onClick={addFields2}>Добавить поле</Button>
+              <>
+                {inputFields2.map(
+                  (input: { id: any; name: string }, key: number) => {
+                    return (
+                      <div key={key} style={{ display: "flex" }}>
+                        <Input
+                          key={key}
+                          placeholder="Поставщик"
+                          id={input.id}
+                          onBlur={(e) => {
+                            providerHandler(e.target.value);
+                          }}
+                        />
+                        <CloseOutlined
+                          onClick={() => {
+                            deleteProvider(input.name);
+                          }}
+                        />
+                      </div>
+                    );
+                  }
+                )}
+                <Button onClick={addFields2}>Добавить поле</Button>
+              </>
             </Form.Item>
             <Form.Item name="name6" className="required-form" label="Импортер">
-              {drawImporters()}
-              <Button onClick={addFields}>Добавить поле</Button>
+              <>
+                {drawImporters()}
+                <Button onClick={addFields}>Добавить поле</Button>
+              </>
             </Form.Item>
             <MyInput
               name="name7"

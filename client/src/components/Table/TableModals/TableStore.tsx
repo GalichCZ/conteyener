@@ -27,6 +27,8 @@ export const TableStore = ({}) => {
     name: "",
   });
 
+  console.log(storeData);
+
   const [updateStore, setUpdateStore] = useState<Store>({
     _id: "",
     receiver: "",

@@ -1,5 +1,4 @@
-const URL = "https://api-automycka.space/api";
-// const URL = "http://localhost:4444/api";
+const URL = import.meta.env.VITE_API_URL;
 
 export class Product {
   async getProducts(_id: string) {

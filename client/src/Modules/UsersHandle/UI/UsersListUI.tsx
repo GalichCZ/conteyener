@@ -1,42 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { UserData } from "../../../Types/Types";
 import { List, Select } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { User } from "../functions/userFuncs";
-import { UserData } from "../Types/Types";
-import { useContext } from "react";
-import AuthContext from "../store/auth-context";
 
-const UserFuncs = new User();
+interface IUsersListUI {
+  data: UserData[];
+  loading: boolean;
+  admin: boolean;
+  handleChange: (value: string, email: string) => void;
+  handleDelete: (email: string) => void;
+}
 
-export const UsersList = () => {
-  const authCtx = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<UserData[]>([]);
-
-  const loadMoreData = async () => {
-    const _id = window.localStorage.getItem("_id");
-    const response = await UserFuncs.getUsers(_id);
-    console.log(response);
-    setData(response);
-  };
-
-  const handleChange = async (value: string, email: string) => {
-    setLoading(true);
-    const response = await UserFuncs.changeRole(email, value);
-    if (response === 200) setLoading(false);
-  };
-
-  const handleDelete = async (email: string) => {
-    const response = await UserFuncs.deleteUser(email);
-    if (response === 200) loadMoreData();
-  };
-
-  useEffect(() => {
-    loadMoreData();
-  }, []);
-
+const UsersListUI: React.FC<IUsersListUI> = ({
+  data,
+  loading,
+  admin,
+  handleChange,
+  handleDelete,
+}) => {
   return (
-    <div className="users-list">
+    <>
       <List
         dataSource={data}
         renderItem={(item) => (
@@ -69,7 +52,7 @@ export const UsersList = () => {
                 },
               ]}
             />
-            {authCtx.role === "admin" && (
+            {admin && (
               <CloseOutlined
                 onClick={() => handleDelete(item.email)}
                 style={{ marginLeft: "10px", scale: "1.25" }}
@@ -78,6 +61,8 @@ export const UsersList = () => {
           </List.Item>
         )}
       />
-    </div>
+    </>
   );
 };
+
+export default UsersListUI;

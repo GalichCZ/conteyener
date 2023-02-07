@@ -16,38 +16,40 @@ export const SelectDelivery: React.FC<SelectDelivery> = ({
 }) => {
   return (
     <Form.Item name={name} className={className} label="Способ Доставки">
-      <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
-      <Select
-        // value={value}
-        style={{ width: 120 }}
-        onChange={onChange}
-        options={[
-          {
-            value: "sea_vld",
-            label: "Море ВЛД",
-          },
-          {
-            value: "sea_spb",
-            label: "Море СПБ",
-          },
-          {
-            value: "sea_new_ros",
-            label: "Море Новоросс",
-          },
-          {
-            value: "sea_riga",
-            label: "Море Рига",
-          },
-          {
-            value: "sea_kotka",
-            label: "Море Котка",
-          },
-          {
-            value: "railway",
-            label: "ЖД",
-          },
-        ]}
-      />
+      <>
+        <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
+        <Select
+          // value={value}
+          style={{ width: 120 }}
+          onChange={onChange}
+          options={[
+            {
+              value: "sea_vld",
+              label: "Море ВЛД",
+            },
+            {
+              value: "sea_spb",
+              label: "Море СПБ",
+            },
+            {
+              value: "sea_new_ros",
+              label: "Море Новоросс",
+            },
+            {
+              value: "sea_riga",
+              label: "Море Рига",
+            },
+            {
+              value: "sea_kotka",
+              label: "Море Котка",
+            },
+            {
+              value: "railway",
+              label: "ЖД",
+            },
+          ]}
+        />
+      </>
     </Form.Item>
   );
 };

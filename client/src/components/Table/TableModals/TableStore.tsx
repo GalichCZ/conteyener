@@ -5,25 +5,20 @@ import { TechStore } from "../../../functions/techStoreFuncs";
 import { Item } from "../../../functions/itemFuncs";
 import { MyInput } from "../TableUI/MyInput";
 import { TechStoreSelect } from "../../index";
+import { setOpenTableStore } from "../../../store/slices/tableStoreSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 
 const { TextArea } = Input;
 
 const TechStoreFuncs = new TechStore();
 const ItemFuncs = new Item();
 
-interface TableStoreProps {
-  opened: boolean | undefined;
-  storeData: Store | undefined;
-  setOpen: (c: any) => any;
-  itemId: string;
-}
+export const TableStore = ({}) => {
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.tableStore.open);
+  const itemId = useAppSelector((state) => state.tableStore.itemId);
+  const storeData = useAppSelector((state) => state.tableStore.storeData);
 
-export const TableStore: React.FC<TableStoreProps> = ({
-  opened,
-  storeData,
-  setOpen,
-  itemId,
-}) => {
   const [err, setErr] = useState<string | null>();
   const [value, setDefaulValue] = useState<string>("");
   const [data, setData] = useState<TechStoreData>({
@@ -42,11 +37,11 @@ export const TableStore: React.FC<TableStoreProps> = ({
 
   const handleOk = async () => {
     await handleUpdateStore(updateStore);
-    setOpen(false);
+    dispatch(setOpenTableStore());
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenTableStore());
   };
 
   const getOneTechStore = async (_id: string) => {
@@ -63,10 +58,10 @@ export const TableStore: React.FC<TableStoreProps> = ({
   };
 
   useEffect(() => {
-    if (opened && storeData) {
+    if (open && storeData) {
       setUpdateStore(storeData);
     }
-  }, [opened]);
+  }, [open]);
 
   useEffect(() => {
     if (storeData) getOneTechStore(storeData.techStore);
@@ -76,14 +71,15 @@ export const TableStore: React.FC<TableStoreProps> = ({
     <Modal
       className="table-store_modal"
       title="Склад"
-      open={opened}
+      open={open}
       onOk={handleOk}
       onCancel={handleCancel}
+      destroyOnClose
     >
       <Form>
         <TechStoreSelect
           value={value}
-          opened={opened}
+          opened={open}
           onChange={(value: string) => {
             getOneTechStore(value);
             setUpdateStore({ ...updateStore, techStore: value });

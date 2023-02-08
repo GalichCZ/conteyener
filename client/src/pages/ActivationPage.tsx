@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import AuthContext from "../store/auth-context";
 import { useSearchParams, useNavigate } from "react-router-dom";
-const URL = "https://api-automycka.space/api";
+const URL = import.meta.env.VITE_API_URL;
 
 export const ActivationPage = () => {
   const navigate = useNavigate();

@@ -35,16 +35,18 @@ export const TechStoreSelect: React.FC<TechStoreSelectProps> = ({
 
   return (
     <Form.Item name={name} className={className} label="Склад">
-      <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
-      <Select
-        // value={value}
-        placeholder="Выберите склад"
-        onChange={onChange}
-        options={stores?.map((store) => ({
-          value: store._id,
-          label: store.name,
-        }))}
-      />
+      <>
+        <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
+        <Select
+          // value={value}
+          placeholder="Выберите склад"
+          onChange={onChange}
+          options={stores?.map((store) => ({
+            value: store._id,
+            label: store.name,
+          }))}
+        />
+      </>
     </Form.Item>
   );
 };

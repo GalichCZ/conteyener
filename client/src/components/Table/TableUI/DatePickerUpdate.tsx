@@ -3,7 +3,7 @@ import { Form } from "antd";
 
 interface DatePickerUpdateProps {
   label: string;
-  value: string;
+  value?: string;
   className?: string;
   onChange: (e: { target: { value: string } }) => void;
 }

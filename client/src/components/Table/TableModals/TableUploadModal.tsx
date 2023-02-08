@@ -4,28 +4,33 @@ import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
 import { Product } from "../../../functions/productFuncs";
 import { Products } from "../../../Types/Types";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import {
+  setOpenUpload,
+  setUploadItemId,
+} from "../../../store/slices/tableUploadSlice";
 
 interface TableUploadProps {
-  opened: boolean | undefined;
-  item_id: string;
-  setOpen: (c: any) => any;
+  opened?: boolean | undefined;
+  item_id?: string;
+  setOpen?: (c: any) => any;
 }
 
 const ProductFuncs = new Product();
 
-export const TableUploadModal: React.FC<TableUploadProps> = ({
-  opened,
-  item_id,
-  setOpen,
-}) => {
+export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
+  const dispatch = useAppDispatch();
+  const item_id = useAppSelector((state) => state.tableUpload.item_id);
+  const open = useAppSelector((state) => state.tableUpload.open);
+
   const [products, setProducts] = useState<Products[]>();
 
   const handleOk = () => {
-    setOpen(false);
+    dispatch(setOpenUpload());
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenUpload());
   };
 
   const productHandler = async () => {
@@ -55,14 +60,14 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({
   };
 
   useEffect(() => {
-    if (opened) productHandler();
-  }, [opened]);
+    if (open) productHandler();
+  }, [open]);
 
   return (
     <Modal
       className="declaration-modal"
       title="Товар"
-      open={opened}
+      open={open}
       onOk={handleOk}
       onCancel={handleCancel}
     >

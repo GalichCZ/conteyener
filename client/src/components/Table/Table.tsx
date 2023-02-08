@@ -1,46 +1,23 @@
 import React, { useState } from "react";
-import {
-  TableStore,
-  TableItemUpdate,
-  TableDeclStatus,
-  TableColNames,
-  TableUploadModal,
-  TableDocsModal,
-  ShowDelivery,
-  TableComment,
-  TableFormulaDate,
-} from "../index";
+import { TableColNames, ShowDelivery } from "../index";
 import * as Types from "../../Types/Types";
-import { Item } from "../../functions/itemFuncs";
 import dayjs from "dayjs";
+import * as ModalHandlers from "./TableHandlers";
+import { useAppDispatch } from "../../hooks/hooks";
 
-export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
-  const [isModal, setIsModal] = useState<boolean>();
-  const [storeData, setStoreData] = useState<Types.Store>();
-  const [itemId, setItemId] = useState<string>("");
+interface ITable {
+  data: Types.TableProps[];
+}
 
+export const Table: React.FunctionComponent<ITable> = ({ data }) => {
   const [docsModal, setDocsModal] = useState<boolean>();
   const [docs, setDocs] = useState<Types.IsDocsType>();
   const [docsItemId, setDocsItemId] = useState<string>("");
 
-  const [commentModal, setCommentModal] = useState<boolean>();
-  const [commentModalValue, setCommentModalValue] = useState<string>("");
-
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
 
-  const [declarationModal, setDeclarationModal] = useState<boolean>();
-  const [declarationNumber, setDeclarationNumber] = useState<string>();
-
-  const [uploadModal, setUploadModal] = useState<boolean>();
-  const [uploadContainer, setUploadContainer] = useState<any>();
-
-  const [formulaDateModal, setFormulaDateModal] = useState<boolean>(false);
-  const [formulaDateType, setFormulaDateType] = useState<number>(0);
-  const [formulaDateDefault, setFormulaDateDefault] = useState<string>("");
-  const [techStoreId, setTechStoreId] = useState<string>("");
-
-  // console.log(data);
+  const dispatch = useAppDispatch();
 
   const docsCount = (item: Types.IsDocsType) => {
     let a = 0;
@@ -60,69 +37,22 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     return a;
   };
 
-  const dateChangeHandler = (
-    dateType: number,
-    _itemId: string,
-    _defValue: string,
-    _techStoreId: string
-  ) => {
-    if (_defValue !== null) {
-      setFormulaDateModal(true);
-      setFormulaDateType(dateType);
-      setItemId(_itemId);
-      setFormulaDateDefault(_defValue);
-      setTechStoreId(_techStoreId);
-    }
-  };
-
   const timeConvert = (time: string) => {
     if (time === null) return "";
     else return dayjs(time).format("DD/MM/YYYY");
   };
+
+  console.log(data);
+
   return (
     <>
-      <TableFormulaDate
-        techStore={techStoreId}
-        value={formulaDateDefault}
-        _id={itemId}
-        setOpen={setFormulaDateModal}
-        opened={formulaDateModal}
-        dateType={formulaDateType}
-      />
-      <TableComment
-        value={commentModalValue}
-        setOpen={setCommentModal}
-        opened={commentModal}
-        _id={itemId}
-        setId={setItemId}
-      />
-      <TableDeclStatus
-        declaration_number={declarationNumber}
-        opened={declarationModal}
-        setOpen={setDeclarationModal}
-      />
-      <TableStore
-        itemId={itemId}
-        opened={isModal}
-        storeData={storeData}
-        setOpen={setIsModal}
-      />
-      <TableItemUpdate
-        opened={updateModal}
-        setOpen={setUpdateModal}
-        item={item}
-      />
-      <TableUploadModal
-        opened={uploadModal}
-        setOpen={setUploadModal}
-        item_id={itemId}
-      />
+      {/* 
       <TableDocsModal
         _id={docsItemId}
         opened={docsModal}
         setOpen={setDocsModal}
         docs={docs}
-      />
+      /> */}
       <div className="table-page_table">
         <table>
           <TableColNames />
@@ -134,8 +64,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setUpdateModal(true);
-                      setItem(item);
+                      ModalHandlers.tableUpdateHandler(dispatch, item);
                     }}
                   >
                     {timeConvert(item.request_date)}
@@ -155,8 +84,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setUploadModal(true);
-                      setItemId(item._id);
+                      ModalHandlers.uploadHandler(dispatch, item._id);
                     }}
                   >
                     {item.simple_product_name}
@@ -192,9 +120,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setIsModal(true);
-                      setItemId(item._id);
-                      setStoreData({
+                      ModalHandlers.tableStoreHandler(dispatch, item._id, {
                         _id: item.store._id,
                         receiver: item.store.receiver,
                         contact: item.store.contact,
@@ -217,7 +143,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       item.eta_update ? "formula-date_update" : "formula-date"
                     }
                     onClick={() => {
-                      dateChangeHandler(
+                      ModalHandlers.dateChangeHandler(
+                        dispatch,
                         1,
                         item._id,
                         item.eta,
@@ -225,15 +152,15 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       );
                     }}
                   >
-                    {" "}
-                    {timeConvert(item.eta)}{" "}
+                    {timeConvert(item.eta)}
                   </td>
                   <td> {item.release && timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
                   <td> {item.td ? "+" : "-"} </td>
                   <td
                     onClick={() => {
-                      dateChangeHandler(
+                      ModalHandlers.dateChangeHandler(
+                        dispatch,
                         2,
                         item._id,
                         item.date_do,
@@ -271,15 +198,18 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setDeclarationModal(true);
-                      setDeclarationNumber(item.declaration_number);
+                      ModalHandlers.declStatusHandler(
+                        dispatch,
+                        item.declaration_number
+                      );
                     }}
                   >
                     {item.declaration_number}
                   </td>
                   <td
                     onClick={() => {
-                      dateChangeHandler(
+                      ModalHandlers.dateChangeHandler(
+                        dispatch,
                         3,
                         item._id,
                         item.declaration_issue_date,
@@ -308,7 +238,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.km_to_dist} </td>
                   <td
                     onClick={() => {
-                      dateChangeHandler(
+                      ModalHandlers.dateChangeHandler(
+                        dispatch,
                         4,
                         item._id,
                         item.train_arrive_date,
@@ -326,7 +257,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   <td> {item.pickup} </td>
                   <td
                     onClick={() => {
-                      dateChangeHandler(
+                      ModalHandlers.dateChangeHandler(
+                        dispatch,
                         5,
                         item._id,
                         item.store_arrive_date,
@@ -343,17 +275,16 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                   </td>
                   <td
                     onClick={() => {
-                      setCommentModalValue(item.comment);
-                      setCommentModal(true);
-                      setItemId(item._id);
+                      ModalHandlers.tableCommentHandler(
+                        dispatch,
+                        item._id,
+                        item.comment
+                      );
                     }}
                     style={{ cursor: "pointer" }}
                   >
                     {item.comment?.substring(0, 10)}...
                   </td>
-                  {/* <td> {item.fraht} </td>
-                  <td> {item.bid} </td>
-                  <td> {item.note} </td> */}
                 </tr>
               );
             })}

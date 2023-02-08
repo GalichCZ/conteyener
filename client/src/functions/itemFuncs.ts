@@ -1,13 +1,12 @@
 import {
   Comment,
   FormulaDateUpdate,
-  NewItem,
+  IItem,
+  INewItem,
   Store,
-  UpdatedItem,
 } from "../Types/Types";
 
-const URL = "https://api-automycka.space/api";
-// const URL = "http://localhost:4444/api";
+const URL = import.meta.env.VITE_API_URL;
 
 export class Item {
   async getItems() {
@@ -20,7 +19,7 @@ export class Item {
     return response;
   }
 
-  async createItem(itemValues: NewItem) {
+  async createItem(itemValues: INewItem) {
     const response = await fetch(URL + "/item", {
       method: "POST",
       body: JSON.stringify(itemValues),
@@ -40,7 +39,7 @@ export class Item {
     return response;
   }
 
-  async updateItem(itemValues: UpdatedItem) {
+  async updateItem(itemValues: IItem) {
     const response = await fetch(URL + "/item", {
       method: "PATCH",
       body: JSON.stringify(itemValues),

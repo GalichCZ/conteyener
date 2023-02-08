@@ -1,23 +1,27 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { User } from "../functions/userFuncs";
-import AuthContext from "../store/auth-context";
+import React, { useState, useContext } from "react";
+import { LoginClass } from "../Functions/Login";
+import AuthContext from "../../../store/auth-context";
 import { useNavigate } from "react-router-dom";
+import LoginFormUI from "../UI/LoginFormUI";
+
+interface ILoginValues {
+  email: string;
+  password: string;
+}
 
 export const LoginForm = () => {
-  const UserFuncs = new User();
+  const Login = new LoginClass();
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
 
-  const [err, setErr] = useState<string | null>();
-  const [loginValues, setLoginValues] = useState<object>({
+  const [err, setErr] = useState<string | null>("");
+  const [loginValues, setLoginValues] = useState<ILoginValues>({
     email: "",
     password: "",
   });
 
   const loginHandler = async () => {
-    const data = await UserFuncs.login(loginValues);
+    const data = await Login.login(loginValues);
 
     if ("message" in data) {
       return setErr(data.message);
@@ -39,7 +43,13 @@ export const LoginForm = () => {
 
   return (
     <>
-      <Form
+      <LoginFormUI
+        loginValues={loginValues}
+        err={err}
+        loginHandler={loginHandler}
+        setLoginValues={setLoginValues}
+      />
+      {/* <Form
         className="login-form"
         name="basic"
         labelCol={{ span: 8 }}
@@ -84,7 +94,7 @@ export const LoginForm = () => {
         </Form.Item>
 
         {err && <p className="login-err">{err}</p>}
-      </Form>
+      </Form> */}
     </>
   );
 };

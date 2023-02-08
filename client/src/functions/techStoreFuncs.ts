@@ -21,7 +21,7 @@ export class TechStore {
       });
     return response;
   }
-  async getOneTechStore(_id: string) {
+  async getOneTechStore(_id?: string) {
     const response = await fetch(URL + `/store/tech/${_id}`)
       .then((res) => res.json())
       .then((data) => {

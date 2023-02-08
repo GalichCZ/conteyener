@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { SingleItem } from "../../Types/Types";
+import { IItem } from "../../Types/Types";
 
 export interface TableItemUpdate {
   open: boolean;
-  item: SingleItem | null;
+  item: IItem | null;
 }
 
 const initialState: TableItemUpdate = {
@@ -19,7 +19,7 @@ export const tableItemUpdateSlice = createSlice({
     setOpenItemUpdate: (state) => {
       state.open = !state.open;
     },
-    setItemUpdateItem: (state, action: PayloadAction<SingleItem>) => {
+    setItemUpdateItem: (state, action: PayloadAction<IItem>) => {
       state.item = action.payload;
     },
   },

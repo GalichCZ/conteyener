@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Input, DatePicker } from "antd";
-import { NewItem } from "../../../Types/Types";
+import { INewItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import { MyInput, SelectDelivery, TechStoreSelect } from "../../index";
@@ -24,10 +24,9 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
   const [inputFields3, setInputFields3] = useState<any>([]);
   const [err, setErr] = useState<string | null>();
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [item, setItem] = useState<NewItem>({
-    request_date: null,
+  const [item, setItem] = useState<INewItem>({
+    request_date: "",
     order_number: [],
-    container_number: "",
     simple_product_name: "",
     delivery_method: "",
     providers: [],
@@ -38,20 +37,6 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
     agent: "",
     container_type: "",
     place_of_dispatch: "",
-    arrive_place: "",
-    line: "",
-    ready_date: null,
-    load_date: null,
-    etd: null,
-    eta: null,
-    eta_update: false,
-    release: null,
-    bl_smgs_cmr: null,
-    td: null,
-    date_do: null,
-    date_do_update: false,
-    port: "",
-    is_ds: null,
     is_docs: {
       PI: false,
       CI: false,
@@ -63,23 +48,6 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
       ED: false,
       bill: false,
     },
-    declaration_number: "",
-    declaration_issue_date: null,
-    declaration_issue_date_update: false,
-    availability_of_ob: null,
-    answer_of_ob: null,
-    expeditor: "",
-    destination_station: "",
-    km_to_dist: null,
-    train_arrive_date: null,
-    train_arrive_date_update: false,
-    bid: null,
-    pickup: "",
-    store_arrive_date: null,
-    store_arrive_date_update: false,
-    comment: "",
-    note: "",
-    fraht: "",
   });
 
   const showModal = () => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Modal, Form, Input, Button, Switch } from "antd";
-import { SingleItem, UpdatedItem } from "../../../Types/Types";
+import { IItem } from "../../../Types/Types";
 import { Item } from "../../../functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import { SelectDelivery } from "../TableUI/SelectDelivery";
@@ -9,6 +9,7 @@ import { MyInput } from "../TableUI/MyInput";
 import ReDrawContext from "../../../store/redraw-context";
 import { DatePickerUpdate } from "../TableUI/DatePickerUpdate";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setOpenItemUpdate } from "../../../store/slices/tableItemUpdateSlice";
 
 const ItemFuncs = new Item();
 
@@ -24,9 +25,9 @@ export const TableItemUpdate = ({}) => {
   const [inputFields, setInputFields] = useState<any>();
   const [inputFields2, setInputFields2] = useState<any>();
   const [inputFields3, setInputFields3] = useState<any>();
-  const [singleItem, setSingleItem] = useState<UpdatedItem>({
+  const [singleItem, setSingleItem] = useState<IItem>({
     _id: "",
-    request_date: null,
+    request_date: "",
     order_number: [],
     container: {
       _id: "",
@@ -45,28 +46,38 @@ export const TableItemUpdate = ({}) => {
     place_of_dispatch: "",
     arrive_place: "",
     line: "",
-    ready_date: null,
-    load_date: null,
-    etd: null,
-    eta: null,
-    release: null,
+    ready_date: "",
+    load_date: "",
+    etd: "",
+    eta: "",
+    release: "",
     bl_smgs_cmr: null,
     td: null,
     date_do: null,
     port: "",
     is_ds: null,
-    is_docs: null,
+    is_docs: {
+      PI: false,
+      CI: false,
+      PL: false,
+      SS_DS: false,
+      contract_agrees: false,
+      cost_agrees: false,
+      instruction: false,
+      ED: false,
+      bill: false,
+    },
     declaration_number: "",
-    declaration_issue_date: null,
-    availability_of_ob: null,
-    answer_of_ob: null,
+    declaration_issue_date: "",
+    availability_of_ob: "",
+    answer_of_ob: "",
     expeditor: "",
     destination_station: "",
-    km_to_dist: null,
-    train_arrive_date: null,
-    bid: null,
+    km_to_dist: 0,
+    train_arrive_date: "",
+    bid: 0,
     pickup: "",
-    store_arrive_date: null,
+    store_arrive_date: "",
     comment: "",
     note: "",
     fraht: "",
@@ -85,12 +96,14 @@ export const TableItemUpdate = ({}) => {
     if (response === 200) {
       reDraw.reDrawHandler(true);
       setConfirmLoading(false);
+      dispatch(setOpenItemUpdate());
       // setOpen(false);
     }
   };
 
   const handleCancel = () => {
     // setOpen(false);
+    dispatch(setOpenItemUpdate());
   };
 
   const importerHandler = (importer: string) => {
@@ -371,37 +384,37 @@ export const TableItemUpdate = ({}) => {
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                ready_date: new Date(e.target.value),
+                ready_date: e.target.value,
               });
             }}
-            value={item?.ready_date?.substring(0, 10)}
+            value={item?.ready_date}
           />
           <DatePickerUpdate
             label="Дата загрузки"
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                load_date: new Date(e.target.value),
+                load_date: e.target.value,
               });
             }}
-            value={item?.load_date?.substring(0, 10)}
+            value={item?.load_date}
           />
           <DatePickerUpdate
             label="ETD"
             onChange={(e) => {
-              setSingleItem({ ...singleItem, etd: new Date(e.target.value) });
+              setSingleItem({ ...singleItem, etd: e.target.value });
             }}
-            value={item?.etd?.substring(0, 10)}
+            value={item?.etd}
           />
           <DatePickerUpdate
             label="Релиз"
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                release: new Date(e.target.value),
+                release: e.target.value,
               });
             }}
-            value={item?.release?.substring(0, 10)}
+            value={item?.release}
           />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
@@ -454,20 +467,20 @@ export const TableItemUpdate = ({}) => {
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                availability_of_ob: new Date(e.target.value),
+                availability_of_ob: e.target.value,
               });
             }}
-            value={item?.availability_of_ob?.substring(0, 10)}
+            value={item?.availability_of_ob}
           />
           <DatePickerUpdate
             label="Ответ ОБ"
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
-                answer_of_ob: new Date(e.target.value),
+                answer_of_ob: e.target.value,
               });
             }}
-            value={item?.answer_of_ob?.substring(0, 10)}
+            value={item?.answer_of_ob}
           />
           <MyInput
             label="Экспедитор"

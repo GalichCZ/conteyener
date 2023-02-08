@@ -6,30 +6,18 @@ type Container = {
 
 type Importers = {
   name: string;
-  _id: string;
+  _id?: string;
 };
 
 type OrderNumber = {
-  name: string;
-  _id: string;
-};
-
-type NewImporters = {
-  name: string;
+  number: string;
+  _id?: string;
 };
 
 type Providers = {
   name: string;
-  _id: string;
+  _id?: string;
 };
-
-type NewProviders = {
-  name: string;
-};
-
-interface NewOrderNumber {
-  number: string;
-}
 
 export type Store = {
   _id?: string;
@@ -40,201 +28,110 @@ export type Store = {
 };
 
 export type TableProps = {
-  data:
-    | {
-        _id: string;
-        request_date: string;
-        order_number: NewOrderNumber[];
-        container: Container;
-        simple_product_name: string;
-        delivery_method: string;
-        providers: Providers[];
-        importers: Importers[];
-        conditions: string;
-        store_name: string;
-        store: Store;
-        agent: string;
-        place_of_dispatch: string;
-        line: string;
-        ready_date: string;
-        load_date: string;
-        etd: string;
-        eta: string;
-        eta_update: boolean;
-        release: string;
-        bl_smgs_cmr: boolean;
-        td: string;
-        date_do: string;
-        date_do_update: boolean;
-        port: string;
-        is_ds: boolean;
-        is_docs: IsDocsType;
-        declaration_number: string;
-        declaration_issue_date: string;
-        declaration_issue_date_update: boolean;
-        declaration_status: string;
-        availability_of_ob: string;
-        answer_of_ob: string;
-        expeditor: string;
-        destination_station: string;
-        km_to_dist: number;
-        train_arrive_date: string;
-        train_arrive_date_update: boolean;
-        pickup: string;
-        store_arrive_date: string;
-        store_arrive_date_update: boolean;
-        comment: string;
-        fraht: string;
-        bid: number;
-        note: string;
-        creator: string;
-      }[]
-    | undefined;
-};
-
-export interface NewItem {
-  request_date: Date | null;
-  order_number: NewOrderNumber[];
-  container_number: string;
+  _id: string;
+  request_date: string;
+  order_number: OrderNumber[];
+  container: Container;
   simple_product_name: string;
   delivery_method: string;
-  providers: NewProviders[];
-  importers: NewImporters[];
+  providers: Providers[];
+  importers: Importers[];
   conditions: string;
   store_name: string;
-  tech_store: string;
+  store: Store;
   agent: string;
-  container_type: string;
   place_of_dispatch: string;
-  arrive_place: string;
   line: string;
-  ready_date: Date | null;
-  load_date: Date | null;
-  etd: Date | null;
-  eta: Date | null;
+  ready_date: string;
+  load_date: string;
+  etd: string;
+  eta: string;
   eta_update: boolean;
-  release: Date | null;
-  bl_smgs_cmr: boolean | null;
-  td: boolean | null;
-  date_do: Date | null;
+  release: string;
+  bl_smgs_cmr: boolean;
+  td: boolean;
+  date_do: string;
   date_do_update: boolean;
   port: string;
-  is_ds: boolean | null;
+  is_ds: boolean;
   is_docs: IsDocsType;
   declaration_number: string;
-  declaration_issue_date: Date | null;
+  declaration_issue_date: string;
   declaration_issue_date_update: boolean;
-  availability_of_ob: Date | null;
-  answer_of_ob: Date | null;
+  declaration_status: string;
+  availability_of_ob: string;
+  answer_of_ob: string;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number | null;
-  train_arrive_date: Date | null;
-  train_arrive_date_update: Boolean;
-  bid: number | null;
+  km_to_dist: number;
+  train_arrive_date: string;
+  train_arrive_date_update: boolean;
   pickup: string;
-  store_arrive_date: Date | null;
-  store_arrive_date_update: Boolean;
+  store_arrive_date: string;
+  store_arrive_date_update: boolean;
   comment: string;
-  note: string;
   fraht: string;
+  bid: number;
+  note: string;
+  creator: string;
+};
+
+export interface INewItem {
+  request_date: Date | string;
+  order_number: OrderNumber[];
+  simple_product_name: string;
+  delivery_method: string;
+  providers: Providers[];
+  importers: Importers[];
+  conditions: string;
+  store_name: string;
+  tech_store?: string;
+  agent: string;
+  container_type?: string;
+  place_of_dispatch: string;
+  is_docs: IsDocsType;
 }
 
-export type SingleItem = {
+export interface IItem extends INewItem {
   _id: string;
-  request_date: string | null | Date;
-  order_number: OrderNumber[];
-  container_number: string;
+  container_number?: string;
   container: Container;
-  delivery_method: string;
-  tech_store: string;
-  simple_product_name: string;
-  providers: NewProviders[];
-  importers: NewImporters[];
-  conditions: string;
-  store_receiver: string;
-  store_name: string;
-  store_address: string;
-  store_contact: string;
-  agent: string;
-  container_type: string;
+  store_receiver?: string;
+  store_address?: string;
+  store_contact?: string;
   place_of_dispatch: string;
-  arrive_place: string;
+  arrive_place?: string;
   line: string;
-  ready_date: string | null;
-  load_date: string | null;
-  etd: string | null;
-  eta: string | null;
-  release: string | null;
+  ready_date: string;
+  load_date: string;
+  etd: string;
+  eta: string;
+  release: string;
   bl_smgs_cmr: boolean | null;
   td: boolean | null;
   date_do: string | null;
   port: string;
   is_ds: boolean | null;
-  is_docs: boolean | null;
+  is_docs: IsDocsType;
   declaration_number: string;
-  declaration_issue_date: string | null;
-  availability_of_ob: string | null;
-  answer_of_ob: string | null;
+  declaration_issue_date: string;
+  availability_of_ob: string;
+  answer_of_ob: string;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number | null;
-  train_arrive_date: string | null;
-  bid: number | null;
+  km_to_dist: number;
+  train_arrive_date: string;
+  bid: number;
   pickup: string;
-  store_arrive_date: string | null;
+  store_arrive_date: string;
   comment: string;
   note: string;
   fraht: string;
-};
+}
 
 export interface Comment {
   comment: string;
   _id: string;
-}
-
-export interface UpdatedItem {
-  _id: string | null;
-  request_date: Date | null;
-  order_number: NewOrderNumber[] | null;
-  container: Container;
-  simple_product_name: string;
-  delivery_method: string;
-  providers: NewProviders[];
-  importers: NewImporters[];
-  conditions: string;
-  tech_store: string;
-  agent: string;
-  store_name: string;
-  container_type: string;
-  place_of_dispatch: string;
-  arrive_place: string;
-  line: string;
-  ready_date: Date | null;
-  load_date: Date | null;
-  etd: Date | null;
-  eta: Date | null;
-  release: Date | null;
-  bl_smgs_cmr: boolean | null;
-  td: boolean | null;
-  date_do: Date | null;
-  port: string;
-  is_ds: boolean | null;
-  is_docs: boolean | null;
-  declaration_number: string;
-  declaration_issue_date: Date | null;
-  availability_of_ob: Date | null;
-  answer_of_ob: Date | null;
-  expeditor: string;
-  destination_station: string;
-  km_to_dist: number | null;
-  train_arrive_date: Date | null;
-  bid: number | null;
-  pickup: string;
-  store_arrive_date: Date | null;
-  comment: string;
-  note: string;
-  fraht: string;
 }
 
 export interface Writes {

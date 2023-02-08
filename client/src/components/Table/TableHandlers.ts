@@ -63,7 +63,7 @@ export const uploadHandler = (dispatch: any, item_id: string) => {
   dispatch(setUploadItemId(item_id));
 };
 
-export const tableUpdateHandler = (dispatch: any, item: Types.SingleItem) => {
+export const tableUpdateHandler = (dispatch: any, item: Types.IItem) => {
   dispatch(setOpenItemUpdate());
   dispatch(setItemUpdateItem(item));
 };

@@ -5,7 +5,11 @@ import dayjs from "dayjs";
 import * as ModalHandlers from "./TableHandlers";
 import { useAppDispatch } from "../../hooks/hooks";
 
-export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
+interface ITable {
+  data: Types.TableProps[];
+}
+
+export const Table: React.FunctionComponent<ITable> = ({ data }) => {
   const [docsModal, setDocsModal] = useState<boolean>();
   const [docs, setDocs] = useState<Types.IsDocsType>();
   const [docsItemId, setDocsItemId] = useState<string>("");
@@ -13,7 +17,6 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
   const [updateModal, setUpdateModal] = useState<any>();
   const [item, setItem] = useState<any>();
 
-  // console.log(data);
   const dispatch = useAppDispatch();
 
   const docsCount = (item: Types.IsDocsType) => {
@@ -38,6 +41,8 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
     if (time === null) return "";
     else return dayjs(time).format("DD/MM/YYYY");
   };
+
+  console.log(data);
 
   return (
     <>
@@ -147,8 +152,7 @@ export const Table: React.FunctionComponent<Types.TableProps> = ({ data }) => {
                       );
                     }}
                   >
-                    {" "}
-                    {timeConvert(item.eta)}{" "}
+                    {timeConvert(item.eta)}
                   </td>
                   <td> {item.release && timeConvert(item.release)} </td>
                   <td> {item.bl_smgs_cmr ? "+" : "-"} </td>

@@ -4,26 +4,21 @@ import { IsDocsType } from "../../../Types/Types";
 import { DocsSelect } from "../../index";
 import Docs from "../../../functions/isDocsFuncs";
 import ReDrawContext from "../../../store/redraw-context";
-
-interface TableDocsProps {
-  opened: boolean | undefined;
-  docs: IsDocsType | undefined;
-  setOpen: (c: boolean) => void;
-  _id: string;
-}
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { setDocsId, setOpenDocs } from "../../../store/slices/tableDocsSlice";
 
 const DocsFuncs = new Docs();
 
-export const TableDocsModal: React.FC<TableDocsProps> = ({
-  opened,
-  docs,
-  setOpen,
-  _id,
-}) => {
+export const TableDocsModal: React.FC = ({}) => {
+  const dispatch = useAppDispatch();
   const reDraw = useContext(ReDrawContext);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
   const [isDocs, setIsDocs] = useState({});
+
+  const open = useAppSelector((state) => state.tableDocs.open);
+  const _id = useAppSelector((state) => state.tableDocs._id);
+  const docs = useAppSelector((state) => state.tableDocs.docs);
 
   useEffect(() => {
     if (docs) setIsDocs(docs);
@@ -35,19 +30,21 @@ export const TableDocsModal: React.FC<TableDocsProps> = ({
     if (response.error) setErr(response.error);
     if (response === 200) {
       setConfirmLoading(false);
-      setOpen(false);
+      dispatch(setOpenDocs());
+      dispatch(setDocsId(""));
       reDraw.reDrawHandler(true);
     }
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenDocs());
+    dispatch(setDocsId(""));
   };
 
   return (
     <Modal
       title="Документы для подачи"
-      open={opened}
+      open={open}
       onOk={async () => {
         await handleOk();
       }}

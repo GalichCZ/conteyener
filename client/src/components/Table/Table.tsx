@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TableColNames, ShowDelivery } from "../index";
 import * as Types from "../../Types/Types";
 import dayjs from "dayjs";
 import * as ModalHandlers from "./TableHandlers";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 
 interface ITable {
   data: Types.TableProps[];
 }
 
 export const Table: React.FunctionComponent<ITable> = ({ data }) => {
-  const [docsModal, setDocsModal] = useState<boolean>();
-  const [docs, setDocs] = useState<Types.IsDocsType>();
-  const [docsItemId, setDocsItemId] = useState<string>("");
-
-  const [updateModal, setUpdateModal] = useState<any>();
-  const [item, setItem] = useState<any>();
+  const [items, setItems] = useState<Types.TableProps[]>();
+  const headerRef = useRef(null);
+  const dataRef = useRef<any>(null);
+  const [widths] = useState<number[]>([]);
+  useEffect(() => {
+    if (dataRef.current) {
+      console.log(dataRef.current.children.length);
+      for (let i = 0; i < dataRef.current.children.length; i++) {
+        console.log(dataRef.current.children[i].offsetWidth);
+        widths.push(dataRef.current.children[i].offsetWidth);
+      }
+    }
+  }, []);
 
   const dispatch = useAppDispatch();
+  const querry = useAppSelector((state) => state.search.value);
 
   const docsCount = (item: Types.IsDocsType) => {
     let a = 0;
@@ -42,25 +50,27 @@ export const Table: React.FunctionComponent<ITable> = ({ data }) => {
     else return dayjs(time).format("DD/MM/YYYY");
   };
 
-  console.log(data);
+  useEffect(() => {
+    setItems(data);
+    console.log(items);
+  }, [data]);
+
+  useEffect(() => {
+    console.log("table", querry);
+    const filtered = items && ModalHandlers.SearchHandler(querry, items, data);
+    setItems(filtered);
+  }, [querry]);
 
   return (
     <>
-      {/* 
-      <TableDocsModal
-        _id={docsItemId}
-        opened={docsModal}
-        setOpen={setDocsModal}
-        docs={docs}
-      /> */}
       <div className="table-page_table">
         <table>
-          <TableColNames />
+          <TableColNames widthsArray={widths} />
 
           <tbody>
-            {data?.map((item, key) => {
+            {items?.map((item, key) => {
               return (
-                <tr key={key}>
+                <tr ref={dataRef} key={key}>
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -181,9 +191,11 @@ export const Table: React.FunctionComponent<ITable> = ({ data }) => {
                   <td
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setDocsModal(true);
-                      setDocs(item.is_docs);
-                      setDocsItemId(item._id);
+                      ModalHandlers.tableDocsHandler(
+                        dispatch,
+                        item._id,
+                        item.is_docs
+                      );
                     }}
                   >
                     {docsCount(item.is_docs) === "+" ? (

@@ -36,6 +36,10 @@ class ItemController {
       req.body.order_number,
       container
     );
+    if ("message" in orders[0]) {
+      console.log(orders);
+      return res.json({ error: orders[0].message });
+    }
 
     const is_docs = await IsDocsService.createDocs(req, container);
 
@@ -80,10 +84,14 @@ class ItemController {
     try {
       const item = await ItemSchema.findById({ _id: req.body._id });
 
+      // console.log(item);
+      // console.log(req.body);
+
       const container = await ContainerService.updateContainer(
         item.container._id,
         req
       );
+      console.log(container);
       await ProviderService.updateProviders(item, req);
       await ImporterService.updateImporters(item, req);
       await OrderService.updateOrders(item, req);

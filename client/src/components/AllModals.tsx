@@ -6,6 +6,7 @@ import {
   TableItemUpdate,
   TableStore,
   TableUploadModal,
+  TableDocsModal,
 } from "./index";
 
 export const AllModals = () => {
@@ -18,6 +19,7 @@ export const AllModals = () => {
       <TableUploadModal />
       <TableFormulaDate />
       <TableItemUpdate />
+      <TableDocsModal />
     </>
   );
 };

@@ -80,18 +80,6 @@ export const TableDeclStatus = () => {
       className="declaration-modal"
       destroyOnClose
     >
-      <table>
-        <thead>
-          <tr>
-            <td>Дата</td>
-            <td>Статус</td>
-            <td>Сообщение</td>
-            <td>Номер декларации</td>
-          </tr>
-        </thead>
-        <tbody>{renderStatuses()}</tbody>
-      </table>
-
       <Form layout="vertical">
         <Form.Item label="Дата">
           <DatePicker
@@ -125,6 +113,18 @@ export const TableDeclStatus = () => {
         </Form.Item>
       </Form>
       <Button onClick={() => createHandler()}>Создать запись</Button>
+
+      <table>
+        <thead>
+          <tr>
+            <td>Дата</td>
+            <td>Статус</td>
+            <td>Сообщение</td>
+            <td>Номер декларации</td>
+          </tr>
+        </thead>
+        <tbody>{renderStatuses()}</tbody>
+      </table>
     </Modal>
   );
 };

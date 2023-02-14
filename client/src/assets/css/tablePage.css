@@ -9,6 +9,15 @@
 }
 .table-page table {
   color: black;
+  background-color: white;
+}
+.table-page table thead tr td {
+  position: relative;
+}
+.table-page table thead tr td span {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 .table-page_table {
   width: 100%;
@@ -74,9 +83,12 @@
   width: 100%;
   padding: 0 !important;
 }
+.declaration-modal button:nth-child(2) {
+  margin-bottom: 3rem;
+}
 .declaration-modal table {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 .declaration-modal td {
   border: 1px black solid;

@@ -16,12 +16,11 @@ export const DatePickerUpdate: React.FC<DatePickerUpdateProps> = ({
 }) => {
   return (
     <Form.Item className={className} label={label}>
-      <p style={{ margin: "0" }}>{value ? value : "Не внесено"}</p>
       <input
         placeholder={label}
         className="ant-input"
         type="date"
-        // value={value}
+        value={value}
         onChange={onChange}
       />
     </Form.Item>

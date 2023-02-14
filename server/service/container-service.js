@@ -43,6 +43,10 @@ class ContainerService {
 
   async updateContainer(_id, req) {
     try {
+      console.log(
+        req.body.container.container_number,
+        req.body.container.container_type
+      );
       await ContainerSchema.updateOne(
         {
           _id,

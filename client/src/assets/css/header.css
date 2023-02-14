@@ -18,3 +18,11 @@
   font-weight: bold;
   font-size: 1.5rem;
 }
+.header-search {
+  color: white;
+  transform: translateX(15px);
+  scale: 2;
+}
+.search {
+  transform: translateX(20px);
+}

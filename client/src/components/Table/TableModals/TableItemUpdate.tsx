@@ -51,11 +51,11 @@ export const TableItemUpdate = ({}) => {
     etd: "",
     eta: "",
     release: "",
-    bl_smgs_cmr: null,
-    td: null,
-    date_do: null,
+    bl_smgs_cmr: false,
+    td: false,
+    date_do: "",
     port: "",
-    is_ds: null,
+    is_ds: false,
     is_docs: {
       PI: false,
       CI: false,
@@ -87,7 +87,12 @@ export const TableItemUpdate = ({}) => {
     setInputFields(item?.importers);
     setInputFields2(item?.providers);
     setInputFields3(item?.order_number);
+    if (item) setSingleItem(item);
   }, [item]);
+
+  useEffect(() => {
+    console.log(singleItem);
+  }, [singleItem]);
 
   const handleOk = async () => {
     setConfirmLoading(true);
@@ -97,17 +102,15 @@ export const TableItemUpdate = ({}) => {
       reDraw.reDrawHandler(true);
       setConfirmLoading(false);
       dispatch(setOpenItemUpdate());
-      // setOpen(false);
     }
   };
 
   const handleCancel = () => {
-    // setOpen(false);
     dispatch(setOpenItemUpdate());
   };
 
   const importerHandler = (importer: string) => {
-    if (importer !== "") item?.importers?.push({ name: importer });
+    if (importer !== "") singleItem?.importers?.push({ name: importer });
   };
 
   const deleteImporter = (_importer: string) => {
@@ -122,7 +125,7 @@ export const TableItemUpdate = ({}) => {
   };
 
   const providerHandler = (provider: string) => {
-    if (provider !== "") item?.providers?.push({ name: provider });
+    if (provider !== "") singleItem?.providers?.push({ name: provider });
   };
 
   const deleteProvider = (_provider: string) => {
@@ -187,8 +190,8 @@ export const TableItemUpdate = ({}) => {
             if (item) {
               const response = await ItemFuncs.deleteItem(item._id);
               if (response === 200) {
-                // setOpen(false);
                 reDraw.reDrawHandler(true);
+                dispatch(setOpenItemUpdate());
               }
             }
           }}
@@ -199,7 +202,7 @@ export const TableItemUpdate = ({}) => {
           <DatePickerUpdate
             className="required-form"
             label="Дата заявки"
-            // value={item?.request_date?.substring(0, 10)}
+            value={singleItem?.request_date?.toString().substring(0, 10)}
             onChange={(e) => {
               setSingleItem({
                 ...singleItem,
@@ -212,14 +215,11 @@ export const TableItemUpdate = ({}) => {
               (input: { id: string; number: string }, key: string) => {
                 return (
                   <div key={key}>
-                    <p style={{ margin: "0" }}>
-                      {input.number ? input.number : "Не внесено"}
-                    </p>
                     <div key={key} style={{ display: "flex" }}>
                       <Input
                         placeholder="Номер заказа"
                         id={input.id}
-                        // value={input.number}
+                        value={input.number}
                         onBlur={(e) => {
                           orderHandler(e.target.value);
                         }}
@@ -258,7 +258,7 @@ export const TableItemUpdate = ({}) => {
                 simple_product_name: e.target.value,
               });
             }}
-            value={item?.simple_product_name}
+            value={singleItem?.simple_product_name}
           />
           <SelectDelivery
             value={singleItem?.delivery_method}
@@ -271,13 +271,11 @@ export const TableItemUpdate = ({}) => {
               (input: { id: string; name: string }, key: number) => {
                 return (
                   <div key={key}>
-                    <p style={{ margin: "0" }}>
-                      {input.name ? input.name : "Не внесено"}
-                    </p>
                     <div style={{ display: "flex" }}>
                       <Input
                         placeholder="Поставщик"
                         id={input.id}
+                        value={input.name}
                         onBlur={(e) => {
                           providerHandler(e.target.value);
                           item?.importers;
@@ -300,13 +298,11 @@ export const TableItemUpdate = ({}) => {
               (input: { id: string; name: string }, key: number) => {
                 return (
                   <div key={key}>
-                    <p style={{ margin: "0" }}>
-                      {input.name ? input.name : "Не внесено"}
-                    </p>
                     <div style={{ display: "flex" }}>
                       <Input
                         placeholder="Импортер"
                         id={input.id}
+                        value={input.name}
                         onBlur={(e) => {
                           importerHandler(e.target.value);
                           item?.importers;
@@ -330,13 +326,15 @@ export const TableItemUpdate = ({}) => {
             onChange={(e) => {
               setSingleItem({ ...singleItem, conditions: e.target.value });
             }}
-            value={item?.conditions}
+            value={singleItem?.conditions}
           />
           <TechStoreSelect
             onChange={(value) => {
+              console.log(singleItem.store_name);
+              console.log(singleItem.tech_store);
               setSingleItem({ ...singleItem, tech_store: value });
             }}
-            value={item?.store_name}
+            value={singleItem?.store_name}
             opened={open}
             className="required-form"
           />
@@ -346,7 +344,7 @@ export const TableItemUpdate = ({}) => {
             onChange={(e) => {
               setSingleItem({ ...singleItem, agent: e.target.value });
             }}
-            value={item?.agent}
+            value={singleItem?.agent}
           />
           <MyInput
             label="Тип контейнера"
@@ -370,14 +368,14 @@ export const TableItemUpdate = ({}) => {
                 place_of_dispatch: e.target.value,
               });
             }}
-            value={item?.place_of_dispatch}
+            value={singleItem?.place_of_dispatch}
           />
           <MyInput
             label="Линия"
             onChange={(e) => {
               setSingleItem({ ...singleItem, line: e.target.value });
             }}
-            value={item?.line}
+            value={singleItem?.line}
           />
           <DatePickerUpdate
             label="Дата готовности"
@@ -387,7 +385,7 @@ export const TableItemUpdate = ({}) => {
                 ready_date: e.target.value,
               });
             }}
-            value={item?.ready_date}
+            value={singleItem?.ready_date}
           />
           <DatePickerUpdate
             label="Дата загрузки"
@@ -397,14 +395,14 @@ export const TableItemUpdate = ({}) => {
                 load_date: e.target.value,
               });
             }}
-            value={item?.load_date}
+            value={singleItem?.load_date}
           />
           <DatePickerUpdate
             label="ETD"
             onChange={(e) => {
               setSingleItem({ ...singleItem, etd: e.target.value });
             }}
-            value={item?.etd}
+            value={singleItem?.etd}
           />
           <DatePickerUpdate
             label="Релиз"
@@ -414,11 +412,11 @@ export const TableItemUpdate = ({}) => {
                 release: e.target.value,
               });
             }}
-            value={item?.release}
+            value={singleItem?.release}
           />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
-              defaultChecked={item?.bl_smgs_cmr ? true : false}
+              defaultChecked={singleItem?.bl_smgs_cmr ? true : false}
               style={{ minWidth: "45px" }}
               onChange={(e) => {
                 setSingleItem({ ...singleItem, bl_smgs_cmr: e.valueOf() });
@@ -433,14 +431,14 @@ export const TableItemUpdate = ({}) => {
                 td: e.target.value === "" ? false : true,
               });
             }}
-            value={item?.td ? "V" : ""}
+            value={singleItem?.td ? "V" : ""}
           />
           <MyInput
             label="Порт"
             onChange={(e) => {
               setSingleItem({ ...singleItem, port: e.target.value });
             }}
-            value={item?.port}
+            value={singleItem?.port}
           />
           <MyInput
             label="ДС для подачи"
@@ -450,7 +448,7 @@ export const TableItemUpdate = ({}) => {
                 is_ds: e.target.value === "" ? false : true,
               });
             }}
-            value={item?.is_ds ? "V" : ""}
+            value={singleItem?.is_ds ? "V" : ""}
           />
           <MyInput
             label="№ декларации"
@@ -460,7 +458,7 @@ export const TableItemUpdate = ({}) => {
                 declaration_number: e.target.value,
               });
             }}
-            value={item?.declaration_number}
+            value={singleItem?.declaration_number}
           />
           <DatePickerUpdate
             label="Наличие ОБ"
@@ -470,7 +468,7 @@ export const TableItemUpdate = ({}) => {
                 availability_of_ob: e.target.value,
               });
             }}
-            value={item?.availability_of_ob}
+            value={singleItem?.availability_of_ob}
           />
           <DatePickerUpdate
             label="Ответ ОБ"
@@ -480,14 +478,14 @@ export const TableItemUpdate = ({}) => {
                 answer_of_ob: e.target.value,
               });
             }}
-            value={item?.answer_of_ob}
+            value={singleItem?.answer_of_ob}
           />
           <MyInput
             label="Экспедитор"
             onChange={(e) => {
               setSingleItem({ ...singleItem, expeditor: e.target.value });
             }}
-            value={item?.expeditor}
+            value={singleItem?.expeditor}
           />
           <MyInput
             label="Станция назначения"
@@ -497,7 +495,7 @@ export const TableItemUpdate = ({}) => {
                 destination_station: e.target.value,
               });
             }}
-            value={item?.destination_station}
+            value={singleItem?.destination_station}
           />
           <MyInput
             label="Км. до станции назначения"
@@ -507,21 +505,21 @@ export const TableItemUpdate = ({}) => {
                 km_to_dist: parseInt(e.target.value),
               });
             }}
-            value={item?.km_to_dist}
+            value={singleItem?.km_to_dist}
           />
           <MyInput
             label="Ставка"
             onChange={(e) => {
               setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
             }}
-            value={item?.bid}
+            value={singleItem?.bid}
           />
           <MyInput
             label="Автовывоз"
             onChange={(e) => {
               setSingleItem({ ...singleItem, pickup: e.target.value });
             }}
-            value={item?.pickup}
+            value={singleItem?.pickup}
           />
         </Form>
       </Modal>

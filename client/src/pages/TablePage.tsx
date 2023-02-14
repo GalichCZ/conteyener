@@ -101,14 +101,6 @@ export const TablePage = () => {
 
   return (
     <section className="table-page">
-      <button
-        onClick={() => {
-          dispatch(setOpen());
-          dispatch(increment(6));
-        }}
-      >
-        redux test
-      </button>
       <TableItemCreate setLoad={setLoad} />
       <Table data={items} />
     </section>

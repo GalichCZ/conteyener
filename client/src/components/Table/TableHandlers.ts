@@ -1,4 +1,3 @@
-import { useAppDispatch } from "../../hooks/hooks";
 import * as Types from "../../Types/Types";
 import {
   setDeclNumber,
@@ -29,6 +28,11 @@ import {
   setFormulaValue,
   setOpenFormula,
 } from "../../store/slices/tableFormulaDateSlice";
+import {
+  setDocs,
+  setDocsId,
+  setOpenDocs,
+} from "../../store/slices/tableDocsSlice";
 
 export const declStatusHandler = (
   dispatch: any,
@@ -68,6 +72,16 @@ export const tableUpdateHandler = (dispatch: any, item: Types.IItem) => {
   dispatch(setItemUpdateItem(item));
 };
 
+export const tableDocsHandler = (
+  dispatch: any,
+  _id: string,
+  docs: Types.IsDocsType
+) => {
+  dispatch(setOpenDocs());
+  dispatch(setDocsId(_id));
+  dispatch(setDocs(docs));
+};
+
 export const dateChangeHandler = (
   dispatch: any,
   dateType: number,
@@ -83,3 +97,22 @@ export const dateChangeHandler = (
     dispatch(setFormulaDateType(dateType));
   }
 };
+
+export const SearchHandler = (
+  searchReq: string,
+  items: Types.TableProps[],
+  itemsCopy: Types.TableProps[]
+) => {
+  if (searchReq.length === 0) return itemsCopy;
+  const filtered = items.filter((item) => {
+    const itemValues = Object.values(item)
+      .map((value) => (typeof value === "number" ? value.toString() : value))
+      .join(" ")
+      .toLowerCase();
+    return itemValues.includes(searchReq.toLowerCase());
+  });
+  console.log(filtered);
+  return filtered;
+};
+
+export const TableSortHandler = () => {};

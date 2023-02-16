@@ -1,38 +1,39 @@
-import * as Types from "../../Types/Types";
+import * as Types from "../../../Types/Types";
 import {
   setDeclNumber,
   setOpenDeclStatus,
-} from "../../store/slices/tableDeclStatusSlice";
+} from "../../../store/slices/tableDeclStatusSlice";
 import {
   setItemId,
   setOpenTableStore,
   setStoreData,
-} from "../../store/slices/tableStoreSlice";
+} from "../../../store/slices/tableStoreSlice";
 import {
   setCommentId,
   setCommentValue,
   setOpenComment,
-} from "../../store/slices/tableCommentSlice";
+} from "../../../store/slices/tableCommentSlice";
 import {
   setOpenUpload,
   setUploadItemId,
-} from "../../store/slices/tableUploadSlice";
+} from "../../../store/slices/tableUploadSlice";
 import {
   setItemUpdateItem,
   setOpenItemUpdate,
-} from "../../store/slices/tableItemUpdateSlice";
+} from "../../../store/slices/tableItemUpdateSlice";
 import {
   setFormulaDateType,
   setFormulaId,
   setFormulaTechStore,
   setFormulaValue,
   setOpenFormula,
-} from "../../store/slices/tableFormulaDateSlice";
+} from "../../../store/slices/tableFormulaDateSlice";
 import {
   setDocs,
   setDocsId,
   setOpenDocs,
-} from "../../store/slices/tableDocsSlice";
+} from "../../../store/slices/tableDocsSlice";
+import { findItemsBySearch } from "./itemFuncs";
 
 export const declStatusHandler = (
   dispatch: any,
@@ -98,21 +99,55 @@ export const dateChangeHandler = (
   }
 };
 
-export const SearchHandler = (
+export const SearchHandler = async (
   searchReq: string,
-  items: Types.TableProps[],
   itemsCopy: Types.TableProps[]
 ) => {
   if (searchReq.length === 0) return itemsCopy;
-  const filtered = items.filter((item) => {
+  const filtered = itemsCopy.filter((item) => {
     const itemValues = Object.values(item)
       .map((value) => (typeof value === "number" ? value.toString() : value))
       .join(" ")
       .toLowerCase();
     return itemValues.includes(searchReq.toLowerCase());
   });
-  console.log(filtered);
+  if (filtered.length === 0) {
+    let items = await findItemsBySearch(searchReq);
+    console.log(items);
+    return items;
+  }
+  console.log(filtered.length);
   return filtered;
 };
 
-export const TableSortHandler = () => {};
+export const TableSortHandler = (
+  key: keyof Types.TableProps,
+  data: Types.TableProps[] | undefined,
+  sortDirection: "asc" | "desc",
+  setSortDirection: (c: "asc" | "desc") => void
+) => {
+  const sortedArray: Types.TableProps[] | undefined = data && [...data];
+  sortedArray &&
+    sortedArray.sort((a, b) => {
+      if (sortDirection === "asc") {
+        if (a[key] < b[key]) {
+          return -1;
+        }
+        if (a[key] > b[key]) {
+          return 1;
+        }
+        return 0;
+      } else {
+        if (a[key] > b[key]) {
+          return -1;
+        }
+        if (a[key] < b[key]) {
+          return 1;
+        }
+        return 0;
+      }
+    });
+  setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+  console.log(sortDirection, sortedArray);
+  return sortedArray;
+};

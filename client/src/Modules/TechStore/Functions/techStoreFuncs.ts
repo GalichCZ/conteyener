@@ -1,6 +1,6 @@
 const URL = import.meta.env.VITE_API_URL;
 
-import { TechStoreData } from "../Types/Types";
+import { TechStoreData } from "../../../Types/Types";
 
 export class TechStore {
   async createTechStore(techStoreData: TechStoreData) {

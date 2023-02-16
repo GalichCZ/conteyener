@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Modal, Button, Form, Input, DatePicker } from "antd";
 import { INewItem } from "../../../Types/Types";
-import { Item } from "../../../functions/itemFuncs";
+import { Item } from "../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import { MyInput, SelectDelivery, TechStoreSelect } from "../../index";
+import {
+  MyInput,
+  SelectDelivery,
+  TechStoreSelect,
+} from "../../../components/index";
 import { Required } from "../../../UI/index";
-import { TechStore } from "../../../functions/techStoreFuncs";
+import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
+import ReDrawContext from "../../../store/redraw-context";
 
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
 
-interface TableItemCreateProps {
-  setLoad: (c: boolean) => void;
-}
-
-export const TableItemCreate: React.FC<TableItemCreateProps> = ({
-  setLoad,
-}) => {
+export const TableItemCreate: React.FC = () => {
+  const reDrawCtx = useContext(ReDrawContext);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [inputFields, setInputFields] = useState<any>([]);
   const [inputFields2, setInputFields2] = useState<any>([]);
   const [inputFields3, setInputFields3] = useState<any>([]);
   const [err, setErr] = useState<string | null>();
-  const [confirmLoading, setConfirmLoading] = useState(false);
   const [item, setItem] = useState<INewItem>({
     request_date: "",
     order_number: [],
@@ -55,15 +54,14 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
   };
 
   const handleOk = async () => {
-    setConfirmLoading(true);
+    reDrawCtx.reDrawHandler(true);
     form.resetFields();
     const response = await ItemFuncs.createItem(item);
     if ("error" in response) {
       setErr(response.error);
-      setConfirmLoading(false);
+      reDrawCtx.reDrawHandler(false);
     } else {
-      setLoad(true);
-      setConfirmLoading(false);
+      reDrawCtx.reDrawHandler(false);
       setOpen(false);
     }
   };
@@ -211,7 +209,7 @@ export const TableItemCreate: React.FC<TableItemCreateProps> = ({
         onOk={async () => {
           await handleOk();
         }}
-        confirmLoading={confirmLoading}
+        confirmLoading={reDrawCtx.reDraw}
         onCancel={handleCancel}
       >
         <div className="">

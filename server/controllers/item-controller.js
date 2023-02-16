@@ -67,6 +67,12 @@ class ItemController {
     });
   }
 
+  async getHiddenItems(req, res) {
+    const items = await ItemService.getHiddenItems();
+
+    res.json({ items });
+  }
+
   async updateFormulaDates(req, res) {
     const result = await ItemService.updateFormulaDates(req.body._id, req);
 
@@ -101,6 +107,18 @@ class ItemController {
       res.json(await ItemSchema.findById({ _id: req.body._id }));
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async findItemsBySearch(req, res) {
+    try {
+      const items = await ItemSchema.find({
+        $text: { $search: req.body.query_string },
+      });
+      res.json(items);
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
     }
   }
 

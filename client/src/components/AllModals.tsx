@@ -1,13 +1,11 @@
-import {
-  ModalTest,
-  TableComment,
-  TableDeclStatus,
-  TableFormulaDate,
-  TableItemUpdate,
-  TableStore,
-  TableUploadModal,
-  TableDocsModal,
-} from "./index";
+import { TableComment } from "../Modules/Table/Components/TableComment";
+import { TableDeclStatus } from "../Modules/Table/Components/TableDeclStatus";
+import { TableDocsModal } from "../Modules/Table/Components/TableDocsModal";
+import { TableFormulaDate } from "../Modules/Table/Components/TableFormulaDate";
+import { TableItemUpdate } from "../Modules/Table/Components/TableItemUpdate";
+import { TableStore } from "../Modules/Table/Components/TableStore";
+import { TableUploadModal } from "../Modules/Table/Components/TableUploadModal";
+import { ModalTest } from "./ModalTest";
 
 export const AllModals = () => {
   return (

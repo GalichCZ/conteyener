@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Button, DatePicker } from "antd";
-import { Declaration } from "../../../functions/declarationFuncs";
+import { Declaration } from "../Functions/declarationFuncs";
 import { Writes } from "../../../Types/Types";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";

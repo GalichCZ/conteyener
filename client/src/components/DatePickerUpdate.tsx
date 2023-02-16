@@ -5,7 +5,7 @@ interface DatePickerUpdateProps {
   label: string;
   value?: string;
   className?: string;
-  onChange: (e: { target: { value: string } }) => void;
+  onChange: (e: { target: HTMLInputElement }) => void;
 }
 
 export const DatePickerUpdate: React.FC<DatePickerUpdateProps> = ({

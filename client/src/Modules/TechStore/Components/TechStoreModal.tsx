@@ -1,8 +1,8 @@
 import { Form, InputNumber, Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { TechStore } from "../../functions/techStoreFuncs";
-import { TechStoreData } from "../../Types/Types";
-import { MyInput } from "../Table/TableUI/MyInput";
+import { TechStore } from "../Functions/techStoreFuncs";
+import { TechStoreData } from "../../../Types/Types";
+import { MyInput } from "../../../components/MyInput";
 
 interface TechStoreModalProps {
   open: boolean;

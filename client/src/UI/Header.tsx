@@ -25,6 +25,7 @@ export const Header = () => {
           ) : (
             <>
               <Link to="/table">Table</Link>
+              <Link to="/table/hidden">Доставленные</Link>
               <Link onClick={authCtx.logout} to="/login">
                 Log Out
               </Link>

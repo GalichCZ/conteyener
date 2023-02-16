@@ -1,7 +1,7 @@
 import { Form, Select } from "antd";
 import React, { useEffect, useState } from "react";
-import { TechStore } from "../../../functions/techStoreFuncs";
-import { TechStoreData } from "../../../Types/Types";
+import { TechStore } from "../Modules/TechStore/Functions/techStoreFuncs";
+import { TechStoreData } from "../Types/Types";
 
 const TechStoreFuncs = new TechStore();
 

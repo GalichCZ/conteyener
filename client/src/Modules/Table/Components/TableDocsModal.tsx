@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form } from "antd";
 import { IsDocsType } from "../../../Types/Types";
-import { DocsSelect } from "../../index";
-import Docs from "../../../functions/isDocsFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setDocsId, setOpenDocs } from "../../../store/slices/tableDocsSlice";
+import { DocsSelect } from "../../../components";
+import Docs from "../Functions/isDocsFuncs";
 
 const DocsFuncs = new Docs();
 

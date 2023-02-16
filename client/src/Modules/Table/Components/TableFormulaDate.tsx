@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form } from "antd";
-import { DatePickerUpdate } from "../TableUI/DatePickerUpdate";
 import { FormulaDateUpdate } from "../../../Types/Types";
-import { TechStore } from "../../../functions/techStoreFuncs";
-import { Item } from "../../../functions/itemFuncs";
+import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
+import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setOpenFormula } from "../../../store/slices/tableFormulaDateSlice";
+import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
 const TechStoreFuncs = new TechStore();
 const ItemFuncs = new Item();
 

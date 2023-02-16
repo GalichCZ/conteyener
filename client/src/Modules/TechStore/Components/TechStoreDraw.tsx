@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, List } from "antd";
-import { TechStore } from "../../functions/techStoreFuncs";
-import { TechStoreData } from "../../Types/Types";
+import { TechStore } from "../Functions/techStoreFuncs";
+import { TechStoreData } from "../../../Types/Types";
 import { CloseOutlined } from "@ant-design/icons";
 
 const TechStoreFuncs = new TechStore();

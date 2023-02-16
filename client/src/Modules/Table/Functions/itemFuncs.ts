@@ -4,7 +4,7 @@ import {
   IItem,
   INewItem,
   Store,
-} from "../Types/Types";
+} from "../../../Types/Types";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -134,3 +134,24 @@ export class Item {
     return response;
   }
 }
+
+export const findItemsBySearch = async (query_string: string) => {
+  const response = await fetch(URL + "/item/search", {
+    method: "POST",
+    body: JSON.stringify({ query_string }),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+      return error;
+    });
+
+  return response;
+};

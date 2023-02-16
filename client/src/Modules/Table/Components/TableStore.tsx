@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Modal } from "antd";
 import { Store, TechStoreData } from "../../../Types/Types";
-import { TechStore } from "../../../functions/techStoreFuncs";
-import { Item } from "../../../functions/itemFuncs";
-import { MyInput } from "../TableUI/MyInput";
-import { TechStoreSelect } from "../../index";
+import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
+import { Item } from "../Functions/itemFuncs";
 import { setOpenTableStore } from "../../../store/slices/tableStoreSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { MyInput, TechStoreSelect } from "../../../components";
 
 const { TextArea } = Input;
 

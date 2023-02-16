@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { InputNumber, Form, Button, Input } from "antd";
-import { MyInput } from "../Table/TableUI/MyInput";
-import { TechStoreData } from "../../Types/Types";
-import { TechStore } from "../../functions/techStoreFuncs";
+import { TechStoreData } from "../../../Types/Types";
+import { TechStore } from "../Functions/techStoreFuncs";
 
 const TechStoreFuncs = new TechStore();
 
@@ -13,17 +12,16 @@ interface TechStoreCreateProps {
 export const TechStoreCreate: React.FC<TechStoreCreateProps> = ({
   setStatus,
 }) => {
-  const [err, setErr] = useState<string | null>();
-
-  const onChange = (value: any) => {
-    setData({ ...data, delivery_time: value });
-  };
-
   const [data, setData] = useState<TechStoreData>({
     delivery_time: 0,
     address: "",
     name: "",
   });
+  const [err, setErr] = useState<string | null>();
+
+  const onChange = (value: any) => {
+    setData({ ...data, delivery_time: value });
+  };
 
   const handleCreate = async (data: TechStoreData) => {
     const response = await TechStoreFuncs.createTechStore(data);

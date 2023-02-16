@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect, ReactNode } from "react";
-import { User } from "../functions/userFuncs";
+import { UsersHandlerClass } from "../Modules/UsersHandle/Functions/UsersHandler";
 
-const UserFuncs = new User();
+const User = new UsersHandlerClass();
 
 export type AuthContextInterface = {
   token: string | null;
@@ -36,7 +36,7 @@ export const AuthContextProvider = (props: any) => {
   const getMe = async () => {
     const _id = window.localStorage.getItem("_id");
     if (_id !== null) {
-      const response = await UserFuncs.getMe(_id);
+      const response = await User.getMe(_id);
       setIsActivated(response?.is_activated);
       setRole(response?.role);
     }

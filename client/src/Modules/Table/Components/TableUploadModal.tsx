@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
-import { Product } from "../../../functions/productFuncs";
 import { Products } from "../../../Types/Types";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import {
   setOpenUpload,
   setUploadItemId,
 } from "../../../store/slices/tableUploadSlice";
+import { Product } from "../Functions/productFuncs";
 
 interface TableUploadProps {
   opened?: boolean | undefined;

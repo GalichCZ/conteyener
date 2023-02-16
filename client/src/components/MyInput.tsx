@@ -6,7 +6,7 @@ interface MyInputInterface {
   style?: object;
   label: string;
   value?: string | number;
-  onChange?: (e: { target: { value: any } }) => void;
+  onChange?: (e: { target: HTMLInputElement }) => void;
   name?: string;
 }
 

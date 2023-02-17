@@ -153,14 +153,14 @@ const TableUI: React.FC<ITableUi> = ({
                 tableDocsHandler(dispatch, item._id, item.is_docs);
               }}
             >
-              {/* {docsCount(item.is_docs) === "+" ? (
+              {docsCount(item.is_docs) === "+" ? (
                 docsCount(item.is_docs)
               ) : (
                 <>
                   {docsCount(item.is_docs)}
                   /9
                 </>
-              )} */}
+              )}
             </td>
             <td
               style={{ cursor: "pointer" }}

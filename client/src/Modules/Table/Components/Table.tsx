@@ -14,33 +14,18 @@ export const Table: React.FunctionComponent = () => {
   const reDraw = useContext(ReDrawContext);
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
+  const [widths] = useState<number[]>([]);
+
+  const query = useAppSelector((state) => state.search.value);
+
+  const headerRef = useRef(null);
+  const dataRef = useRef<any>(null);
 
   const getItems = async () => {
     const data = await ItemFuncs.getItems();
     setItems(data.items);
     setCopyItems(data.items);
   };
-  useEffect(() => {
-    getItems().catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
-    getItems().catch((err) => console.log(err));
-  }, [reDraw.reDraw]);
-
-  const headerRef = useRef(null);
-  const dataRef = useRef<any>(null);
-  const [widths] = useState<number[]>([]);
-  useEffect(() => {
-    if (dataRef.current) {
-      for (let i = 0; i < dataRef.current.children.length; i++) {
-        widths.push(dataRef.current.children[i].offsetWidth);
-      }
-    }
-  }, []);
-
-  const dispatch = useAppDispatch();
-  const query = useAppSelector((state) => state.search.value);
 
   const docsCount = (item: Types.IsDocsType) => {
     let a = 0;
@@ -65,13 +50,25 @@ export const Table: React.FunctionComponent = () => {
     else return dayjs(time).format("DD/MM/YYYY");
   };
 
-  async function search() {
+  const search = async () => {
     const filtered =
       items &&
       copyItems &&
       (await ModalHandlers.SearchHandler(query, copyItems));
     filtered && setItems(filtered);
-  }
+  };
+
+  useEffect(() => {
+    getItems().catch((err) => console.log(err));
+  }, [reDraw.reDraw]);
+
+  useEffect(() => {
+    if (dataRef.current) {
+      for (let i = 0; i < dataRef.current.children.length; i++) {
+        widths.push(dataRef.current.children[i].offsetWidth);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     console.log("table", query);

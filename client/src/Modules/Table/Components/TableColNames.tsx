@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { TableProps } from "../../../Types/Types";
 
 interface ITableColProps {
-  widthsArray: number[];
+  widthsArray?: number[];
   data: TableProps[] | undefined;
   setItems: (c: TableProps[]) => void;
 }

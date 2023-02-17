@@ -102,4 +102,33 @@ const ItemSchema = new mongoose.Schema(
   }
 );
 
+ItemSchema.index({
+  request_date: "text",
+  order_number: "text",
+  simple_product_name: "text",
+  providers: "text",
+  importers: "text",
+  conditions: "text",
+  store_name: "text",
+  agent: "text",
+  place_of_dispatch: "text",
+  delivery_method: "text",
+  line: "text",
+  ready_date: "text",
+  load_date: "text",
+  etd: "text",
+  eta: "text",
+  release: "text",
+  date_do: "text",
+  port: "text",
+  declaration_number: "text",
+  declaration_issue_date: "text",
+  answer_of_ob: "text",
+  expeditor: "text",
+  destination_station: "text",
+  train_arrive_date: "text",
+  pickup: "text",
+  store_arrive_date: "text",
+});
+
 module.exports = mongoose.model("Item", ItemSchema);

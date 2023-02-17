@@ -4,7 +4,6 @@ const OrderSchema = new mongoose.Schema(
   {
     number: {
       type: String,
-      unique: true,
     },
     container: {
       type: mongoose.Schema.Types.ObjectId,

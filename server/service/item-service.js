@@ -136,6 +136,19 @@ class ItemService {
     }
   }
 
+  async getHiddenItems() {
+    try {
+      const items = await ItemSchema.find({
+        store_arrive_date_update: true,
+      }).exec();
+
+      return items;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   async updateFormulaDates(_id, req) {
     try {
       if (req.body.eta) {

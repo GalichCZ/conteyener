@@ -5,6 +5,16 @@ class OrderService {
   async createOrder(numbers, container) {
     try {
       const orders = numbers.map(async (order) => {
+        const existsOrder = await OrderSchema.findOne({
+          number: order.number,
+        }).exec();
+        if (existsOrder?.number) {
+          console.log(existsOrder.number);
+          return {
+            message: `Order number ${existsOrder.number} already exists`,
+          };
+        }
+
         const doc = new OrderSchema({
           number: order.number,
           container,
@@ -18,6 +28,7 @@ class OrderService {
       });
     } catch (error) {
       console.log("order error: " + error);
+      return { message: "Order number already exists" };
     }
   }
 

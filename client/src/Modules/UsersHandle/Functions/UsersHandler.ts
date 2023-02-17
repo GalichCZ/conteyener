@@ -24,6 +24,16 @@ export class UsersHandlerClass {
     return response;
   }
 
+  async getMe(userId: string | null) {
+    const response = await fetch(URL + `/user/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => console.log(err));
+    return response;
+  }
+
   async changeRole(email: string, role: string) {
     const object = {
       email,

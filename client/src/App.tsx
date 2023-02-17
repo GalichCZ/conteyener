@@ -16,6 +16,16 @@ const TablePage = lazy(() =>
 const Users = lazy(() =>
   import("./pages/Users").then(({ Users }) => ({ default: Users }))
 );
+const DeliveryChannelPage = lazy(() =>
+  import("./pages/DeliveryChannelPage").then(({ DeliveryChannelPage }) => ({
+    default: DeliveryChannelPage,
+  }))
+);
+const HiddenItemsPage = lazy(() =>
+  import("./pages/HiddenItemsPage").then(({ HiddenItemsPage }) => ({
+    default: HiddenItemsPage,
+  }))
+);
 const ActivatePage = lazy(() =>
   import("./pages/ActivatePage").then(({ ActivatePage }) => ({
     default: ActivatePage,
@@ -67,6 +77,11 @@ function App() {
           <Route path="/table" element={<TablePage />} />
           <Route path="/tech/users" element={<Users />} />
           <Route path="/tech/store" element={<TechStorePage />} />
+          <Route
+            path="/tech/deliverychannel"
+            element={<DeliveryChannelPage />}
+          />
+          <Route path="/table/hidden" element={<HiddenItemsPage />} />
           <Route path="/activation" element={<ActivationPage />} />
         </Routes>
       </BrowserRouter>

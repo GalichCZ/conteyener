@@ -6,6 +6,8 @@ import tableCommentReducer from "./slices/tableCommentSlice";
 import tableUploadReducer from "./slices/tableUploadSlice";
 import tableFormulaDateReducer from "./slices/tableFormulaDateSlice";
 import tableItemUpdateReducer from "./slices/tableItemUpdateSlice";
+import tableDocsReducer from "./slices/tableDocsSlice";
+import searchReducer from "./slices/searchSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +18,8 @@ export const store = configureStore({
     tableUpload: tableUploadReducer,
     tableFormulaDate: tableFormulaDateReducer,
     tableItemUpdate: tableItemUpdateReducer,
+    tableDocs: tableDocsReducer,
+    search: searchReducer,
   },
 });
 

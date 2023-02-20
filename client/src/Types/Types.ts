@@ -64,6 +64,8 @@ export type TableProps = {
   expeditor: string;
   destination_station: string;
   km_to_dist: number;
+  train_depart_date: string;
+  train_depart_date_update: boolean;
   train_arrive_date: string;
   train_arrive_date_update: boolean;
   pickup: string;
@@ -194,6 +196,7 @@ export interface FormulaDateUpdate {
   eta?: Date | string;
   date_do?: Date | string;
   declaration_issue_date?: Date | string;
+  train_depart_date?: Date | string;
   train_arrive_date?: Date | string;
   store_arrive_date?: Date | string;
   _id: string;
@@ -201,6 +204,17 @@ export interface FormulaDateUpdate {
   eta_update?: boolean;
   date_do_update?: boolean;
   declaration_issue_date_update?: boolean;
+  train_depart_date_update?: boolean;
   train_arrive_date_update?: boolean;
   store_arrive_date_update?: boolean;
+}
+
+export interface IChannelObject {
+  name: string;
+  eta: number;
+  date_do: number;
+  declaration_issue_date: number;
+  train_depart_date: number;
+  train_arrive_date: number;
+  store_arrive_date: number;
 }

@@ -1,5 +1,10 @@
 import React from "react";
+import { DeliveryChannel } from "../Modules/DeliveryChannel/Components/DeliveryChannel";
 
 export const DeliveryChannelPage = () => {
-  return <section>DeliveryChannelPage</section>;
+  return (
+    <section className="delivery-section">
+      <DeliveryChannel />
+    </section>
+  );
 };

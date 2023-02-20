@@ -201,6 +201,24 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   4,
                   item._id,
+                  item.train_depart_date,
+                  item.store?.techStore
+                );
+              }}
+              className={
+                item.train_depart_date_update
+                  ? "formula-date_update"
+                  : "formula-date"
+              }
+            >
+              {timeConvert(item.train_depart_date)}
+            </td>
+            <td
+              onClick={() => {
+                dateChangeHandler(
+                  dispatch,
+                  5,
+                  item._id,
                   item.train_arrive_date,
                   item.store?.techStore
                 );
@@ -218,7 +236,7 @@ const TableUI: React.FC<ITableUi> = ({
               onClick={() => {
                 dateChangeHandler(
                   dispatch,
-                  5,
+                  6,
                   item._id,
                   item.store_arrive_date,
                   item.store?.techStore

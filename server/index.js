@@ -10,6 +10,7 @@ const ProductController = require("./controllers/product-controller");
 const TechStoreController = require("./controllers/techStore-controller");
 const DeclarationController = require("./controllers/declaration-controller");
 const UploadOnceController = require("./controllers/uploadOnce-controller");
+const DeliveryChannelController = require("./controllers/deliveryChannel-controller");
 
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
@@ -26,6 +27,9 @@ app.get("/api/", CheckAuth.checkToken, (req, res) => {
   console.log(req.userId);
   res.send("HELLO");
 });
+
+app.post("/api/channel", DeliveryChannelController.createDeliveryChannel);
+app.get("/api/channel", DeliveryChannelController.getChannels);
 
 app.post("/api/auth/login", UserController.login);
 app.patch("/api/role", UserController.roleChange);

@@ -277,6 +277,14 @@ export const TableColNames: React.FC<ITableColProps> = ({
           />
         </td>
         <td>
+          Дата отправки по ЖД
+          <FilterFilled
+            onClick={() => {
+              sort("train_arrive_date");
+            }}
+          />
+        </td>
+        <td>
           Дата прибытия по ЖД
           <FilterFilled
             onClick={() => {

@@ -3,7 +3,7 @@ import { TableColNames, ShowDelivery } from "../../../components/index";
 import * as Types from "../../../Types/Types";
 import dayjs from "dayjs";
 import * as ModalHandlers from "../Functions/TableHandlers";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppSelector } from "../../../hooks/hooks";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
@@ -98,27 +98,6 @@ export const Table: React.FunctionComponent = () => {
               declStatusHandler={ModalHandlers.declStatusHandler}
               tableCommentHandler={ModalHandlers.tableCommentHandler}
             />
-            {/* {items?.map((item, key) => {
-                  <td
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      ModalHandlers.tableDocsHandler(
-                        dispatch,
-                        item._id,
-                        item.is_docs
-                      );
-                    }}
-                  >
-                    {docsCount(item.is_docs) === "+" ? (
-                      docsCount(item.is_docs)
-                    ) : (
-                      <>
-                        {docsCount(item.is_docs)}
-                        /9
-                      </>
-                    )}
-                  </td>
-            })} */}
           </tbody>
         </table>
       </div>

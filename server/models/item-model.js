@@ -72,6 +72,11 @@ const ItemSchema = new mongoose.Schema(
     expeditor: String,
     destination_station: String,
     km_to_dist: { type: Number, default: 0 },
+    train_depart_date: { type: Date, default: null },
+    train_depart_date_update: {
+      type: Boolean,
+      default: false,
+    },
     train_arrive_date: { type: Date, default: null },
     train_arrive_date_update: {
       type: Boolean,

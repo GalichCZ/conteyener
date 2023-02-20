@@ -108,6 +108,19 @@ export const TableFormulaDate = ({}) => {
       {dateType === 4 && (
         <DatePickerUpdate
           value={value.substring(0, 10)}
+          label="Дата отправки по ЖД"
+          onChange={(e) => {
+            setData({
+              ...data,
+              train_depart_date: e.target.value,
+              train_depart_date_update: true,
+            });
+          }}
+        />
+      )}
+      {dateType === 5 && (
+        <DatePickerUpdate
+          value={value.substring(0, 10)}
           label="Дата прибытия по ЖД"
           onChange={(e) => {
             setData({
@@ -118,7 +131,7 @@ export const TableFormulaDate = ({}) => {
           }}
         />
       )}
-      {dateType === 5 && (
+      {dateType === 6 && (
         <DatePickerUpdate
           value={value.substring(0, 10)}
           label="Дата прибытия на склад"

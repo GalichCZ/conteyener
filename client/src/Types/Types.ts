@@ -211,10 +211,10 @@ export interface FormulaDateUpdate {
 
 export interface IChannelObject {
   name: string;
-  eta: number;
-  date_do: number;
-  declaration_issue_date: number;
-  train_depart_date: number;
-  train_arrive_date: number;
-  store_arrive_date: number;
+  eta: number | null;
+  date_do: number | null;
+  declaration_issue_date: number | null;
+  train_depart_date: number | null;
+  train_arrive_date: number | null;
+  store_arrive_date: number | null;
 }

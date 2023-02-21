@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IChannelObject } from "../../../Types/Types";
+import { createChannel } from "../Functions/ChannelsApi";
+import DeliveryChannelForm from "../UI/DeliveryChannelForm";
 import { Channels } from "./Channels";
 
 export const DeliveryChannel: React.FC = () => {
@@ -13,9 +15,22 @@ export const DeliveryChannel: React.FC = () => {
     store_arrive_date: 0,
   });
 
+  const createChannelHandler = async () => {
+    const response = await createChannel(channel);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    console.log(channel);
+  }, [channel]);
+
   return (
-    <div>
-      <div></div>
+    <div className="delivery-channel">
+      <DeliveryChannelForm
+        submit={createChannelHandler}
+        setChannel={setChannel}
+        channel={channel}
+      />
       <Channels />
     </div>
   );

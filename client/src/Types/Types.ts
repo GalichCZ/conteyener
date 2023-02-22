@@ -210,6 +210,7 @@ export interface FormulaDateUpdate {
 }
 
 export interface IChannelObject {
+  _id?: string;
   name: string;
   eta: number | null;
   date_do: number | null;

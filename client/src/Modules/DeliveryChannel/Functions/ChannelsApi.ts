@@ -12,9 +12,8 @@ export const createChannel = async (channel: IChannelObject) => {
       Authorization: `Bearer ${window.localStorage.getItem("token")}`,
     },
   })
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
+    .then((response) => {
+      return response.status;
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -30,6 +29,5 @@ export const getChannels = async () => {
     })
     .catch((err) => console.log(err));
 
-  console.log(response);
   return response;
 };

@@ -17,9 +17,9 @@ export const SelectDelivery: React.FC<SelectDelivery> = ({
   return (
     <Form.Item name={name} className={className} label="Способ Доставки">
       <>
-        <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p>
+        {/* <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p> */}
         <Select
-          // value={value}
+          value={value}
           style={{ width: 120 }}
           onChange={onChange}
           options={[

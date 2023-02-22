@@ -6,7 +6,6 @@ class DeliveryChannelService {
       const deliveryChannel = await DeliveryChannelSchema.findOne({
         name: req.body.name,
       });
-      console.log(deliveryChannel);
       if (deliveryChannel) return { message: "Deliver channel already exists" };
 
       const doc = new DeliveryChannelSchema({

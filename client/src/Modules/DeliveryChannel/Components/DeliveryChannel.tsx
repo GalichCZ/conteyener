@@ -14,10 +14,21 @@ export const DeliveryChannel: React.FC = () => {
     train_arrive_date: 0,
     store_arrive_date: 0,
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const createChannelHandler = async () => {
+    setLoading(true);
     const response = await createChannel(channel);
-    console.log(response);
+    setChannel({
+      name: "",
+      eta: 0,
+      date_do: 0,
+      declaration_issue_date: 0,
+      train_depart_date: 0,
+      train_arrive_date: 0,
+      store_arrive_date: 0,
+    });
+    if (response) setLoading(false);
   };
 
   useEffect(() => {
@@ -31,7 +42,7 @@ export const DeliveryChannel: React.FC = () => {
         setChannel={setChannel}
         channel={channel}
       />
-      <Channels />
+      <Channels loading={loading} />
     </div>
   );
 };

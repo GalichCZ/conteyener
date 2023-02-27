@@ -1,5 +1,5 @@
 import { Form, Select } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getChannels } from "../Modules/DeliveryChannel/Functions/ChannelsApi";
 import { IChannelObject } from "../Types/Types";
 
@@ -22,9 +22,18 @@ export const SelectChannel: React.FC<ISelectChannel> = ({
     if (response) setChannels(response);
   };
 
+  useEffect(() => {
+    getChannelHandler();
+  }, []);
+
   return (
-    <Form.Item className={className} name="select_delivery">
+    <Form.Item
+      label="Канал поставки"
+      className={className}
+      name="select_delivery"
+    >
       <Select
+        placeholder="Выберете канал поставки"
         value={value}
         onChange={onChange}
         options={channels?.map((channel) => {

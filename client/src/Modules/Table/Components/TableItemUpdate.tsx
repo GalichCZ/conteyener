@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setOpenItemUpdate } from "../../../store/slices/tableItemUpdateSlice";
 import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
 import { MyInput, SelectDelivery, TechStoreSelect } from "../../../components";
+import { SelectChannel } from "../../../components/SelectChannel";
 
 const ItemFuncs = new Item();
 
@@ -40,6 +41,7 @@ export const TableItemUpdate = ({}) => {
     tech_store: "",
     agent: "",
     store_name: "",
+    delivery_channel: "",
     container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
@@ -85,11 +87,11 @@ export const TableItemUpdate = ({}) => {
     setInputFields(item?.importers);
     setInputFields2(item?.providers);
     setInputFields3(item?.order_number);
-    if (item) setSingleItem(item);
+    // if (item) setSingleItem(item);
   }, [item]);
 
   useEffect(() => {
-    console.log(singleItem);
+    console.log(singleItem.order_number);
   }, [singleItem]);
 
   const handleOk = async () => {
@@ -167,8 +169,39 @@ export const TableItemUpdate = ({}) => {
     setInputFields3([...inputFields3, newField]);
   };
 
+  const handleOrderChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newOrders = singleItem.order_number.map((item, i) => {
+      if (i === index) {
+        return {
+          ...singleItem.order_number[index],
+          number: event.target.value,
+        };
+      }
+
+      return item;
+    });
+    newOrders[index].number = event.target.value;
+    setSingleItem({ ...singleItem, order_number: newOrders });
+  };
+
+  const handleAddOrder = () => {
+    setSingleItem({
+      ...singleItem,
+      order_number: [...singleItem.order_number, { number: "" }],
+    });
+  };
+
+  const handleDeleteOrder = (index: number) => {
+    const newOrders = [...singleItem.order_number];
+    newOrders.splice(index, 1);
+    setSingleItem({ ...singleItem, order_number: newOrders });
+  };
+
   useEffect(() => {
-    if (open && item !== null) setSingleItem(item);
+    if (open && item !== null) setSingleItem({ ...item });
   }, [open]);
 
   return (
@@ -209,30 +242,26 @@ export const TableItemUpdate = ({}) => {
             }}
           />
           <Form.Item className="required-form" label="№ заказа">
-            {inputFields3?.map(
-              (input: { id: string; number: string }, key: string) => {
+            <>
+              {singleItem.order_number.map((order, index) => {
                 return (
-                  <div key={key}>
-                    <div key={key} style={{ display: "flex" }}>
-                      <Input
-                        placeholder="Номер заказа"
-                        id={input.id}
-                        value={input.number}
-                        onBlur={(e) => {
-                          orderHandler(e.target.value);
-                        }}
-                      />
-                      <CloseOutlined
-                        onClick={() => {
-                          deleteOrder(input.number);
-                        }}
-                      />
-                    </div>
+                  <div key={index} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Номер заказа"
+                      id={order._id}
+                      value={order.number}
+                      onChange={(event) => handleOrderChange(index, event)}
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        handleDeleteOrder(index);
+                      }}
+                    />
                   </div>
                 );
-              }
-            )}
-            <Button onClick={addFields3}>Добавить поле</Button>
+              })}
+              <Button onClick={handleAddOrder}>Добавить поле</Button>
+            </>
           </Form.Item>
           <MyInput
             label="Номер контейнера"
@@ -246,6 +275,12 @@ export const TableItemUpdate = ({}) => {
               });
             }}
             value={singleItem?.container?.container_number}
+          />
+          <SelectChannel
+            value={singleItem.delivery_channel}
+            onChange={(value: string) => {
+              setSingleItem({ ...singleItem, delivery_channel: value });
+            }}
           />
           <MyInput
             label="Товар"

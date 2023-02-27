@@ -38,6 +38,7 @@ export type TableProps = {
   importers: Importers[];
   conditions: string;
   store_name: string;
+  delivery_channel: string;
   store: Store;
   agent: string;
   place_of_dispatch: string;
@@ -114,6 +115,7 @@ export interface IItem extends INewItem {
   date_do: string | null;
   port: string;
   is_ds: boolean | null;
+  delivery_channel: string;
   is_docs: IsDocsType;
   declaration_number: string;
   declaration_issue_date: string;
@@ -200,13 +202,14 @@ export interface FormulaDateUpdate {
   train_arrive_date?: Date | string;
   store_arrive_date?: Date | string;
   _id: string;
-  delivery_time: number;
   eta_update?: boolean;
   date_do_update?: boolean;
   declaration_issue_date_update?: boolean;
   train_depart_date_update?: boolean;
   train_arrive_date_update?: boolean;
   store_arrive_date_update?: boolean;
+  dateType: number;
+  delivery_channel: string;
 }
 
 export interface IChannelObject {

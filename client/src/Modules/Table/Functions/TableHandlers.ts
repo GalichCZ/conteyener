@@ -22,9 +22,9 @@ import {
   setOpenItemUpdate,
 } from "../../../store/slices/tableItemUpdateSlice";
 import {
+  setDeliveryChannel,
   setFormulaDateType,
   setFormulaId,
-  setFormulaTechStore,
   setFormulaValue,
   setOpenFormula,
 } from "../../../store/slices/tableFormulaDateSlice";
@@ -87,14 +87,14 @@ export const dateChangeHandler = (
   dispatch: any,
   dateType: number,
   _itemId: string,
-  _defValue: string,
-  _techStoreId: string
+  delivery_channel: string,
+  _defValue: string
 ) => {
   if (_defValue !== null) {
     dispatch(setOpenFormula());
     dispatch(setFormulaId(_itemId));
-    dispatch(setFormulaTechStore(_techStoreId));
     dispatch(setFormulaValue(_defValue));
+    dispatch(setDeliveryChannel(delivery_channel));
     dispatch(setFormulaDateType(dateType));
   }
 };

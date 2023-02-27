@@ -29,7 +29,7 @@ const ItemSchema = new mongoose.Schema(
       required: true,
     },
     store_name: { type: String, required: true },
-    delivery_channel: String,
+    delivery_channel: { type: String, default: "" },
     product: Array,
     store: Object,
     agent: {

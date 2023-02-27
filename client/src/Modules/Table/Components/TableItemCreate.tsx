@@ -19,9 +19,6 @@ export const TableItemCreate: React.FC = () => {
   const reDrawCtx = useContext(ReDrawContext);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const [inputFields, setInputFields] = useState<any>([]);
-  const [inputFields2, setInputFields2] = useState<any>([]);
-  const [inputFields3, setInputFields3] = useState<any>([]);
   const [err, setErr] = useState<string | null>();
   const [item, setItem] = useState<INewItem>({
     request_date: "",
@@ -70,108 +67,61 @@ export const TableItemCreate: React.FC = () => {
     setOpen(false);
   };
 
-  const importerHandler = (importer: string) => {
-    if (importer !== "") item.importers?.push({ name: importer });
+  const handleImporterChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newImporters = [...item.importers];
+    newImporters[index].name = event.target.value;
+    setItem({ ...item, importers: newImporters });
   };
 
-  const deleteImporter = (_importer: string) => {
-    const newImporters = item.importers?.filter((importer) => {
-      return importer.name !== _importer;
-    });
-
-    if (newImporters) {
-      setItem({ ...item, importers: newImporters });
-      setInputFields(newImporters);
-    }
+  const handleAddImporter = () => {
+    setItem({ ...item, importers: [...item.importers, { name: "" }] });
   };
 
-  const providerHandler = (provider: string) => {
-    if (provider !== "") item.providers?.push({ name: provider });
+  const handleDeleteImporter = (index: number) => {
+    const newImporters = [...item.importers];
+    newImporters.splice(index, 1);
+    setItem({ ...item, importers: newImporters });
   };
 
-  const deleteProvider = (_provider: string) => {
-    const newProviders = item.providers?.filter((provider) => {
-      return provider.name !== _provider;
-    });
-
-    if (newProviders) {
-      setItem({ ...item, providers: newProviders });
-      setInputFields2(newProviders);
-    }
+  const handleProviderChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newProviders = [...item.providers];
+    newProviders[index].name = event.target.value;
+    setItem({ ...item, providers: newProviders });
   };
 
-  const addFields = () => {
-    let newField = { id: inputFields.length };
-    setInputFields([...inputFields, newField]);
+  const handleAddProvider = () => {
+    setItem({ ...item, providers: [...item.providers, { name: "" }] });
   };
 
-  const addFields2 = () => {
-    let newField = { id: inputFields2.length };
-    setInputFields2([...inputFields2, newField]);
+  const handleDeleteProvider = (index: number) => {
+    const newProviders = [...item.providers];
+    newProviders.splice(index, 1);
+    setItem({ ...item, providers: newProviders });
   };
 
-  const addFields3 = () => {
-    let newField = { id: inputFields3.length };
-    setInputFields3([...inputFields3, newField]);
+  const handleOrderChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newOrders = [...item.order_number];
+    newOrders[index].number = event.target.value;
+    setItem({ ...item, order_number: newOrders });
   };
 
-  const orderHandler = (order: string) => {
-    if (order !== "") item.order_number.push({ number: order });
+  const handleAddOrder = () => {
+    setItem({ ...item, order_number: [...item.order_number, { number: "" }] });
   };
 
-  const deleteOrder = (_order: string) => {
-    const newOrders = item.order_number?.filter((order) => {
-      return order.number !== _order;
-    });
-
-    if (newOrders) {
-      setItem({ ...item, order_number: newOrders });
-      setInputFields3(newOrders);
-    }
-  };
-
-  const drawImporters = () => {
-    return inputFields.map((input: { id: any; name: string }) => {
-      return (
-        <div key={input.id} style={{ display: "flex" }}>
-          <Input
-            placeholder="Импортер"
-            id={input.id}
-            onBlur={(e) => {
-              importerHandler(e.target.value);
-            }}
-          />
-          <CloseOutlined
-            onClick={() => {
-              deleteImporter(input.name);
-            }}
-          />
-        </div>
-      );
-    });
-  };
-
-  const drawOrders = () => {
-    return inputFields3.map(
-      (input: { id: string; number: string }, key: string) => {
-        return (
-          <div key={key} style={{ display: "flex" }}>
-            <Input
-              placeholder="Номер заказа"
-              id={input.id}
-              onBlur={(e) => {
-                orderHandler(e.target.value);
-              }}
-            />
-            <CloseOutlined
-              onClick={() => {
-                deleteOrder(input.number);
-              }}
-            />
-          </div>
-        );
-      }
-    );
+  const handleDeleteOrder = (index: number) => {
+    const newOrders = [...item.order_number];
+    newOrders.splice(index, 1);
+    setItem({ ...item, order_number: newOrders });
   };
 
   useEffect(() => {
@@ -179,10 +129,6 @@ export const TableItemCreate: React.FC = () => {
       setErr(null);
     }, 5000);
   }, [err]);
-
-  useEffect(() => {
-    drawImporters();
-  }, [deleteImporter, inputFields]);
 
   const getName = async () => {
     const response = await TechStoreFuncs.getOneTechStore(item.tech_store);
@@ -238,8 +184,24 @@ export const TableItemCreate: React.FC = () => {
               label="Номер заказа"
             >
               <>
-                {drawOrders()}
-                <Button onClick={addFields3}>Добавить поле</Button>
+                {item.order_number.map((order, index) => {
+                  return (
+                    <div key={index} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Номер заказа"
+                        id={order._id}
+                        value={order.number}
+                        onChange={(event) => handleOrderChange(index, event)}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          handleDeleteOrder(index);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                <Button onClick={handleAddOrder}>Добавить поле</Button>
               </>
             </Form.Item>
             <MyInput
@@ -259,34 +221,46 @@ export const TableItemCreate: React.FC = () => {
             />
             <Form.Item name="name5" className="required-form" label="Поставщик">
               <>
-                {inputFields2.map(
-                  (input: { id: any; name: string }, key: number) => {
-                    return (
-                      <div key={key} style={{ display: "flex" }}>
-                        <Input
-                          key={key}
-                          placeholder="Поставщик"
-                          id={input.id}
-                          onBlur={(e) => {
-                            providerHandler(e.target.value);
-                          }}
-                        />
-                        <CloseOutlined
-                          onClick={() => {
-                            deleteProvider(input.name);
-                          }}
-                        />
-                      </div>
-                    );
-                  }
-                )}
-                <Button onClick={addFields2}>Добавить поле</Button>
+                {item.providers.map((provider, index) => {
+                  return (
+                    <div key={index} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Номер заказа"
+                        id={provider._id}
+                        value={provider.name}
+                        onChange={(event) => handleProviderChange(index, event)}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          handleDeleteProvider(index);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                <Button onClick={handleAddProvider}>Добавить поле</Button>
               </>
             </Form.Item>
             <Form.Item name="name6" className="required-form" label="Импортер">
               <>
-                {drawImporters()}
-                <Button onClick={addFields}>Добавить поле</Button>
+                {item.importers.map((importer, index) => {
+                  return (
+                    <div key={index} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Импортер"
+                        id={importer._id}
+                        value={importer.name}
+                        onChange={(event) => handleImporterChange(index, event)}
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          handleDeleteImporter(index);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                <Button onClick={handleAddImporter}>Добавить поле</Button>
               </>
             </Form.Item>
             <MyInput

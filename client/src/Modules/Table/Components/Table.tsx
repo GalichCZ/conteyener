@@ -50,6 +50,13 @@ export const Table: React.FunctionComponent = () => {
     else return dayjs(time).format("DD/MM/YYYY");
   };
 
+  function checkTimeStyle(time: string, time_update: boolean) {
+    const isExpired = new Date(time) < new Date();
+    if (time_update) return "formula-date_update";
+    if (!time_update && isExpired) return "formula-date red";
+    return "formula-date";
+  }
+
   const search = async () => {
     const filtered =
       items &&
@@ -71,7 +78,6 @@ export const Table: React.FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    console.log("table", query);
     search();
   }, [query]);
 
@@ -97,6 +103,7 @@ export const Table: React.FunctionComponent = () => {
               tableDocsHandler={ModalHandlers.tableDocsHandler}
               declStatusHandler={ModalHandlers.declStatusHandler}
               tableCommentHandler={ModalHandlers.tableCommentHandler}
+              checkTimeStyle={checkTimeStyle}
             />
           </tbody>
         </table>

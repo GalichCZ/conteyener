@@ -14,12 +14,13 @@ interface ITableUi {
     dispatch: any,
     dateType: number,
     _itemId: string,
-    _defValue: string,
-    _techStoreId: string
+    delivery_channel: string,
+    _defValue: string
   ) => void;
   tableDocsHandler: (dispatch: any, _id: string, docs: IsDocsType) => void;
   declStatusHandler: (dispatch: any, declaration_number: string) => void;
   tableCommentHandler: (dispatch: any, _id: string, value: string) => void;
+  checkTimeStyle: (time: string, time_update: boolean) => string;
 }
 
 const TableUI: React.FC<ITableUi> = ({
@@ -33,6 +34,7 @@ const TableUI: React.FC<ITableUi> = ({
   tableDocsHandler,
   declStatusHandler,
   tableCommentHandler,
+  checkTimeStyle,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -111,16 +113,14 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.load_date && timeConvert(item.load_date)} </td>
             <td> {item.etd && timeConvert(item.etd)} </td>
             <td
-              className={
-                item.eta_update ? "formula-date_update" : "formula-date"
-              }
+              className={checkTimeStyle(item.eta, item.eta_update)}
               onClick={() => {
                 dateChangeHandler(
                   dispatch,
                   1,
                   item._id,
-                  item.eta,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.eta
                 );
               }}
             >
@@ -135,13 +135,11 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   2,
                   item._id,
-                  item.date_do,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.date_do
                 );
               }}
-              className={
-                item.date_do_update ? "formula-date_update" : "formula-date"
-              }
+              className={checkTimeStyle(item.date_do, item.date_do_update)}
             >
               {timeConvert(item.date_do)}
             </td>
@@ -176,15 +174,14 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   3,
                   item._id,
-                  item.declaration_issue_date,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.declaration_issue_date
                 );
               }}
-              className={
+              className={checkTimeStyle(
+                item.declaration_issue_date,
                 item.declaration_issue_date_update
-                  ? "formula-date_update"
-                  : "formula-date"
-              }
+              )}
             >
               {timeConvert(item.declaration_issue_date)}
             </td>
@@ -201,15 +198,14 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   4,
                   item._id,
-                  item.train_depart_date,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.train_depart_date
                 );
               }}
-              className={
+              className={checkTimeStyle(
+                item.train_depart_date,
                 item.train_depart_date_update
-                  ? "formula-date_update"
-                  : "formula-date"
-              }
+              )}
             >
               {timeConvert(item.train_depart_date)}
             </td>
@@ -219,15 +215,14 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   5,
                   item._id,
-                  item.train_arrive_date,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.train_arrive_date
                 );
               }}
-              className={
+              className={checkTimeStyle(
+                item.train_arrive_date,
                 item.train_arrive_date_update
-                  ? "formula-date_update"
-                  : "formula-date"
-              }
+              )}
             >
               {timeConvert(item.train_arrive_date)}
             </td>
@@ -238,15 +233,14 @@ const TableUI: React.FC<ITableUi> = ({
                   dispatch,
                   6,
                   item._id,
-                  item.store_arrive_date,
-                  item.store?.techStore
+                  item.delivery_channel,
+                  item.store_arrive_date
                 );
               }}
-              className={
+              className={checkTimeStyle(
+                item.store_arrive_date,
                 item.store_arrive_date_update
-                  ? "formula-date_update"
-                  : "formula-date"
-              }
+              )}
             >
               {timeConvert(item.store_arrive_date)}
             </td>

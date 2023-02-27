@@ -5,7 +5,7 @@ export interface TableFormulaDate {
   open: boolean;
   _id: string;
   value: string;
-  techStore: string;
+  delivery_channel: string;
   dateType: number;
 }
 
@@ -13,7 +13,7 @@ const initialState: TableFormulaDate = {
   open: false,
   _id: "",
   value: "",
-  techStore: "",
+  delivery_channel: "",
   dateType: 0,
 };
 
@@ -30,8 +30,8 @@ export const tableFormulaDateSlice = createSlice({
     setFormulaValue: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
     },
-    setFormulaTechStore: (state, action: PayloadAction<string>) => {
-      state.techStore = action.payload;
+    setDeliveryChannel: (state, action: PayloadAction<string>) => {
+      state.delivery_channel = action.payload;
     },
     setFormulaDateType: (state, action: PayloadAction<number>) => {
       state.dateType = action.payload;
@@ -43,7 +43,7 @@ export const {
   setOpenFormula,
   setFormulaId,
   setFormulaValue,
-  setFormulaTechStore,
+  setDeliveryChannel,
   setFormulaDateType,
 } = tableFormulaDateSlice.actions;
 

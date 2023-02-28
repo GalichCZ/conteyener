@@ -7,19 +7,19 @@ interface ITableUi {
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   docsCount: (docs: IsDocsType) => number | "+";
-  tableUpdateHandler: (dispatch: any, item: IItem) => void;
-  uploadHandler: (dispatch: any, item_id: string) => void;
-  tableStoreHandler: (dispatch: any, itemId: string, storeData: Store) => void;
-  dateChangeHandler: (
+  tableUpdateHandler?: (dispatch: any, item: IItem) => void;
+  uploadHandler?: (dispatch: any, item_id: string) => void;
+  tableStoreHandler?: (dispatch: any, itemId: string, storeData: Store) => void;
+  dateChangeHandler?: (
     dispatch: any,
     dateType: number,
     _itemId: string,
     delivery_channel: string,
     _defValue: string
   ) => void;
-  tableDocsHandler: (dispatch: any, _id: string, docs: IsDocsType) => void;
-  declStatusHandler: (dispatch: any, declaration_number: string) => void;
-  tableCommentHandler: (dispatch: any, _id: string, value: string) => void;
+  tableDocsHandler?: (dispatch: any, _id: string, docs: IsDocsType) => void;
+  declStatusHandler?: (dispatch: any, declaration_number: string) => void;
+  tableCommentHandler?: (dispatch: any, _id: string, value: string) => void;
   checkTimeStyle: (time: string, time_update: boolean) => string;
 }
 
@@ -45,7 +45,9 @@ const TableUI: React.FC<ITableUi> = ({
           <tr key={key}>
             <td
               style={{ cursor: "pointer" }}
-              onClick={() => tableUpdateHandler(dispatch, item)}
+              onClick={() =>
+                tableUpdateHandler && tableUpdateHandler(dispatch, item)
+              }
             >
               {timeConvert(item.request_date)}
             </td>
@@ -63,7 +65,7 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.container?.container_number} </td>
             <td
               style={{ cursor: "pointer" }}
-              onClick={() => uploadHandler(dispatch, item._id)}
+              onClick={() => uploadHandler && uploadHandler(dispatch, item._id)}
             >
               {item.simple_product_name}
             </td>
@@ -94,6 +96,7 @@ const TableUI: React.FC<ITableUi> = ({
             <td
               style={{ cursor: "pointer" }}
               onClick={() =>
+                tableStoreHandler &&
                 tableStoreHandler(dispatch, item._id, {
                   _id: item.store._id,
                   receiver: item.store.receiver,
@@ -115,13 +118,14 @@ const TableUI: React.FC<ITableUi> = ({
             <td
               className={checkTimeStyle(item.eta, item.eta_update)}
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  1,
-                  item._id,
-                  item.delivery_channel,
-                  item.eta
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    1,
+                    item._id,
+                    item.delivery_channel,
+                    item.eta
+                  );
               }}
             >
               {timeConvert(item.eta)}
@@ -131,13 +135,14 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.td ? "+" : "-"} </td>
             <td
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  2,
-                  item._id,
-                  item.delivery_channel,
-                  item.date_do
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    2,
+                    item._id,
+                    item.delivery_channel,
+                    item.date_do
+                  );
               }}
               className={checkTimeStyle(item.date_do, item.date_do_update)}
             >
@@ -148,7 +153,8 @@ const TableUI: React.FC<ITableUi> = ({
             <td
               style={{ cursor: "pointer" }}
               onClick={() => {
-                tableDocsHandler(dispatch, item._id, item.is_docs);
+                tableDocsHandler &&
+                  tableDocsHandler(dispatch, item._id, item.is_docs);
               }}
             >
               {docsCount(item.is_docs) === "+" ? (
@@ -163,20 +169,22 @@ const TableUI: React.FC<ITableUi> = ({
             <td
               style={{ cursor: "pointer" }}
               onClick={() => {
-                declStatusHandler(dispatch, item.declaration_number);
+                declStatusHandler &&
+                  declStatusHandler(dispatch, item.declaration_number);
               }}
             >
               {item.declaration_number}
             </td>
             <td
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  3,
-                  item._id,
-                  item.delivery_channel,
-                  item.declaration_issue_date
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    3,
+                    item._id,
+                    item.delivery_channel,
+                    item.declaration_issue_date
+                  );
               }}
               className={checkTimeStyle(
                 item.declaration_issue_date,
@@ -194,13 +202,14 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.km_to_dist} </td>
             <td
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  4,
-                  item._id,
-                  item.delivery_channel,
-                  item.train_depart_date
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    4,
+                    item._id,
+                    item.delivery_channel,
+                    item.train_depart_date
+                  );
               }}
               className={checkTimeStyle(
                 item.train_depart_date,
@@ -211,13 +220,14 @@ const TableUI: React.FC<ITableUi> = ({
             </td>
             <td
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  5,
-                  item._id,
-                  item.delivery_channel,
-                  item.train_arrive_date
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    5,
+                    item._id,
+                    item.delivery_channel,
+                    item.train_arrive_date
+                  );
               }}
               className={checkTimeStyle(
                 item.train_arrive_date,
@@ -229,13 +239,14 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.pickup} </td>
             <td
               onClick={() => {
-                dateChangeHandler(
-                  dispatch,
-                  6,
-                  item._id,
-                  item.delivery_channel,
-                  item.store_arrive_date
-                );
+                dateChangeHandler &&
+                  dateChangeHandler(
+                    dispatch,
+                    6,
+                    item._id,
+                    item.delivery_channel,
+                    item.store_arrive_date
+                  );
               }}
               className={checkTimeStyle(
                 item.store_arrive_date,
@@ -246,7 +257,8 @@ const TableUI: React.FC<ITableUi> = ({
             </td>
             <td
               onClick={() => {
-                tableCommentHandler(dispatch, item._id, item.comment);
+                tableCommentHandler &&
+                  tableCommentHandler(dispatch, item._id, item.comment);
               }}
               style={{ cursor: "pointer" }}
             >

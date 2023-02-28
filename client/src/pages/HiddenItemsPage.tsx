@@ -1,5 +1,10 @@
 import React from "react";
+import { TableHidden } from "../Modules/HiddenItems/Components/TableHidden";
 
 export const HiddenItemsPage = () => {
-  return <section>HiddenItemsPage</section>;
+  return (
+    <section className="table-page">
+      <TableHidden />
+    </section>
+  );
 };

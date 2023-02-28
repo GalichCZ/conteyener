@@ -128,7 +128,9 @@ class ItemService {
 
   async getItems() {
     try {
-      const items = await ItemSchema.find();
+      const items = await ItemSchema.find({
+        store_arrive_date_update: false,
+      }).exec();
 
       return items;
     } catch (error) {

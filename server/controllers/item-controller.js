@@ -76,8 +76,10 @@ class ItemController {
   async updateFormulaDates(req, res) {
     const result = await ItemService.updateFormulaDates(req.body._id, req);
 
+    console.log(result);
+
     if (result) res.sendStatus(200);
-    else res.sendStatus(500).json({ message: "server error" });
+    else res.status(500).json({ message: "server error" });
   }
 
   async updateComment(req, res) {
@@ -90,14 +92,10 @@ class ItemController {
     try {
       const item = await ItemSchema.findById({ _id: req.body._id });
 
-      // console.log(item);
-      // console.log(req.body);
-
       const container = await ContainerService.updateContainer(
         item.container._id,
         req
       );
-      console.log(container);
       await ProviderService.updateProviders(item, req);
       await ImporterService.updateImporters(item, req);
       await OrderService.updateOrders(item, req);

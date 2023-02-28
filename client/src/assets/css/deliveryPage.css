@@ -4,16 +4,24 @@
   width: 100%;
   align-items: center;
   justify-content: center;
+  background-color: rgb(220, 222, 252);
 }
 
 .delivery-channel {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 4rem;
 }
 
 .delivery-channel_form {
   display: grid;
+  width: 60%;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
 }
 
 .delivery-channel_form input {
@@ -22,4 +30,23 @@
 
 .delivery-channel_form button {
   max-width: 100px;
+}
+
+.channels {
+  margin-top: 1rem;
+  background-color: white;
+  min-width: 60%;
+  border-radius: 10px;
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
+.channel-point {
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px;
+}
+.channel-point p {
+  padding: 0;
+  margin: 0;
 }

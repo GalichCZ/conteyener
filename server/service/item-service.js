@@ -128,7 +128,9 @@ class ItemService {
 
   async getItems() {
     try {
-      const items = await ItemSchema.find();
+      const items = await ItemSchema.find({
+        store_arrive_date_update: false,
+      }).exec();
 
       return items;
     } catch (error) {
@@ -150,98 +152,46 @@ class ItemService {
   }
 
   async updateFormulaDates(_id, req) {
+    // pass item
+    // update one
+
     try {
-      if (req.body.eta) {
-        const dates = formulaService.updateDateFormulaEta(
-          req.body.eta,
-          req.body.delivery_time
-        );
+      const item = await ItemSchema.findById(_id).exec();
 
-        const result = await ItemSchema.updateOne(
-          { _id },
-          {
-            eta: req.body.eta,
-            eta_update: req.body.eta_update,
-            date_do: dates.date_do,
-            declaration_issue_date: dates.declaration_issue_date,
-            train_arrive_date: dates.train_arrive_date,
-            store_arrive_date: dates.store_arrive_date,
-          }
-        );
+      const {
+        eta,
+        eta_update,
+        date_do,
+        date_do_update,
+        declaration_issue_date,
+        declaration_issue_date_update,
+        train_depart_date,
+        train_depart_date_update,
+        train_arrive_date,
+        train_arrive_date_update,
+        store_arrive_date,
+        store_arrive_date_update,
+      } = await FormulaService.updateFormulaDates(req, item);
 
-        if (result) return true;
-      }
+      await ItemSchema.updateOne(
+        { _id },
+        {
+          eta,
+          eta_update,
+          date_do,
+          date_do_update,
+          declaration_issue_date,
+          declaration_issue_date_update,
+          train_depart_date,
+          train_depart_date_update,
+          train_arrive_date,
+          train_arrive_date_update,
+          store_arrive_date,
+          store_arrive_date_update,
+        }
+      );
 
-      if (req.body.date_do) {
-        const dates = formulaService.updateDateFormulaDateDo(
-          req.body.date_do,
-          req.body.delivery_time
-        );
-
-        const result = await ItemSchema.updateOne(
-          { _id },
-          {
-            date_do: req.body.date_do,
-            date_do_update: req.body.date_do_update,
-            declaration_issue_date: dates.declaration_issue_date,
-            train_arrive_date: dates.train_arrive_date,
-            store_arrive_date: dates.store_arrive_date,
-          }
-        );
-
-        if (result) return true;
-      }
-
-      if (req.body.declaration_issue_date) {
-        const dates = formulaService.updateDateFormulaDeclaration(
-          req.body.declaration_issue_date,
-          req.body.delivery_time
-        );
-
-        const result = await ItemSchema.updateOne(
-          { _id },
-          {
-            declaration_issue_date: req.body.declaration_issue_date,
-            declaration_issue_date_update:
-              req.body.declaration_issue_date_update,
-            train_arrive_date: dates.train_arrive_date,
-            store_arrive_date: dates.store_arrive_date,
-          }
-        );
-
-        if (result) return true;
-      }
-
-      if (req.body.train_arrive_date) {
-        console.log(req.body.delivery_time + " delivery time");
-        const dates = formulaService.updateDateFormulaDateTrain(
-          req.body.train_arrive_date,
-          req.body.delivery_time
-        );
-
-        const result = await ItemSchema.updateOne(
-          { _id },
-          {
-            train_arrive_date: req.body.train_arrive_date,
-            train_arrive_date_update: req.body.train_arrive_date_update,
-            store_arrive_date: dates.store_arrive_date,
-          }
-        );
-
-        if (result) return true;
-      }
-
-      if (req.body.store_arrive_date) {
-        const result = await ItemSchema.updateOne(
-          { _id },
-          {
-            store_arrive_date: req.body.store_arrive_date,
-            store_arrive_date_update: req.body.store_arrive_date_update,
-          }
-        );
-
-        if (result) return true;
-      }
+      return { message: "success" };
     } catch (error) {
       console.log(error);
       return error;
@@ -264,16 +214,24 @@ class ItemService {
 
   async updateItem(_id, req, container) {
     try {
-      const delivery_method = req.body.delivery_method;
+      const item = await ItemSchema.findById(_id);
 
-      const techStore = await TechStoreSchema.findById(
-        req.body.store.techStore
-      );
+      let delivery_channel = "";
+      let etd = null;
 
-      const formulaRes = FormulaService.dateFormula(
-        delivery_method,
-        req.body.etd,
-        techStore.delivery_time
+      if (req.body.etd) etd = req.body.etd;
+      else if (item.etd) etd = item.etd;
+      else return;
+
+      if (req.body.delivery_channel.length > 0)
+        delivery_channel = req.body.delivery_channel;
+      else if (item.delivery_channel.length > 0)
+        delivery_channel = item.delivery_channel;
+      else return;
+
+      const formulaRes = await FormulaService.dateFormula(
+        etd,
+        delivery_channel
       );
       return await ItemSchema.updateOne(
         {
@@ -284,14 +242,15 @@ class ItemService {
           order_number: req.body.order_number,
           container,
           simple_product_name: req.body.simple_product_name,
-          delivery_method,
+          delivery_method: req.body.delivery_method,
           conditions: req.body.conditions,
           agent: req.body.agent,
+          delivery_channel: req.body.delivery_channel,
           place_of_dispatch: req.body.place_of_dispatch,
           line: req.body.line,
           ready_date: req.body.ready_date,
           load_date: req.body.load_date,
-          etd: req.body.etd,
+          etd,
           eta: formulaRes.eta,
           release: req.body.release,
           bl_smgs_cmr: req.body.bl_smgs_cmr,
@@ -307,6 +266,7 @@ class ItemService {
           expeditor: req.body.expeditor,
           destination_station: req.body.destination_station,
           km_to_dist: req.body.km_to_dist,
+          train_depart_date: formulaRes.train_depart_date,
           train_arrive_date: formulaRes.train_arrive_date,
           pickup: req.body.pickup,
           store_arrive_date: formulaRes.store_arrive_date,

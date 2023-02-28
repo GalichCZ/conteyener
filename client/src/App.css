@@ -69,6 +69,10 @@
   cursor: pointer;
 }
 
+.red {
+  color: red;
+}
+
 .comment-modal {
   min-width: 700px;
 }

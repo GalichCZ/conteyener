@@ -19,6 +19,16 @@ export class Item {
     return response;
   }
 
+  async getHiddenItems() {
+    const response = await fetch(URL + "/item/hidden")
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((err) => console.log(err));
+    return response;
+  }
+
   async createItem(itemValues: INewItem) {
     const response = await fetch(URL + "/item", {
       method: "POST",

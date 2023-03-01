@@ -64,7 +64,7 @@ export const TableItemUpdate = ({}) => {
       ED: false,
       bill: false,
     },
-    declaration_number: "",
+    declaration_number: [],
     declaration_issue_date: "",
     availability_of_ob: "",
     answer_of_ob: "",
@@ -128,6 +128,28 @@ export const TableItemUpdate = ({}) => {
     const newProviders = [...singleItem.providers];
     newProviders.splice(index, 1);
     setSingleItem({ ...singleItem, providers: newProviders });
+  };
+
+  const handleDeclarationNumberChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newDeclarationNumbers = [...singleItem.declaration_number];
+    newDeclarationNumbers[index] = event.target.value;
+    setSingleItem({ ...singleItem, declaration_number: newDeclarationNumbers });
+  };
+
+  const handleAddDeclarationNumber = () => {
+    setSingleItem({
+      ...singleItem,
+      declaration_number: [...singleItem.declaration_number, ""],
+    });
+  };
+
+  const handleDeleteDeclarationNumber = (index: number) => {
+    const newDeclarationNumbers = [...singleItem.declaration_number];
+    newDeclarationNumbers.splice(index, 1);
+    setSingleItem({ ...singleItem, declaration_number: newDeclarationNumbers });
   };
 
   const handleImporterChange = (
@@ -461,16 +483,29 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.is_ds ? "V" : ""}
           />
-          <MyInput
-            label="№ декларации"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                declaration_number: e.target.value,
-              });
-            }}
-            value={singleItem?.declaration_number}
-          />
+          <Form.Item className="required-form" label="№ декларации">
+            {singleItem.declaration_number.map((declaration, index) => {
+              return (
+                <div key={index} style={{ display: "flex" }}>
+                  <Input
+                    placeholder="№ декларации"
+                    id={index.toString()}
+                    value={declaration}
+                    onChange={(event) =>
+                      handleDeclarationNumberChange(index, event)
+                    }
+                  />
+                  <CloseOutlined
+                    onClick={() => {
+                      handleDeleteDeclarationNumber(index);
+                    }}
+                  />
+                </div>
+              );
+            })}
+            <Button onClick={handleAddDeclarationNumber}>Добавить поле</Button>
+          </Form.Item>
+
           <DatePickerUpdate
             label="Наличие ОБ"
             onChange={(e: { target: HTMLInputElement }) => {

@@ -56,7 +56,7 @@ export type TableProps = {
   port: string;
   is_ds: boolean;
   is_docs: IsDocsType;
-  declaration_number: string;
+  declaration_number: string[];
   declaration_issue_date: string;
   declaration_issue_date_update: boolean;
   declaration_status: string;
@@ -117,7 +117,7 @@ export interface IItem extends INewItem {
   is_ds: boolean | null;
   delivery_channel: string;
   is_docs: IsDocsType;
-  declaration_number: string;
+  declaration_number: string[];
   declaration_issue_date: string;
   availability_of_ob: string;
   answer_of_ob: string;

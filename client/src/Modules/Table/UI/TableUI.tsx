@@ -166,7 +166,7 @@ const TableUI: React.FC<ITableUi> = ({
                 </>
               )}
             </td>
-            <td
+            {/* <td
               style={{ cursor: "pointer" }}
               onClick={() => {
                 declStatusHandler &&
@@ -174,6 +174,28 @@ const TableUI: React.FC<ITableUi> = ({
               }}
             >
               {item.declaration_number}
+            </td> */}
+            <td>
+              <table className="table-importers">
+                <tbody>
+                  <tr>
+                    {item.declaration_number.map((num, key) => {
+                      return (
+                        <td
+                          key={key}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            declStatusHandler &&
+                              declStatusHandler(dispatch, num);
+                          }}
+                        >
+                          {num}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
             </td>
             <td
               onClick={() => {

@@ -61,7 +61,7 @@ const ItemSchema = new mongoose.Schema(
     port: String,
     is_ds: Boolean,
     is_docs: Object,
-    declaration_number: String,
+    declaration_number: Array,
     declaration_issue_date: { type: Date, default: null },
     declaration_issue_date_update: {
       type: Boolean,

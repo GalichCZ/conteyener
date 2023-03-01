@@ -152,9 +152,6 @@ class ItemService {
   }
 
   async updateFormulaDates(_id, req) {
-    // pass item
-    // update one
-
     try {
       const item = await ItemSchema.findById(_id).exec();
 
@@ -218,6 +215,8 @@ class ItemService {
 
       let delivery_channel = "";
       let etd = null;
+
+      console.log("Declaration", req.body.declaration_number);
 
       if (req.body.etd) etd = req.body.etd;
       else if (item.etd) etd = item.etd;

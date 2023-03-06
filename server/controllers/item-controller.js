@@ -96,13 +96,10 @@ class ItemController {
         item.container._id,
         req
       );
-      await ProviderService.updateProviders(item, req);
-      await ImporterService.updateImporters(item, req);
-      await OrderService.updateOrders(item, req);
 
       await ItemService.updateItem(item._id, req, container);
 
-      res.json(await ItemSchema.findById({ _id: req.body._id }));
+      return res.json(await ItemSchema.findById({ _id: req.body._id }));
     } catch (error) {
       console.log(error);
     }

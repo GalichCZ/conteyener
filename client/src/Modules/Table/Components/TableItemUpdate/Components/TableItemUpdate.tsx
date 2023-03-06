@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Modal, Form, Input, Button, Switch } from "antd";
-import { IItem } from "../../../../../Types/Types";
+import { IItem, INewItem } from "../../../../../Types/Types";
 import { Item } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import ReDrawContext from "../../../../../store/redraw-context";
@@ -26,7 +26,7 @@ import {
   handleAddOrder,
   handleDeleteOrder,
   handleOrderChange,
-} from "../Functions/MultipleInputHandler";
+} from "../../../Functions/MultipleInputHandler";
 
 const ItemFuncs = new Item();
 
@@ -99,14 +99,21 @@ export const TableItemUpdate = ({}) => {
   });
 
   const handleOk = async () => {
-    setConfirmLoading(true);
-    const response = await ItemFuncs.updateItem(singleItem);
-    if (response.error) setErr(response.error);
-    if (response === 200) {
-      reDraw.reDrawHandler(true);
-      setConfirmLoading(false);
-      dispatch(setOpenItemUpdate());
-    }
+    const duplicatesCheck = checkDuplicate();
+    console.log(duplicatesCheck);
+    if (duplicatesCheck.success === true) {
+      setConfirmLoading(true);
+      const response = await ItemFuncs.updateItem(singleItem);
+      if (response.error) setErr(response.error);
+      if (response === 200) {
+        reDraw.reDrawHandler(true);
+        setConfirmLoading(false);
+        dispatch(setOpenItemUpdate());
+      }
+    } else
+      return setErr(
+        `These orders already exists: ${duplicatesCheck.duplicates}`
+      );
   };
 
   const handleCancel = () => {
@@ -116,18 +123,26 @@ export const TableItemUpdate = ({}) => {
   function checkDuplicate() {
     let duplicates: any[] = [];
 
-    // singleItem.order_number.forEach((order, index) => {
-    //   if (
-    //     singleItem.order_number.indexOf(order.number, index + 1) !== -1 &&
-    //     duplicates.indexOf(order) === -1
-    //   ) {
-    //     duplicates.push(order);
-    //   }
-    // });
+    singleItem.order_number.forEach((order, index) => {
+      if (
+        singleItem.order_number.indexOf(order, index + 1) !== -1 &&
+        duplicates.indexOf(order) === -1
+      ) {
+        duplicates.push(order);
+      }
+    });
+
+    console.log(duplicates);
+
+    if (duplicates.length > 0) return { success: false, duplicates };
+    else return { success: true };
   }
 
   useEffect(() => {
     console.log(singleItem);
+    console.log(singleItem.order_number);
+    console.log(singleItem.importers);
+    console.log(singleItem.providers);
   }, [singleItem]);
 
   useEffect(() => {
@@ -159,6 +174,16 @@ export const TableItemUpdate = ({}) => {
         >
           Удалить запись
         </Button>
+        <b
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            left: "45%",
+            color: "red",
+          }}
+        >
+          {err}
+        </b>
         <Form className="table-form" layout="vertical">
           <DatePickerUpdate
             className="required-form"
@@ -178,14 +203,16 @@ export const TableItemUpdate = ({}) => {
                   <div key={index} style={{ display: "flex" }}>
                     <Input
                       placeholder="Номер заказа"
-                      id={order._id}
-                      value={order.number}
+                      id={order}
+                      value={order}
                       onChange={(event) =>
                         handleOrderChange(
                           index,
                           event,
                           singleItem,
-                          setSingleItem
+                          undefined,
+                          setSingleItem,
+                          undefined
                         )
                       }
                     />
@@ -197,7 +224,16 @@ export const TableItemUpdate = ({}) => {
                   </div>
                 );
               })}
-              <Button onClick={() => handleAddOrder(singleItem, setSingleItem)}>
+              <Button
+                onClick={() =>
+                  handleAddOrder(
+                    undefined,
+                    undefined,
+                    singleItem,
+                    setSingleItem
+                  )
+                }
+              >
                 Добавить поле
               </Button>
             </>
@@ -244,8 +280,8 @@ export const TableItemUpdate = ({}) => {
                 <div key={index} style={{ display: "flex" }}>
                   <Input
                     placeholder="Номер заказа"
-                    id={provider._id}
-                    value={provider.name}
+                    id={provider}
+                    value={provider}
                     onChange={(event) =>
                       handleProviderChange(
                         index,
@@ -257,14 +293,27 @@ export const TableItemUpdate = ({}) => {
                   />
                   <CloseOutlined
                     onClick={() => {
-                      handleDeleteProvider(index, singleItem, setSingleItem);
+                      handleDeleteProvider(
+                        index,
+                        undefined,
+                        undefined,
+                        singleItem,
+                        setSingleItem
+                      );
                     }}
                   />
                 </div>
               );
             })}
             <Button
-              onClick={() => handleAddProvider(singleItem, setSingleItem)}
+              onClick={() =>
+                handleAddProvider(
+                  undefined,
+                  undefined,
+                  singleItem,
+                  setSingleItem
+                )
+              }
             >
               Добавить поле
             </Button>
@@ -275,12 +324,14 @@ export const TableItemUpdate = ({}) => {
                 <div key={index} style={{ display: "flex" }}>
                   <Input
                     placeholder="Номер заказа"
-                    id={importer._id}
-                    value={importer.name}
+                    id={importer}
+                    value={importer}
                     onChange={(event) =>
                       handleImporterChange(
                         index,
                         event,
+                        undefined,
+                        undefined,
                         singleItem,
                         setSingleItem
                       )
@@ -288,14 +339,27 @@ export const TableItemUpdate = ({}) => {
                   />
                   <CloseOutlined
                     onClick={() => {
-                      handleDeleteImporter(index, singleItem, setSingleItem);
+                      handleDeleteImporter(
+                        index,
+                        undefined,
+                        undefined,
+                        singleItem,
+                        setSingleItem
+                      );
                     }}
                   />
                 </div>
               );
             })}
             <Button
-              onClick={() => handleAddImporter(singleItem, setSingleItem)}
+              onClick={() =>
+                handleAddImporter(
+                  undefined,
+                  undefined,
+                  singleItem,
+                  setSingleItem
+                )
+              }
             >
               Добавить поле
             </Button>

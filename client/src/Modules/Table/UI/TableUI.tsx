@@ -56,7 +56,7 @@ const TableUI: React.FC<ITableUi> = ({
                 <tbody>
                   <tr>
                     {item.order_number.map((num, key) => {
-                      return <td key={key}>{num.number}</td>;
+                      return <td key={key}>{num}</td>;
                     })}
                   </tr>
                 </tbody>
@@ -74,8 +74,8 @@ const TableUI: React.FC<ITableUi> = ({
               <table className="table-importers">
                 <tbody>
                   <tr>
-                    {item.providers.map((provider) => {
-                      return <td key={provider._id}> {provider.name} </td>;
+                    {item.providers.map((provider, key) => {
+                      return <td key={key}> {provider} </td>;
                     })}
                   </tr>
                 </tbody>
@@ -85,8 +85,8 @@ const TableUI: React.FC<ITableUi> = ({
               <table className="table-importers">
                 <tbody>
                   <tr>
-                    {item.importers.map((importer) => {
-                      return <td key={importer._id}> {importer.name} </td>;
+                    {item.importers.map((importer, key) => {
+                      return <td key={key}> {importer} </td>;
                     })}
                   </tr>
                 </tbody>

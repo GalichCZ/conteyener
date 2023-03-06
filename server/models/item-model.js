@@ -15,7 +15,10 @@ const ItemSchema = new mongoose.Schema(
       type: Object,
       // required: true,
     },
-    simple_product_name: { type: String, required: true },
+    simple_product_name: {
+      type: String,
+      required: true,
+    },
     providers: {
       type: Array,
       required: true,
@@ -28,8 +31,14 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    store_name: { type: String, required: true },
-    delivery_channel: { type: String, default: "" },
+    store_name: {
+      type: String,
+      required: true,
+    },
+    delivery_channel: {
+      type: String,
+      default: "",
+    },
     product: Array,
     store: Object,
     agent: {
@@ -42,18 +51,42 @@ const ItemSchema = new mongoose.Schema(
     },
     delivery_method: String,
     line: String,
-    ready_date: { type: Date, default: null },
-    load_date: { type: Date, default: null },
-    etd: { type: Date, default: null },
-    eta: { type: Date, default: null },
+    ready_date: {
+      type: Date,
+      default: null,
+    },
+    load_date: {
+      type: Date,
+      default: null,
+    },
+    etd: {
+      type: Date,
+      default: null,
+    },
+    eta: {
+      type: Date,
+      default: null,
+    },
     eta_update: {
       type: Boolean,
       default: false,
     },
-    release: { type: Date, default: null },
-    bl_smgs_cmr: { type: Boolean, default: false },
-    td: { type: Boolean, default: false },
-    date_do: { type: Date, default: null },
+    release: {
+      type: Date,
+      default: null,
+    },
+    bl_smgs_cmr: {
+      type: Boolean,
+      default: false,
+    },
+    td: {
+      type: Boolean,
+      default: false,
+    },
+    date_do: {
+      type: Date,
+      default: null,
+    },
     date_do_update: {
       type: Boolean,
       default: false,
@@ -62,29 +95,50 @@ const ItemSchema = new mongoose.Schema(
     is_ds: Boolean,
     is_docs: Object,
     declaration_number: Array,
-    declaration_issue_date: { type: Date, default: null },
+    declaration_issue_date: {
+      type: Date,
+      default: null,
+    },
     declaration_issue_date_update: {
       type: Boolean,
       default: false,
     },
     declaration_status: Array,
-    availability_of_ob: { type: Date, default: null },
-    answer_of_ob: { type: Date, default: null },
+    availability_of_ob: {
+      type: Date,
+      default: null,
+    },
+    answer_of_ob: {
+      type: Date,
+      default: null,
+    },
     expeditor: String,
     destination_station: String,
-    km_to_dist: { type: Number, default: 0 },
-    train_depart_date: { type: Date, default: null },
+    km_to_dist: {
+      type: Number,
+      default: 0,
+    },
+    train_depart_date: {
+      type: Date,
+      default: null,
+    },
     train_depart_date_update: {
       type: Boolean,
       default: false,
     },
-    train_arrive_date: { type: Date, default: null },
+    train_arrive_date: {
+      type: Date,
+      default: null,
+    },
     train_arrive_date_update: {
       type: Boolean,
       default: false,
     },
     pickup: String,
-    store_arrive_date: { type: Date, default: null },
+    store_arrive_date: {
+      type: Date,
+      default: null,
+    },
     store_arrive_date_update: {
       type: Boolean,
       default: false,

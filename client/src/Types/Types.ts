@@ -9,10 +9,10 @@ type Importers = {
   _id?: string;
 };
 
-type OrderNumber = {
-  number: string;
-  _id?: string;
-};
+// type OrderNumber = {
+//   number: string;
+//   _id?: string;
+// };
 
 type Providers = {
   name: string;
@@ -30,12 +30,12 @@ export type Store = {
 export type TableProps = {
   _id: string;
   request_date: string;
-  order_number: OrderNumber[];
+  order_number: string[];
   container: Container;
   simple_product_name: string;
   delivery_method: string;
-  providers: Providers[];
-  importers: Importers[];
+  providers: string[];
+  importers: string[];
   conditions: string;
   store_name: string;
   delivery_channel: string;
@@ -81,11 +81,11 @@ export type TableProps = {
 
 export interface INewItem {
   request_date: Date | string;
-  order_number: OrderNumber[];
+  order_number: string[];
   simple_product_name: string;
   delivery_method: string;
-  providers: Providers[];
-  importers: Importers[];
+  providers: string[];
+  importers: string[];
   conditions: string;
   store_name: string;
   tech_store?: string;

@@ -11,6 +11,20 @@ import {
 import { Required } from "../../../UI/index";
 import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import ReDrawContext from "../../../store/redraw-context";
+import {
+  handleProviderChange,
+  handleAddProvider,
+  handleDeleteProvider,
+  handleAddDeclarationNumber,
+  handleDeclarationNumberChange,
+  handleDeleteDeclarationNumber,
+  handleAddImporter,
+  handleDeleteImporter,
+  handleImporterChange,
+  handleAddOrder,
+  handleDeleteOrder,
+  handleOrderChange,
+} from "../Functions/MultipleInputHandler";
 
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
@@ -67,63 +81,6 @@ export const TableItemCreate: React.FC = () => {
     setOpen(false);
   };
 
-  const handleImporterChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newImporters = [...item.importers];
-    newImporters[index].name = event.target.value;
-    setItem({ ...item, importers: newImporters });
-  };
-
-  const handleAddImporter = () => {
-    setItem({ ...item, importers: [...item.importers, { name: "" }] });
-  };
-
-  const handleDeleteImporter = (index: number) => {
-    const newImporters = [...item.importers];
-    newImporters.splice(index, 1);
-    setItem({ ...item, importers: newImporters });
-  };
-
-  const handleProviderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newProviders = [...item.providers];
-    newProviders[index].name = event.target.value;
-    setItem({ ...item, providers: newProviders });
-  };
-
-  const handleAddProvider = () => {
-    setItem({ ...item, providers: [...item.providers, { name: "" }] });
-  };
-
-  const handleDeleteProvider = (index: number) => {
-    const newProviders = [...item.providers];
-    newProviders.splice(index, 1);
-    setItem({ ...item, providers: newProviders });
-  };
-
-  const handleOrderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newOrders = [...item.order_number];
-    newOrders[index].number = event.target.value;
-    setItem({ ...item, order_number: newOrders });
-  };
-
-  const handleAddOrder = () => {
-    setItem({ ...item, order_number: [...item.order_number, { number: "" }] });
-  };
-
-  const handleDeleteOrder = (index: number) => {
-    const newOrders = [...item.order_number];
-    newOrders.splice(index, 1);
-    setItem({ ...item, order_number: newOrders });
-  };
-
   useEffect(() => {
     setTimeout(() => {
       setErr(null);
@@ -140,6 +97,11 @@ export const TableItemCreate: React.FC = () => {
     console.log(item.tech_store);
   }, [item.tech_store]);
 
+  useEffect(() => {
+    console.log(item.order_number, "orders");
+    console.log(item.providers, "providers");
+    console.log(item.importers, "importers");
+  }, [item]);
   return (
     <>
       <Button
@@ -189,9 +151,18 @@ export const TableItemCreate: React.FC = () => {
                     <div key={index} style={{ display: "flex" }}>
                       <Input
                         placeholder="Номер заказа"
-                        id={order._id}
-                        value={order.number}
-                        onChange={(event) => handleOrderChange(index, event)}
+                        id={order}
+                        value={order}
+                        onChange={(event) =>
+                          handleOrderChange(
+                            index,
+                            event,
+                            undefined,
+                            item,
+                            undefined,
+                            setItem
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
@@ -201,7 +172,9 @@ export const TableItemCreate: React.FC = () => {
                     </div>
                   );
                 })}
-                <Button onClick={handleAddOrder}>Добавить поле</Button>
+                <Button onClick={() => handleAddOrder(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <MyInput
@@ -225,10 +198,19 @@ export const TableItemCreate: React.FC = () => {
                   return (
                     <div key={index} style={{ display: "flex" }}>
                       <Input
-                        placeholder="Номер заказа"
-                        id={provider._id}
-                        value={provider.name}
-                        onChange={(event) => handleProviderChange(index, event)}
+                        placeholder="Поставщик"
+                        id={provider}
+                        value={provider}
+                        onChange={(event) =>
+                          handleProviderChange(
+                            index,
+                            event,
+                            undefined,
+                            undefined,
+                            item,
+                            setItem
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
@@ -238,7 +220,9 @@ export const TableItemCreate: React.FC = () => {
                     </div>
                   );
                 })}
-                <Button onClick={handleAddProvider}>Добавить поле</Button>
+                <Button onClick={() => handleAddProvider(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <Form.Item name="name6" className="required-form" label="Импортер">
@@ -248,9 +232,18 @@ export const TableItemCreate: React.FC = () => {
                     <div key={index} style={{ display: "flex" }}>
                       <Input
                         placeholder="Импортер"
-                        id={importer._id}
-                        value={importer.name}
-                        onChange={(event) => handleImporterChange(index, event)}
+                        id={importer}
+                        value={importer}
+                        onChange={(event) =>
+                          handleImporterChange(
+                            index,
+                            event,
+                            item,
+                            setItem,
+                            undefined,
+                            undefined
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
@@ -260,7 +253,9 @@ export const TableItemCreate: React.FC = () => {
                     </div>
                   );
                 })}
-                <Button onClick={handleAddImporter}>Добавить поле</Button>
+                <Button onClick={() => handleAddImporter(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <MyInput

@@ -3,49 +3,34 @@ const DeliveryChannelSchema = require("../models/deliveryChannel-model");
 
 class FormulaService {
   async dateFormula(_etd, _delivery_channel) {
-    const delivery_channel = await DeliveryChannelSchema.findById(
-      _delivery_channel
-    ).exec();
+    if (_delivery_channel && _etd) {
+      const delivery_channel = await DeliveryChannelSchema.findById(
+        _delivery_channel
+      ).exec();
 
-    if (delivery_channel && _etd) {
-      const eta =
-        delivery_channel.eta === null
-          ? null
-          : dayjs(_etd).add(delivery_channel.eta, "day");
+      const eta = dayjs(_etd).add(delivery_channel.eta, "day");
 
-      const date_do =
-        delivery_channel.date_do === null
-          ? null
-          : dayjs(eta).add(delivery_channel.date_do, "day");
+      const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
 
-      const declaration_issue_date =
-        delivery_channel.declaration_issue_date === null
-          ? null
-          : dayjs(date_do).add(delivery_channel.declaration_issue_date, "day");
+      const declaration_issue_date = dayjs(date_do).add(
+        delivery_channel.declaration_issue_date,
+        "day"
+      );
 
-      const train_depart_date =
-        delivery_channel.train_depart_date === null
-          ? null
-          : dayjs(declaration_issue_date).add(
-              delivery_channel.train_depart_date,
-              "day"
-            );
+      const train_depart_date = dayjs(declaration_issue_date).add(
+        delivery_channel.train_depart_date,
+        "day"
+      );
 
-      const train_arrive_date =
-        delivery_channel.train_arrive_date === null
-          ? null
-          : dayjs(train_depart_date).add(
-              delivery_channel.train_arrive_date,
-              "day"
-            );
+      const train_arrive_date = dayjs(train_depart_date).add(
+        delivery_channel.train_arrive_date,
+        "day"
+      );
 
-      const store_arrive_date =
-        delivery_channel.store_arrive_date === null
-          ? null
-          : dayjs(train_arrive_date).add(
-              delivery_channel.store_arrive_date,
-              "day"
-            );
+      const store_arrive_date = dayjs(train_arrive_date).add(
+        delivery_channel.store_arrive_date,
+        "day"
+      );
 
       return {
         eta,

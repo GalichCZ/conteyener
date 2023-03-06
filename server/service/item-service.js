@@ -16,18 +16,13 @@ class ItemService {
     try {
       const delivery_method = req.body.delivery_method;
 
-      // const formulaRes = FormulaService.dateFormula(
-      // delivery_method,
-      // req.body.etd
-      // );
-
       const doc = new ItemSchema({
         request_date: req.body.request_date,
-        order_number: orders,
+        order_number: req.body.order_number,
         simple_product_name: req.body.simple_product_name,
         delivery_method,
-        providers: provider,
-        importers: importer,
+        providers: req.body.providers,
+        importers: req.body.importers,
         conditions: req.body.conditions,
         store_name: req.body.store_name,
         store,
@@ -44,8 +39,8 @@ class ItemService {
 
       return item;
     } catch (error) {
-      console.log(error);
-      return error;
+      console.log(error.keyPattern);
+      return error.keyPattern;
     }
   }
 
@@ -216,23 +211,23 @@ class ItemService {
       let delivery_channel = "";
       let etd = null;
 
-      console.log("Declaration", req.body.declaration_number);
-
       if (req.body.etd) etd = req.body.etd;
       else if (item.etd) etd = item.etd;
-      else return;
+      else etd = null;
 
       if (req.body.delivery_channel.length > 0)
         delivery_channel = req.body.delivery_channel;
       else if (item.delivery_channel.length > 0)
         delivery_channel = item.delivery_channel;
-      else return;
+      else delivery_channel = "";
+
+      console.log(_id, "item id");
 
       const formulaRes = await FormulaService.dateFormula(
         etd,
         delivery_channel
       );
-      return await ItemSchema.updateOne(
+      await ItemSchema.updateOne(
         {
           _id,
         },
@@ -240,6 +235,8 @@ class ItemService {
           request_date: req.body.request_date,
           order_number: req.body.order_number,
           container,
+          providers: req.body.providers,
+          importers: req.body.importers,
           simple_product_name: req.body.simple_product_name,
           delivery_method: req.body.delivery_method,
           conditions: req.body.conditions,
@@ -275,6 +272,7 @@ class ItemService {
           note: req.body.note,
         }
       );
+      return { message: "success" };
     } catch (error) {
       console.log(error);
     }

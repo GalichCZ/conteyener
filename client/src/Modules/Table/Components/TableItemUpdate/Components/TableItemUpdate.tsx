@@ -1,26 +1,49 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Modal, Form, Input, Button, Switch } from "antd";
-import { IItem } from "../../../Types/Types";
-import { Item } from "../Functions/itemFuncs";
+import { Modal, Form, Input, Button, Switch, message, InputNumber } from "antd";
+import { IItem, INewItem } from "../../../../../Types/Types";
+import { Item } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import { setOpenItemUpdate } from "../../../store/slices/tableItemUpdateSlice";
-import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
-import { MyInput, SelectDelivery, TechStoreSelect } from "../../../components";
-import { SelectChannel } from "../../../components/SelectChannel";
+import ReDrawContext from "../../../../../store/redraw-context";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
+import { setOpenItemUpdate } from "../../../../../store/slices/tableItemUpdateSlice";
+import { DatePickerUpdate } from "../../../../../components/DatePickerUpdate";
+import {
+  MyInput,
+  SelectDelivery,
+  TechStoreSelect,
+} from "../../../../../components";
+import { SelectChannel } from "../../../../../components/SelectChannel";
+import {
+  handleProviderChange,
+  handleAddProvider,
+  handleDeleteProvider,
+  handleAddDeclarationNumber,
+  handleDeclarationNumberChange,
+  handleDeleteDeclarationNumber,
+  handleAddImporter,
+  handleDeleteImporter,
+  handleImporterChange,
+  handleAddOrder,
+  handleDeleteOrder,
+  handleOrderChange,
+} from "../../../Functions/MultipleInputHandler";
+import {
+  checkDuplicateOrders,
+  checkDuplicateDeclarations,
+} from "../Functions/DuplicateHandler";
+import { callError } from "../../../Functions/ErrorHandlers";
 
 const ItemFuncs = new Item();
 
 export const TableItemUpdate = ({}) => {
   const reDraw = useContext(ReDrawContext);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const dispatch = useAppDispatch();
   const item = useAppSelector((state) => state.tableItemUpdate.item);
   const open = useAppSelector((state) => state.tableItemUpdate.open);
 
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [err, setErr] = useState<string | null>();
   const [singleItem, setSingleItem] = useState<IItem>({
     _id: "",
     request_date: "",
@@ -64,7 +87,7 @@ export const TableItemUpdate = ({}) => {
       ED: false,
       bill: false,
     },
-    declaration_number: "",
+    declaration_number: [],
     declaration_issue_date: "",
     availability_of_ob: "",
     answer_of_ob: "",
@@ -80,18 +103,38 @@ export const TableItemUpdate = ({}) => {
     fraht: "",
   });
 
-  useEffect(() => {
-    console.log(singleItem.order_number);
-  }, [singleItem]);
-
   const handleOk = async () => {
-    setConfirmLoading(true);
-    const response = await ItemFuncs.updateItem(singleItem);
-    if (response.error) setErr(response.error);
-    if (response === 200) {
-      reDraw.reDrawHandler(true);
-      setConfirmLoading(false);
-      dispatch(setOpenItemUpdate());
+    const duplicatesOrdersCheck = checkDuplicateOrders(singleItem);
+    const duplicatesDeclarationsCheck = checkDuplicateDeclarations(singleItem);
+    reDraw.reDrawHandler(true);
+    if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
+      setConfirmLoading(true);
+      const response = await ItemFuncs.updateItem(singleItem);
+      if (response.error) {
+        setConfirmLoading(false);
+        const duplicates = response.error.map(
+          (dup: { key: string; value: string }) => {
+            return dup.value;
+          }
+        );
+        callError(messageApi, `These orders already exists: ${duplicates}`);
+      }
+      if (response === "success") {
+        setConfirmLoading(false);
+        dispatch(setOpenItemUpdate());
+        reDraw.reDrawHandler(false);
+      }
+    } else {
+      duplicatesOrdersCheck.duplicates &&
+        callError(
+          messageApi,
+          `These orders already exists: ${duplicatesOrdersCheck.duplicates}`
+        );
+      duplicatesDeclarationsCheck.duplicates &&
+        callError(
+          messageApi,
+          `These declarations already exists: ${duplicatesDeclarationsCheck.duplicates}`
+        );
     }
   };
 
@@ -99,98 +142,12 @@ export const TableItemUpdate = ({}) => {
     dispatch(setOpenItemUpdate());
   };
 
-  const handleProviderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newProviders = singleItem.providers.map((item, i) => {
-      if (i === index) {
-        return {
-          ...singleItem.providers[index],
-          name: event.target.value,
-        };
-      }
-
-      return item;
-    });
-    newProviders[index].name = event.target.value;
-    setSingleItem({ ...singleItem, providers: newProviders });
-  };
-
-  const handleAddProvider = () => {
-    setSingleItem({
-      ...singleItem,
-      providers: [...singleItem.providers, { name: "" }],
-    });
-  };
-
-  const handleDeleteProvider = (index: number) => {
-    const newProviders = [...singleItem.providers];
-    newProviders.splice(index, 1);
-    setSingleItem({ ...singleItem, providers: newProviders });
-  };
-
-  const handleImporterChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newImporters = singleItem.importers.map((item, i) => {
-      if (i === index) {
-        return {
-          ...singleItem.importers[index],
-          name: event.target.value,
-        };
-      }
-
-      return item;
-    });
-    newImporters[index].name = event.target.value;
-    setSingleItem({ ...singleItem, importers: newImporters });
-  };
-
-  const handleAddImporter = () => {
-    setSingleItem({
-      ...singleItem,
-      importers: [...singleItem.importers, { name: "" }],
-    });
-  };
-
-  const handleDeleteImporter = (index: number) => {
-    const newImporters = [...singleItem.importers];
-    newImporters.splice(index, 1);
-    setSingleItem({ ...singleItem, importers: newImporters });
-  };
-
-  const handleOrderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newOrders = singleItem.order_number.map((item, i) => {
-      if (i === index) {
-        return {
-          ...singleItem.order_number[index],
-          number: event.target.value,
-        };
-      }
-
-      return item;
-    });
-    newOrders[index].number = event.target.value;
-    setSingleItem({ ...singleItem, order_number: newOrders });
-  };
-
-  const handleAddOrder = () => {
-    setSingleItem({
-      ...singleItem,
-      order_number: [...singleItem.order_number, { number: "" }],
-    });
-  };
-
-  const handleDeleteOrder = (index: number) => {
-    const newOrders = [...singleItem.order_number];
-    newOrders.splice(index, 1);
-    setSingleItem({ ...singleItem, order_number: newOrders });
-  };
+  useEffect(() => {
+    // console.log(singleItem);
+    // console.log(singleItem.order_number);
+    // console.log(singleItem.importers);
+    // console.log(singleItem.providers);
+  }, [singleItem]);
 
   useEffect(() => {
     if (open && item !== null) setSingleItem({ ...item });
@@ -198,6 +155,7 @@ export const TableItemUpdate = ({}) => {
 
   return (
     <>
+      {contextHolder}
       <Modal
         title="Редактирование записи"
         open={open}
@@ -240,19 +198,39 @@ export const TableItemUpdate = ({}) => {
                   <div key={index} style={{ display: "flex" }}>
                     <Input
                       placeholder="Номер заказа"
-                      id={order._id}
-                      value={order.number}
-                      onChange={(event) => handleOrderChange(index, event)}
+                      id={order}
+                      value={order}
+                      onChange={(event) =>
+                        handleOrderChange(
+                          index,
+                          event,
+                          singleItem,
+                          undefined,
+                          setSingleItem,
+                          undefined
+                        )
+                      }
                     />
                     <CloseOutlined
                       onClick={() => {
-                        handleDeleteOrder(index);
+                        handleDeleteOrder(index, singleItem, setSingleItem);
                       }}
                     />
                   </div>
                 );
               })}
-              <Button onClick={handleAddOrder}>Добавить поле</Button>
+              <Button
+                onClick={() =>
+                  handleAddOrder(
+                    undefined,
+                    undefined,
+                    singleItem,
+                    setSingleItem
+                  )
+                }
+              >
+                Добавить поле
+              </Button>
             </>
           </Form.Item>
           <MyInput
@@ -297,19 +275,43 @@ export const TableItemUpdate = ({}) => {
                 <div key={index} style={{ display: "flex" }}>
                   <Input
                     placeholder="Номер заказа"
-                    id={provider._id}
-                    value={provider.name}
-                    onChange={(event) => handleProviderChange(index, event)}
+                    id={provider}
+                    value={provider}
+                    onChange={(event) =>
+                      handleProviderChange(
+                        index,
+                        event,
+                        singleItem,
+                        setSingleItem
+                      )
+                    }
                   />
                   <CloseOutlined
                     onClick={() => {
-                      handleDeleteProvider(index);
+                      handleDeleteProvider(
+                        index,
+                        undefined,
+                        undefined,
+                        singleItem,
+                        setSingleItem
+                      );
                     }}
                   />
                 </div>
               );
             })}
-            <Button onClick={handleAddProvider}>Добавить поле</Button>
+            <Button
+              onClick={() =>
+                handleAddProvider(
+                  undefined,
+                  undefined,
+                  singleItem,
+                  setSingleItem
+                )
+              }
+            >
+              Добавить поле
+            </Button>
           </Form.Item>
           <Form.Item className="required-form" label="Импортер">
             {singleItem.importers.map((importer, index) => {
@@ -317,19 +319,45 @@ export const TableItemUpdate = ({}) => {
                 <div key={index} style={{ display: "flex" }}>
                   <Input
                     placeholder="Номер заказа"
-                    id={importer._id}
-                    value={importer.name}
-                    onChange={(event) => handleImporterChange(index, event)}
+                    id={importer}
+                    value={importer}
+                    onChange={(event) =>
+                      handleImporterChange(
+                        index,
+                        event,
+                        undefined,
+                        undefined,
+                        singleItem,
+                        setSingleItem
+                      )
+                    }
                   />
                   <CloseOutlined
                     onClick={() => {
-                      handleDeleteImporter(index);
+                      handleDeleteImporter(
+                        index,
+                        undefined,
+                        undefined,
+                        singleItem,
+                        setSingleItem
+                      );
                     }}
                   />
                 </div>
               );
             })}
-            <Button onClick={handleAddImporter}>Добавить поле</Button>
+            <Button
+              onClick={() =>
+                handleAddImporter(
+                  undefined,
+                  undefined,
+                  singleItem,
+                  setSingleItem
+                )
+              }
+            >
+              Добавить поле
+            </Button>
           </Form.Item>
           <MyInput
             className="required-form"
@@ -461,16 +489,43 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.is_ds ? "V" : ""}
           />
-          <MyInput
-            label="№ декларации"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                declaration_number: e.target.value,
-              });
-            }}
-            value={singleItem?.declaration_number}
-          />
+          <Form.Item className="required-form" label="№ декларации">
+            {singleItem.declaration_number.map((declaration, index) => {
+              return (
+                <div key={index} style={{ display: "flex" }}>
+                  <Input
+                    placeholder="№ декларации"
+                    id={index.toString()}
+                    value={declaration}
+                    onChange={(event) =>
+                      handleDeclarationNumberChange(
+                        index,
+                        event,
+                        singleItem,
+                        setSingleItem
+                      )
+                    }
+                  />
+                  <CloseOutlined
+                    onClick={() => {
+                      handleDeleteDeclarationNumber(
+                        index,
+                        singleItem,
+                        setSingleItem
+                      );
+                    }}
+                  />
+                </div>
+              );
+            })}
+            <Button
+              onClick={() =>
+                handleAddDeclarationNumber(singleItem, setSingleItem)
+              }
+            >
+              Добавить поле
+            </Button>
+          </Form.Item>
           <DatePickerUpdate
             label="Наличие ОБ"
             onChange={(e: { target: HTMLInputElement }) => {
@@ -508,23 +563,22 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.destination_station}
           />
-          <MyInput
-            label="Км. до станции назначения"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                km_to_dist: parseInt(e.target.value),
-              });
-            }}
-            value={singleItem?.km_to_dist}
-          />
-          <MyInput
-            label="Ставка"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
-            }}
-            value={singleItem?.bid}
-          />
+          <Form.Item label="Км. до станции назначения">
+            <InputNumber
+              name="km"
+              value={singleItem?.km_to_dist}
+              onChange={(value) =>
+                setSingleItem({ ...singleItem, km_to_dist: value })
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Ставка">
+            <InputNumber
+              name="bid"
+              value={singleItem?.bid}
+              onChange={(value) => setSingleItem({ ...singleItem, bid: value })}
+            />
+          </Form.Item>
           <MyInput
             label="Автовывоз"
             onChange={(e: { target: HTMLInputElement }) => {

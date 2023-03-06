@@ -4,21 +4,6 @@ type Container = {
   _id: string;
 };
 
-type Importers = {
-  name: string;
-  _id?: string;
-};
-
-type OrderNumber = {
-  number: string;
-  _id?: string;
-};
-
-type Providers = {
-  name: string;
-  _id?: string;
-};
-
 export type Store = {
   _id?: string;
   receiver: string | undefined;
@@ -30,12 +15,12 @@ export type Store = {
 export type TableProps = {
   _id: string;
   request_date: string;
-  order_number: OrderNumber[];
+  order_number: string[];
   container: Container;
   simple_product_name: string;
   delivery_method: string;
-  providers: Providers[];
-  importers: Importers[];
+  providers: string[];
+  importers: string[];
   conditions: string;
   store_name: string;
   delivery_channel: string;
@@ -56,7 +41,7 @@ export type TableProps = {
   port: string;
   is_ds: boolean;
   is_docs: IsDocsType;
-  declaration_number: string;
+  declaration_number: string[];
   declaration_issue_date: string;
   declaration_issue_date_update: boolean;
   declaration_status: string;
@@ -81,11 +66,11 @@ export type TableProps = {
 
 export interface INewItem {
   request_date: Date | string;
-  order_number: OrderNumber[];
+  order_number: string[];
   simple_product_name: string;
   delivery_method: string;
-  providers: Providers[];
-  importers: Importers[];
+  providers: string[];
+  importers: string[];
   conditions: string;
   store_name: string;
   tech_store?: string;
@@ -117,15 +102,15 @@ export interface IItem extends INewItem {
   is_ds: boolean | null;
   delivery_channel: string;
   is_docs: IsDocsType;
-  declaration_number: string;
+  declaration_number: string[];
   declaration_issue_date: string;
   availability_of_ob: string;
   answer_of_ob: string;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number;
+  km_to_dist: number | null;
   train_arrive_date: string;
-  bid: number;
+  bid: number | null;
   pickup: string;
   store_arrive_date: string;
   comment: string;

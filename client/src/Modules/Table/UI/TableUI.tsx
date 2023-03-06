@@ -56,7 +56,7 @@ const TableUI: React.FC<ITableUi> = ({
                 <tbody>
                   <tr>
                     {item.order_number.map((num, key) => {
-                      return <td key={key}>{num.number}</td>;
+                      return <td key={key}>{num}</td>;
                     })}
                   </tr>
                 </tbody>
@@ -74,8 +74,8 @@ const TableUI: React.FC<ITableUi> = ({
               <table className="table-importers">
                 <tbody>
                   <tr>
-                    {item.providers.map((provider) => {
-                      return <td key={provider._id}> {provider.name} </td>;
+                    {item.providers.map((provider, key) => {
+                      return <td key={key}> {provider} </td>;
                     })}
                   </tr>
                 </tbody>
@@ -85,8 +85,8 @@ const TableUI: React.FC<ITableUi> = ({
               <table className="table-importers">
                 <tbody>
                   <tr>
-                    {item.importers.map((importer) => {
-                      return <td key={importer._id}> {importer.name} </td>;
+                    {item.importers.map((importer, key) => {
+                      return <td key={key}> {importer} </td>;
                     })}
                   </tr>
                 </tbody>
@@ -128,7 +128,7 @@ const TableUI: React.FC<ITableUi> = ({
                   );
               }}
             >
-              {timeConvert(item.eta)}
+              {item.eta && item.eta === item.etd ? "-" : timeConvert(item.eta)}
             </td>
             <td> {item.release && timeConvert(item.release)} </td>
             <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
@@ -146,7 +146,9 @@ const TableUI: React.FC<ITableUi> = ({
               }}
               className={checkTimeStyle(item.date_do, item.date_do_update)}
             >
-              {timeConvert(item.date_do)}
+              {item.date_do && item.date_do === item.eta
+                ? "-"
+                : timeConvert(item.date_do)}
             </td>
             <td> {item.port} </td>
             <td> {item.is_ds ? "+" : "-"} </td>
@@ -166,14 +168,27 @@ const TableUI: React.FC<ITableUi> = ({
                 </>
               )}
             </td>
-            <td
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                declStatusHandler &&
-                  declStatusHandler(dispatch, item.declaration_number);
-              }}
-            >
-              {item.declaration_number}
+            <td>
+              <table className="table-importers">
+                <tbody>
+                  <tr>
+                    {item.declaration_number.map((num, key) => {
+                      return (
+                        <td
+                          key={key}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            declStatusHandler &&
+                              declStatusHandler(dispatch, num);
+                          }}
+                        >
+                          {num}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
             </td>
             <td
               onClick={() => {
@@ -191,7 +206,10 @@ const TableUI: React.FC<ITableUi> = ({
                 item.declaration_issue_date_update
               )}
             >
-              {timeConvert(item.declaration_issue_date)}
+              {item.declaration_issue_date &&
+              item.date_do === item.declaration_issue_date
+                ? "-"
+                : timeConvert(item.declaration_issue_date)}
             </td>
             <td>
               {item.availability_of_ob && timeConvert(item.availability_of_ob)}
@@ -216,7 +234,10 @@ const TableUI: React.FC<ITableUi> = ({
                 item.train_depart_date_update
               )}
             >
-              {timeConvert(item.train_depart_date)}
+              {item.train_depart_date &&
+              item.declaration_issue_date === item.train_depart_date
+                ? "-"
+                : timeConvert(item.train_depart_date)}
             </td>
             <td
               onClick={() => {
@@ -234,7 +255,10 @@ const TableUI: React.FC<ITableUi> = ({
                 item.train_arrive_date_update
               )}
             >
-              {timeConvert(item.train_arrive_date)}
+              {item.train_arrive_date &&
+              item.train_depart_date === item.train_arrive_date
+                ? "-"
+                : timeConvert(item.train_arrive_date)}
             </td>
             <td> {item.pickup} </td>
             <td
@@ -253,7 +277,10 @@ const TableUI: React.FC<ITableUi> = ({
                 item.store_arrive_date_update
               )}
             >
-              {timeConvert(item.store_arrive_date)}
+              {item.store_arrive_date &&
+              item.train_arrive_date === item.store_arrive_date
+                ? "-"
+                : timeConvert(item.store_arrive_date)}
             </td>
             <td
               onClick={() => {

@@ -58,7 +58,7 @@ export class Item {
         Accept: "application/json",
       },
     })
-      .then((response) => response.status)
+      .then((response) => response.json())
       .then((data) => {
         return data;
       })

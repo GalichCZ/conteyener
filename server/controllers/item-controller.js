@@ -54,9 +54,9 @@ class ItemController {
       is_docs
     );
 
-    if ("code" in item) return res.json({ error: "duplicated key" });
+    if (item.error) return res.status(400).json({ error: item.error });
 
-    res.status(200).json(item);
+    return res.status(200).json(item);
   }
 
   async getItems(req, res) {
@@ -96,13 +96,13 @@ class ItemController {
         item.container._id,
         req
       );
-      await ProviderService.updateProviders(item, req);
-      await ImporterService.updateImporters(item, req);
-      await OrderService.updateOrders(item, req);
 
-      await ItemService.updateItem(item._id, req, container);
+      const response = await ItemService.updateItem(item._id, req, container);
 
-      res.json(await ItemSchema.findById({ _id: req.body._id }));
+      if (response.error)
+        return res.status(400).json({ error: response.error });
+
+      return res.json("success");
     } catch (error) {
       console.log(error);
     }

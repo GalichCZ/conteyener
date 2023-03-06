@@ -50,10 +50,9 @@
   padding: 0 !important;
 }
 .table-form div {
-  min-width: 200px;
+  /* min-width: 200px; */
   max-width: 250px;
 }
-
 .required-form {
   font-weight: 600;
 }

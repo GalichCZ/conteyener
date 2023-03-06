@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Modal, Button, Form, Input, DatePicker } from "antd";
+import { Modal, Button, Form, Input, DatePicker, message } from "antd";
 import { INewItem } from "../../../Types/Types";
 import { Item } from "../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -11,15 +11,29 @@ import {
 import { Required } from "../../../UI/index";
 import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import ReDrawContext from "../../../store/redraw-context";
+import {
+  handleProviderChange,
+  handleAddProvider,
+  handleDeleteProvider,
+  handleAddImporter,
+  handleDeleteImporter,
+  handleImporterChange,
+  handleAddOrder,
+  handleDeleteOrder,
+  handleOrderChange,
+} from "../Functions/MultipleInputHandler";
+import { callError } from "../Functions/ErrorHandlers";
 
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
 
 export const TableItemCreate: React.FC = () => {
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
   const reDrawCtx = useContext(ReDrawContext);
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
-  const [err, setErr] = useState<string | null>();
+  const [filled, setFilled] = useState(false);
   const [item, setItem] = useState<INewItem>({
     request_date: "",
     order_number: [],
@@ -51,97 +65,68 @@ export const TableItemCreate: React.FC = () => {
   };
 
   const handleOk = async () => {
-    reDrawCtx.reDrawHandler(true);
-    form.resetFields();
-    const response = await ItemFuncs.createItem(item);
-    if ("error" in response) {
-      setErr(response.error);
-      reDrawCtx.reDrawHandler(false);
-    } else {
-      reDrawCtx.reDrawHandler(false);
-      setOpen(false);
-    }
+    if (filled) {
+      reDrawCtx.reDrawHandler(true);
+      setConfirmLoading(true);
+      form.resetFields();
+      const response = await ItemFuncs.createItem(item);
+      if (response.error) {
+        setConfirmLoading(false);
+        const duplicates = response.error.map(
+          (dup: { key: string; value: string }) => {
+            return dup.value;
+          }
+        );
+        callError(messageApi, `These orders already exists: ${duplicates}`);
+        reDrawCtx.reDrawHandler(false);
+      } else {
+        setConfirmLoading(false);
+        reDrawCtx.reDrawHandler(false);
+        setOpen(false);
+        setItem({ ...item, importers: [], providers: [], order_number: [] });
+      }
+    } else callError(messageApi, "Fill the all poles !");
   };
 
   const handleCancel = () => {
     setOpen(false);
   };
 
-  const handleImporterChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newImporters = [...item.importers];
-    newImporters[index].name = event.target.value;
-    setItem({ ...item, importers: newImporters });
-  };
-
-  const handleAddImporter = () => {
-    setItem({ ...item, importers: [...item.importers, { name: "" }] });
-  };
-
-  const handleDeleteImporter = (index: number) => {
-    const newImporters = [...item.importers];
-    newImporters.splice(index, 1);
-    setItem({ ...item, importers: newImporters });
-  };
-
-  const handleProviderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newProviders = [...item.providers];
-    newProviders[index].name = event.target.value;
-    setItem({ ...item, providers: newProviders });
-  };
-
-  const handleAddProvider = () => {
-    setItem({ ...item, providers: [...item.providers, { name: "" }] });
-  };
-
-  const handleDeleteProvider = (index: number) => {
-    const newProviders = [...item.providers];
-    newProviders.splice(index, 1);
-    setItem({ ...item, providers: newProviders });
-  };
-
-  const handleOrderChange = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newOrders = [...item.order_number];
-    newOrders[index].number = event.target.value;
-    setItem({ ...item, order_number: newOrders });
-  };
-
-  const handleAddOrder = () => {
-    setItem({ ...item, order_number: [...item.order_number, { number: "" }] });
-  };
-
-  const handleDeleteOrder = (index: number) => {
-    const newOrders = [...item.order_number];
-    newOrders.splice(index, 1);
-    setItem({ ...item, order_number: newOrders });
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setErr(null);
-    }, 5000);
-  }, [err]);
-
   const getName = async () => {
     const response = await TechStoreFuncs.getOneTechStore(item.tech_store);
 
     setItem({ ...item, store_name: response.name });
   };
+
+  function checkFilledPoles() {
+    if (
+      item.request_date !== "" &&
+      item.order_number.length > 0 &&
+      item.simple_product_name !== "" &&
+      item.delivery_method !== "" &&
+      item.providers.length > 0 &&
+      item.importers.length > 0 &&
+      item.conditions !== "" &&
+      item.store_name !== "" &&
+      item.tech_store !== "" &&
+      item.agent !== "" &&
+      item.container_type !== "" &&
+      item.place_of_dispatch !== ""
+    )
+      setFilled(true);
+    else setFilled(false);
+  }
+
   useEffect(() => {
     getName();
-    console.log(item.tech_store);
   }, [item.tech_store]);
 
+  useEffect(() => {
+    checkFilledPoles();
+  }, [item]);
   return (
     <>
+      {contextHolder}
       <Button
         style={{ marginBottom: "1rem" }}
         type="primary"
@@ -155,11 +140,10 @@ export const TableItemCreate: React.FC = () => {
         onOk={async () => {
           await handleOk();
         }}
-        confirmLoading={reDrawCtx.reDraw}
+        confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
         <div className="">
-          {err && <p className="login-err">{err}</p>}
           <Form
             form={form}
             id="form-create"
@@ -189,19 +173,36 @@ export const TableItemCreate: React.FC = () => {
                     <div key={index} style={{ display: "flex" }}>
                       <Input
                         placeholder="Номер заказа"
-                        id={order._id}
-                        value={order.number}
-                        onChange={(event) => handleOrderChange(index, event)}
+                        id={order}
+                        value={order}
+                        onChange={(event) =>
+                          handleOrderChange(
+                            index,
+                            event,
+                            undefined,
+                            item,
+                            undefined,
+                            setItem
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
-                          handleDeleteOrder(index);
+                          handleDeleteOrder(
+                            index,
+                            undefined,
+                            undefined,
+                            item,
+                            setItem
+                          );
                         }}
                       />
                     </div>
                   );
                 })}
-                <Button onClick={handleAddOrder}>Добавить поле</Button>
+                <Button onClick={() => handleAddOrder(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <MyInput
@@ -225,10 +226,19 @@ export const TableItemCreate: React.FC = () => {
                   return (
                     <div key={index} style={{ display: "flex" }}>
                       <Input
-                        placeholder="Номер заказа"
-                        id={provider._id}
-                        value={provider.name}
-                        onChange={(event) => handleProviderChange(index, event)}
+                        placeholder="Поставщик"
+                        id={provider}
+                        value={provider}
+                        onChange={(event) =>
+                          handleProviderChange(
+                            index,
+                            event,
+                            undefined,
+                            undefined,
+                            item,
+                            setItem
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
@@ -238,7 +248,9 @@ export const TableItemCreate: React.FC = () => {
                     </div>
                   );
                 })}
-                <Button onClick={handleAddProvider}>Добавить поле</Button>
+                <Button onClick={() => handleAddProvider(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <Form.Item name="name6" className="required-form" label="Импортер">
@@ -248,19 +260,30 @@ export const TableItemCreate: React.FC = () => {
                     <div key={index} style={{ display: "flex" }}>
                       <Input
                         placeholder="Импортер"
-                        id={importer._id}
-                        value={importer.name}
-                        onChange={(event) => handleImporterChange(index, event)}
+                        id={importer}
+                        value={importer}
+                        onChange={(event) =>
+                          handleImporterChange(
+                            index,
+                            event,
+                            item,
+                            setItem,
+                            undefined,
+                            undefined
+                          )
+                        }
                       />
                       <CloseOutlined
                         onClick={() => {
-                          handleDeleteImporter(index);
+                          handleDeleteImporter(index, item, setItem);
                         }}
                       />
                     </div>
                   );
                 })}
-                <Button onClick={handleAddImporter}>Добавить поле</Button>
+                <Button onClick={() => handleAddImporter(item, setItem)}>
+                  Добавить поле
+                </Button>
               </>
             </Form.Item>
             <MyInput

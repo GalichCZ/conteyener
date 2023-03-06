@@ -39,8 +39,11 @@ class ItemService {
 
       return item;
     } catch (error) {
-      console.log(error.keyPattern);
-      return error.keyPattern;
+      const array = Object.entries(error.keyValue).map(([key, value]) => {
+        return { key, value };
+      });
+      console.log(error);
+      return { error: array };
     }
   }
 
@@ -275,6 +278,10 @@ class ItemService {
       return { message: "success" };
     } catch (error) {
       console.log(error);
+      const array = Object.entries(error.keyValue).map(([key, value]) => {
+        return { key, value };
+      });
+      return { error: array };
     }
   }
 

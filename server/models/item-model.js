@@ -94,7 +94,9 @@ const ItemSchema = new mongoose.Schema(
     port: String,
     is_ds: Boolean,
     is_docs: Object,
-    declaration_number: Array,
+    declaration_number: {
+      type: Array,
+    },
     declaration_issue_date: {
       type: Date,
       default: null,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Modal, Form, Input, Button, Switch } from "antd";
+import { Modal, Form, Input, Button, Switch, message, InputNumber } from "antd";
 import { IItem, INewItem } from "../../../../../Types/Types";
 import { Item } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -27,18 +27,23 @@ import {
   handleDeleteOrder,
   handleOrderChange,
 } from "../../../Functions/MultipleInputHandler";
+import {
+  checkDuplicateOrders,
+  checkDuplicateDeclarations,
+} from "../Functions/DuplicateHandler";
+import { callError } from "../../../Functions/ErrorHandlers";
 
 const ItemFuncs = new Item();
 
 export const TableItemUpdate = ({}) => {
   const reDraw = useContext(ReDrawContext);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const dispatch = useAppDispatch();
   const item = useAppSelector((state) => state.tableItemUpdate.item);
   const open = useAppSelector((state) => state.tableItemUpdate.open);
 
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [err, setErr] = useState<string | null>();
   const [singleItem, setSingleItem] = useState<IItem>({
     _id: "",
     request_date: "",
@@ -99,50 +104,49 @@ export const TableItemUpdate = ({}) => {
   });
 
   const handleOk = async () => {
-    const duplicatesCheck = checkDuplicate();
-    console.log(duplicatesCheck);
-    if (duplicatesCheck.success === true) {
+    const duplicatesOrdersCheck = checkDuplicateOrders(singleItem);
+    const duplicatesDeclarationsCheck = checkDuplicateDeclarations(singleItem);
+    reDraw.reDrawHandler(true);
+    if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
       setConfirmLoading(true);
       const response = await ItemFuncs.updateItem(singleItem);
-      if (response.error) setErr(response.error);
-      if (response === 200) {
-        reDraw.reDrawHandler(true);
+      if (response.error) {
+        setConfirmLoading(false);
+        const duplicates = response.error.map(
+          (dup: { key: string; value: string }) => {
+            return dup.value;
+          }
+        );
+        callError(messageApi, `These orders already exists: ${duplicates}`);
+      }
+      if (response === "success") {
         setConfirmLoading(false);
         dispatch(setOpenItemUpdate());
+        reDraw.reDrawHandler(false);
       }
-    } else
-      return setErr(
-        `These orders already exists: ${duplicatesCheck.duplicates}`
-      );
+    } else {
+      duplicatesOrdersCheck.duplicates &&
+        callError(
+          messageApi,
+          `These orders already exists: ${duplicatesOrdersCheck.duplicates}`
+        );
+      duplicatesDeclarationsCheck.duplicates &&
+        callError(
+          messageApi,
+          `These declarations already exists: ${duplicatesDeclarationsCheck.duplicates}`
+        );
+    }
   };
 
   const handleCancel = () => {
     dispatch(setOpenItemUpdate());
   };
 
-  function checkDuplicate() {
-    let duplicates: any[] = [];
-
-    singleItem.order_number.forEach((order, index) => {
-      if (
-        singleItem.order_number.indexOf(order, index + 1) !== -1 &&
-        duplicates.indexOf(order) === -1
-      ) {
-        duplicates.push(order);
-      }
-    });
-
-    console.log(duplicates);
-
-    if (duplicates.length > 0) return { success: false, duplicates };
-    else return { success: true };
-  }
-
   useEffect(() => {
-    console.log(singleItem);
-    console.log(singleItem.order_number);
-    console.log(singleItem.importers);
-    console.log(singleItem.providers);
+    // console.log(singleItem);
+    // console.log(singleItem.order_number);
+    // console.log(singleItem.importers);
+    // console.log(singleItem.providers);
   }, [singleItem]);
 
   useEffect(() => {
@@ -151,6 +155,7 @@ export const TableItemUpdate = ({}) => {
 
   return (
     <>
+      {contextHolder}
       <Modal
         title="Редактирование записи"
         open={open}
@@ -174,16 +179,6 @@ export const TableItemUpdate = ({}) => {
         >
           Удалить запись
         </Button>
-        <b
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            left: "45%",
-            color: "red",
-          }}
-        >
-          {err}
-        </b>
         <Form className="table-form" layout="vertical">
           <DatePickerUpdate
             className="required-form"
@@ -568,23 +563,22 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.destination_station}
           />
-          <MyInput
-            label="Км. до станции назначения"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                km_to_dist: parseInt(e.target.value),
-              });
-            }}
-            value={singleItem?.km_to_dist}
-          />
-          <MyInput
-            label="Ставка"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({ ...singleItem, bid: parseInt(e.target.value) });
-            }}
-            value={singleItem?.bid}
-          />
+          <Form.Item label="Км. до станции назначения">
+            <InputNumber
+              name="km"
+              value={singleItem?.km_to_dist}
+              onChange={(value) =>
+                setSingleItem({ ...singleItem, km_to_dist: value })
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Ставка">
+            <InputNumber
+              name="bid"
+              value={singleItem?.bid}
+              onChange={(value) => setSingleItem({ ...singleItem, bid: value })}
+            />
+          </Form.Item>
           <MyInput
             label="Автовывоз"
             onChange={(e: { target: HTMLInputElement }) => {

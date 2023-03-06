@@ -4,21 +4,6 @@ type Container = {
   _id: string;
 };
 
-type Importers = {
-  name: string;
-  _id?: string;
-};
-
-// type OrderNumber = {
-//   number: string;
-//   _id?: string;
-// };
-
-type Providers = {
-  name: string;
-  _id?: string;
-};
-
 export type Store = {
   _id?: string;
   receiver: string | undefined;
@@ -123,9 +108,9 @@ export interface IItem extends INewItem {
   answer_of_ob: string;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number;
+  km_to_dist: number | null;
   train_arrive_date: string;
-  bid: number;
+  bid: number | null;
   pickup: string;
   store_arrive_date: string;
   comment: string;

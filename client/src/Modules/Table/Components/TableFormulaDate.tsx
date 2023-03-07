@@ -29,6 +29,7 @@ export const TableFormulaDate = () => {
   });
 
   const handleOk = async () => {
+    reDraw.reDrawHandler(true);
     await updateFormulaDate();
   };
 
@@ -46,8 +47,9 @@ export const TableFormulaDate = () => {
     console.log(response);
     if (response === 200) {
       dispatch(setOpenFormula());
+      reDraw.reDrawHandler(false);
     }
-    reDraw.reDrawHandler(true);
+    reDraw.reDrawHandler(false);
   };
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import {
   setUploadItemId,
 } from "../../../store/slices/tableUploadSlice";
 import { Product } from "../Functions/productFuncs";
+const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
   opened?: boolean | undefined;
@@ -42,7 +43,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const props: UploadProps = {
     name: "file",
     // action: `https://api-automycka.space/api/product/${item_id}`,
-    action: `http://localhost:4444/api/product/${item_id}`,
+    action: `${URL}/product/${item_id}`,
     headers: {
       authorization: "authorization-text",
     },

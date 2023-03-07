@@ -69,6 +69,7 @@ export const TableItemCreate: React.FC = () => {
       reDrawCtx.reDrawHandler(true);
       setConfirmLoading(true);
       form.resetFields();
+      dropInput();
       const response = await ItemFuncs.createItem(item);
       if (response.error) {
         setConfirmLoading(false);
@@ -83,7 +84,6 @@ export const TableItemCreate: React.FC = () => {
         setConfirmLoading(false);
         reDrawCtx.reDrawHandler(false);
         setOpen(false);
-        setItem({ ...item, importers: [], providers: [], order_number: [] });
       }
     } else callError(messageApi, "Fill the all poles !");
   };
@@ -115,6 +115,34 @@ export const TableItemCreate: React.FC = () => {
     )
       setFilled(true);
     else setFilled(false);
+  }
+
+  function dropInput() {
+    setItem({
+      request_date: "",
+      order_number: [],
+      simple_product_name: "",
+      delivery_method: "",
+      providers: [],
+      importers: [],
+      conditions: "",
+      store_name: "",
+      tech_store: "",
+      agent: "",
+      container_type: "",
+      place_of_dispatch: "",
+      is_docs: {
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+      },
+    });
   }
 
   useEffect(() => {
@@ -209,12 +237,14 @@ export const TableItemCreate: React.FC = () => {
               name="name3"
               className="required-form"
               label="Товар"
+              value={item.simple_product_name}
               onChange={(e) => {
                 setItem({ ...item, simple_product_name: e.target.value });
               }}
             />
             <SelectDelivery
               name="name4"
+              value={item.delivery_method}
               className="required-form"
               onChange={(value) => {
                 setItem({ ...item, delivery_method: value });
@@ -289,6 +319,7 @@ export const TableItemCreate: React.FC = () => {
             <MyInput
               name="name7"
               className="required-form"
+              value={item.conditions}
               label="Условия поставки"
               onChange={(e) => {
                 setItem({ ...item, conditions: e.target.value });
@@ -299,6 +330,7 @@ export const TableItemCreate: React.FC = () => {
               onChange={(value) => {
                 setItem({ ...item, tech_store: value });
               }}
+              value={item.tech_store}
               opened={open}
               className="required-form"
             />
@@ -306,6 +338,7 @@ export const TableItemCreate: React.FC = () => {
               name="name9"
               className="required-form"
               label="Агент"
+              value={item.agent}
               onChange={(e) => {
                 setItem({ ...item, agent: e.target.value });
               }}
@@ -314,12 +347,14 @@ export const TableItemCreate: React.FC = () => {
               name="name10"
               className="required-form"
               label="Тип контейнера"
+              value={item.container_type}
               onChange={(e) => {
                 setItem({ ...item, container_type: e.target.value });
               }}
             />
             <MyInput
               name="name11"
+              value={item.place_of_dispatch}
               className="required-form"
               label="Место отправки"
               onChange={(e) => {

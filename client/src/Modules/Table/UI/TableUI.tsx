@@ -146,7 +146,8 @@ const TableUI: React.FC<ITableUi> = ({
               }}
               className={checkTimeStyle(item.date_do, item.date_do_update)}
             >
-              {item.date_do && item.date_do === item.eta
+              {item.date_do &&
+              timeConvert(item.date_do) === timeConvert(item.eta)
                 ? "-"
                 : timeConvert(item.date_do)}
             </td>
@@ -207,7 +208,8 @@ const TableUI: React.FC<ITableUi> = ({
               )}
             >
               {item.declaration_issue_date &&
-              item.date_do === item.declaration_issue_date
+              timeConvert(item.date_do) ===
+                timeConvert(item.declaration_issue_date)
                 ? "-"
                 : timeConvert(item.declaration_issue_date)}
             </td>
@@ -235,7 +237,8 @@ const TableUI: React.FC<ITableUi> = ({
               )}
             >
               {item.train_depart_date &&
-              item.declaration_issue_date === item.train_depart_date
+              timeConvert(item.declaration_issue_date) ===
+                timeConvert(item.train_depart_date)
                 ? "-"
                 : timeConvert(item.train_depart_date)}
             </td>
@@ -256,7 +259,8 @@ const TableUI: React.FC<ITableUi> = ({
               )}
             >
               {item.train_arrive_date &&
-              item.train_depart_date === item.train_arrive_date
+              timeConvert(item.train_depart_date) ===
+                timeConvert(item.train_arrive_date)
                 ? "-"
                 : timeConvert(item.train_arrive_date)}
             </td>
@@ -278,7 +282,8 @@ const TableUI: React.FC<ITableUi> = ({
               )}
             >
               {item.store_arrive_date &&
-              item.train_arrive_date === item.store_arrive_date
+              timeConvert(item.train_arrive_date) ===
+                timeConvert(item.store_arrive_date)
                 ? "-"
                 : timeConvert(item.store_arrive_date)}
             </td>

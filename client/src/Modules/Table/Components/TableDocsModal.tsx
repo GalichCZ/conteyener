@@ -26,13 +26,14 @@ export const TableDocsModal: React.FC = ({}) => {
 
   const handleOk = async () => {
     setConfirmLoading(true);
+    reDraw.reDrawHandler(true);
     const response = await DocsFuncs.updateDocs(isDocs, _id);
     if (response.error) setErr(response.error);
     if (response === 200) {
       setConfirmLoading(false);
       dispatch(setOpenDocs());
       dispatch(setDocsId(""));
-      reDraw.reDrawHandler(true);
+      reDraw.reDrawHandler(false);
     }
   };
 

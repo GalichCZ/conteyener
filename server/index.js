@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
@@ -15,8 +16,10 @@ const DeliveryChannelController = require("./controllers/deliveryChannel-control
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
 
-const url =
-  "mongodb+srv://root:root@conteyener.w3d0tne.mongodb.net/?retryWrites=true&w=majority";
+dotenv.config();
+
+const url = process.env.DB_URL;
+// "mongodb+srv://root:root@conteyener.w3d0tne.mongodb.net/?retryWrites=true&w=majority";
 const PORT = 4444;
 
 const app = express();

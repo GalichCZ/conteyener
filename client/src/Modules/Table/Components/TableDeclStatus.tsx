@@ -5,6 +5,7 @@ import { Writes } from "../../../Types/Types";
 import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setOpenDeclStatus } from "../../../store/slices/tableDeclStatusSlice";
+import { CloseOutlined } from "@ant-design/icons";
 
 const DeclarationFuncs = new Declaration();
 
@@ -47,6 +48,12 @@ export const TableDeclStatus = () => {
     setWrites(response);
   };
 
+  const deleteHandler = async (_id: string) => {
+    const response = await DeclarationFuncs.deleteOneDeclarationStatus(_id);
+    console.log(response);
+    getHandler();
+  };
+
   const renderStatuses = () => {
     return writes?.map((write) => {
       return (
@@ -55,6 +62,15 @@ export const TableDeclStatus = () => {
           <td>{write.declaration_status}</td>
           <td>{write.declaration_status_message}</td>
           <td>{write.declaration_number}</td>
+          <CloseOutlined
+            onClick={() => {
+              deleteHandler(write._id);
+            }}
+            style={{
+              transform: "translateX(10px) translateY(8px)",
+              scale: "1.2",
+            }}
+          />
         </tr>
       );
     });

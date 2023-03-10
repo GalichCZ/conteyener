@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import React from "react";
 import { ShowDelivery } from "../../../components/SelectDelivery";
 import { useAppDispatch } from "../../../hooks/hooks";
@@ -21,6 +22,8 @@ interface ITableUi {
   declStatusHandler?: (dispatch: any, declaration_number: string) => void;
   tableCommentHandler?: (dispatch: any, _id: string, value: string) => void;
   checkTimeStyle: (time: string, time_update: boolean) => string;
+  hideItem?: (_id: string, hidden: boolean) => void;
+  hidden?: boolean;
 }
 
 const TableUI: React.FC<ITableUi> = ({
@@ -35,6 +38,8 @@ const TableUI: React.FC<ITableUi> = ({
   declStatusHandler,
   tableCommentHandler,
   checkTimeStyle,
+  hideItem,
+  hidden,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -296,6 +301,17 @@ const TableUI: React.FC<ITableUi> = ({
             >
               {item.comment?.substring(0, 10)}...
             </td>
+            {hidden && (
+              <td>
+                <Button
+                  onClick={() => {
+                    hideItem && hideItem(item._id, !item.hidden);
+                  }}
+                >
+                  Открыть запись
+                </Button>
+              </td>
+            )}
           </tr>
         );
       })}

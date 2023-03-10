@@ -1,45 +1,24 @@
 import React from "react";
-import { Select, Form } from "antd";
+import { Select, Form, Switch } from "antd";
 
 interface SelectDocs {
-  onChange: (value: string) => void;
+  onChange: (value: boolean) => void;
   label: string;
-  value: boolean | undefined | null;
+  checked: boolean;
 }
 
 export const DocsSelect: React.FC<SelectDocs> = ({
   onChange,
   label,
-  value,
+  checked,
 }) => {
   return (
     <Form.Item label={label}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <p style={{ margin: "0", fontSize: "35px" }}>
-          {value ? "+" : "-" || (value === null && "+")}
-        </p>
-        <Select
-          // value={value ? "+" : "-" || (value === null && "+")}
-          style={{ width: 128 }}
-          onChange={onChange}
-          placeholder="Измените наличие"
-          options={[
-            {
-              value: "+",
-              label: "+",
-            },
-            {
-              value: "-",
-              label: "-",
-            },
-          ]}
-        />
-      </div>
+      <Switch
+        checked={checked}
+        style={{ minWidth: "45px" }}
+        onChange={onChange}
+      />
     </Form.Item>
   );
 };

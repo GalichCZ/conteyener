@@ -11,6 +11,7 @@ import {
   timeConvert,
 } from "../../Table/Functions/TableHandlers";
 import TableUI from "../../Table/UI/TableUI";
+import { hideItem } from "../../Table/Functions/itemFuncs";
 
 const ItemFuncs = new Item();
 
@@ -33,6 +34,12 @@ export const TableHidden = () => {
     filtered && setItems(filtered);
   };
 
+  const hideItemHandler = async (_id: string, hidden: boolean) => {
+    reDraw.reDrawHandler(true);
+    const result = await hideItem(_id, hidden);
+    if (result) reDraw.reDrawHandler(false);
+  };
+
   useEffect(() => {
     getItems().catch((err) => console.log(err));
   }, [reDraw.reDraw]);
@@ -51,6 +58,8 @@ export const TableHidden = () => {
             checkTimeStyle={checkTimeStyle}
             timeConvert={timeConvert}
             docsCount={docsCount}
+            hideItem={hideItemHandler}
+            hidden={true}
           />
         </tbody>
       </table>

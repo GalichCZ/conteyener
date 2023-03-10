@@ -10,7 +10,6 @@ export const TechStorePage = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [data, setData] = useState<TechStoreData>({
-    delivery_time: 0,
     address: "",
     name: "",
     _id: "",

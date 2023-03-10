@@ -182,3 +182,53 @@ export const timeConvert = (time: string) => {
   if (time === null) return "";
   else return dayjs(time).format("DD/MM/YYYY");
 };
+
+export const dropInput = (setItem: (c: Types.INewItem) => void) => {
+  setItem({
+    request_date: "",
+    order_number: [],
+    simple_product_name: "",
+    delivery_method: "",
+    providers: [],
+    importers: [],
+    conditions: "",
+    store_name: "",
+    tech_store: "",
+    agent: "",
+    container_type: "",
+    place_of_dispatch: "",
+    is_docs: {
+      PI: false,
+      CI: false,
+      PL: false,
+      SS_DS: false,
+      contract_agrees: false,
+      cost_agrees: false,
+      instruction: false,
+      ED: false,
+      bill: false,
+    },
+  });
+};
+
+export const checkFilledPoles = (
+  item: Types.INewItem,
+  setFilled: (c: boolean) => void
+) => {
+  if (
+    item.request_date !== "" &&
+    item.order_number.length > 0 &&
+    item.simple_product_name !== "" &&
+    item.delivery_method !== "" &&
+    item.providers.length > 0 &&
+    item.importers.length > 0 &&
+    item.conditions !== "" &&
+    item.store_name !== "" &&
+    item.tech_store !== "" &&
+    item.agent !== "" &&
+    item.container_type !== "" &&
+    item.place_of_dispatch !== ""
+  )
+    setFilled(true);
+  else setFilled(false);
+};

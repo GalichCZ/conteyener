@@ -13,15 +13,10 @@ export const TechStoreCreate: React.FC<TechStoreCreateProps> = ({
   setStatus,
 }) => {
   const [data, setData] = useState<TechStoreData>({
-    delivery_time: 0,
     address: "",
     name: "",
   });
   const [err, setErr] = useState<string | null>();
-
-  const onChange = (value: any) => {
-    setData({ ...data, delivery_time: value });
-  };
 
   const handleCreate = async (data: TechStoreData) => {
     const response = await TechStoreFuncs.createTechStore(data);
@@ -32,9 +27,6 @@ export const TechStoreCreate: React.FC<TechStoreCreateProps> = ({
   return (
     <div className="tech-store_create">
       <Form layout="vertical">
-        <Form.Item label="Дней на доставку">
-          <InputNumber min={1} defaultValue={0} onChange={onChange} />
-        </Form.Item>
         <Form.Item style={{ margin: "0 15px" }} label="Название">
           <Input
             onChange={(e) => {

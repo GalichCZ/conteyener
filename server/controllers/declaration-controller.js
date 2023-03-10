@@ -7,6 +7,12 @@ class DeclarationController {
     res.status(200).json("Success");
   }
 
+  async declarationStatusDeleteOne(req, res) {
+    await DeclarationService.declarationStatusDeleteOne(req);
+
+    res.status(200).json("Success");
+  }
+
   async declarationStatusGet(req, res) {
     const response = await DeclarationService.getDeclarationStatus(
       req.body.declaration_number

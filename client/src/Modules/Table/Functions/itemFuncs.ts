@@ -93,10 +93,6 @@ export class Item {
     const response = await fetch(URL + "/item/comment", {
       method: "PATCH",
       body: JSON.stringify(commentUpdate),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
     })
       .then((response) => response.status)
       .then((data) => {
@@ -144,6 +140,27 @@ export class Item {
     return response;
   }
 }
+
+export const hideItem = async (_id: string, hidden: boolean) => {
+  console.log(_id, hidden);
+  const response = await fetch(URL + "/item/hide", {
+    method: "PATCH",
+    body: JSON.stringify({ _id, hidden }),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.status)
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
+  return response;
+};
 
 export const findItemsBySearch = async (query_string: string) => {
   const response = await fetch(URL + "/item/search", {

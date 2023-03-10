@@ -45,6 +45,15 @@ class DeclarationService {
       console.log(error);
     }
   }
+
+  async declarationStatusDeleteOne(req) {
+    try {
+      return await DeclarationSchema.deleteOne({ _id: req.params._id });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
 }
 
 module.exports = new DeclarationService();

@@ -54,9 +54,14 @@ app.patch("/api/item/comment", ItemController.updateComment);
 app.patch("/api/item/date", ItemController.updateFormulaDates);
 app.post("/api/item/search", ItemController.findItemsBySearch);
 app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
+app.patch("/api/item/hide", ItemController.hideItem);
 
 app.post("/api/declaration/get", DeclarationController.declarationStatusGet);
 app.post("/api/declaration", DeclarationController.declarationStatusCreate);
+app.delete(
+  "/api/declaration/:_id",
+  DeclarationController.declarationStatusDeleteOne
+);
 
 app.post("/api/isdocs/:_id", IsDocsController.updateDocs);
 

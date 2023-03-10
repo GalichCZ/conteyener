@@ -31,6 +31,11 @@ export const TableFormulaDate = () => {
   const handleOk = async () => {
     reDraw.reDrawHandler(true);
     await updateFormulaDate();
+    setData({
+      _id: "",
+      dateType: 0,
+      delivery_channel: "",
+    });
   };
 
   const handleCancel = () => {

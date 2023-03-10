@@ -21,6 +21,21 @@ export class Declaration {
     return response;
   }
 
+  async deleteOneDeclarationStatus(_id: string) {
+    const response = await fetch(URL + `/declaration/${_id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    return response;
+  }
+
   async createDeclarationStatus(declarationData: object) {
     declarationData;
     const response = await fetch(URL + "/declaration", {

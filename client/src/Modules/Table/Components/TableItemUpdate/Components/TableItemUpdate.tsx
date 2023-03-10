@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Modal, Form, Input, Button, Switch, message, InputNumber } from "antd";
-import { IItem, INewItem } from "../../../../../Types/Types";
+import { IItem } from "../../../../../Types/Types";
 import { Item } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import ReDrawContext from "../../../../../store/redraw-context";
@@ -32,6 +32,9 @@ import {
   checkDuplicateDeclarations,
 } from "../Functions/DuplicateHandler";
 import { callError } from "../../../Functions/ErrorHandlers";
+import { resetInputs } from "../Functions/ResetInputs";
+import { hideItem } from "../../../Functions/itemFuncs";
+import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
 
@@ -101,11 +104,13 @@ export const TableItemUpdate = ({}) => {
     comment: "",
     note: "",
     fraht: "",
+    hidden: false,
   });
 
   const handleOk = async () => {
     const duplicatesOrdersCheck = checkDuplicateOrders(singleItem);
     const duplicatesDeclarationsCheck = checkDuplicateDeclarations(singleItem);
+    resetInputs(setSingleItem);
     reDraw.reDrawHandler(true);
     if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
       setConfirmLoading(true);
@@ -142,8 +147,30 @@ export const TableItemUpdate = ({}) => {
     dispatch(setOpenItemUpdate());
   };
 
+  function timeConvert(time: string) {
+    return dayjs(time).format("YYYY-MM-DD");
+  }
+
+  async function deleteItem() {
+    reDraw.reDrawHandler(true);
+    const response = item && (await ItemFuncs.deleteItem(item._id));
+    if (response === 200) {
+      reDraw.reDrawHandler(false);
+      dispatch(setOpenItemUpdate());
+    }
+  }
+
+  async function hideItemHandler() {
+    reDraw.reDrawHandler(true);
+    const response = item && (await hideItem(item._id, !item.hidden));
+    if (response) {
+      reDraw.reDrawHandler(false);
+      dispatch(setOpenItemUpdate());
+    }
+  }
+
   useEffect(() => {
-    // console.log(singleItem);
+    console.log(singleItem);
     // console.log(singleItem.order_number);
     // console.log(singleItem.importers);
     // console.log(singleItem.providers);
@@ -165,19 +192,11 @@ export const TableItemUpdate = ({}) => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        <Button
-          className="delete-btn"
-          onClick={async () => {
-            if (item) {
-              const response = await ItemFuncs.deleteItem(item._id);
-              if (response === 200) {
-                reDraw.reDrawHandler(true);
-                dispatch(setOpenItemUpdate());
-              }
-            }
-          }}
-        >
+        <Button className="delete-btn" onClick={deleteItem}>
           Удалить запись
+        </Button>
+        <Button className="hide-btn" onClick={hideItemHandler}>
+          Скрыть запись
         </Button>
         <Form className="table-form" layout="vertical">
           <DatePickerUpdate
@@ -424,7 +443,7 @@ export const TableItemUpdate = ({}) => {
                 ready_date: e.target.value,
               });
             }}
-            value={singleItem?.ready_date}
+            value={timeConvert(singleItem?.ready_date)}
           />
           <DatePickerUpdate
             label="Дата загрузки"
@@ -434,14 +453,14 @@ export const TableItemUpdate = ({}) => {
                 load_date: e.target.value,
               });
             }}
-            value={singleItem?.load_date}
+            value={timeConvert(singleItem?.load_date)}
           />
           <DatePickerUpdate
             label="ETD"
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({ ...singleItem, etd: e.target.value });
             }}
-            value={singleItem?.etd}
+            value={timeConvert(singleItem?.etd)}
           />
           <DatePickerUpdate
             label="Релиз"
@@ -451,27 +470,26 @@ export const TableItemUpdate = ({}) => {
                 release: e.target.value,
               });
             }}
-            value={singleItem?.release}
+            value={timeConvert(singleItem?.release)}
           />
           <Form.Item label="BL/СМГС/CMR">
             <Switch
-              defaultChecked={singleItem?.bl_smgs_cmr ? true : false}
+              checked={singleItem?.bl_smgs_cmr}
               style={{ minWidth: "45px" }}
               onChange={(e) => {
                 setSingleItem({ ...singleItem, bl_smgs_cmr: e.valueOf() });
               }}
             />
           </Form.Item>
-          <MyInput
-            label="ТД"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                td: e.target.value === "" ? false : true,
-              });
-            }}
-            value={singleItem?.td ? "V" : ""}
-          />
+          <Form.Item label="ТД">
+            <Switch
+              checked={singleItem?.td}
+              style={{ minWidth: "45px" }}
+              onChange={(e) => {
+                setSingleItem({ ...singleItem, td: e.valueOf() });
+              }}
+            />
+          </Form.Item>
           <MyInput
             label="Порт"
             onChange={(e: { target: HTMLInputElement }) => {
@@ -479,16 +497,15 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.port}
           />
-          <MyInput
-            label="ДС для подачи"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                is_ds: e.target.value === "" ? false : true,
-              });
-            }}
-            value={singleItem?.is_ds ? "V" : ""}
-          />
+          <Form.Item label="ДС для подачи">
+            <Switch
+              checked={singleItem?.is_ds}
+              style={{ minWidth: "45px" }}
+              onChange={(e) => {
+                setSingleItem({ ...singleItem, is_ds: e.valueOf() });
+              }}
+            />
+          </Form.Item>
           <Form.Item className="required-form" label="№ декларации">
             {singleItem.declaration_number.map((declaration, index) => {
               return (
@@ -534,7 +551,7 @@ export const TableItemUpdate = ({}) => {
                 availability_of_ob: e.target.value,
               });
             }}
-            value={singleItem?.availability_of_ob}
+            value={timeConvert(singleItem?.availability_of_ob)}
           />
           <DatePickerUpdate
             label="Ответ ОБ"
@@ -544,7 +561,7 @@ export const TableItemUpdate = ({}) => {
                 answer_of_ob: e.target.value,
               });
             }}
-            value={singleItem?.answer_of_ob}
+            value={timeConvert(singleItem?.answer_of_ob)}
           />
           <MyInput
             label="Экспедитор"

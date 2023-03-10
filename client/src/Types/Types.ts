@@ -62,6 +62,7 @@ export type TableProps = {
   bid: number;
   note: string;
   creator: string;
+  hidden: boolean;
 };
 
 export interface INewItem {
@@ -95,11 +96,11 @@ export interface IItem extends INewItem {
   etd: string;
   eta: string;
   release: string;
-  bl_smgs_cmr: boolean | null;
-  td: boolean | null;
-  date_do: string | null;
+  bl_smgs_cmr: boolean;
+  td: boolean;
+  date_do: string;
   port: string;
-  is_ds: boolean | null;
+  is_ds: boolean;
   delivery_channel: string;
   is_docs: IsDocsType;
   declaration_number: string[];
@@ -116,6 +117,7 @@ export interface IItem extends INewItem {
   comment: string;
   note: string;
   fraht: string;
+  hidden: boolean;
 }
 
 export interface Comment {
@@ -161,19 +163,18 @@ export interface UserData {
 }
 
 export interface IsDocsType {
-  PI: boolean | null;
-  CI: boolean | null;
-  PL: boolean | null;
-  SS_DS: boolean | null;
-  contract_agrees: boolean | null;
-  cost_agrees: boolean | null;
-  instruction: boolean | null;
-  ED: boolean | null;
-  bill: boolean | null;
+  PI: boolean;
+  CI: boolean;
+  PL: boolean;
+  SS_DS: boolean;
+  contract_agrees: boolean;
+  cost_agrees: boolean;
+  instruction: boolean;
+  ED: boolean;
+  bill: boolean;
 }
 
 export interface TechStoreData {
-  delivery_time: number;
   name: string;
   address: string;
   _id?: string;

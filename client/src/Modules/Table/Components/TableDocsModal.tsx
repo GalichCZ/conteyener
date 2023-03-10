@@ -3,7 +3,11 @@ import { Modal, Form } from "antd";
 import { IsDocsType } from "../../../Types/Types";
 import ReDrawContext from "../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import { setDocsId, setOpenDocs } from "../../../store/slices/tableDocsSlice";
+import {
+  setDocsId,
+  setOpenDocs,
+  setDocs,
+} from "../../../store/slices/tableDocsSlice";
 import { DocsSelect } from "../../../components";
 import Docs from "../Functions/isDocsFuncs";
 
@@ -14,7 +18,17 @@ export const TableDocsModal: React.FC = ({}) => {
   const reDraw = useContext(ReDrawContext);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [err, setErr] = useState<string | null>();
-  const [isDocs, setIsDocs] = useState({});
+  const [isDocs, setIsDocs] = useState<IsDocsType>({
+    PI: false,
+    CI: false,
+    PL: false,
+    SS_DS: false,
+    contract_agrees: false,
+    cost_agrees: false,
+    instruction: false,
+    ED: false,
+    bill: false,
+  });
 
   const open = useAppSelector((state) => state.tableDocs.open);
   const _id = useAppSelector((state) => state.tableDocs._id);
@@ -23,6 +37,10 @@ export const TableDocsModal: React.FC = ({}) => {
   useEffect(() => {
     if (docs) setIsDocs(docs);
   }, [docs]);
+
+  useEffect(() => {
+    console.log(isDocs);
+  }, [isDocs]);
 
   const handleOk = async () => {
     setConfirmLoading(true);
@@ -33,6 +51,7 @@ export const TableDocsModal: React.FC = ({}) => {
       setConfirmLoading(false);
       dispatch(setOpenDocs());
       dispatch(setDocsId(""));
+      resetInput();
       reDraw.reDrawHandler(false);
     }
   };
@@ -40,7 +59,24 @@ export const TableDocsModal: React.FC = ({}) => {
   const handleCancel = () => {
     dispatch(setOpenDocs());
     dispatch(setDocsId(""));
+    resetInput();
   };
+
+  function resetInput() {
+    dispatch(
+      setDocs({
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+      })
+    );
+  }
 
   return (
     <Modal
@@ -55,69 +91,66 @@ export const TableDocsModal: React.FC = ({}) => {
       <Form layout="vertical" className="docs-modal">
         <DocsSelect
           label="PI"
-          value={docs?.PI}
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, PI: value === "+" ? true : false })
-          }
+          checked={isDocs?.PI}
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, PI: e.valueOf() });
+          }}
         />
         <DocsSelect
           label="CI"
-          value={docs?.CI}
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, CI: value === "+" ? true : false })
-          }
+          checked={isDocs?.CI}
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, CI: e.valueOf() });
+          }}
         />
         <DocsSelect
           label="PL"
-          value={docs?.PL}
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, PL: value === "+" ? true : false })
-          }
+          checked={isDocs?.PL}
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, PL: e.valueOf() });
+          }}
         />
         <DocsSelect
           label="СС/ДС"
-          value={docs?.SS_DS}
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, SS_DS: value === "+" ? true : false })
-          }
+          checked={isDocs?.SS_DS}
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, SS_DS: e.valueOf() });
+          }}
         />
         <DocsSelect
-          value={docs?.contract_agrees}
+          checked={isDocs?.contract_agrees}
           label="Контракт и действующие доп. соглашения"
-          onChange={(value) =>
-            setIsDocs({
-              ...isDocs,
-              contract_agrees: value === "+" ? true : false,
-            })
-          }
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, contract_agrees: e.valueOf() });
+          }}
         />
         <DocsSelect
-          value={docs?.cost_agrees}
+          checked={isDocs?.cost_agrees}
           label="Стоимостные доп. соглашения"
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, cost_agrees: value === "+" ? true : false })
-          }
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, cost_agrees: e.valueOf() });
+          }}
         />
         <DocsSelect
-          value={docs?.instruction}
+          checked={isDocs?.instruction}
           label="Инструкция"
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, instruction: value === "+" ? true : false })
-          }
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, instruction: e.valueOf() });
+          }}
         />
         <DocsSelect
-          value={docs?.ED}
+          checked={isDocs?.ED}
           label="ED"
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, ED: value === "+" ? true : false })
-          }
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, ED: e.valueOf() });
+          }}
         />
         <DocsSelect
-          value={docs?.bill}
+          checked={isDocs?.bill}
           label="Счет"
-          onChange={(value) =>
-            setIsDocs({ ...isDocs, bill: value === "+" ? true : false })
-          }
+          onChange={(e) => {
+            setIsDocs({ ...isDocs, bill: e.valueOf() });
+          }}
         />
       </Form>
     </Modal>

@@ -1,11 +1,8 @@
 const DeclarationService = require("../service/declaration-service");
 const ContainerService = require("../service/container-service");
-const ProviderService = require("../service/provider-service");
-const ImporterService = require("../service/importer-service");
 const ProductService = require("../service/product-service");
 const IsDocsService = require("../service/isDocs-service");
 const StoreService = require("../service/store-service");
-const OrderService = require("../service/order-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
@@ -20,39 +17,11 @@ class ItemController {
 
     const container = await ContainerService.getContainer(req);
 
-    const provider = await ProviderService.createProvider(
-      req.body.providers,
-      container._id
-    );
-
-    const importer = await ImporterService.createImporter(
-      req.body.importers,
-      container._id
-    );
-
     const store = await StoreService.createStore(req.body.tech_store);
-
-    const orders = await OrderService.createOrder(
-      req.body.order_number,
-      container
-    );
-    if ("message" in orders[0]) {
-      console.log(orders);
-      return res.json({ error: orders[0].message });
-    }
 
     const is_docs = await IsDocsService.createDocs(req, container);
 
-    const item = await ItemService.createItem(
-      req,
-      store,
-      container,
-      provider,
-      importer,
-      orders,
-      creator,
-      is_docs
-    );
+    const item = await ItemService.createItem(req, store, container);
 
     if (item.error) return res.status(400).json({ error: item.error });
 
@@ -71,6 +40,13 @@ class ItemController {
     const items = await ItemService.getHiddenItems();
 
     res.json({ items });
+  }
+
+  async hideItem(req, res) {
+    console.log(req.body);
+    const result = await ItemService.hideItem(req);
+
+    res.json(result);
   }
 
   async updateFormulaDates(req, res) {
@@ -125,14 +101,11 @@ class ItemController {
       const item = await ItemSchema.findById(req.params._id).exec();
 
       await ItemService.deleteItem(req.params._id);
-      await ImporterService.deleteImporters(item);
       await ContainerService.deleteContainer(item);
       await StoreService.deleteStore(item);
-      await ProviderService.deleteProviders(item);
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
       await ProductService.deleteProduct(item._id);
       await IsDocsService.deleteDocs(item.container);
-      await OrderService.deleteOrders(item);
 
       res.json(200);
     } catch (error) {

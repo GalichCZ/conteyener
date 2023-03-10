@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InputNumber, Form, Button, Input } from "antd";
+import { Form, Button, Input } from "antd";
 import { TechStoreData } from "../../../Types/Types";
 import { TechStore } from "../Functions/techStoreFuncs";
 

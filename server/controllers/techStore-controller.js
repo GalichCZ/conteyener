@@ -3,7 +3,6 @@ const TechStoreService = require("../service/techStore-service");
 class TechStoreController {
   async createTechStore(req, res) {
     const result = await TechStoreService.createTechStore(
-      req.body.delivery_time,
       req.body.address,
       req.body.name
     );

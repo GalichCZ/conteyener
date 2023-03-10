@@ -33,6 +33,7 @@ import {
 } from "../Functions/DuplicateHandler";
 import { callError } from "../../../Functions/ErrorHandlers";
 import { resetInputs } from "../Functions/ResetInputs";
+import { hideItem } from "../../../Functions/itemFuncs";
 import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
@@ -103,6 +104,7 @@ export const TableItemUpdate = ({}) => {
     comment: "",
     note: "",
     fraht: "",
+    hidden: false,
   });
 
   const handleOk = async () => {
@@ -149,6 +151,24 @@ export const TableItemUpdate = ({}) => {
     return dayjs(time).format("YYYY-MM-DD");
   }
 
+  async function deleteItem() {
+    reDraw.reDrawHandler(true);
+    const response = item && (await ItemFuncs.deleteItem(item._id));
+    if (response === 200) {
+      reDraw.reDrawHandler(false);
+      dispatch(setOpenItemUpdate());
+    }
+  }
+
+  async function hideItemHandler() {
+    reDraw.reDrawHandler(true);
+    const response = item && (await hideItem(item._id, !item.hidden));
+    if (response) {
+      reDraw.reDrawHandler(false);
+      dispatch(setOpenItemUpdate());
+    }
+  }
+
   useEffect(() => {
     console.log(singleItem);
     // console.log(singleItem.order_number);
@@ -172,19 +192,11 @@ export const TableItemUpdate = ({}) => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
       >
-        <Button
-          className="delete-btn"
-          onClick={async () => {
-            if (item) {
-              const response = await ItemFuncs.deleteItem(item._id);
-              if (response === 200) {
-                reDraw.reDrawHandler(true);
-                dispatch(setOpenItemUpdate());
-              }
-            }
-          }}
-        >
+        <Button className="delete-btn" onClick={deleteItem}>
           Удалить запись
+        </Button>
+        <Button className="hide-btn" onClick={hideItemHandler}>
+          Скрыть запись
         </Button>
         <Form className="table-form" layout="vertical">
           <DatePickerUpdate

@@ -23,6 +23,8 @@ import {
   handleOrderChange,
 } from "../Functions/MultipleInputHandler";
 import { callError } from "../Functions/ErrorHandlers";
+import { dropInput } from "../Functions/TableHandlers";
+import { checkFilledPoles } from "../Functions/TableHandlers";
 
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
@@ -68,8 +70,6 @@ export const TableItemCreate: React.FC = () => {
     if (filled) {
       reDrawCtx.reDrawHandler(true);
       setConfirmLoading(true);
-      form.resetFields();
-      dropInput();
       const response = await ItemFuncs.createItem(item);
       if (response.error) {
         setConfirmLoading(false);
@@ -81,6 +81,8 @@ export const TableItemCreate: React.FC = () => {
         callError(messageApi, `These orders already exists: ${duplicates}`);
         reDrawCtx.reDrawHandler(false);
       } else {
+        form.resetFields();
+        dropInput(setItem);
         setConfirmLoading(false);
         reDrawCtx.reDrawHandler(false);
         setOpen(false);
@@ -98,59 +100,12 @@ export const TableItemCreate: React.FC = () => {
     setItem({ ...item, store_name: response.name });
   };
 
-  function checkFilledPoles() {
-    if (
-      item.request_date !== "" &&
-      item.order_number.length > 0 &&
-      item.simple_product_name !== "" &&
-      item.delivery_method !== "" &&
-      item.providers.length > 0 &&
-      item.importers.length > 0 &&
-      item.conditions !== "" &&
-      item.store_name !== "" &&
-      item.tech_store !== "" &&
-      item.agent !== "" &&
-      item.container_type !== "" &&
-      item.place_of_dispatch !== ""
-    )
-      setFilled(true);
-    else setFilled(false);
-  }
-
-  function dropInput() {
-    setItem({
-      request_date: "",
-      order_number: [],
-      simple_product_name: "",
-      delivery_method: "",
-      providers: [],
-      importers: [],
-      conditions: "",
-      store_name: "",
-      tech_store: "",
-      agent: "",
-      container_type: "",
-      place_of_dispatch: "",
-      is_docs: {
-        PI: false,
-        CI: false,
-        PL: false,
-        SS_DS: false,
-        contract_agrees: false,
-        cost_agrees: false,
-        instruction: false,
-        ED: false,
-        bill: false,
-      },
-    });
-  }
-
   useEffect(() => {
     getName();
   }, [item.tech_store]);
 
   useEffect(() => {
-    checkFilledPoles();
+    checkFilledPoles(item, setFilled);
   }, [item]);
   return (
     <>

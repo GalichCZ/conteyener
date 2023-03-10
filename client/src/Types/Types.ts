@@ -62,6 +62,7 @@ export type TableProps = {
   bid: number;
   note: string;
   creator: string;
+  hidden: boolean;
 };
 
 export interface INewItem {
@@ -116,6 +117,7 @@ export interface IItem extends INewItem {
   comment: string;
   note: string;
   fraht: string;
+  hidden: boolean;
 }
 
 export interface Comment {
@@ -173,7 +175,6 @@ export interface IsDocsType {
 }
 
 export interface TechStoreData {
-  delivery_time: number;
   name: string;
   address: string;
   _id?: string;

@@ -3,16 +3,7 @@ const TechStoreSchema = require("../models/techStore-model");
 const formulaService = require("./formula-service");
 const FormulaService = require("./formula-service");
 class ItemService {
-  async createItem(
-    req,
-    store,
-    container,
-    provider,
-    importer,
-    orders,
-    creator,
-    is_docs
-  ) {
+  async createItem(req, store, container) {
     try {
       const delivery_method = req.body.delivery_method;
 
@@ -127,7 +118,7 @@ class ItemService {
   async getItems() {
     try {
       const items = await ItemSchema.find({
-        store_arrive_date_update: false,
+        hidden: false,
       }).exec();
 
       return items;
@@ -139,10 +130,21 @@ class ItemService {
   async getHiddenItems() {
     try {
       const items = await ItemSchema.find({
-        store_arrive_date_update: true,
+        hidden: true,
       }).exec();
 
       return items;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async hideItem(req) {
+    try {
+      // console.log("hide call", req.body);
+      const _id = req.body._id;
+      return await ItemSchema.updateOne({ _id }, { hidden: req.body.hidden });
     } catch (error) {
       console.log(error);
       return error;

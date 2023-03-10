@@ -23,7 +23,6 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
 
   const [data, setData] = useState<TechStoreData>({
     _id: "",
-    delivery_time: 0,
     address: "",
     name: "",
   });
@@ -40,10 +39,6 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
     console.log(data);
   };
 
-  const onChange = (value: any) => {
-    setData({ ...data, delivery_time: value });
-  };
-
   const handleCancel = () => {
     setOpen(false);
   };
@@ -55,24 +50,17 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
   return (
     <Modal onOk={handleOk} onCancel={handleCancel} open={open}>
       <Form>
-        <Form.Item label="Дней на доставку">
-          <InputNumber
-            min={1}
-            value={dataStore.delivery_time}
-            onChange={onChange}
-          />
-        </Form.Item>
         <MyInput
           style={{ margin: "0 15px" }}
           label="Название"
-          value={dataStore.name}
+          value={data.name}
           onChange={(e) => {
             setData({ ...data, name: e.target.value });
           }}
         />
         <MyInput
           label="Адрес"
-          value={dataStore.address}
+          value={data.address}
           onChange={(e) => {
             setData({ ...data, address: e.target.value });
           }}

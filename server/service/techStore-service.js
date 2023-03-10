@@ -1,10 +1,9 @@
 const TechStoreSchema = require("../models/techStore-model");
 
 class TechStoreService {
-  async createTechStore(delivery_time, address, name) {
+  async createTechStore(address, name) {
     try {
       const doc = new TechStoreSchema({
-        delivery_time,
         address,
         name,
       });
@@ -56,7 +55,6 @@ class TechStoreService {
           _id: req.body._id,
         },
         {
-          delivery_time: req.body.delivery_time,
           address: req.body.address,
           name: req.body.name,
         }

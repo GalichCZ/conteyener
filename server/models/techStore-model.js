@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const TechStoreSchema = new mongoose.Schema(
   {
-    delivery_time: Number,
     address: String,
     name: String,
   },

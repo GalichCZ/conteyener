@@ -33,14 +33,8 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
     if (response) await getStores();
   };
 
-  const modalHandler = (
-    delivery_time: number,
-    address: string,
-    name: string,
-    _id?: string
-  ) => {
+  const modalHandler = (address: string, name: string, _id?: string) => {
     setData({
-      delivery_time,
       address,
       name,
       _id,
@@ -67,17 +61,9 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
             <div className="stores-data" key={key}>
               <strong>Название: {store.name}</strong>
               <p style={{ margin: "0 15px" }}>Адрес: {store.address}</p>
-              <p style={{ margin: "0" }}>
-                Дней на доставку: {store.delivery_time}
-              </p>
               <Button
                 onClick={() =>
-                  modalHandler(
-                    store.delivery_time,
-                    store.address,
-                    store.name,
-                    store._id
-                  )
+                  modalHandler(store.address, store.name, store._id)
                 }
                 style={{ margin: "0 15px" }}
               >

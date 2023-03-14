@@ -215,3 +215,10 @@ export interface IChannelObject {
   train_arrive_date: number | null;
   store_arrive_date: number | null;
 }
+
+export interface IComment {
+  _id?: string;
+  comment_text: string;
+  comment_date: string;
+  comment_item: string;
+}

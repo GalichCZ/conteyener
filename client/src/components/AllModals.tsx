@@ -1,6 +1,6 @@
 import { ContainerStockModal } from "../Modules/ContainerStock/Components/ContainerStockModal";
 import DeliveryMethodModal from "../Modules/DeliveryMethod/Components/DeliveryMethodModal";
-import { TableComment } from "../Modules/Table/Components/TableComment";
+import { TableComment } from "../Modules/CommentItem/TableComment";
 import { TableDeclStatus } from "../Modules/Table/Components/TableDeclStatus";
 import { TableDocsModal } from "../Modules/Table/Components/TableDocsModal";
 import { TableFormulaDate } from "../Modules/Table/Components/TableFormulaDate";

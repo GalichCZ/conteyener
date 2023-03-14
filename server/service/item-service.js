@@ -10,8 +10,6 @@ class ItemService {
     try {
       const delivery_method = req.body.delivery_method;
 
-      const request_date = dayjs(req.body.request_date).toJSON();
-
       const doc = await new ItemSchema({
         request_date: req.body.request_date,
         order_number: req.body.order_number,

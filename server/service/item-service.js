@@ -1,13 +1,18 @@
 const ItemSchema = require("../models/item-model");
-const TechStoreSchema = require("../models/techStore-model");
-const formulaService = require("./formula-service");
 const FormulaService = require("./formula-service");
+const StockPlaceSchema = require("../models/stockPlace-model");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+const dayjs = require("dayjs");
+
+dayjs.extend(customParseFormat);
 class ItemService {
   async createItem(req, store, container) {
     try {
       const delivery_method = req.body.delivery_method;
 
-      const doc = new ItemSchema({
+      const request_date = dayjs(req.body.request_date).toJSON();
+
+      const doc = await new ItemSchema({
         request_date: req.body.request_date,
         order_number: req.body.order_number,
         simple_product_name: req.body.simple_product_name,
@@ -28,12 +33,12 @@ class ItemService {
 
       const item = await doc.save();
 
-      return item;
+      return true;
     } catch (error) {
+      console.log("ERROR LOG:", error);
       const array = Object.entries(error.keyValue).map(([key, value]) => {
         return { key, value };
       });
-      console.log(error);
       return { error: array };
     }
   }
@@ -213,6 +218,12 @@ class ItemService {
     try {
       const item = await ItemSchema.findById(_id);
 
+      const stock_place =
+        req.body.stock_place &&
+        (await StockPlaceSchema.findById({
+          _id: req.body.stock_place,
+        }));
+
       let delivery_channel = "";
       let etd = null;
 
@@ -272,6 +283,7 @@ class ItemService {
           pickup: req.body.pickup,
           store_arrive_date: formulaRes.store_arrive_date,
           comment: req.body.comment,
+          stock_place: stock_place && stock_place.name,
           fraht: req.body.fraht,
           bid: req.body.bid,
           note: req.body.note,

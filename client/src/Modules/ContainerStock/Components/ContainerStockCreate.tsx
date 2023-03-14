@@ -1,10 +1,21 @@
 import { Button, Form } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { MyInput } from "../../../components";
+import ReDrawContext from "../../../store/redraw-context";
+import { createStockPlace } from "../Functions/StockApi";
 import { IStockData } from "../Types";
 
 export const ContainerStockCreate = () => {
+  const redrawCtx = useContext(ReDrawContext);
   const [data, setData] = useState<IStockData>({ name: "", address: "" });
+
+  const createStockPlaceHandler = async () => {
+    redrawCtx.reDrawHandler(true);
+    const result = await createStockPlace(data);
+
+    if (result) redrawCtx.reDrawHandler(false);
+    console.log(result);
+  };
 
   return (
     <div className="stock-create">
@@ -22,7 +33,7 @@ export const ContainerStockCreate = () => {
           }}
         />
         <Form.Item>
-          <Button>Создать</Button>
+          <Button onClick={createStockPlaceHandler}>Создать</Button>
         </Form.Item>
       </Form>
     </div>

@@ -7,11 +7,7 @@ import ReDrawContext from "../../../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { setOpenItemUpdate } from "../../../../../store/slices/tableItemUpdateSlice";
 import { DatePickerUpdate } from "../../../../../components/DatePickerUpdate";
-import {
-  MyInput,
-  SelectDelivery,
-  TechStoreSelect,
-} from "../../../../../components";
+import { MyInput, TechStoreSelect } from "../../../../../components";
 import { SelectChannel } from "../../../../../components/SelectChannel";
 import {
   handleProviderChange,
@@ -35,6 +31,7 @@ import { callError } from "../../../Functions/ErrorHandlers";
 import { resetInputs } from "../Functions/ResetInputs";
 import { hideItem } from "../../../Functions/itemFuncs";
 import dayjs from "dayjs";
+import StockPlaceSelect from "../../../../../components/StockPlaceSelect";
 
 const ItemFuncs = new Item();
 
@@ -103,6 +100,7 @@ export const TableItemUpdate = ({}) => {
     store_arrive_date: "",
     comment: "",
     note: "",
+    stock_place: "",
     fraht: "",
     hidden: false,
   });
@@ -147,7 +145,7 @@ export const TableItemUpdate = ({}) => {
     dispatch(setOpenItemUpdate());
   };
 
-  function timeConvert(time: string) {
+  function timeConvert(time: string | undefined) {
     return dayjs(time).format("YYYY-MM-DD");
   }
 
@@ -202,7 +200,7 @@ export const TableItemUpdate = ({}) => {
           <DatePickerUpdate
             className="required-form"
             label="Дата заявки"
-            value={singleItem?.request_date?.toString().substring(0, 10)}
+            value={timeConvert(singleItem?.request_date?.toString())}
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({
                 ...singleItem,
@@ -282,10 +280,15 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.simple_product_name}
           />
-          <SelectDelivery
+          <MyInput
+            label="Способ Доставки"
+            className="required-form"
             value={singleItem?.delivery_method}
-            onChange={(value: string) => {
-              setSingleItem({ ...singleItem, delivery_method: value });
+            onChange={(e: { target: HTMLInputElement }) => {
+              setSingleItem({
+                ...singleItem,
+                delivery_method: e.target.value,
+              });
             }}
           />
           <Form.Item className="required-form" label="Поставщик">
@@ -589,6 +592,13 @@ export const TableItemUpdate = ({}) => {
               }
             />
           </Form.Item>
+          <StockPlaceSelect
+            opened={open}
+            value={singleItem?.stock_place}
+            onChange={(value) =>
+              setSingleItem({ ...singleItem, stock_place: value })
+            }
+          />
           <Form.Item label="Ставка">
             <InputNumber
               name="bid"

@@ -8,6 +8,7 @@ import tableFormulaDateReducer from "./slices/tableFormulaDateSlice";
 import tableItemUpdateReducer from "./slices/tableItemUpdateSlice";
 import tableDocsReducer from "./slices/tableDocsSlice";
 import searchReducer from "./slices/searchSlice";
+import stockModalReducer from "./slices/stockModalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     tableItemUpdate: tableItemUpdateReducer,
     tableDocs: tableDocsReducer,
     search: searchReducer,
+    stockModal: stockModalReducer,
   },
 });
 

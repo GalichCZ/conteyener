@@ -308,6 +308,7 @@ export const TableColNames: React.FC<ITableColProps> = ({
             }}
           />
         </td>
+        <td>Сток Сдачи</td>
         <td>Комментарий</td>
         {/* <td>Фрахт</td>
         <td>Ставка</td>

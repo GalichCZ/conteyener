@@ -4,6 +4,11 @@ type Container = {
   _id: string;
 };
 
+export type StockPlace = {
+  _id: string;
+  name: string;
+};
+
 export type Store = {
   _id?: string;
   receiver: string | undefined;
@@ -62,11 +67,12 @@ export type TableProps = {
   bid: number;
   note: string;
   creator: string;
+  stock_place: any;
   hidden: boolean;
 };
 
 export interface INewItem {
-  request_date: Date | string;
+  request_date: Date | string | undefined;
   order_number: string[];
   simple_product_name: string;
   delivery_method: string;
@@ -117,6 +123,7 @@ export interface IItem extends INewItem {
   comment: string;
   note: string;
   fraht: string;
+  stock_place: any;
   hidden: boolean;
 }
 
@@ -207,4 +214,11 @@ export interface IChannelObject {
   train_depart_date: number | null;
   train_arrive_date: number | null;
   store_arrive_date: number | null;
+}
+
+export interface IComment {
+  _id?: string;
+  comment_text: string;
+  comment_date: string;
+  comment_item: string;
 }

@@ -11,6 +11,13 @@
   border-radius: 10px;
 }
 
+.ant-upload-list {
+  display: none !important;
+}
+.ant-upload-list-text {
+  display: none !important;
+}
+
 .ant-modal {
   width: fit-content !important;
 }

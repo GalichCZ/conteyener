@@ -17,6 +17,10 @@ const items: MenuProps["items"] = [
     key: "3",
     label: <Link to="/tech/deliverychannel">Каналы поставки</Link>,
   },
+  {
+    key: "4",
+    label: <Link to="/tech/stock">Сток Сдачи</Link>,
+  },
 ];
 
 export const DropDown = () => {

@@ -4,7 +4,6 @@ export * from "../Modules/Table/Components/Table";
 export * from "../Modules/Table/Components/TableColNames";
 export * from "./TechStoreSelect";
 export * from "./MyInput";
-export * from "./SelectDelivery";
 export * from "./DocsSelect";
 export * from "../Modules/UsersHandle/Components/UsersList";
 export * from "../Modules/TechStore/Components/TechStoreCreate";

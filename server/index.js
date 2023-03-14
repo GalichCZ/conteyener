@@ -8,9 +8,11 @@ const TestController = require("./controllers/test-controller");
 const StoreController = require("./controllers/store-controller");
 const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
+const CommentController = require("./controllers/comment-controller");
 const TechStoreController = require("./controllers/techStore-controller");
-const DeclarationController = require("./controllers/declaration-controller");
 const UploadOnceController = require("./controllers/uploadOnce-controller");
+const StockPlaceController = require("./controllers/stockPlace-controller");
+const DeclarationController = require("./controllers/declaration-controller");
 const DeliveryChannelController = require("./controllers/deliveryChannel-controller");
 
 const CheckAuth = require("./utils/check-auth");
@@ -19,7 +21,6 @@ const FileWare = require("./utils/file-ware");
 dotenv.config();
 
 const url = process.env.DB_URL;
-// "mongodb+srv://root:root@conteyener.w3d0tne.mongodb.net/?retryWrites=true&w=majority";
 const PORT = 4444;
 
 const app = express();
@@ -71,15 +72,24 @@ app.patch("/api/store/tech", TechStoreController.updateTechStore);
 app.get("/api/store/tech/:_id", TechStoreController.getOneTechStore);
 app.delete("/api/store/tech/:_id", TechStoreController.deleteTechStore);
 
+app.post("/api/test/formula", TestController.testFormula);
+app.post("/api/test/store", TestController.testStoreCreate);
 app.patch("/api/test/product", TestController.testUpdateProduct);
 app.post("/api/test/declaration", TestController.testDeclaration);
-app.post("/api/test/formula", TestController.testFormula);
 app.post("/api/test/product", FileWare, TestController.testProduct);
 app.get(
   "/api/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
-app.post("/api/test/store", TestController.testStoreCreate);
+
+app.get("/api/stock", StockPlaceController.getStockPlaces);
+app.post("/api/stock", StockPlaceController.createStockPlace);
+app.patch("/api/stock", StockPlaceController.updateStockPlaces);
+app.get("/api/stock/:_id", StockPlaceController.getOneStockPlace);
+
+app.get("/api/comment/:comment_item", CommentController.getComments);
+app.patch("/api/comment", CommentController.updateCommetn);
+app.post("/api/comment", CheckAuth.checkToken, CommentController.createComment);
 
 app.post("/uploadOnce", FileWare, UploadOnceController.uploadItems);
 

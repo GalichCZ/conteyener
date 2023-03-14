@@ -56,6 +56,12 @@ const TechStorePage = lazy(() =>
     default: TechStorePage,
   }))
 );
+const ContainerStockPage = lazy(() =>
+  import("./pages/ContainerStockPage").then(({ ContainerStockPage }) => ({
+    default: ContainerStockPage,
+  }))
+);
+
 function wait(time: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, time);
@@ -77,6 +83,7 @@ function App() {
           <Route path="/table" element={<TablePage />} />
           <Route path="/tech/users" element={<Users />} />
           <Route path="/tech/store" element={<TechStorePage />} />
+          <Route path="/tech/stock" element={<ContainerStockPage />} />
           <Route
             path="/tech/deliverychannel"
             element={<DeliveryChannelPage />}

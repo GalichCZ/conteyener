@@ -1,0 +1,33 @@
+.stock-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  height: fit-content;
+  background-color: rgb(220, 222, 252);
+}
+
+.stock-create form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px !important;
+}
+
+.stock-create .ant-form-item {
+  margin: 0 10px;
+}
+
+.stock-create form button {
+  transform: translateY(15px);
+}
+
+.stock-pole {
+  display: flex;
+  margin: 0 10px;
+}
+.stock-pole p {
+  margin: 0;
+}

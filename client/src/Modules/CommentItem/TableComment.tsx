@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form, Input } from "antd";
-import { Item } from "../Functions/itemFuncs";
-import { Comment } from "../../../Types/Types";
-import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { Item } from "../Table/Functions/itemFuncs";
+import { Comment } from "../../Types/Types";
+import ReDrawContext from "../../store/redraw-context";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import {
   setOpenComment,
   setCommentId,
-} from "../../../store/slices/tableCommentSlice";
+} from "../../store/slices/tableCommentSlice";
 
 const ItemFuncs = new Item();
 

@@ -1,6 +1,5 @@
 import { Button } from "antd";
 import React from "react";
-import { ShowDelivery } from "../../../components/SelectDelivery";
 import { useAppDispatch } from "../../../hooks/hooks";
 import { IItem, IsDocsType, Store, TableProps } from "../../../Types/Types";
 
@@ -74,7 +73,7 @@ const TableUI: React.FC<ITableUi> = ({
             >
               {item.simple_product_name}
             </td>
-            <ShowDelivery delivery_method={item.delivery_method} />
+            <td>{item.delivery_method}</td>
             <td>
               <table className="table-importers">
                 <tbody>
@@ -292,6 +291,7 @@ const TableUI: React.FC<ITableUi> = ({
                 ? "-"
                 : timeConvert(item.store_arrive_date)}
             </td>
+            <td>{item.stock_place}</td>
             <td
               onClick={() => {
                 tableCommentHandler &&

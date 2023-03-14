@@ -42,7 +42,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
 
   const props: UploadProps = {
     name: "file",
-    // action: `https://api-automycka.space/api/product/${item_id}`,
     action: `${URL}/product/${item_id}`,
     headers: {
       authorization: "authorization-text",

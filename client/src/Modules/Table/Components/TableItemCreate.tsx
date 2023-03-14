@@ -3,11 +3,7 @@ import { Modal, Button, Form, Input, DatePicker, message } from "antd";
 import { INewItem } from "../../../Types/Types";
 import { Item } from "../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
-import {
-  MyInput,
-  SelectDelivery,
-  TechStoreSelect,
-} from "../../../components/index";
+import { MyInput, TechStoreSelect } from "../../../components/index";
 import { Required } from "../../../UI/index";
 import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import ReDrawContext from "../../../store/redraw-context";
@@ -25,6 +21,7 @@ import {
 import { callError } from "../Functions/ErrorHandlers";
 import { dropInput } from "../Functions/TableHandlers";
 import { checkFilledPoles } from "../Functions/TableHandlers";
+import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
 const TechStoreFuncs = new TechStore();
@@ -37,18 +34,11 @@ export const TableItemCreate: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [filled, setFilled] = useState(false);
   const [item, setItem] = useState<INewItem>({
-    request_date: "",
-    order_number: [],
-    simple_product_name: "",
-    delivery_method: "",
-    providers: [],
-    importers: [],
-    conditions: "",
-    store_name: "",
-    tech_store: "",
-    agent: "",
-    container_type: "",
-    place_of_dispatch: "",
+    agent: "asd",
+    conditions: "asd",
+    container_type: "asd",
+    delivery_method: "asd",
+    importers: ["asd"],
     is_docs: {
       PI: false,
       CI: false,
@@ -60,6 +50,13 @@ export const TableItemCreate: React.FC = () => {
       ED: false,
       bill: false,
     },
+    order_number: ["zsxasdfd"],
+    place_of_dispatch: "asd",
+    providers: ["asd"],
+    request_date: "09/03/2023",
+    simple_product_name: "asd",
+    store_name: "qwe",
+    tech_store: "64105922c29ba8b0a05eb61b",
   });
 
   const showModal = () => {
@@ -105,8 +102,10 @@ export const TableItemCreate: React.FC = () => {
   }, [item.tech_store]);
 
   useEffect(() => {
+    console.log(item);
     checkFilledPoles(item, setFilled);
   }, [item]);
+
   return (
     <>
       {contextHolder}
@@ -139,8 +138,12 @@ export const TableItemCreate: React.FC = () => {
               label="Дата заявки"
             >
               <DatePicker
+                format="DD/MM/YYYY"
                 onChange={(date, dateString) => {
-                  setItem({ ...item, request_date: new Date(dateString) });
+                  setItem({
+                    ...item,
+                    request_date: date?.toISOString(),
+                  });
                 }}
                 placeholder="Дата заявки"
               />
@@ -197,12 +200,15 @@ export const TableItemCreate: React.FC = () => {
                 setItem({ ...item, simple_product_name: e.target.value });
               }}
             />
-            <SelectDelivery
-              name="name4"
-              value={item.delivery_method}
+            <MyInput
+              label="Способ Доставки"
               className="required-form"
-              onChange={(value) => {
-                setItem({ ...item, delivery_method: value });
+              value={item?.delivery_method}
+              onChange={(e: { target: HTMLInputElement }) => {
+                setItem({
+                  ...item,
+                  delivery_method: e.target.value,
+                });
               }}
             />
             <Form.Item name="name5" className="required-form" label="Поставщик">

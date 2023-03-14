@@ -1,5 +1,4 @@
 import {
-  Comment,
   FormulaDateUpdate,
   IItem,
   INewItem,
@@ -89,21 +88,21 @@ export class Item {
     return response;
   }
 
-  async updateComment(commentUpdate: Comment) {
-    const response = await fetch(URL + "/item/comment", {
-      method: "PATCH",
-      body: JSON.stringify(commentUpdate),
-    })
-      .then((response) => response.status)
-      .then((data) => {
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        return error;
-      });
-    return response;
-  }
+  // async updateComment(commentUpdate: Comment) {
+  //   const response = await fetch(URL + "/item/comment", {
+  //     method: "PATCH",
+  //     body: JSON.stringify(commentUpdate),
+  //   })
+  //     .then((response) => response.status)
+  //     .then((data) => {
+  //       return data;
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //       return error;
+  //     });
+  //   return response;
+  // }
 
   async updateStore(updateStore: Store, itemId: string) {
     const response = await fetch(URL + "/item/store", {

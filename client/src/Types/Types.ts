@@ -127,11 +127,6 @@ export interface IItem extends INewItem {
   hidden: boolean;
 }
 
-export interface Comment {
-  comment: string;
-  _id: string;
-}
-
 export interface Writes {
   _id: string;
   declaration_number: string;
@@ -221,4 +216,9 @@ export interface IComment {
   comment_text: string;
   comment_date: string;
   comment_item: string;
+}
+
+export interface IUpdateComment {
+  _id?: string;
+  comment_text?: string;
 }

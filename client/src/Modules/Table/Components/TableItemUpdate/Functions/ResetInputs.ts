@@ -56,6 +56,8 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     pickup: "",
     store_arrive_date: "",
     comment: "",
+    stock_place: "",
+    hidden: false,
     note: "",
     fraht: "",
   });

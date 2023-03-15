@@ -22,7 +22,6 @@ export const TableStore = ({}) => {
   const [value, setDefaulValue] = useState<string>("");
   const [data, setData] = useState<TechStoreData>({
     address: "",
-    delivery_time: 0,
     name: "",
   });
 
@@ -109,8 +108,6 @@ export const TableStore = ({}) => {
             placeholder="Примечание"
           />
         </Form.Item>
-
-        <p>Время доставки: {data.delivery_time}</p>
       </Form>
     </Modal>
   );

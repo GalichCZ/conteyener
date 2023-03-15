@@ -43,7 +43,6 @@ class ItemController {
   }
 
   async hideItem(req, res) {
-    console.log(req.body);
     const result = await ItemService.hideItem(req);
 
     res.json(result);
@@ -51,8 +50,6 @@ class ItemController {
 
   async updateFormulaDates(req, res) {
     const result = await ItemService.updateFormulaDates(req.body._id, req);
-
-    console.log(result);
 
     if (result) res.sendStatus(200);
     else res.status(500).json({ message: "server error" });

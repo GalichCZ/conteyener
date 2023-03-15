@@ -1,11 +1,12 @@
 import React from "react";
-import { Form } from "antd";
+import { DatePicker, Form } from "antd";
+import moment from "moment";
 
 interface DatePickerUpdateProps {
   label: string;
   value?: string;
   className?: string;
-  onChange: (e: { target: HTMLInputElement }) => void;
+  onChange: (date: any, dateString: any) => void;
 }
 
 export const DatePickerUpdate: React.FC<DatePickerUpdateProps> = ({
@@ -16,13 +17,7 @@ export const DatePickerUpdate: React.FC<DatePickerUpdateProps> = ({
 }) => {
   return (
     <Form.Item className={className} label={label}>
-      <input
-        placeholder={label}
-        className="ant-input"
-        type="date"
-        value={value}
-        onChange={onChange}
-      />
+      <DatePicker value={value ? moment(value) : null} onChange={onChange} />
     </Form.Item>
   );
 };

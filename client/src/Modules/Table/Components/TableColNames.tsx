@@ -24,7 +24,6 @@ export const TableColNames: React.FC<ITableColProps> = ({
     );
     sortedArray && setItems(sortedArray);
   }
-  // console.log(widthsArray);
   return (
     <thead>
       <tr>

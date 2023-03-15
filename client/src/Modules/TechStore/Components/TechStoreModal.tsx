@@ -36,7 +36,6 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
   const handleOk = () => {
     updateHandler(data);
     setOpen(false);
-    console.log(data);
   };
 
   const handleCancel = () => {

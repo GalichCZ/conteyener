@@ -27,7 +27,6 @@ export function checkDuplicateDeclarations(singleItem: IItem) {
       duplicates.push(number);
     }
   });
-  console.log(duplicates);
   if (duplicates.length > 0) return { success: false, duplicates };
   else return { success: true };
 }

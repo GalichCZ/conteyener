@@ -1,4 +1,4 @@
-import { IComment } from "../../Types/Types";
+import { IComment, IUpdateComment } from "../../Types/Types";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -32,10 +32,10 @@ export const getComment = async (comment_item: string) => {
   return response;
 };
 
-export const updateComment = async (_id: string, comment_text: string) => {
+export const updateComment = async (updateComment: IUpdateComment) => {
   const response = await fetch(URL + "/comment", {
     method: "PATCH",
-    body: JSON.stringify({ _id, comment_text }),
+    body: JSON.stringify(updateComment),
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

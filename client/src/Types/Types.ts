@@ -97,11 +97,11 @@ export interface IItem extends INewItem {
   place_of_dispatch: string;
   arrive_place?: string;
   line: string;
-  ready_date: string;
-  load_date: string;
-  etd: string;
+  ready_date: string | undefined;
+  load_date: string | undefined;
+  etd: string | undefined;
   eta: string;
-  release: string;
+  release: string | undefined;
   bl_smgs_cmr: boolean;
   td: boolean;
   date_do: string;
@@ -111,8 +111,8 @@ export interface IItem extends INewItem {
   is_docs: IsDocsType;
   declaration_number: string[];
   declaration_issue_date: string;
-  availability_of_ob: string;
-  answer_of_ob: string;
+  availability_of_ob: string | undefined;
+  answer_of_ob: string | undefined;
   expeditor: string;
   destination_station: string;
   km_to_dist: number | null;
@@ -125,11 +125,6 @@ export interface IItem extends INewItem {
   fraht: string;
   stock_place: any;
   hidden: boolean;
-}
-
-export interface Comment {
-  comment: string;
-  _id: string;
 }
 
 export interface Writes {
@@ -221,4 +216,10 @@ export interface IComment {
   comment_text: string;
   comment_date: string;
   comment_item: string;
+  creator_name?: UserData;
+}
+
+export interface IUpdateComment {
+  _id?: string;
+  comment_text?: string;
 }

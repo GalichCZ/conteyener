@@ -15,8 +15,6 @@ export const TechStorePage = () => {
     _id: "",
   });
 
-  console.log(data);
-
   return (
     <section className="users-page">
       <TechStoreModal

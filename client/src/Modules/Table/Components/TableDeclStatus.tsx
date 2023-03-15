@@ -50,7 +50,6 @@ export const TableDeclStatus = () => {
 
   const deleteHandler = async (_id: string) => {
     const response = await DeclarationFuncs.deleteOneDeclarationStatus(_id);
-    console.log(response);
     getHandler();
   };
 

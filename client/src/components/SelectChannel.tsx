@@ -18,7 +18,6 @@ export const SelectChannel: React.FC<ISelectChannel> = ({
 
   const getChannelHandler = async () => {
     const response = await getChannels();
-    console.log(response);
     if (response) setChannels(response);
   };
 

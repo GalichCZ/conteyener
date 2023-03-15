@@ -102,3 +102,17 @@
   display: flex;
   justify-content: center;
 }
+
+.comment-section {
+  height: 400px;
+  overflow-y: scroll;
+  padding: 10px !important;
+}
+
+.comment-info {
+  display: flex;
+  flex-direction: column;
+}
+.comment-info p {
+  margin: 0;
+}

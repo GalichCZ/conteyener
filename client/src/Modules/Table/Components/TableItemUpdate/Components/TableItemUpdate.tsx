@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Modal, Form, Input, Button, Switch, message, InputNumber } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Button,
+  Switch,
+  message,
+  InputNumber,
+  DatePicker,
+} from "antd";
 import { IItem } from "../../../../../Types/Types";
 import { Item } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -32,6 +41,7 @@ import { resetInputs } from "../Functions/ResetInputs";
 import { hideItem } from "../../../Functions/itemFuncs";
 import dayjs from "dayjs";
 import StockPlaceSelect from "../../../../../components/StockPlaceSelect";
+import moment from "moment";
 
 const ItemFuncs = new Item();
 
@@ -168,13 +178,6 @@ export const TableItemUpdate = ({}) => {
   }
 
   useEffect(() => {
-    console.log(singleItem);
-    // console.log(singleItem.order_number);
-    // console.log(singleItem.importers);
-    // console.log(singleItem.providers);
-  }, [singleItem]);
-
-  useEffect(() => {
     if (open && item !== null) setSingleItem({ ...item });
   }, [open]);
 
@@ -197,17 +200,22 @@ export const TableItemUpdate = ({}) => {
           Скрыть запись
         </Button>
         <Form className="table-form" layout="vertical">
-          <DatePickerUpdate
-            className="required-form"
-            label="Дата заявки"
-            value={timeConvert(singleItem?.request_date?.toString())}
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                request_date: new Date(e.target.value),
-              });
-            }}
-          />
+          <Form.Item label="Дата заявки">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  request_date: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.request_date === null
+                  ? null
+                  : moment(singleItem.request_date)
+              }
+            />
+          </Form.Item>
           <Form.Item className="required-form" label="№ заказа">
             <>
               {singleItem.order_number.map((order, index) => {
@@ -391,8 +399,6 @@ export const TableItemUpdate = ({}) => {
           />
           <TechStoreSelect
             onChange={(value: string) => {
-              console.log(singleItem.store_name);
-              console.log(singleItem.tech_store);
               setSingleItem({ ...singleItem, tech_store: value });
             }}
             value={singleItem?.store_name}
@@ -438,43 +444,64 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.line}
           />
-          <DatePickerUpdate
-            label="Дата готовности"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                ready_date: e.target.value,
-              });
-            }}
-            value={timeConvert(singleItem?.ready_date)}
-          />
-          <DatePickerUpdate
-            label="Дата загрузки"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                load_date: e.target.value,
-              });
-            }}
-            value={timeConvert(singleItem?.load_date)}
-          />
-          <DatePickerUpdate
-            label="ETD"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({ ...singleItem, etd: e.target.value });
-            }}
-            value={timeConvert(singleItem?.etd)}
-          />
-          <DatePickerUpdate
-            label="Релиз"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                release: e.target.value,
-              });
-            }}
-            value={timeConvert(singleItem?.release)}
-          />
+          <Form.Item label="Дата готовности">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  ready_date: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.ready_date === null
+                  ? null
+                  : moment(singleItem.ready_date)
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Дата загрузки">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  load_date: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.load_date === null
+                  ? null
+                  : moment(singleItem.load_date)
+              }
+            />
+          </Form.Item>
+          <Form.Item label="ETD">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  etd: date?.toISOString(),
+                });
+              }}
+              value={singleItem.etd === null ? null : moment(singleItem.etd)}
+            />
+          </Form.Item>
+          <Form.Item label="Релиз">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  release: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.release === null ? null : moment(singleItem.release)
+              }
+            />
+          </Form.Item>
           <Form.Item label="BL/СМГС/CMR">
             <Switch
               checked={singleItem?.bl_smgs_cmr}
@@ -546,26 +573,38 @@ export const TableItemUpdate = ({}) => {
               Добавить поле
             </Button>
           </Form.Item>
-          <DatePickerUpdate
-            label="Наличие ОБ"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                availability_of_ob: e.target.value,
-              });
-            }}
-            value={timeConvert(singleItem?.availability_of_ob)}
-          />
-          <DatePickerUpdate
-            label="Ответ ОБ"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                answer_of_ob: e.target.value,
-              });
-            }}
-            value={timeConvert(singleItem?.answer_of_ob)}
-          />
+          <Form.Item label="Наличие ОБ">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  availability_of_ob: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.availability_of_ob === null
+                  ? null
+                  : moment(singleItem.availability_of_ob)
+              }
+            />
+          </Form.Item>
+          <Form.Item label="Ответ ОБ">
+            <DatePicker
+              format="DD/MM/YYYY"
+              onChange={(date, dateString) => {
+                setSingleItem({
+                  ...singleItem,
+                  answer_of_ob: date?.toISOString(),
+                });
+              }}
+              value={
+                singleItem.answer_of_ob === null
+                  ? null
+                  : moment(singleItem.answer_of_ob)
+              }
+            />
+          </Form.Item>
           <MyInput
             label="Экспедитор"
             onChange={(e: { target: HTMLInputElement }) => {

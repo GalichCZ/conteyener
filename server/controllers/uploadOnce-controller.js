@@ -14,7 +14,6 @@ class UploadOnceController {
     try {
       const file = await FileService.createFile(req.file.path);
       file[0].map(async (item) => {
-        // console.log(item);
         if (!item["Дата выгрузки"]) {
           const container = await ContainerService.getContainerOnce(
             item["Номер контейнера"],

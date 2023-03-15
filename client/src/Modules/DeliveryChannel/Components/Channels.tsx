@@ -12,7 +12,6 @@ export const Channels: React.FC<IChannels> = ({ loading }) => {
 
   const getChannelHandler = async () => {
     const response = await getChannels();
-    console.log(response);
     if (response) setChannels(response);
   };
 

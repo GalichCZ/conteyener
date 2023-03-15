@@ -34,11 +34,11 @@ export const TableItemCreate: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [filled, setFilled] = useState(false);
   const [item, setItem] = useState<INewItem>({
-    agent: "asd",
-    conditions: "asd",
-    container_type: "asd",
-    delivery_method: "asd",
-    importers: ["asd"],
+    agent: "",
+    conditions: "",
+    container_type: "",
+    delivery_method: "",
+    importers: [],
     is_docs: {
       PI: false,
       CI: false,
@@ -50,13 +50,13 @@ export const TableItemCreate: React.FC = () => {
       ED: false,
       bill: false,
     },
-    order_number: ["zsxasdfd"],
-    place_of_dispatch: "asd",
-    providers: ["asd"],
-    request_date: "09/03/2023",
-    simple_product_name: "asd",
-    store_name: "qwe",
-    tech_store: "64105922c29ba8b0a05eb61b",
+    order_number: [],
+    place_of_dispatch: "",
+    providers: [],
+    request_date: "",
+    simple_product_name: "",
+    store_name: "",
+    tech_store: "",
   });
 
   const showModal = () => {
@@ -102,7 +102,6 @@ export const TableItemCreate: React.FC = () => {
   }, [item.tech_store]);
 
   useEffect(() => {
-    console.log(item);
     checkFilledPoles(item, setFilled);
   }, [item]);
 

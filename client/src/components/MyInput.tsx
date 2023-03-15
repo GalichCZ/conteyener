@@ -21,7 +21,6 @@ export const MyInput: React.FC<MyInputInterface> = ({
   return (
     <Form.Item name={name} style={style} className={className} label={label}>
       <>
-        {/* <p style={{ marginBottom: "0px" }}>{value ? value : "Не внесено"}</p> */}
         <Input onChange={onChange} value={value} placeholder={label} />
       </>
     </Form.Item>

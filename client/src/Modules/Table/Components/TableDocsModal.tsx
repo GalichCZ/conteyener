@@ -38,10 +38,6 @@ export const TableDocsModal: React.FC = ({}) => {
     if (docs) setIsDocs(docs);
   }, [docs]);
 
-  useEffect(() => {
-    console.log(isDocs);
-  }, [isDocs]);
-
   const handleOk = async () => {
     setConfirmLoading(true);
     reDraw.reDrawHandler(true);

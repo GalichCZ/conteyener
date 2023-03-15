@@ -145,7 +145,6 @@ class ItemService {
 
   async hideItem(req) {
     try {
-      // console.log("hide call", req.body);
       const _id = req.body._id;
       return await ItemSchema.updateOne({ _id }, { hidden: req.body.hidden });
     } catch (error) {
@@ -234,8 +233,6 @@ class ItemService {
       else if (item.delivery_channel.length > 0)
         delivery_channel = item.delivery_channel;
       else delivery_channel = "";
-
-      console.log(_id, "item id");
 
       const formulaRes = await FormulaService.dateFormula(
         etd,

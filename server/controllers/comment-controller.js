@@ -2,7 +2,8 @@ const CommentService = require("../service/comment-service");
 
 class CommentController {
   async createComment(req, res) {
-    const comment = await CommentService.createComment(req);
+    const creator = req.userId;
+    const comment = await CommentService.createComment(req, creator);
 
     if (comment.success) res.status(200).json(comment.comment);
     else res.json(comment);
@@ -11,8 +12,8 @@ class CommentController {
   async getComments(req, res) {
     const comments = await CommentService.getComments(req);
 
-    if (comments.success) res.status(200).json(comments.comment);
-    else res.json(comments);
+    if (comments.success) return res.status(200).json(comments.comments);
+    else return res.json(comments);
   }
 
   async updateCommetn(req, res) {

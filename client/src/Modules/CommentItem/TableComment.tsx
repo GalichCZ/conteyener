@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, Button } from "antd";
 import { Item } from "../Table/Functions/itemFuncs";
-import { Comment } from "../../Types/Types";
+import { IUpdateComment, IComment } from "../../Types/Types";
 import ReDrawContext from "../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import {
   setOpenComment,
   setCommentId,
 } from "../../store/slices/tableCommentSlice";
+import { createComment, getComment, updateComment } from "./CommentApi";
+import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
 
@@ -24,19 +26,22 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.tableComment.open);
   const _id = useAppSelector((state) => state.tableComment._id);
-  const value = useAppSelector((state) => state.tableComment.value);
 
-  const [data, setData] = useState<Comment>({ comment: "", _id });
+  const [newComment, setNewComment] = useState<IComment>({
+    comment_date: "",
+    comment_item: "",
+    comment_text: "",
+  });
+  const [comments, setComments] = useState<IComment[]>();
+  const [upComment, setUpComment] = useState<IUpdateComment>({
+    comment_text: "",
+    _id: "",
+  });
   const [err, setErr] = useState<string | null>();
 
   const handleOk = async () => {
-    const response = await ItemFuncs.updateComment(data);
-    if (response.error) setErr(response.error);
-    if (response === 200) {
-      reDraw.reDrawHandler(true);
-      dispatch(setOpenComment());
-      dispatch(setCommentId(""));
-    }
+    dispatch(setOpenComment());
+    dispatch(setCommentId(""));
   };
 
   const handleCancel = () => {
@@ -44,9 +49,27 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
     dispatch(setCommentId(""));
   };
 
+  const getComments = async () => {
+    const result = await getComment(_id);
+    if (result) setComments(result);
+  };
+
+  const createCommentHandler = async () => {
+    reDraw.reDrawHandler(true);
+    const result = await createComment(newComment);
+    if (result) reDraw.reDrawHandler(false);
+  };
+
   useEffect(() => {
-    if (open) setData({ ...data, _id: _id, comment: value });
-  }, [open]);
+    if (open) {
+      getComments();
+      setNewComment({
+        ...newComment,
+        comment_item: _id,
+        comment_date: dayjs(new Date()).toISOString(),
+      });
+    }
+  }, [open, reDraw.reDraw]);
 
   return (
     <Modal
@@ -57,17 +80,58 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
       className="comment-modal"
       destroyOnClose
     >
+      <Form layout="vertical" className="comment-section">
+        {comments?.map((comment, key) => {
+          return <Comment key={key} value={comment} />;
+        })}
+      </Form>
       <Form layout="vertical">
-        <p>{value}</p>
-        <Form.Item label="Комментарий">
+        <Form.Item label="Добавить комментарий">
           <Input.TextArea
-            placeholder="Измените Комментарий"
+            value={newComment?.comment_text}
             onChange={(e) => {
-              setData({ ...data, comment: e.target.value });
+              setNewComment({ ...newComment, comment_text: e.target.value });
             }}
           />
         </Form.Item>
+        <Button onClick={createCommentHandler}>Отправить</Button>
       </Form>
     </Modal>
+  );
+};
+
+interface ICommentProps {
+  value: IComment;
+}
+export const Comment: React.FC<ICommentProps> = ({ value }) => {
+  const [upComment, setUpComment] = useState<IUpdateComment>({
+    comment_text: value.comment_text,
+    _id: value._id,
+  });
+
+  const updateCommentHandler = async () => {
+    const result = await updateComment(upComment);
+  };
+
+  return (
+    <Form.Item
+      label={`${value.creator_name?.first_name} ${value.creator_name?.last_name}`}
+    >
+      <div style={{ display: "flex" }}>
+        <div style={{ marginRight: "10px" }}>
+          <b>Дата:</b>
+          <p>{dayjs(value.comment_date).format("DD/MM/YYYY")}</p>
+        </div>
+        <Input.TextArea
+          style={{ margin: "0 10px" }}
+          value={upComment.comment_text}
+          placeholder="Измените Комментарий"
+          onChange={(e) => {
+            setUpComment({ _id: value._id, comment_text: e.target.value });
+          }}
+        />
+        <Button onClick={updateCommentHandler}>Редактировать</Button>
+      </div>
+    </Form.Item>
   );
 };

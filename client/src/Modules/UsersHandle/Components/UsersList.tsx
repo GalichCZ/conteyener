@@ -15,7 +15,6 @@ export const UsersList = () => {
   const loadMoreData = async () => {
     const _id = window.localStorage.getItem("_id");
     const response = await UsersHandler.getUsers(_id);
-    console.log(response);
     setData(response);
   };
 

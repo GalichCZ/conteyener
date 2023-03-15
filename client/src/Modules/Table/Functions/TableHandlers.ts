@@ -114,10 +114,8 @@ export const SearchHandler = async (
   });
   if (filtered.length === 0) {
     let items = await findItemsBySearch(searchReq);
-    console.log(items);
     return items;
   }
-  console.log(filtered.length);
   return filtered;
 };
 
@@ -149,7 +147,6 @@ export const TableSortHandler = (
       }
     });
   setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-  console.log(sortDirection, sortedArray);
   return sortedArray;
 };
 

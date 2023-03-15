@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { DatePicker, Modal } from "antd";
+import { DatePicker, Form, Modal } from "antd";
 import { FormulaDateUpdate } from "../../../Types/Types";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setOpenFormula } from "../../../store/slices/tableFormulaDateSlice";
 import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
-import dayjs from "dayjs";
+import moment from "moment";
 const ItemFuncs = new Item();
 
 export const TableFormulaDate = () => {
@@ -49,7 +49,6 @@ export const TableFormulaDate = () => {
 
   const updateFormulaDate = async () => {
     const response = await ItemFuncs.updateFormulaDates(data);
-    console.log(response);
     if (response === 200) {
       dispatch(setOpenFormula());
       reDraw.reDrawHandler(false);
@@ -108,14 +107,6 @@ export const TableFormulaDate = () => {
     }
   }, [open]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  function formatDate(date: string | undefined | Date) {
-    return dayjs(date).format("YYYY/MM/DD").replace(/\//g, "-");
-  }
-
   return (
     <Modal
       title="Изменение даты"
@@ -124,74 +115,104 @@ export const TableFormulaDate = () => {
       onCancel={handleCancel}
     >
       {dateType === 1 && (
-        <DatePickerUpdate
-          value={formatDate(data.eta)}
-          label="ETA"
-          onChange={(e) => {
-            setData({ ...data, eta: e.target.value, eta_update: true });
-          }}
-        />
+        <Form.Item label="ETA">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                eta: date?.toISOString(),
+              });
+            }}
+            value={data.eta === null ? null : moment(data.eta)}
+          />
+        </Form.Item>
       )}
       {dateType === 2 && (
-        <DatePickerUpdate
-          value={formatDate(data.date_do)}
-          label="Дата ДО"
-          onChange={(e) => {
-            setData({ ...data, date_do: e.target.value, date_do_update: true });
-          }}
-        />
+        <Form.Item label="Дата ДО">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                date_do: date?.toISOString(),
+              });
+            }}
+            value={data.date_do === null ? null : moment(data.date_do)}
+          />
+        </Form.Item>
       )}
       {dateType === 3 && (
-        <DatePickerUpdate
-          value={formatDate(data.declaration_issue_date)}
-          label="Дата выпуска декларации"
-          onChange={(e) => {
-            setData({
-              ...data,
-              declaration_issue_date: e.target.value,
-              declaration_issue_date_update: true,
-            });
-          }}
-        />
+        <Form.Item label="Дата выпуска декларации">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                declaration_issue_date: date?.toISOString(),
+              });
+            }}
+            value={
+              data.declaration_issue_date === null
+                ? null
+                : moment(data.declaration_issue_date)
+            }
+          />
+        </Form.Item>
       )}
       {dateType === 4 && (
-        <DatePickerUpdate
-          value={formatDate(data.train_depart_date)}
-          label="Дата отправки по ЖД"
-          onChange={(e) => {
-            setData({
-              ...data,
-              train_depart_date: e.target.value,
-              train_depart_date_update: true,
-            });
-          }}
-        />
+        <Form.Item label="Дата отправки по ЖД">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                train_depart_date: date?.toISOString(),
+              });
+            }}
+            value={
+              data.train_depart_date === null
+                ? null
+                : moment(data.train_depart_date)
+            }
+          />
+        </Form.Item>
       )}
       {dateType === 5 && (
-        <DatePickerUpdate
-          value={formatDate(data.train_arrive_date)}
-          label="Дата прибытия по ЖД"
-          onChange={(e) => {
-            setData({
-              ...data,
-              train_arrive_date: e.target.value,
-              train_arrive_date_update: true,
-            });
-          }}
-        />
+        <Form.Item label="Дата прибытия по ЖД">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                train_arrive_date: date?.toISOString(),
+              });
+            }}
+            value={
+              data.train_arrive_date === null
+                ? null
+                : moment(data.train_arrive_date)
+            }
+          />
+        </Form.Item>
       )}
       {dateType === 6 && (
-        <DatePickerUpdate
-          value={formatDate(data.store_arrive_date)}
-          label="Дата прибытия на склад"
-          onChange={(e) => {
-            setData({
-              ...data,
-              store_arrive_date: e.target.value,
-              store_arrive_date_update: true,
-            });
-          }}
-        />
+        <Form.Item label="Дата прибытия на склад">
+          <DatePicker
+            format="DD/MM/YYYY"
+            onChange={(date, dateString) => {
+              setData({
+                ...data,
+                store_arrive_date: date?.toISOString(),
+              });
+            }}
+            value={
+              data.store_arrive_date === null
+                ? null
+                : moment(data.store_arrive_date)
+            }
+          />
+        </Form.Item>
       )}
     </Modal>
   );

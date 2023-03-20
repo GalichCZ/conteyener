@@ -25,7 +25,7 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     line: "",
     ready_date: "",
     load_date: "",
-    etd: "",
+    etd: null,
     eta: "",
     release: "",
     bl_smgs_cmr: false,

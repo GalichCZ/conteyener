@@ -98,10 +98,11 @@ export const TableDeclStatus = () => {
       <Form layout="vertical">
         <Form.Item label="Дата">
           <DatePicker
+            format="DD/MM/YYYY"
             onChange={(date, dateString) => {
               setDeclarationData({
                 ...declarationData,
-                declaration_status_date: new Date(dateString),
+                declaration_status_date: date?.toISOString(),
               });
             }}
           />

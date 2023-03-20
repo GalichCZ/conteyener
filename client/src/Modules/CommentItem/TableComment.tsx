@@ -33,11 +33,6 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
     comment_text: "",
   });
   const [comments, setComments] = useState<IComment[]>();
-  const [upComment, setUpComment] = useState<IUpdateComment>({
-    comment_text: "",
-    _id: "",
-  });
-  const [err, setErr] = useState<string | null>();
 
   const handleOk = async () => {
     dispatch(setOpenComment());
@@ -57,7 +52,11 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
   const createCommentHandler = async () => {
     reDraw.reDrawHandler(true);
     const result = await createComment(newComment);
-    if (result) reDraw.reDrawHandler(false);
+    console.log(result);
+    if (result) {
+      reDraw.reDrawHandler(false);
+      setNewComment({ ...newComment, comment_text: "" });
+    }
   };
 
   useEffect(() => {
@@ -111,6 +110,7 @@ export const Comment: React.FC<ICommentProps> = ({ value }) => {
 
   const updateCommentHandler = async () => {
     const result = await updateComment(upComment);
+    console.log(result, " res");
   };
 
   return (

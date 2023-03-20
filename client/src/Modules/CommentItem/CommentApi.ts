@@ -3,6 +3,7 @@ import { IComment, IUpdateComment } from "../../Types/Types";
 const URL = import.meta.env.VITE_API_URL;
 
 export const createComment = async (comment: IComment) => {
+  console.log(comment);
   const response = await fetch(URL + "/comment", {
     method: "POST",
     body: JSON.stringify(comment),
@@ -33,6 +34,7 @@ export const getComment = async (comment_item: string) => {
 };
 
 export const updateComment = async (updateComment: IUpdateComment) => {
+  console.log(updateComment);
   const response = await fetch(URL + "/comment", {
     method: "PATCH",
     body: JSON.stringify(updateComment),

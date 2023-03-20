@@ -155,10 +155,6 @@ export const TableItemUpdate = ({}) => {
     dispatch(setOpenItemUpdate());
   };
 
-  function timeConvert(time: string | undefined) {
-    return dayjs(time).format("YYYY-MM-DD");
-  }
-
   async function deleteItem() {
     reDraw.reDrawHandler(true);
     const response = item && (await ItemFuncs.deleteItem(item._id));
@@ -180,6 +176,10 @@ export const TableItemUpdate = ({}) => {
   useEffect(() => {
     if (open && item !== null) setSingleItem({ ...item });
   }, [open]);
+
+  useEffect(() => {
+    console.log(singleItem);
+  }, [singleItem]);
 
   return (
     <>
@@ -273,8 +273,11 @@ export const TableItemUpdate = ({}) => {
           />
           <SelectChannel
             value={singleItem.delivery_channel}
-            onChange={(value: string) => {
-              setSingleItem({ ...singleItem, delivery_channel: value });
+            onChange={(value: any) => {
+              setSingleItem({
+                ...singleItem,
+                delivery_channel: value.target.value,
+              });
             }}
           />
           <MyInput

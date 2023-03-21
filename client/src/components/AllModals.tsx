@@ -7,6 +7,7 @@ import { TableFormulaDate } from "../Modules/Table/Components/TableFormulaDate";
 import { TableItemUpdate } from "../Modules/Table/Components/TableItemUpdate/Components/TableItemUpdate";
 import { TableStore } from "../Modules/Table/Components/TableStore";
 import { TableUploadModal } from "../Modules/Table/Components/TableUploadModal";
+import { TableDateCalc } from "../Modules/Table/Components/TableDateCalc";
 import { ModalTest } from "./ModalTest";
 
 export const AllModals = () => {
@@ -22,6 +23,7 @@ export const AllModals = () => {
       <TableDocsModal />
       <ContainerStockModal />
       <DeliveryMethodModal />
+      <TableDateCalc />
     </>
   );
 };

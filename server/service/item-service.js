@@ -211,15 +211,10 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req, container) {
+  async calculateDates(req) {
     try {
+      const _id = req.body.itemId;
       const item = await ItemSchema.findById(_id);
-
-      const stock_place =
-        req.body.stock_place &&
-        (await StockPlaceSchema.findById({
-          _id: req.body.stock_place,
-        }));
 
       let delivery_channel = "";
       let etd = null;
@@ -238,6 +233,37 @@ class ItemService {
         etd,
         delivery_channel
       );
+
+      await ItemSchema.updateOne(
+        {
+          _id,
+        },
+        {
+          etd,
+          eta: formulaRes.eta,
+          date_do: formulaRes.date_do,
+          declaration_issue_date: formulaRes.declaration_issue_date,
+          train_depart_date: formulaRes.train_depart_date,
+          train_arrive_date: formulaRes.train_arrive_date,
+          store_arrive_date: formulaRes.store_arrive_date,
+          delivery_channel,
+        }
+      );
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      return { error, success: false };
+    }
+  }
+
+  async updateItem(_id, req, container) {
+    try {
+      const stock_place =
+        req.body.stock_place &&
+        (await StockPlaceSchema.findById({
+          _id: req.body.stock_place,
+        }));
+
       await ItemSchema.updateOne(
         {
           _id,
@@ -252,31 +278,23 @@ class ItemService {
           delivery_method: req.body.delivery_method,
           conditions: req.body.conditions,
           agent: req.body.agent,
-          delivery_channel: req.body.delivery_channel,
           place_of_dispatch: req.body.place_of_dispatch,
           line: req.body.line,
           ready_date: req.body.ready_date,
           load_date: req.body.load_date,
-          etd,
-          eta: formulaRes.eta,
           release: req.body.release,
           bl_smgs_cmr: req.body.bl_smgs_cmr,
           td: req.body.td,
-          date_do: formulaRes.date_do,
           port: req.body.port,
           is_ds: req.body.is_ds,
           is_docs: req.body.is_docs,
           declaration_number: req.body.declaration_number,
-          declaration_issue_date: formulaRes.declaration_issue_date,
           availability_of_ob: req.body.availability_of_ob,
           answer_of_ob: req.body.answer_of_ob,
           expeditor: req.body.expeditor,
           destination_station: req.body.destination_station,
           km_to_dist: req.body.km_to_dist,
-          train_depart_date: formulaRes.train_depart_date,
-          train_arrive_date: formulaRes.train_arrive_date,
           pickup: req.body.pickup,
-          store_arrive_date: formulaRes.store_arrive_date,
           comment: req.body.comment,
           stock_place: stock_place && stock_place.name,
           fraht: req.body.fraht,

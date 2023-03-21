@@ -56,6 +56,7 @@ app.patch("/api/item/date", ItemController.updateFormulaDates);
 app.post("/api/item/search", ItemController.findItemsBySearch);
 app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
 app.patch("/api/item/hide", ItemController.hideItem);
+app.patch("/api/item/calculate", ItemController.calculateDates);
 
 app.post("/api/declaration/get", DeclarationController.declarationStatusGet);
 app.post("/api/declaration", DeclarationController.declarationStatusCreate);

@@ -15,7 +15,6 @@ import { CloseOutlined } from "@ant-design/icons";
 import ReDrawContext from "../../../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { setOpenItemUpdate } from "../../../../../store/slices/tableItemUpdateSlice";
-import { DatePickerUpdate } from "../../../../../components/DatePickerUpdate";
 import { MyInput, TechStoreSelect } from "../../../../../components";
 import { SelectChannel } from "../../../../../components/SelectChannel";
 import {
@@ -76,11 +75,11 @@ export const TableItemUpdate = ({}) => {
     place_of_dispatch: "",
     arrive_place: "",
     line: "",
-    ready_date: "",
-    load_date: "",
-    etd: "",
+    ready_date: null,
+    load_date: null,
+    etd: null,
     eta: "",
-    release: "",
+    release: null,
     bl_smgs_cmr: false,
     td: false,
     date_do: "",
@@ -99,8 +98,8 @@ export const TableItemUpdate = ({}) => {
     },
     declaration_number: [],
     declaration_issue_date: "",
-    availability_of_ob: "",
-    answer_of_ob: "",
+    availability_of_ob: null,
+    answer_of_ob: null,
     expeditor: "",
     destination_station: "",
     km_to_dist: 0,

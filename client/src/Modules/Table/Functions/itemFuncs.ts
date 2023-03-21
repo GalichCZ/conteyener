@@ -1,5 +1,6 @@
 import {
   FormulaDateUpdate,
+  ICalcDate,
   IItem,
   INewItem,
   Store,
@@ -162,5 +163,25 @@ export const findItemsBySearch = async (query_string: string) => {
       return error;
     });
 
+  return response;
+};
+
+export const calculateDates = async (data: ICalcDate) => {
+  const response = await fetch(URL + "/item/calculate", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
   return response;
 };

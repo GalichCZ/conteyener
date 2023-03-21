@@ -36,6 +36,13 @@ class ItemController {
     });
   }
 
+  async calculateDates(req, res) {
+    const result = await ItemService.calculateDates(req);
+
+    if (result.success) res.json({ message: "success" });
+    else res.status(500).json(result.error);
+  }
+
   async getHiddenItems(req, res) {
     const items = await ItemService.getHiddenItems();
 

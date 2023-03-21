@@ -35,6 +35,10 @@ import {
 } from "../../../store/slices/tableDocsSlice";
 import { findItemsBySearch } from "./itemFuncs";
 import dayjs from "dayjs";
+import {
+  setCalcData,
+  setOpenDateCalc,
+} from "../../../store/slices/tableDateCalcModal";
 
 export const declStatusHandler = (
   dispatch: any,
@@ -52,6 +56,16 @@ export const tableStoreHandler = (
   dispatch(setOpenTableStore());
   dispatch(setItemId(itemId));
   dispatch(setStoreData(storeData));
+};
+
+export const tableCalcDateHandler = (
+  dispatch: any,
+  itemId: string,
+  delivery_channel: string,
+  etd: string | null | undefined
+) => {
+  dispatch(setOpenDateCalc());
+  dispatch(setCalcData({ etd, delivery_channel, itemId }));
 };
 
 export const tableCommentHandler = (

@@ -17,6 +17,12 @@ interface ITableUi {
     delivery_channel: string,
     _defValue: string
   ) => void;
+  tableCalcDateHandler?: (
+    dispatch: any,
+    itemId: string,
+    delivery_channel: string,
+    request_date: string | null | undefined
+  ) => void;
   tableDocsHandler?: (dispatch: any, _id: string, docs: IsDocsType) => void;
   declStatusHandler?: (dispatch: any, declaration_number: string) => void;
   tableCommentHandler?: (dispatch: any, _id: string, value: string) => void;
@@ -36,6 +42,7 @@ const TableUI: React.FC<ITableUi> = ({
   tableDocsHandler,
   declStatusHandler,
   tableCommentHandler,
+  tableCalcDateHandler,
   checkTimeStyle,
   hideItem,
   hidden,
@@ -118,7 +125,21 @@ const TableUI: React.FC<ITableUi> = ({
             <td> {item.line} </td>
             <td> {item.ready_date && timeConvert(item.ready_date)} </td>
             <td> {item.load_date && timeConvert(item.load_date)} </td>
-            <td> {item.etd && timeConvert(item.etd)} </td>
+            <td
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                tableCalcDateHandler &&
+                  tableCalcDateHandler(
+                    dispatch,
+                    item._id,
+                    item.delivery_channel,
+                    item.etd
+                  );
+              }}
+            >
+              {" "}
+              {item.etd && timeConvert(item.etd)}{" "}
+            </td>
             <td
               className={checkTimeStyle(item.eta, item.eta_update)}
               onClick={() => {

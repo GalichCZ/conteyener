@@ -73,6 +73,7 @@ export const Table: React.FunctionComponent = () => {
               declStatusHandler={TableHandlers.declStatusHandler}
               tableCommentHandler={TableHandlers.tableCommentHandler}
               checkTimeStyle={TableHandlers.checkTimeStyle}
+              tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
             />
           </tbody>
         </table>

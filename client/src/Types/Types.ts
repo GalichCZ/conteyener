@@ -223,3 +223,9 @@ export interface IUpdateComment {
   _id?: string;
   comment_text?: string;
 }
+
+export interface ICalcDate {
+  etd: string | null | undefined;
+  delivery_channel: string;
+  itemId: string;
+}

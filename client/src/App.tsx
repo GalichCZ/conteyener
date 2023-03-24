@@ -1,4 +1,4 @@
-import React, { useContext, lazy } from "react";
+import { useContext, lazy } from "react";
 import AuthContext from "./store/auth-context";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header } from "./UI/index";

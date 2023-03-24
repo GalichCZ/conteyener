@@ -1,19 +1,61 @@
-import { ContainerStockModal } from "../Modules/ContainerStock/Components/ContainerStockModal";
-import DeliveryMethodModal from "../Modules/DeliveryMethod/Components/DeliveryMethodModal";
-import { TableComment } from "../Modules/CommentItem/TableComment";
-import { TableDeclStatus } from "../Modules/Table/Components/TableDeclStatus";
-import { TableDocsModal } from "../Modules/Table/Components/TableDocsModal";
-import { TableFormulaDate } from "../Modules/Table/Components/TableFormulaDate";
-import { TableItemUpdate } from "../Modules/Table/Components/TableItemUpdate/Components/TableItemUpdate";
-import { TableStore } from "../Modules/Table/Components/TableStore";
-import { TableUploadModal } from "../Modules/Table/Components/TableUploadModal";
-import { TableDateCalc } from "../Modules/Table/Components/TableDateCalc";
-import { ModalTest } from "./ModalTest";
+import { lazy } from "react";
+
+const TableDateCalc = lazy(() =>
+  import("../Modules/Table/Components/TableDateCalc").then(
+    ({ TableDateCalc }) => ({ default: TableDateCalc })
+  )
+);
+const TableDistanceModal = lazy(() =>
+  import("../Modules/Table/Components/TableDistanceModal").then(
+    ({ TableDistanceModal }) => ({ default: TableDistanceModal })
+  )
+);
+const TableUploadModal = lazy(() =>
+  import("../Modules/Table/Components/TableUploadModal").then(
+    ({ TableUploadModal }) => ({ default: TableUploadModal })
+  )
+);
+const TableItemUpdate = lazy(() =>
+  import(
+    "../Modules/Table/Components/TableItemUpdate/Components/TableItemUpdate"
+  ).then(({ TableItemUpdate }) => ({ default: TableItemUpdate }))
+);
+const TableFormulaDate = lazy(() =>
+  import("../Modules/Table/Components/TableFormulaDate").then(
+    ({ TableFormulaDate }) => ({ default: TableFormulaDate })
+  )
+);
+const TableDeclStatus = lazy(() =>
+  import("../Modules/Table/Components/TableDeclStatus").then(
+    ({ TableDeclStatus }) => ({
+      default: TableDeclStatus,
+    })
+  )
+);
+const TableStore = lazy(() =>
+  import("../Modules/Table/Components/TableStore").then(({ TableStore }) => ({
+    default: TableStore,
+  }))
+);
+const TableComment = lazy(() =>
+  import("../Modules/CommentItem/TableComment").then(({ TableComment }) => ({
+    default: TableComment,
+  }))
+);
+const TableDocsModal = lazy(() =>
+  import("../Modules/Table/Components/TableDocsModal").then(
+    ({ TableDocsModal }) => ({ default: TableDocsModal })
+  )
+);
+const ContainerStockModal = lazy(() =>
+  import("../Modules/ContainerStock/Components/ContainerStockModal").then(
+    ({ ContainerStockModal }) => ({ default: ContainerStockModal })
+  )
+);
 
 export const AllModals = () => {
   return (
     <>
-      <ModalTest />
       <TableDeclStatus />
       <TableStore />
       <TableComment />
@@ -22,8 +64,8 @@ export const AllModals = () => {
       <TableItemUpdate />
       <TableDocsModal />
       <ContainerStockModal />
-      <DeliveryMethodModal />
       <TableDateCalc />
+      <TableDistanceModal />
     </>
   );
 };

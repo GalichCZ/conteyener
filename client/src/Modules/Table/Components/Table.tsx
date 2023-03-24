@@ -6,6 +6,8 @@ import { useAppSelector } from "../../../hooks/hooks";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
+import { TableColNamesFixed } from "../UI/TableColNamesFixed";
+import { TableUiFixed } from "../UI/TableUiFixed";
 
 const ItemFuncs = new Item();
 
@@ -53,19 +55,29 @@ export const Table: React.FunctionComponent = () => {
   return (
     <>
       <div className="table-page_table">
-        <table>
-          <TableColNames
+        <table className="table-page_fixed-table">
+          <TableColNamesFixed
             widthsArray={widths}
             data={copyItems}
             setItems={setItems}
           />
-
-          <tbody>
+          <TableUiFixed
+            items={items}
+            timeConvert={TableHandlers.timeConvert}
+            tableUpdateHandler={TableHandlers.tableUpdateHandler}
+          />
+        </table>
+        <div className="table-page_unfixed-table">
+          <table>
+            <TableColNames
+              widthsArray={widths}
+              data={copyItems}
+              setItems={setItems}
+            />
             <TableUI
               items={items}
               timeConvert={TableHandlers.timeConvert}
               docsCount={TableHandlers.docsCount}
-              tableUpdateHandler={TableHandlers.tableUpdateHandler}
               uploadHandler={TableHandlers.uploadHandler}
               tableStoreHandler={TableHandlers.tableStoreHandler}
               dateChangeHandler={TableHandlers.dateChangeHandler}
@@ -74,9 +86,10 @@ export const Table: React.FunctionComponent = () => {
               tableCommentHandler={TableHandlers.tableCommentHandler}
               checkTimeStyle={TableHandlers.checkTimeStyle}
               tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
+              tableDistanceHandler={TableHandlers.distanceHandler}
             />
-          </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </>
   );

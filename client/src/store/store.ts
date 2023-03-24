@@ -10,6 +10,7 @@ import tableDocsReducer from "./slices/tableDocsSlice";
 import searchReducer from "./slices/searchSlice";
 import stockModalReducer from "./slices/stockModalSlice";
 import tableDateCalcReducer from "./slices/tableDateCalcModal";
+import tableDistanceReducer from "./slices/tableDistanceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     search: searchReducer,
     stockModal: stockModalReducer,
     tableDateCalc: tableDateCalcReducer,
+    tableDistance: tableDistanceReducer,
   },
 });
 

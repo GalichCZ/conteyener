@@ -10,13 +10,12 @@ import {
   DatePicker,
 } from "antd";
 import { IItem } from "../../../../../Types/Types";
-import { Item } from "../../../Functions/itemFuncs";
+import { Item, updateItem } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import ReDrawContext from "../../../../../store/redraw-context";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { setOpenItemUpdate } from "../../../../../store/slices/tableItemUpdateSlice";
 import { MyInput, TechStoreSelect } from "../../../../../components";
-import { SelectChannel } from "../../../../../components/SelectChannel";
 import {
   handleProviderChange,
   handleAddProvider,
@@ -38,7 +37,6 @@ import {
 import { callError } from "../../../Functions/ErrorHandlers";
 import { resetInputs } from "../Functions/ResetInputs";
 import { hideItem } from "../../../Functions/itemFuncs";
-import dayjs from "dayjs";
 import StockPlaceSelect from "../../../../../components/StockPlaceSelect";
 import moment from "moment";
 
@@ -121,7 +119,7 @@ export const TableItemUpdate = ({}) => {
     reDraw.reDrawHandler(true);
     if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
       setConfirmLoading(true);
-      const response = await ItemFuncs.updateItem(singleItem);
+      const response = await updateItem(singleItem);
       if (response.error) {
         setConfirmLoading(false);
         const duplicates = response.error.map(
@@ -270,7 +268,7 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.container?.container_number}
           />
-          <SelectChannel
+          {/* <SelectChannel
             value={singleItem.delivery_channel}
             onChange={(value: any) => {
               setSingleItem({
@@ -278,7 +276,7 @@ export const TableItemUpdate = ({}) => {
                 delivery_channel: value.target.value,
               });
             }}
-          />
+          /> */}
           <MyInput
             label="Товар"
             className="required-form"
@@ -478,7 +476,7 @@ export const TableItemUpdate = ({}) => {
               }
             />
           </Form.Item>
-          <Form.Item label="ETD">
+          {/* <Form.Item label="ETD">
             <DatePicker
               format="DD/MM/YYYY"
               onChange={(date, dateString) => {
@@ -489,7 +487,7 @@ export const TableItemUpdate = ({}) => {
               }}
               value={singleItem.etd === null ? null : moment(singleItem.etd)}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label="Релиз">
             <DatePicker
               format="DD/MM/YYYY"
@@ -624,15 +622,6 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.destination_station}
           />
-          <Form.Item label="Км. до станции назначения">
-            <InputNumber
-              name="km"
-              value={singleItem?.km_to_dist}
-              onChange={(value) =>
-                setSingleItem({ ...singleItem, km_to_dist: value })
-              }
-            />
-          </Form.Item>
           <StockPlaceSelect
             opened={open}
             value={singleItem?.stock_place}

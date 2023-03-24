@@ -43,16 +43,21 @@ class ContainerService {
 
   async updateContainer(_id, req) {
     try {
-      await ContainerSchema.updateOne(
-        {
-          _id,
-        },
-        {
-          container_number: req.body.container.container_number,
-          container_type: req.body.container.container_type,
-        }
-      );
-      return await ContainerSchema.findById(_id);
+      if (
+        req.body.container.container_number ||
+        req.body.container.container_type
+      ) {
+        await ContainerSchema.updateOne(
+          {
+            _id,
+          },
+          {
+            container_number: req.body.container.container_number,
+            container_type: req.body.container.container_type,
+          }
+        );
+        return await ContainerSchema.findById(_id);
+      }
     } catch (error) {
       console.log(error);
     }

@@ -49,26 +49,6 @@ export class Item {
     return response;
   }
 
-  async updateItem(itemValues: IItem) {
-    const response = await fetch(URL + "/item", {
-      method: "PATCH",
-      body: JSON.stringify(itemValues),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        return error;
-      });
-    return response;
-  }
-
   async updateFormulaDates(data: FormulaDateUpdate) {
     const response = await fetch(URL + "/item/date", {
       method: "PATCH",
@@ -124,6 +104,28 @@ export class Item {
     return response;
   }
 }
+
+export const updateItem = async (
+  itemValues: IItem | { km_to_dist: number | null; _id: string }
+) => {
+  const response = await fetch(URL + "/item", {
+    method: "PATCH",
+    body: JSON.stringify(itemValues),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
+  return response;
+};
 
 export const hideItem = async (_id: string, hidden: boolean) => {
   const response = await fetch(URL + "/item/hide", {

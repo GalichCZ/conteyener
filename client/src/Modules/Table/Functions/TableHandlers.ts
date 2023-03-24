@@ -39,6 +39,21 @@ import {
   setCalcData,
   setOpenDateCalc,
 } from "../../../store/slices/tableDateCalcModal";
+import {
+  setDistance,
+  setDistanceId,
+  setOpenDistance,
+} from "../../../store/slices/tableDistanceSlice";
+
+export const distanceHandler = (
+  dispatch: any,
+  km_to_dist: number | null,
+  _id: string
+) => {
+  dispatch(setOpenDistance());
+  dispatch(setDistance(km_to_dist));
+  dispatch(setDistanceId(_id));
+};
 
 export const declStatusHandler = (
   dispatch: any,

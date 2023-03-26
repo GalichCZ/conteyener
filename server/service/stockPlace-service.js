@@ -30,6 +30,17 @@ class StockPlaceService {
     }
   }
 
+  async getOneStockPlaceByName(name) {
+    try {
+      const stockPlace = await StockPlaceSchema.findOne({ name }).exec();
+
+      return stockPlace;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
   async getStockPlaces() {
     try {
       const stockPlaces = await StockPlaceSchema.find();

@@ -18,6 +18,20 @@ class StockPlaceController {
     res.json(result);
   }
 
+  async getOneStockPlace(req, res) {
+    const result = await StockPlaceService.getOneStockPlace(req.params._id);
+
+    res.json(result);
+  }
+
+  async getOneStockPlaceByName(req, res) {
+    const result = await StockPlaceService.getOneStockPlaceByName(
+      req.params.name
+    );
+
+    res.json(result);
+  }
+
   async getStockPlaces(req, res) {
     const result = await StockPlaceService.getStockPlaces();
 

@@ -42,6 +42,17 @@ export const getOneStockPlace = async (_id: string) => {
   return response;
 };
 
+export const getOneStockPlaceByName = async (name: string) => {
+  const response = await fetch(URL + `/stock/${name}/name`)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
+
+  return response;
+};
+
 export const updateStockPlace = async (stockUpdate: IStockData) => {
   const response = await fetch(URL + "/stock", {
     method: "PATCH",

@@ -44,6 +44,10 @@ import {
   setDistanceId,
   setOpenDistance,
 } from "../../../store/slices/tableDistanceSlice";
+import {
+  setOpenTableStock,
+  setTableStockInfo,
+} from "../../../store/slices/tableStockSlice";
 
 export const distanceHandler = (
   dispatch: any,
@@ -111,6 +115,11 @@ export const tableDocsHandler = (
   dispatch(setOpenDocs());
   dispatch(setDocsId(_id));
   dispatch(setDocs(docs));
+};
+
+export const tableStockInfoHandler = (dispatch: any, stockId: string) => {
+  dispatch(setOpenTableStock());
+  dispatch(setTableStockInfo(stockId));
 };
 
 export const dateChangeHandler = (

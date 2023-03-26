@@ -46,7 +46,7 @@
 
 .table-page_unfixed-table {
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: overlay;
   position: relative;
   padding-bottom: 0 !important;
 }

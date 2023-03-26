@@ -11,6 +11,8 @@ import searchReducer from "./slices/searchSlice";
 import stockModalReducer from "./slices/stockModalSlice";
 import tableDateCalcReducer from "./slices/tableDateCalcModal";
 import tableDistanceReducer from "./slices/tableDistanceSlice";
+import updateChannelReducer from "./slices/updateChannelSlice";
+import tableStockReducer from "./slices/tableStockSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +28,8 @@ export const store = configureStore({
     stockModal: stockModalReducer,
     tableDateCalc: tableDateCalcReducer,
     tableDistance: tableDistanceReducer,
+    updateChannel: updateChannelReducer,
+    tableStock: tableStockReducer,
   },
 });
 

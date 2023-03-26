@@ -15,6 +15,7 @@ export const DeliveryChannel: React.FC = () => {
     store_arrive_date: 0,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const createChannelHandler = async () => {
     setLoading(true);

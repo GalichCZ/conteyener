@@ -1,4 +1,4 @@
-import { IComment, IUpdateComment } from "../../Types/Types";
+import { IComment, IUpdateComment } from "../../../Types/Types";
 
 const URL = import.meta.env.VITE_API_URL;
 

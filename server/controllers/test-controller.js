@@ -2,14 +2,7 @@ const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
 const FileService = require("../service/file-service");
 const FormulaService = require("../service/formula-service");
-const StoreService = require("../service/store-service");
 class TestController {
-  async testStoreCreate(req, res) {
-    const response = await StoreService.createStore(req.body.techStore);
-
-    res.json(response);
-  }
-
   async testDeclaration(req, res) {
     const response = await DeclarationService.createDeclarationStatus(req);
 

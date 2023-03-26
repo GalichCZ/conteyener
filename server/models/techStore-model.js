@@ -4,6 +4,9 @@ const TechStoreSchema = new mongoose.Schema(
   {
     address: String,
     name: String,
+    receiver: String,
+    contact: String,
+    note: String,
   },
   { timestamps: true }
 );

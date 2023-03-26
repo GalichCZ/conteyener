@@ -5,7 +5,6 @@ const dotenv = require("dotenv");
 const UserController = require("./controllers/user-controller");
 const ItemController = require("./controllers/item-controller");
 const TestController = require("./controllers/test-controller");
-const StoreController = require("./controllers/store-controller");
 const IsDocsController = require("./controllers/isDocs-controller");
 const ProductController = require("./controllers/product-controller");
 const CommentController = require("./controllers/comment-controller");
@@ -32,8 +31,9 @@ app.get("/api/", CheckAuth.checkToken, (req, res) => {
   res.send("HELLO");
 });
 
-app.post("/api/channel", DeliveryChannelController.createDeliveryChannel);
 app.get("/api/channel", DeliveryChannelController.getChannels);
+app.patch("/api/channel", DeliveryChannelController.updateChannel);
+app.post("/api/channel", DeliveryChannelController.createDeliveryChannel);
 
 app.post("/api/auth/login", UserController.login);
 app.patch("/api/role", UserController.roleChange);
@@ -49,7 +49,6 @@ app.get("/api/product/:item_id", ProductController.getProduct);
 app.get("/api/item", ItemController.getItems);
 app.patch("/api/item", ItemController.updateItem);
 app.delete("/api/item/:_id", ItemController.deleteItem);
-app.patch("/api/item/store", StoreController.updateStore);
 app.get("/api/item/hidden", ItemController.getHiddenItems);
 app.patch("/api/item/comment", ItemController.updateComment);
 app.patch("/api/item/date", ItemController.updateFormulaDates);
@@ -74,7 +73,6 @@ app.get("/api/store/tech/:_id", TechStoreController.getOneTechStore);
 app.delete("/api/store/tech/:_id", TechStoreController.deleteTechStore);
 
 app.post("/api/test/formula", TestController.testFormula);
-app.post("/api/test/store", TestController.testStoreCreate);
 app.patch("/api/test/product", TestController.testUpdateProduct);
 app.post("/api/test/declaration", TestController.testDeclaration);
 app.post("/api/test/product", FileWare, TestController.testProduct);

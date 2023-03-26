@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form, Input, Button } from "antd";
-import { Item } from "../Table/Functions/itemFuncs";
-import { IUpdateComment, IComment } from "../../Types/Types";
-import ReDrawContext from "../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { Item } from "../Functions/itemFuncs";
+import { IUpdateComment, IComment } from "../../../Types/Types";
+import ReDrawContext from "../../../store/redraw-context";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import {
   setOpenComment,
   setCommentId,
-} from "../../store/slices/tableCommentSlice";
-import { createComment, getComment, updateComment } from "./CommentApi";
+} from "../../../store/slices/tableCommentSlice";
+import {
+  createComment,
+  getComment,
+  updateComment,
+} from "../Functions/CommentApi";
 import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
@@ -93,7 +97,12 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
             }}
           />
         </Form.Item>
-        <Button onClick={createCommentHandler}>Отправить</Button>
+        <Button
+          disabled={newComment.comment_text === ""}
+          onClick={createCommentHandler}
+        >
+          Отправить
+        </Button>
       </Form>
     </Modal>
   );
@@ -130,7 +139,12 @@ export const Comment: React.FC<ICommentProps> = ({ value }) => {
             setUpComment({ _id: value._id, comment_text: e.target.value });
           }}
         />
-        <Button onClick={updateCommentHandler}>Редактировать</Button>
+        <Button
+          disabled={value.comment_text === upComment.comment_text}
+          onClick={updateCommentHandler}
+        >
+          Редактировать
+        </Button>
       </div>
     </Form.Item>
   );

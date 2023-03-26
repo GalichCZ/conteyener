@@ -10,8 +10,11 @@ export const TechStorePage = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [data, setData] = useState<TechStoreData>({
-    address: "",
     name: "",
+    address: "",
+    receiver: "",
+    contact: "",
+    note: "",
     _id: "",
   });
 

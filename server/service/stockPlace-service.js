@@ -1,11 +1,13 @@
 const StockPlaceSchema = require("../models/stockPlace-model");
 
 class StockPlaceService {
-  async createStockPlace(address, name) {
+  async createStockPlace(address, name, contact, note) {
     try {
       const doc = new StockPlaceSchema({
         address,
         name,
+        contact,
+        note,
       });
 
       const stockPlace = await doc.save();
@@ -48,6 +50,8 @@ class StockPlaceService {
         {
           address,
           name,
+          contact,
+          note,
         }
       );
 

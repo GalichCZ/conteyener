@@ -1,22 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Store } from "../../Types/Types";
 
 export interface TableStore {
   open: boolean;
   itemId: string;
-  storeData: Store;
+  store: string;
 }
 
 const initialState: TableStore = {
   open: false,
   itemId: "",
-  storeData: {
-    receiver: "",
-    contact: "",
-    note: "",
-    techStore: "",
-  },
+  store: "",
 };
 
 export const tableStoreSlice = createSlice({
@@ -29,8 +23,8 @@ export const tableStoreSlice = createSlice({
     setItemId: (state, action: PayloadAction<string>) => {
       state.itemId = action.payload;
     },
-    setStoreData: (state, action: PayloadAction<Store>) => {
-      state.storeData = action.payload;
+    setStoreData: (state, action: PayloadAction<string>) => {
+      state.store = action.payload;
     },
   },
 });

@@ -4,7 +4,9 @@ class StockPlaceController {
   async createStockPlace(req, res) {
     const result = await StockPlaceService.createStockPlace(
       req.body.address,
-      req.body.name
+      req.body.name,
+      req.body.contact,
+      req.body.note
     );
 
     res.json(result);

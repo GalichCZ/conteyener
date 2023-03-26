@@ -31,3 +31,22 @@ export const getChannels = async () => {
 
   return response;
 };
+
+export const updateChannel = async (channelUpdate: IChannelObject) => {
+  const response = await fetch(URL + "/channel", {
+    method: "PATCH",
+    body: JSON.stringify({ channelUpdate }),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  return response;
+};

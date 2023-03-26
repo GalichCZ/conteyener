@@ -6,6 +6,7 @@ import { useAppSelector } from "../../../hooks/hooks";
 import ReDrawContext from "../../../store/redraw-context";
 import { setOpen } from "../../../store/slices/stockModalSlice";
 import { updateStockPlace } from "../Functions/StockApi";
+import { dropInput } from "../Functions/StockHandlers";
 import { IStockData } from "../Types";
 
 export const ContainerStockModal = () => {
@@ -14,26 +15,27 @@ export const ContainerStockModal = () => {
   const open = useAppSelector((state) => state.stockModal.open);
   const dataStock = useAppSelector((state) => state.stockModal.data);
 
-  const [data, setData] = useState<IStockData>({ name: "", address: "" });
+  const [data, setData] = useState<IStockData>({
+    name: "",
+    address: "",
+    contact: "",
+    note: "",
+  });
 
   const updateStock = async () => {
     redrawCtx.reDrawHandler(true);
     const result = await updateStockPlace(data);
     if (result) redrawCtx.reDrawHandler(false);
-    dropInput();
+    dropInput(setData);
     dispatch(setOpen());
   };
-
-  function dropInput() {
-    setData({ name: "", address: "", _id: "" });
-  }
 
   const handleOk = () => {
     updateStock();
   };
 
   const handleCancel = () => {
-    dropInput();
+    dropInput(setData);
     dispatch(setOpen());
   };
 
@@ -56,6 +58,20 @@ export const ContainerStockModal = () => {
           value={data.address}
           onChange={(e) => {
             setData({ ...data, address: e.target.value });
+          }}
+        />
+        <MyInput
+          label="Контакт"
+          value={data.contact}
+          onChange={(e) => {
+            setData({ ...data, contact: e.target.value });
+          }}
+        />
+        <MyInput
+          label="Примечание"
+          value={data.note}
+          onChange={(e) => {
+            setData({ ...data, note: e.target.value });
           }}
         />
       </Form>

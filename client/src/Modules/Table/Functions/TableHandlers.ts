@@ -66,11 +66,11 @@ export const declStatusHandler = (
 export const tableStoreHandler = (
   dispatch: any,
   itemId: string,
-  storeData: Types.Store
+  store: string
 ) => {
   dispatch(setOpenTableStore());
   dispatch(setItemId(itemId));
-  dispatch(setStoreData(storeData));
+  dispatch(setStoreData(store));
 };
 
 export const tableCalcDateHandler = (
@@ -219,7 +219,7 @@ export const dropInput = (setItem: (c: Types.INewItem) => void) => {
     importers: [],
     conditions: "",
     store_name: "",
-    tech_store: "",
+    store: "",
     agent: "",
     container_type: "",
     place_of_dispatch: "",
@@ -242,19 +242,19 @@ export const checkFilledPoles = (
   setFilled: (c: boolean) => void
 ) => {
   if (
-    item.request_date !== "" &&
-    item.order_number.length > 0 &&
-    item.simple_product_name !== "" &&
-    item.delivery_method !== "" &&
-    item.providers.length > 0 &&
-    item.importers.length > 0 &&
-    item.conditions !== "" &&
-    item.store_name !== "" &&
-    item.tech_store !== "" &&
     item.agent !== "" &&
+    item.conditions !== "" &&
     item.container_type !== "" &&
-    item.place_of_dispatch !== ""
-  )
+    item.delivery_method !== "" &&
+    item.importers.length > 0 &&
+    item.order_number.length > 0 &&
+    item.place_of_dispatch !== "" &&
+    item.providers.length > 0 &&
+    item.request_date !== "" &&
+    item.simple_product_name !== "" &&
+    item.store !== ""
+  ) {
+    console.log("filled");
     setFilled(true);
-  else setFilled(false);
+  } else setFilled(false);
 };

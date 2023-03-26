@@ -1,14 +1,15 @@
 import { Button } from "antd";
 import React from "react";
 import { useAppDispatch } from "../../../hooks/hooks";
-import { IItem, IsDocsType, Store, TableProps } from "../../../Types/Types";
+import { IItem, IsDocsType, TableProps } from "../../../Types/Types";
+import { IStockData } from "../../ContainerStock/Types";
 
 interface ITableUi {
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   docsCount: (docs: IsDocsType) => number | "+";
   uploadHandler?: (dispatch: any, item_id: string) => void;
-  tableStoreHandler?: (dispatch: any, itemId: string, storeData: Store) => void;
+  tableStoreHandler?: (dispatch: any, itemId: string, store: string) => void;
   dateChangeHandler?: (
     dispatch: any,
     dateType: number,
@@ -31,6 +32,7 @@ interface ITableUi {
   declStatusHandler?: (dispatch: any, declaration_number: string) => void;
   tableCommentHandler?: (dispatch: any, _id: string, value: string) => void;
   checkTimeStyle: (time: string, time_update: boolean) => string;
+  tableStockHandler?: (dispatch: any, info: IStockData) => void;
   hideItem?: (_id: string, hidden: boolean) => void;
   hidden?: boolean;
 }
@@ -48,6 +50,7 @@ const TableUI: React.FC<ITableUi> = ({
   tableCalcDateHandler,
   tableDistanceHandler,
   checkTimeStyle,
+  tableStockHandler,
   hideItem,
   hidden,
 }) => {
@@ -95,13 +98,7 @@ const TableUI: React.FC<ITableUi> = ({
                 style={{ cursor: "pointer" }}
                 onClick={() =>
                   tableStoreHandler &&
-                  tableStoreHandler(dispatch, item._id, {
-                    _id: item.store._id,
-                    receiver: item.store.receiver,
-                    contact: item.store.contact,
-                    note: item.store.note,
-                    techStore: item.store.techStore,
-                  })
+                  tableStoreHandler(dispatch, item._id, item.store)
                 }
               >
                 {item.store_name}
@@ -311,7 +308,14 @@ const TableUI: React.FC<ITableUi> = ({
                   ? "-"
                   : timeConvert(item.store_arrive_date)}
               </td>
-              <td>{item.stock_place}</td>
+              <td
+                onClick={() => {
+                  tableStockHandler &&
+                    tableStockHandler(dispatch, item.stock_place);
+                }}
+              >
+                {item.stock_place}
+              </td>
               <td
                 onClick={() => {
                   tableCommentHandler &&

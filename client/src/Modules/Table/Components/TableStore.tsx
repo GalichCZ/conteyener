@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Modal } from "antd";
-import { Store, TechStoreData } from "../../../Types/Types";
+import { TechStoreData } from "../../../Types/Types";
 import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import { Item } from "../Functions/itemFuncs";
 import { setOpenTableStore } from "../../../store/slices/tableStoreSlice";
@@ -15,26 +15,20 @@ const ItemFuncs = new Item();
 export const TableStore = ({}) => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.tableStore.open);
-  const itemId = useAppSelector((state) => state.tableStore.itemId);
-  const storeData = useAppSelector((state) => state.tableStore.storeData);
+  const store = useAppSelector((state) => state.tableStore.store);
 
   const [err, setErr] = useState<string | null>();
-  const [value, setDefaulValue] = useState<string>("");
-  const [data, setData] = useState<TechStoreData>({
-    address: "",
-    name: "",
-  });
 
-  const [updateStore, setUpdateStore] = useState<Store>({
+  const [storeData, setStoreData] = useState<TechStoreData>({
     _id: "",
     receiver: "",
     contact: "",
     note: "",
-    techStore: "",
+    address: "",
+    name: "",
   });
 
   const handleOk = async () => {
-    await handleUpdateStore(updateStore);
     dispatch(setOpenTableStore());
   };
 
@@ -46,24 +40,13 @@ export const TableStore = ({}) => {
     const response = await TechStoreFuncs.getOneTechStore(_id);
     if ("error" in response) setErr(response.error);
     else {
-      setData(response);
-      setDefaulValue(response.name);
+      setStoreData(response);
     }
-  };
-
-  const handleUpdateStore = async (updateStore: Store) => {
-    const response = await ItemFuncs.updateStore(updateStore, itemId);
   };
 
   useEffect(() => {
-    if (open && storeData) {
-      setUpdateStore(storeData);
-    }
+    if (open) getOneTechStore(store);
   }, [open]);
-
-  useEffect(() => {
-    if (storeData) getOneTechStore(storeData.techStore);
-  }, [storeData]);
 
   return (
     <Modal
@@ -74,41 +57,11 @@ export const TableStore = ({}) => {
       onCancel={handleCancel}
       destroyOnClose
     >
-      <Form>
-        <TechStoreSelect
-          value={value}
-          opened={open}
-          onChange={(value: string) => {
-            getOneTechStore(value);
-            setUpdateStore({ ...updateStore, techStore: value });
-          }}
-        />
-        <p>Адрес: {data.address}</p>
-        <MyInput
-          value={storeData?.receiver}
-          onChange={(e) => {
-            setUpdateStore({ ...updateStore, receiver: e.target.value });
-          }}
-          label="Получатель"
-        />
-        <MyInput
-          value={storeData?.contact}
-          onChange={(e) => {
-            setUpdateStore({ ...updateStore, contact: e.target.value });
-          }}
-          label="Контактное лицо"
-        />
-        <Form.Item label="Примечание">
-          <TextArea
-            value={storeData?.note}
-            onChange={(e) => {
-              setUpdateStore({ ...updateStore, note: e.target.value });
-            }}
-            rows={4}
-            placeholder="Примечание"
-          />
-        </Form.Item>
-      </Form>
+      <p>Название: {storeData.name}</p>
+      <p>Адрес: {storeData.address}</p>
+      <p>Получатель: {storeData.receiver}</p>
+      <p>Контакт: {storeData.contact}</p>
+      <p>Примечание: {storeData.note}</p>
     </Modal>
   );
 };

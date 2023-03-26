@@ -1,11 +1,14 @@
 const TechStoreSchema = require("../models/techStore-model");
 
 class TechStoreService {
-  async createTechStore(address, name) {
+  async createTechStore(address, name, receiver, contact, note) {
     try {
       const doc = new TechStoreSchema({
         address,
         name,
+        receiver,
+        contact,
+        note,
       });
 
       const techStore = await doc.save();
@@ -57,6 +60,9 @@ class TechStoreService {
         {
           address: req.body.address,
           name: req.body.name,
+          receiver: req.body.receiver,
+          contact: req.body.contact,
+          note: req.body.note,
         }
       );
 

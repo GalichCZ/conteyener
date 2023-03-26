@@ -37,10 +37,19 @@ const TableStore = lazy(() =>
     default: TableStore,
   }))
 );
+const TableStockInfo = lazy(() =>
+  import("../Modules/Table/Components/TableStockInfo").then(
+    ({ TableStockInfo }) => ({
+      default: TableStockInfo,
+    })
+  )
+);
 const TableComment = lazy(() =>
-  import("../Modules/CommentItem/TableComment").then(({ TableComment }) => ({
-    default: TableComment,
-  }))
+  import("../Modules/Table/Components/TableComment").then(
+    ({ TableComment }) => ({
+      default: TableComment,
+    })
+  )
 );
 const TableDocsModal = lazy(() =>
   import("../Modules/Table/Components/TableDocsModal").then(
@@ -50,6 +59,11 @@ const TableDocsModal = lazy(() =>
 const ContainerStockModal = lazy(() =>
   import("../Modules/ContainerStock/Components/ContainerStockModal").then(
     ({ ContainerStockModal }) => ({ default: ContainerStockModal })
+  )
+);
+const ChannelUpdate = lazy(() =>
+  import("../Modules/DeliveryChannel/Components/ChannelUpdate").then(
+    ({ ChannelUpdate }) => ({ default: ChannelUpdate })
   )
 );
 
@@ -66,6 +80,8 @@ export const AllModals = () => {
       <ContainerStockModal />
       <TableDateCalc />
       <TableDistanceModal />
+      <ChannelUpdate />
+      <TableStockInfo />
     </>
   );
 };

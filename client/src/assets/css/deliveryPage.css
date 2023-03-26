@@ -19,8 +19,9 @@
 
 .delivery-channel_form {
   display: grid;
-  width: 60%;
-  grid-template-columns: 1fr 1fr;
+  width: 75%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 30px;
   align-items: center;
 }
 

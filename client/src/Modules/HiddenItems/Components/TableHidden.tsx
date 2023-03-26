@@ -12,6 +12,8 @@ import {
 } from "../../Table/Functions/TableHandlers";
 import TableUI from "../../Table/UI/TableUI";
 import { hideItem } from "../../Table/Functions/itemFuncs";
+import { TableColNamesFixed } from "../../Table/UI/TableColNamesFixed";
+import { TableUiFixed } from "../../Table/UI/TableUiFixed";
 
 const ItemFuncs = new Item();
 
@@ -50,18 +52,20 @@ export const TableHidden = () => {
 
   return (
     <div className="table-page_table">
-      <table>
+      <table className="table-page_fixed-table">
+        <TableColNamesFixed data={copyItems} setItems={setItems} />
+        <TableUiFixed items={items} timeConvert={timeConvert} />
+      </table>
+      <table className="table-page_unfixed-table">
         <TableColNames setItems={setItems} data={copyItems} />
-        <tbody>
-          <TableUI
-            items={items}
-            checkTimeStyle={checkTimeStyle}
-            timeConvert={timeConvert}
-            docsCount={docsCount}
-            hideItem={hideItemHandler}
-            hidden={true}
-          />
-        </tbody>
+        <TableUI
+          items={items}
+          checkTimeStyle={checkTimeStyle}
+          timeConvert={timeConvert}
+          docsCount={docsCount}
+          hideItem={hideItemHandler}
+          hidden={true}
+        />
       </table>
     </div>
   );

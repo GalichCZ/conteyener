@@ -1,5 +1,12 @@
-import { List } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, List } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { useAppDispatch } from "../../../hooks/hooks";
+import ReDrawContext from "../../../store/redraw-context";
+import {
+  setChannel,
+  setItemId,
+  setOpenUpdateChannel,
+} from "../../../store/slices/updateChannelSlice";
 import { IChannelObject } from "../../../Types/Types";
 import { getChannels } from "../Functions/ChannelsApi";
 
@@ -8,6 +15,9 @@ interface IChannels {
 }
 
 export const Channels: React.FC<IChannels> = ({ loading }) => {
+  const dispatch = useAppDispatch();
+  const reDraw = useContext(ReDrawContext);
+
   const [channels, setChannels] = useState<IChannelObject[]>();
 
   const getChannelHandler = async () => {
@@ -15,9 +25,15 @@ export const Channels: React.FC<IChannels> = ({ loading }) => {
     if (response) setChannels(response);
   };
 
+  const modalHandler = (channel: IChannelObject) => {
+    dispatch(setOpenUpdateChannel());
+    dispatch(setChannel(channel));
+    dispatch(setItemId(channel._id));
+  };
+
   useEffect(() => {
     if (!loading) getChannelHandler();
-  }, [loading]);
+  }, [loading, reDraw.reDraw]);
 
   return (
     <List className="channels">
@@ -52,6 +68,7 @@ export const Channels: React.FC<IChannels> = ({ loading }) => {
               <p>Дата прибытия на склад:</p>
               <p>{channel.store_arrive_date}</p>
             </div>
+            <Button onClick={() => modalHandler(channel)}>Редактировать</Button>
           </List.Item>
         );
       })}

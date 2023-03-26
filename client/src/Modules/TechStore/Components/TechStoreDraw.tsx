@@ -33,10 +33,20 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
     if (response) await getStores();
   };
 
-  const modalHandler = (address: string, name: string, _id?: string) => {
+  const modalHandler = (
+    address: string,
+    name: string,
+    receiver: string,
+    contact: string,
+    note: string,
+    _id?: string
+  ) => {
     setData({
       address,
       name,
+      receiver,
+      contact,
+      note,
       _id,
     });
     setOpen(true);
@@ -63,7 +73,14 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
               <p style={{ margin: "0 15px" }}>Адрес: {store.address}</p>
               <Button
                 onClick={() =>
-                  modalHandler(store.address, store.name, store._id)
+                  modalHandler(
+                    store.address,
+                    store.name,
+                    store.receiver,
+                    store.contact,
+                    store.note,
+                    store._id
+                  )
                 }
                 style={{ margin: "0 15px" }}
               >

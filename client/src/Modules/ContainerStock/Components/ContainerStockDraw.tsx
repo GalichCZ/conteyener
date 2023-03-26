@@ -39,6 +39,14 @@ export const ContainerStockDraw = () => {
               <p>Адрес: </p>
               <p> {item.address}</p>
             </div>
+            <div className="stock-pole">
+              <p>Контакт: </p>
+              <p> {item.contact}</p>
+            </div>
+            <div className="stock-pole">
+              <p>Примечание: </p>
+              <p> {item.note}</p>
+            </div>
             <Button onClick={() => updateModalHandler(item)}>
               Редактировать
             </Button>

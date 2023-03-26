@@ -17,6 +17,8 @@ export const Table: React.FunctionComponent = () => {
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
   const [widths] = useState<number[]>([]);
 
+  const [height, setHeight] = useState<number>(0);
+
   const query = useAppSelector((state) => state.search.value);
 
   const headerRef = useRef(null);
@@ -49,6 +51,10 @@ export const Table: React.FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
+    console.log(height, "final");
+  }, [height]);
+
+  useEffect(() => {
     search();
   }, [query]);
 
@@ -62,6 +68,8 @@ export const Table: React.FunctionComponent = () => {
             setItems={setItems}
           />
           <TableUiFixed
+            height={height}
+            setHeight={setHeight}
             items={items}
             timeConvert={TableHandlers.timeConvert}
             tableUpdateHandler={TableHandlers.tableUpdateHandler}
@@ -75,6 +83,8 @@ export const Table: React.FunctionComponent = () => {
               setItems={setItems}
             />
             <TableUI
+              height={height}
+              setHeight={setHeight}
               items={items}
               timeConvert={TableHandlers.timeConvert}
               docsCount={TableHandlers.docsCount}
@@ -87,6 +97,7 @@ export const Table: React.FunctionComponent = () => {
               checkTimeStyle={TableHandlers.checkTimeStyle}
               tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
               tableDistanceHandler={TableHandlers.distanceHandler}
+              tableStockHandler={TableHandlers.tableStockInfoHandler}
             />
           </table>
         </div>

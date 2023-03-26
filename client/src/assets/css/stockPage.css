@@ -10,7 +10,9 @@
 }
 
 .stock-create form {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 20px;
   align-items: center;
   justify-content: center;
   padding-bottom: 40px !important;

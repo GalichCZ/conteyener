@@ -1,4 +1,4 @@
-import { Form, InputNumber, Modal } from "antd";
+import { Form, Input, InputNumber, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { TechStore } from "../Functions/techStoreFuncs";
 import { TechStoreData } from "../../../Types/Types";
@@ -25,6 +25,9 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
     _id: "",
     address: "",
     name: "",
+    receiver: "",
+    contact: "",
+    note: "",
   });
 
   const updateHandler = async (data: TechStoreData) => {
@@ -43,27 +46,50 @@ export const TechStoreModal: React.FC<TechStoreModalProps> = ({
   };
 
   useEffect(() => {
-    setData(dataStore);
+    if (open) setData(dataStore);
   }, [dataStore]);
 
   return (
     <Modal onOk={handleOk} onCancel={handleCancel} open={open}>
       <Form>
-        <MyInput
-          style={{ margin: "0 15px" }}
-          label="Название"
-          value={data.name}
-          onChange={(e) => {
-            setData({ ...data, name: e.target.value });
-          }}
-        />
-        <MyInput
-          label="Адрес"
-          value={data.address}
-          onChange={(e) => {
-            setData({ ...data, address: e.target.value });
-          }}
-        />
+        <div className="tech-store_create_inputs">
+          <MyInput
+            label="Название"
+            value={data.name}
+            onChange={(e) => {
+              setData({ ...data, name: e.target.value });
+            }}
+          />
+          <MyInput
+            label="Адрес"
+            value={data.address}
+            onChange={(e) => {
+              setData({ ...data, address: e.target.value });
+            }}
+          />
+          <MyInput
+            label="Получатель"
+            value={data.receiver}
+            onChange={(e) => {
+              setData({ ...data, receiver: e.target.value });
+            }}
+          />
+          <MyInput
+            label="Контактное лицо"
+            value={data.contact}
+            onChange={(e) => {
+              setData({ ...data, contact: e.target.value });
+            }}
+          />
+        </div>
+        <Form.Item label="Примечание">
+          <Input.TextArea
+            value={data.note}
+            onChange={(e) => {
+              setData({ ...data, note: e.target.value });
+            }}
+          />
+        </Form.Item>
       </Form>
     </Modal>
   );

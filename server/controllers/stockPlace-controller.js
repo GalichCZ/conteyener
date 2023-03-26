@@ -4,7 +4,9 @@ class StockPlaceController {
   async createStockPlace(req, res) {
     const result = await StockPlaceService.createStockPlace(
       req.body.address,
-      req.body.name
+      req.body.name,
+      req.body.contact,
+      req.body.note
     );
 
     res.json(result);
@@ -12,6 +14,20 @@ class StockPlaceController {
 
   async getOneStockPlace(req, res) {
     const result = await StockPlaceService.getOneStockPlace(req.params._id);
+
+    res.json(result);
+  }
+
+  async getOneStockPlace(req, res) {
+    const result = await StockPlaceService.getOneStockPlace(req.params._id);
+
+    res.json(result);
+  }
+
+  async getOneStockPlaceByName(req, res) {
+    const result = await StockPlaceService.getOneStockPlaceByName(
+      req.params.name
+    );
 
     res.json(result);
   }

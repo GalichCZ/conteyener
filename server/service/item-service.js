@@ -1,4 +1,5 @@
 const ItemSchema = require("../models/item-model");
+const TechStoreSchema = require("../models/techStore-model");
 const FormulaService = require("./formula-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
@@ -6,9 +7,12 @@ const dayjs = require("dayjs");
 
 dayjs.extend(customParseFormat);
 class ItemService {
-  async createItem(req, store, container) {
+  async createItem(req, container) {
     try {
       const delivery_method = req.body.delivery_method;
+      const store_name = await TechStoreSchema.findById({
+        _id: req.body.store,
+      }).exec();
 
       const doc = await new ItemSchema({
         request_date: req.body.request_date,
@@ -18,9 +22,9 @@ class ItemService {
         providers: req.body.providers,
         importers: req.body.importers,
         conditions: req.body.conditions,
-        store_name: req.body.store_name,
-        store,
+        store_name: store_name && store_name.name,
         agent: req.body.agent,
+        store: req.body.store,
         container: {
           container_number: container.container_number,
           container_type: container.container_type,
@@ -38,83 +42,6 @@ class ItemService {
         return { key, value };
       });
       return { error: array };
-    }
-  }
-
-  async createItemOnce(
-    _etd,
-    _request_date,
-    _simple_product_name,
-    _store_name,
-    _place_of_dispatch,
-    _line,
-    _ready_date,
-    _load_date,
-    _bl_smgs_cmr,
-    _td,
-    _port,
-    _declaration_number,
-    _destination_station,
-    _km_to_dist,
-    _comment,
-    store,
-    container,
-    provider,
-    importer,
-    orders
-  ) {
-    try {
-      const delivery_method = "";
-
-      const formulaRes = FormulaService.dateFormula(delivery_method, _etd);
-
-      const doc = new ItemSchema({
-        request_date: _request_date,
-        order_number: orders,
-        container: {
-          container_number: container.container_number,
-          container_type: container.container_type,
-          _id: container._id,
-        },
-        simple_product_name: _simple_product_name,
-        delivery_method: "",
-        providers: provider,
-        importers: importer,
-        conditions: "",
-        store,
-        store_name: _store_name,
-        agent: "",
-        place_of_dispatch: _place_of_dispatch,
-        line: _line,
-        ready_date: _ready_date,
-        load_date: _load_date,
-        etd: _etd,
-        eta: formulaRes.eta,
-        release: "",
-        bl_smgs_cmr: _bl_smgs_cmr === "+" ? true : false,
-        td: _td === "+" ? true : false,
-        date_do: formulaRes.date_do,
-        port: _port,
-        is_ds: false,
-        declaration_number: _declaration_number,
-        declaration_issue_date: formulaRes.declaration_issue_date,
-        availability_of_ob: null,
-        answer_of_ob: null,
-        expeditor: "",
-        destination_station: _destination_station,
-        km_to_dist: _km_to_dist,
-        train_arrive_date: formulaRes.train_arrive_date,
-        pickup: "",
-        store_arrive_date: formulaRes.store_arrive_date,
-        comment: _comment,
-      });
-
-      await doc.save();
-
-      // return item;
-    } catch (error) {
-      console.log(error);
-      return error;
     }
   }
 
@@ -264,45 +191,70 @@ class ItemService {
           _id: req.body.stock_place,
         }));
 
-      await ItemSchema.updateOne(
-        {
-          _id,
-        },
-        {
-          request_date: req.body.request_date,
-          order_number: req.body.order_number,
-          container,
-          providers: req.body.providers,
-          importers: req.body.importers,
-          simple_product_name: req.body.simple_product_name,
-          delivery_method: req.body.delivery_method,
-          conditions: req.body.conditions,
-          agent: req.body.agent,
-          place_of_dispatch: req.body.place_of_dispatch,
-          line: req.body.line,
-          ready_date: req.body.ready_date,
-          load_date: req.body.load_date,
-          release: req.body.release,
-          bl_smgs_cmr: req.body.bl_smgs_cmr,
-          td: req.body.td,
-          port: req.body.port,
-          is_ds: req.body.is_ds,
-          is_docs: req.body.is_docs,
-          declaration_number: req.body.declaration_number,
-          availability_of_ob: req.body.availability_of_ob,
-          answer_of_ob: req.body.answer_of_ob,
-          expeditor: req.body.expeditor,
-          destination_station: req.body.destination_station,
-          km_to_dist: req.body.km_to_dist,
-          pickup: req.body.pickup,
-          comment: req.body.comment,
-          stock_place: stock_place && stock_place.name,
-          fraht: req.body.fraht,
-          bid: req.body.bid,
-          note: req.body.note,
-        }
-      );
-      return { message: "success" };
+      const items = await ItemSchema.find({
+        declaration_number: { $in: [req.body.declaration_number] },
+      });
+      const store_name = await TechStoreSchema.findById({
+        _id: req.body.store,
+      });
+
+      const exists = null;
+
+      items.forEach((item) => {
+        req.body.declaration_number.forEach((decl) => {
+          console.log(decl);
+          if (
+            // _id.toString() !== item._id.toString() &&
+            item.declaration_number.includes(decl)
+          ) {
+            console.log(decl, " d");
+          }
+        });
+      });
+
+      if (exists !== null) return { error: "Declaration", duplicates: exists };
+      else {
+        await ItemSchema.updateOne(
+          {
+            _id,
+          },
+          {
+            request_date: req.body.request_date,
+            order_number: req.body.order_number,
+            container,
+            providers: req.body.providers,
+            importers: req.body.importers,
+            simple_product_name: req.body.simple_product_name,
+            delivery_method: req.body.delivery_method,
+            conditions: req.body.conditions,
+            agent: req.body.agent,
+            place_of_dispatch: req.body.place_of_dispatch,
+            line: req.body.line,
+            ready_date: req.body.ready_date,
+            load_date: req.body.load_date,
+            release: req.body.release,
+            bl_smgs_cmr: req.body.bl_smgs_cmr,
+            td: req.body.td,
+            port: req.body.port,
+            is_ds: req.body.is_ds,
+            is_docs: req.body.is_docs,
+            declaration_number: req.body.declaration_number,
+            availability_of_ob: req.body.availability_of_ob,
+            answer_of_ob: req.body.answer_of_ob,
+            expeditor: req.body.expeditor,
+            destination_station: req.body.destination_station,
+            km_to_dist: req.body.km_to_dist,
+            pickup: req.body.pickup,
+            comment: req.body.comment,
+            stock_place: stock_place && stock_place.name,
+            store_name: store_name && store_name.name,
+            fraht: req.body.fraht,
+            bid: req.body.bid,
+            note: req.body.note,
+          }
+        );
+        return { message: "success" };
+      }
     } catch (error) {
       console.log(error);
       const array = Object.entries(error.keyValue).map(([key, value]) => {
@@ -317,6 +269,82 @@ class ItemService {
       await ItemSchema.deleteOne({ _id });
     } catch (error) {
       console.log(error);
+    }
+  }
+  async createItemOnce(
+    _etd,
+    _request_date,
+    _simple_product_name,
+    _store_name,
+    _place_of_dispatch,
+    _line,
+    _ready_date,
+    _load_date,
+    _bl_smgs_cmr,
+    _td,
+    _port,
+    _declaration_number,
+    _destination_station,
+    _km_to_dist,
+    _comment,
+    store,
+    container,
+    provider,
+    importer,
+    orders
+  ) {
+    try {
+      const delivery_method = "";
+
+      const formulaRes = FormulaService.dateFormula(delivery_method, _etd);
+
+      const doc = new ItemSchema({
+        request_date: _request_date,
+        order_number: orders,
+        container: {
+          container_number: container.container_number,
+          container_type: container.container_type,
+          _id: container._id,
+        },
+        simple_product_name: _simple_product_name,
+        delivery_method: "",
+        providers: provider,
+        importers: importer,
+        conditions: "",
+        store,
+        store_name: _store_name,
+        agent: "",
+        place_of_dispatch: _place_of_dispatch,
+        line: _line,
+        ready_date: _ready_date,
+        load_date: _load_date,
+        etd: _etd,
+        eta: formulaRes.eta,
+        release: "",
+        bl_smgs_cmr: _bl_smgs_cmr === "+" ? true : false,
+        td: _td === "+" ? true : false,
+        date_do: formulaRes.date_do,
+        port: _port,
+        is_ds: false,
+        declaration_number: _declaration_number,
+        declaration_issue_date: formulaRes.declaration_issue_date,
+        availability_of_ob: null,
+        answer_of_ob: null,
+        expeditor: "",
+        destination_station: _destination_station,
+        km_to_dist: _km_to_dist,
+        train_arrive_date: formulaRes.train_arrive_date,
+        pickup: "",
+        store_arrive_date: formulaRes.store_arrive_date,
+        comment: _comment,
+      });
+
+      await doc.save();
+
+      // return item;
+    } catch (error) {
+      console.log(error);
+      return error;
     }
   }
 }

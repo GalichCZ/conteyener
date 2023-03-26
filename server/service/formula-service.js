@@ -2,6 +2,74 @@ const dayjs = require("dayjs");
 const DeliveryChannelSchema = require("../models/deliveryChannel-model");
 
 class FormulaService {
+  async updatedDateFormula(_etd, _delivery_channel, item) {
+    if (_delivery_channel && _etd) {
+      const delivery_channel = await DeliveryChannelSchema.findById(
+        _delivery_channel
+      ).exec();
+
+      const eta = dayjs(_etd).add(delivery_channel.eta, "day");
+
+      const date_do = !item.eta_update
+        ? dayjs(eta).add(delivery_channel.date_do, "day")
+        : dayjs(item.eta).add(delivery_channel.date_do, "day");
+
+      const declaration_issue_date = !item.date_do_update
+        ? dayjs(date_do).add(delivery_channel.declaration_issue_date, "day")
+        : dayjs(item.date_do).add(
+            delivery_channel.declaration_issue_date,
+            "day"
+          );
+
+      const train_depart_date = !item.declaration_issue_date_update
+        ? dayjs(declaration_issue_date).add(
+            delivery_channel.train_depart_date,
+            "day"
+          )
+        : dayjs(item.declaration_issue_date).add(
+            delivery_channel.train_depart_date,
+            "day"
+          );
+
+      const train_arrive_date = !item.train_depart_date_update
+        ? dayjs(train_depart_date).add(
+            delivery_channel.train_arrive_date,
+            "day"
+          )
+        : dayjs(item.train_depart_date).add(
+            delivery_channel.train_arrive_date,
+            "day"
+          );
+
+      const store_arrive_date = !item.train_arrive_date
+        ? dayjs(train_arrive_date).add(
+            delivery_channel.store_arrive_date,
+            "day"
+          )
+        : dayjs(item.train_arrive_date).add(
+            delivery_channel.store_arrive_date,
+            "day"
+          );
+
+      return {
+        eta,
+        date_do,
+        declaration_issue_date,
+        train_arrive_date,
+        train_depart_date,
+        store_arrive_date,
+      };
+    } else {
+      return {
+        eta: null,
+        date_do: null,
+        declaration_issue_date: null,
+        train_depart_date: null,
+        train_arrive_date: null,
+        store_arrive_date: null,
+      };
+    }
+  }
   async dateFormula(_etd, _delivery_channel) {
     if (_delivery_channel && _etd) {
       const delivery_channel = await DeliveryChannelSchema.findById(

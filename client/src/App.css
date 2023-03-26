@@ -50,8 +50,12 @@
   margin-top: 15px;
 }
 .tech-store_create form {
-  display: flex;
   padding: 5px 45px 0px 45px !important;
+}
+.tech-store_create_inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
 }
 .stores-data {
   display: flex;
@@ -73,7 +77,7 @@
 }
 
 .formula-date {
-  opacity: 0.7;
+  opacity: 0.3;
   cursor: pointer;
 }
 

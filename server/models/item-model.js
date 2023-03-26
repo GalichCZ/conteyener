@@ -35,12 +35,12 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    store: String,
     delivery_channel: {
       type: String,
       default: "",
     },
     product: Array,
-    store: Object,
     agent: {
       type: String,
       required: true,

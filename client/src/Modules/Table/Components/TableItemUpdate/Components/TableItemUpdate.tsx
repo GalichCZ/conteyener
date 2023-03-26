@@ -65,7 +65,7 @@ export const TableItemUpdate = ({}) => {
     providers: [],
     importers: [],
     conditions: "",
-    tech_store: "",
+    store: "",
     agent: "",
     store_name: "",
     delivery_channel: "",
@@ -115,7 +115,6 @@ export const TableItemUpdate = ({}) => {
   const handleOk = async () => {
     const duplicatesOrdersCheck = checkDuplicateOrders(singleItem);
     const duplicatesDeclarationsCheck = checkDuplicateDeclarations(singleItem);
-    resetInputs(setSingleItem);
     reDraw.reDrawHandler(true);
     if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
       setConfirmLoading(true);
@@ -130,6 +129,7 @@ export const TableItemUpdate = ({}) => {
         callError(messageApi, `These orders already exists: ${duplicates}`);
       }
       if (response === "success") {
+        resetInputs(setSingleItem);
         setConfirmLoading(false);
         dispatch(setOpenItemUpdate());
         reDraw.reDrawHandler(false);
@@ -268,15 +268,6 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.container?.container_number}
           />
-          {/* <SelectChannel
-            value={singleItem.delivery_channel}
-            onChange={(value: any) => {
-              setSingleItem({
-                ...singleItem,
-                delivery_channel: value.target.value,
-              });
-            }}
-          /> */}
           <MyInput
             label="Товар"
             className="required-form"
@@ -399,9 +390,10 @@ export const TableItemUpdate = ({}) => {
           />
           <TechStoreSelect
             onChange={(value: string) => {
-              setSingleItem({ ...singleItem, tech_store: value });
+              console.log(value);
+              setSingleItem({ ...singleItem, store: value });
             }}
-            value={singleItem?.store_name}
+            value={singleItem?.store}
             opened={open}
             className="required-form"
           />
@@ -476,18 +468,6 @@ export const TableItemUpdate = ({}) => {
               }
             />
           </Form.Item>
-          {/* <Form.Item label="ETD">
-            <DatePicker
-              format="DD/MM/YYYY"
-              onChange={(date, dateString) => {
-                setSingleItem({
-                  ...singleItem,
-                  etd: date?.toISOString(),
-                });
-              }}
-              value={singleItem.etd === null ? null : moment(singleItem.etd)}
-            />
-          </Form.Item> */}
           <Form.Item label="Релиз">
             <DatePicker
               format="DD/MM/YYYY"

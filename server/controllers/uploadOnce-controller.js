@@ -3,7 +3,6 @@ const DeclarationService = require("../service/declaration-service");
 const ContainerService = require("../service/container-service");
 const ProductService = require("../service/product-service");
 const IsDocsService = require("../service/isDocs-service");
-const StoreService = require("../service/store-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
@@ -19,7 +18,6 @@ class UploadOnceController {
             item["Номер контейнера"],
             item["Тип конт."]
           );
-          const store = await StoreService.createStoreUpload(item["Склад"]);
 
           await ItemService.createItemOnce(
             item["Дата выхода в море"],

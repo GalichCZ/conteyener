@@ -2,7 +2,6 @@ const DeclarationService = require("../service/declaration-service");
 const ContainerService = require("../service/container-service");
 const ProductService = require("../service/product-service");
 const IsDocsService = require("../service/isDocs-service");
-const StoreService = require("../service/store-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
@@ -17,11 +16,9 @@ class ItemController {
 
     const container = await ContainerService.getContainer(req);
 
-    const store = await StoreService.createStore(req.body.tech_store);
-
     const is_docs = await IsDocsService.createDocs(req, container);
 
-    const item = await ItemService.createItem(req, store, container);
+    const item = await ItemService.createItem(req, container);
 
     if (item.error) return res.status(400).json({ error: item.error });
 
@@ -79,8 +76,9 @@ class ItemController {
 
       const response = await ItemService.updateItem(item._id, req, container);
 
-      if (response.error)
-        return res.status(400).json({ error: response.error });
+      console.log(response);
+
+      if (response.error) return res.status(400).json({ error: response });
 
       return res.json("success");
     } catch (error) {
@@ -106,7 +104,6 @@ class ItemController {
 
       await ItemService.deleteItem(req.params._id);
       await ContainerService.deleteContainer(item);
-      await StoreService.deleteStore(item);
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
       await ProductService.deleteProduct(item._id);
       await IsDocsService.deleteDocs(item.container);

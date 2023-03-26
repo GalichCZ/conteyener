@@ -15,7 +15,7 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     providers: [],
     importers: [],
     conditions: "",
-    tech_store: "",
+    store: "",
     agent: "",
     store_name: "",
     delivery_channel: "",

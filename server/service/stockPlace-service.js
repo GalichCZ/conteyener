@@ -1,11 +1,13 @@
 const StockPlaceSchema = require("../models/stockPlace-model");
 
 class StockPlaceService {
-  async createStockPlace(address, name) {
+  async createStockPlace(address, name, contact, note) {
     try {
       const doc = new StockPlaceSchema({
         address,
         name,
+        contact,
+        note,
       });
 
       const stockPlace = await doc.save();
@@ -20,6 +22,17 @@ class StockPlaceService {
   async getOneStockPlace(_id) {
     try {
       const stockPlace = await StockPlaceSchema.findById(_id);
+
+      return stockPlace;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async getOneStockPlaceByName(name) {
+    try {
+      const stockPlace = await StockPlaceSchema.findOne({ name }).exec();
 
       return stockPlace;
     } catch (error) {
@@ -48,6 +61,8 @@ class StockPlaceService {
         {
           address,
           name,
+          contact,
+          note,
         }
       );
 

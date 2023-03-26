@@ -56,7 +56,7 @@ export const TableItemCreate: React.FC = () => {
     request_date: "",
     simple_product_name: "",
     store_name: "",
-    tech_store: "",
+    store: "",
   });
 
   const showModal = () => {
@@ -92,17 +92,17 @@ export const TableItemCreate: React.FC = () => {
   };
 
   const getName = async () => {
-    const response = await TechStoreFuncs.getOneTechStore(item.tech_store);
-
-    setItem({ ...item, store_name: response.name });
+    // const response = await TechStoreFuncs.getOneTechStore(item.store);
+    // setItem({ ...item, store_name: response.name });
   };
 
   useEffect(() => {
     getName();
-  }, [item.tech_store]);
+  }, [item.store]);
 
   useEffect(() => {
     checkFilledPoles(item, setFilled);
+    console.log(item);
   }, [item]);
 
   return (
@@ -288,9 +288,9 @@ export const TableItemCreate: React.FC = () => {
             <TechStoreSelect
               name="name8"
               onChange={(value) => {
-                setItem({ ...item, tech_store: value });
+                setItem({ ...item, store: value });
               }}
-              value={item.tech_store}
+              value={item.store}
               opened={open}
               className="required-form"
             />

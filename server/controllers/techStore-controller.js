@@ -4,7 +4,10 @@ class TechStoreController {
   async createTechStore(req, res) {
     const result = await TechStoreService.createTechStore(
       req.body.address,
-      req.body.name
+      req.body.name,
+      req.body.receiver,
+      req.body.contact,
+      req.body.note
     );
 
     if (result.toString().includes("Error"))

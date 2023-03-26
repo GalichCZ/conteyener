@@ -9,14 +9,6 @@ export type StockPlace = {
   name: string;
 };
 
-export type Store = {
-  _id?: string;
-  receiver: string | undefined;
-  contact: string;
-  note: string;
-  techStore: string;
-};
-
 export type TableProps = {
   _id: string;
   request_date: string;
@@ -28,8 +20,8 @@ export type TableProps = {
   importers: string[];
   conditions: string;
   store_name: string;
+  store: string;
   delivery_channel: string;
-  store: Store;
   agent: string;
   place_of_dispatch: string;
   line: string;
@@ -80,7 +72,7 @@ export interface INewItem {
   importers: string[];
   conditions: string;
   store_name: string;
-  tech_store?: string;
+  store: string;
   agent: string;
   container_type?: string;
   place_of_dispatch: string;
@@ -179,6 +171,9 @@ export interface IsDocsType {
 export interface TechStoreData {
   name: string;
   address: string;
+  receiver: string;
+  contact: string;
+  note: string;
   _id?: string;
 }
 

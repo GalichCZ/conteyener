@@ -3,7 +3,6 @@ import {
   ICalcDate,
   IItem,
   INewItem,
-  Store,
 } from "../../../Types/Types";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -53,26 +52,6 @@ export class Item {
     const response = await fetch(URL + "/item/date", {
       method: "PATCH",
       body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => response.status)
-      .then((data) => {
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        return error;
-      });
-    return response;
-  }
-
-  async updateStore(updateStore: Store, itemId: string) {
-    const response = await fetch(URL + "/item/store", {
-      method: "PATCH",
-      body: JSON.stringify({ updateStore, itemId }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

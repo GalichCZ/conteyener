@@ -51,6 +51,7 @@ app.patch("/api/item", ItemController.updateItem);
 app.delete("/api/item/:_id", ItemController.deleteItem);
 app.get("/api/item/hidden", ItemController.getHiddenItems);
 app.patch("/api/item/comment", ItemController.updateComment);
+app.patch("/api/item/distance", ItemController.updateDistance);
 app.patch("/api/item/date", ItemController.updateFormulaDates);
 app.post("/api/item/search", ItemController.findItemsBySearch);
 app.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);

@@ -1,42 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { IItem, TableProps } from "../../../Types/Types";
 
 interface ITableUi {
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   tableUpdateHandler?: (dispatch: any, item: IItem) => void;
-  height: number;
-  setHeight: (c: number) => void;
+  setHeights1?: (c: Array<number | null | undefined>) => void;
 }
 
 export const TableUiFixed: React.FC<ITableUi> = ({
   items,
   timeConvert,
   tableUpdateHandler,
-  height,
-  setHeight,
+  setHeights1,
 }) => {
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
-  const [maxHeight, setMaxHeight] = useState<number>(0);
+  const [height, setHeight] = useState<Array<number | null | undefined>>([]);
+  const heights = useAppSelector((state) => state.heightHandler.heights);
 
   const getHeight = () => {
     if (myRefs.current) {
-      myRefs.current.map((ref) => {
-        if (ref?.clientHeight) {
-          if (ref?.clientHeight > height) {
-            setHeight(ref?.clientHeight);
-            console.log(ref?.clientHeight, "bigger left");
-          }
-        }
-      });
+      setHeight(
+        myRefs.current.map((ref) => {
+          return ref?.clientHeight;
+        })
+      );
     }
   };
 
   useEffect(() => {
-    if (maxHeight > height) setHeight(maxHeight);
-  }, [maxHeight, height]);
+    if (height.length > 0 && setHeights1) setHeights1(height);
+  }, [height]);
 
   useEffect(() => {
     getHeight();
@@ -46,7 +42,11 @@ export const TableUiFixed: React.FC<ITableUi> = ({
     <tbody>
       {items?.map((item, key) => {
         return (
-          <tr ref={(el) => (myRefs.current[key] = el)} key={key}>
+          <tr
+            style={{ height: `${heights[key]}px` }}
+            ref={(el) => (myRefs.current[key] = el)}
+            key={key}
+          >
             <td
               style={{ cursor: "pointer" }}
               onClick={() =>

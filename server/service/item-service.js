@@ -203,10 +203,7 @@ class ItemService {
       items.forEach((item) => {
         req.body.declaration_number.forEach((decl) => {
           console.log(decl);
-          if (
-            // _id.toString() !== item._id.toString() &&
-            item.declaration_number.includes(decl)
-          ) {
+          if (item.declaration_number.includes(decl)) {
             console.log(decl, " d");
           }
         });
@@ -271,6 +268,7 @@ class ItemService {
       console.log(error);
     }
   }
+
   async createItemOnce(
     _etd,
     _request_date,
@@ -345,6 +343,23 @@ class ItemService {
     } catch (error) {
       console.log(error);
       return error;
+    }
+  }
+
+  async updateDistance(req) {
+    try {
+      await ItemSchema.updateOne(
+        {
+          _id: req.body._id,
+        },
+        {
+          km_to_dist: req.body.km_to_dist,
+        }
+      );
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      return { success: false, error };
     }
   }
 }

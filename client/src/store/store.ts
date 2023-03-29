@@ -13,6 +13,7 @@ import tableDateCalcReducer from "./slices/tableDateCalcModal";
 import tableDistanceReducer from "./slices/tableDistanceSlice";
 import updateChannelReducer from "./slices/updateChannelSlice";
 import tableStockReducer from "./slices/tableStockSlice";
+import heightHandlerReducer from "./slices/heightHandlerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     tableDistance: tableDistanceReducer,
     updateChannel: updateChannelReducer,
     tableStock: tableStockReducer,
+    heightHandler: heightHandlerReducer,
   },
 });
 

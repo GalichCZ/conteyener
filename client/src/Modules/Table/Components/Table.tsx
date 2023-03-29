@@ -2,27 +2,44 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { TableColNames } from "../../../components/index";
 import * as Types from "../../../Types/Types";
 import * as TableHandlers from "../Functions/TableHandlers";
-import { useAppSelector } from "../../../hooks/hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks/hooks";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
+import { setHeights } from "../../../store/slices/heightHandlerSlice";
 
 const ItemFuncs = new Item();
 
 export const Table: React.FunctionComponent = () => {
+  const dispatch = useAppDispatch();
   const reDraw = useContext(ReDrawContext);
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
   const [widths] = useState<number[]>([]);
 
-  const [height, setHeight] = useState<number>(0);
+  const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
+    []
+  );
+  const [heights2, setHeights2] = useState<Array<number | null | undefined>>(
+    []
+  );
+
+  useEffect(() => {
+    dispatch(
+      setHeights(
+        heights1.map((num, index) =>
+          Math.max(
+            num ?? Number.MIN_SAFE_INTEGER,
+            heights2[index] ?? Number.MIN_SAFE_INTEGER
+          )
+        )
+      )
+    );
+  }, [heights1, heights2]);
 
   const query = useAppSelector((state) => state.search.value);
-
-  const headerRef = useRef(null);
-  const dataRef = useRef<any>(null);
 
   const getItems = async () => {
     const data = await ItemFuncs.getItems();
@@ -43,18 +60,6 @@ export const Table: React.FunctionComponent = () => {
   }, [reDraw.reDraw]);
 
   useEffect(() => {
-    if (dataRef.current) {
-      for (let i = 0; i < dataRef.current.children.length; i++) {
-        widths.push(dataRef.current.children[i].offsetWidth);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log(height, "final");
-  }, [height]);
-
-  useEffect(() => {
     search();
   }, [query]);
 
@@ -68,8 +73,7 @@ export const Table: React.FunctionComponent = () => {
             setItems={setItems}
           />
           <TableUiFixed
-            height={height}
-            setHeight={setHeight}
+            setHeights1={setHeights1}
             items={items}
             timeConvert={TableHandlers.timeConvert}
             tableUpdateHandler={TableHandlers.tableUpdateHandler}
@@ -83,8 +87,7 @@ export const Table: React.FunctionComponent = () => {
               setItems={setItems}
             />
             <TableUI
-              height={height}
-              setHeight={setHeight}
+              setHeights2={setHeights2}
               items={items}
               timeConvert={TableHandlers.timeConvert}
               docsCount={TableHandlers.docsCount}

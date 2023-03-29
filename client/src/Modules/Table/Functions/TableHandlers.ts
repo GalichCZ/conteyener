@@ -206,10 +206,11 @@ export const docsCount = (item: Types.IsDocsType) => {
   return a;
 };
 
-export const checkTimeStyle = (time: string, time_update: boolean) => {
-  const isExpired = new Date(time) < new Date();
+export const checkTimeStyle = (time: string | null, time_update: boolean) => {
+  const isExpired = time && new Date(time) < new Date();
   if (time_update) return "formula-date_update";
   if (!time_update && isExpired) return "formula-date red";
+  if (time === null) return "formula-date_update";
   return "formula-date";
 };
 

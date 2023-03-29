@@ -9,7 +9,7 @@ export interface StockModalState {
 
 const initialState: StockModalState = {
   open: false,
-  data: { name: "", address: "", _id: "" },
+  data: { name: "", address: "", _id: "", contact: "", note: "" },
 };
 
 export const stockModalSlice = createSlice({

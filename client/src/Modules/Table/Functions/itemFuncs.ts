@@ -87,7 +87,7 @@ export class Item {
 export const updateItem = async (
   itemValues: IItem | { km_to_dist: number | null; _id: string }
 ) => {
-  const response = await fetch(URL + "/item", {
+  const response = await fetch(URL + "/item/distance", {
     method: "PATCH",
     body: JSON.stringify(itemValues),
     headers: {

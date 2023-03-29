@@ -101,12 +101,18 @@ class FormulaService {
       );
 
       return {
-        eta,
-        date_do,
-        declaration_issue_date,
-        train_arrive_date,
-        train_depart_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : eta,
+        date_do: delivery_channel.date_do === 0 ? null : date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
       };
     } else {
       return {
@@ -145,12 +151,18 @@ class FormulaService {
         "day"
       );
       return {
-        eta,
-        date_do,
-        declaration_issue_date,
-        train_arrive_date,
-        train_depart_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : eta,
+        date_do: delivery_channel.date_do === 0 ? null : date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: true,
         date_do_update: false,
         declaration_issue_date_update: false,
@@ -177,12 +189,18 @@ class FormulaService {
         "day"
       );
       return {
-        eta: item.eta,
-        date_do,
-        declaration_issue_date,
-        train_arrive_date,
-        train_depart_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : item.eta,
+        date_do: delivery_channel.date_do === 0 ? null : date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: item.eta_update,
         date_do_update: true,
         declaration_issue_date_update: false,
@@ -205,12 +223,18 @@ class FormulaService {
         "day"
       );
       return {
-        eta: item.eta,
-        date_do: item.date_do,
-        declaration_issue_date,
-        train_arrive_date,
-        train_depart_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : item.eta,
+        date_do: delivery_channel.date_do === 0 ? null : item.date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: item.eta_update,
         date_do_update: item.date_do_update,
         declaration_issue_date_update: true,
@@ -229,12 +253,18 @@ class FormulaService {
         "day"
       );
       return {
-        eta: item.eta,
-        date_do: item.date_do,
-        declaration_issue_date: item.declaration_issue_date,
-        train_depart_date,
-        train_arrive_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : item.eta,
+        date_do: delivery_channel.date_do === 0 ? null : item.date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : item.declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: item.eta_update,
         date_do_update: item.date_do_update,
         declaration_issue_date_update: item.declaration_issue_date_update,
@@ -249,12 +279,20 @@ class FormulaService {
         "day"
       );
       return {
-        eta: item.eta,
-        date_do: item.date_do,
-        declaration_issue_date: item.declaration_issue_date,
-        train_depart_date: item.train_depart_date,
-        train_arrive_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : item.eta,
+        date_do: delivery_channel.date_do === 0 ? null : item.date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : item.declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0
+            ? null
+            : item.train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: item.eta_update,
         date_do_update: item.date_do_update,
         declaration_issue_date_update: item.declaration_issue_date_update,
@@ -265,12 +303,22 @@ class FormulaService {
     } else if (dateType === 6) {
       const store_arrive_date = req.body.store_arrive_date;
       return {
-        eta: item.eta,
-        date_do: item.date_do,
-        declaration_issue_date: item.declaration_issue_date,
-        train_depart_date: item.train_depart_date,
-        train_arrive_date: item.train_arrive_date,
-        store_arrive_date,
+        eta: delivery_channel.eta === 0 ? null : item.eta,
+        date_do: delivery_channel.date_do === 0 ? null : item.date_do,
+        declaration_issue_date:
+          delivery_channel.declaration_issue_date === 0
+            ? null
+            : item.declaration_issue_date,
+        train_arrive_date:
+          delivery_channel.train_arrive_date === 0
+            ? null
+            : item.train_arrive_date,
+        train_depart_date:
+          delivery_channel.train_depart_date === 0
+            ? null
+            : item.train_depart_date,
+        store_arrive_date:
+          delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
         eta_update: item.eta_update,
         date_do_update: item.date_do_update,
         declaration_issue_date_update: item.declaration_issue_date_update,

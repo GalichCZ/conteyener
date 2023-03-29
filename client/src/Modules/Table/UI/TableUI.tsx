@@ -1,12 +1,10 @@
 import { Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch } from "../../../hooks/hooks";
-import { IItem, IsDocsType, TableProps } from "../../../Types/Types";
-import { IStockData } from "../../ContainerStock/Types";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { IsDocsType, TableProps } from "../../../Types/Types";
 
 interface ITableUi {
-  height: number;
-  setHeight: (c: number) => void;
+  setHeights2?: (c: Array<number | null | undefined>) => void;
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   docsCount: (docs: IsDocsType) => number | "+";
@@ -55,29 +53,26 @@ const TableUI: React.FC<ITableUi> = ({
   tableStockHandler,
   hideItem,
   hidden,
-  height,
-  setHeight,
+  setHeights2,
 }) => {
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
-  const [maxHeight, setMaxHeight] = useState<number>(0);
+  const [height, setHeight] = useState<Array<number | null | undefined>>([]);
+  const heights = useAppSelector((state) => state.heightHandler.heights);
 
   const getHeight = () => {
     if (myRefs.current) {
-      myRefs.current.map((ref) => {
-        if (ref?.clientHeight) {
-          if (ref?.clientHeight > height) {
-            setHeight(ref?.clientHeight);
-            console.log(ref?.clientHeight, "bigger right");
-          }
-        }
-      });
+      setHeight(
+        myRefs.current.map((ref) => {
+          return ref?.clientHeight;
+        })
+      );
     }
   };
 
   useEffect(() => {
-    if (maxHeight > height) setHeight(maxHeight);
-  }, [maxHeight, height]);
+    if (height.length > 0 && setHeights2) setHeights2(height);
+  }, [height]);
 
   useEffect(() => {
     getHeight();
@@ -88,7 +83,11 @@ const TableUI: React.FC<ITableUi> = ({
       <tbody>
         {items?.map((item, key) => {
           return (
-            <tr ref={(el) => (myRefs.current[key] = el)} key={key}>
+            <tr
+              style={{ height: `${heights[key]}px` }}
+              ref={(el) => (myRefs.current[key] = el)}
+              key={key}
+            >
               <td
                 style={{ cursor: "pointer" }}
                 onClick={() =>
@@ -164,9 +163,7 @@ const TableUI: React.FC<ITableUi> = ({
                     );
                 }}
               >
-                {item.eta && item.eta === item.etd
-                  ? "-"
-                  : timeConvert(item.eta)}
+                {item.eta === null ? "-" : timeConvert(item.eta)}
               </td>
               <td> {item.release && timeConvert(item.release)} </td>
               <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
@@ -184,10 +181,7 @@ const TableUI: React.FC<ITableUi> = ({
                 }}
                 className={checkTimeStyle(item.date_do, item.date_do_update)}
               >
-                {item.date_do &&
-                timeConvert(item.date_do) === timeConvert(item.eta)
-                  ? "-"
-                  : timeConvert(item.date_do)}
+                {item.date_do === null ? "-" : timeConvert(item.date_do)}
               </td>
               <td> {item.port} </td>
               <td> {item.is_ds ? "+" : "-"} </td>
@@ -245,9 +239,7 @@ const TableUI: React.FC<ITableUi> = ({
                   item.declaration_issue_date_update
                 )}
               >
-                {item.declaration_issue_date &&
-                timeConvert(item.date_do) ===
-                  timeConvert(item.declaration_issue_date)
+                {item.declaration_issue_date === null
                   ? "-"
                   : timeConvert(item.declaration_issue_date)}
               </td>
@@ -284,9 +276,7 @@ const TableUI: React.FC<ITableUi> = ({
                   item.train_depart_date_update
                 )}
               >
-                {item.train_depart_date &&
-                timeConvert(item.declaration_issue_date) ===
-                  timeConvert(item.train_depart_date)
+                {item.train_depart_date === null
                   ? "-"
                   : timeConvert(item.train_depart_date)}
               </td>
@@ -306,9 +296,7 @@ const TableUI: React.FC<ITableUi> = ({
                   item.train_arrive_date_update
                 )}
               >
-                {item.train_arrive_date &&
-                timeConvert(item.train_depart_date) ===
-                  timeConvert(item.train_arrive_date)
+                {item.train_arrive_date === null
                   ? "-"
                   : timeConvert(item.train_arrive_date)}
               </td>
@@ -329,9 +317,7 @@ const TableUI: React.FC<ITableUi> = ({
                   item.store_arrive_date_update
                 )}
               >
-                {item.store_arrive_date &&
-                timeConvert(item.train_arrive_date) ===
-                  timeConvert(item.store_arrive_date)
+                {item.store_arrive_date === null
                   ? "-"
                   : timeConvert(item.store_arrive_date)}
               </td>

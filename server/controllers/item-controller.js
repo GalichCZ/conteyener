@@ -113,6 +113,13 @@ class ItemController {
       console.log(error);
     }
   }
+
+  async updateDistance(req, res) {
+    const result = await ItemService.updateDistance(req);
+
+    if (result.success) res.status(200).json({ message: "success" });
+    else res.status(400).json(result.error);
+  }
 }
 
 module.exports = new ItemController();

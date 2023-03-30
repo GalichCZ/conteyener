@@ -97,7 +97,7 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.simple_product_name}
               </td>
               <td>{item.delivery_method}</td>
-              <td>
+              <td style={{ minWidth: "250px", textAlign: "justify" }}>
                 <table className="table-importers">
                   <tbody>
                     <tr>
@@ -258,7 +258,7 @@ const TableUI: React.FC<ITableUi> = ({
                 }}
               >
                 {" "}
-                {item.km_to_dist}{" "}
+                {item.km_to_dist ? item.km_to_dist : ""}{" "}
               </td>
               <td
                 onClick={() => {

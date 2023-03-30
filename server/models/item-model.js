@@ -118,7 +118,7 @@ const ItemSchema = new mongoose.Schema(
     destination_station: String,
     km_to_dist: {
       type: Number,
-      default: 0,
+      default: null,
     },
     train_depart_date: {
       type: Date,

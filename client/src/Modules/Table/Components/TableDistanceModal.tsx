@@ -4,7 +4,7 @@ import { MyInput } from "../../../components";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import ReDrawContext from "../../../store/redraw-context";
 import { setOpenDistance } from "../../../store/slices/tableDistanceSlice";
-import { updateItem } from "../Functions/itemFuncs";
+import { updateItemDistance } from "../Functions/itemFuncs";
 
 export const TableDistanceModal = () => {
   const reDraw = useContext(ReDrawContext);
@@ -30,7 +30,7 @@ export const TableDistanceModal = () => {
 
   const updateDistanceHandler = async () => {
     reDraw.reDrawHandler(true);
-    const result = km && (await updateItem(km));
+    const result = km && (await updateItemDistance(km));
     result && reDraw.reDrawHandler(false);
   };
 

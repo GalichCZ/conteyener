@@ -84,12 +84,33 @@ export class Item {
   }
 }
 
-export const updateItem = async (
-  itemValues: IItem | { km_to_dist: number | null; _id: string }
-) => {
-  const response = await fetch(URL + "/item/distance", {
+export const updateItem = async (itemValues: IItem) => {
+  const response = await fetch(URL + "/item", {
     method: "PATCH",
     body: JSON.stringify(itemValues),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
+  return response;
+};
+
+export const updateItemDistance = async (data: {
+  km_to_dist: number | null;
+  _id: string;
+}) => {
+  const response = await fetch(URL + "/item/distance", {
+    method: "PATCH",
+    body: JSON.stringify(data),
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

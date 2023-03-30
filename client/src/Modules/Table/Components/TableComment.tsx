@@ -112,13 +112,17 @@ interface ICommentProps {
   value: IComment;
 }
 export const Comment: React.FC<ICommentProps> = ({ value }) => {
+  const reDraw = useContext(ReDrawContext);
+
   const [upComment, setUpComment] = useState<IUpdateComment>({
     comment_text: value.comment_text,
     _id: value._id,
   });
 
   const updateCommentHandler = async () => {
+    reDraw.reDrawHandler(true);
     const result = await updateComment(upComment);
+    if (result) reDraw.reDrawHandler(false);
     console.log(result, " res");
   };
 

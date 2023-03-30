@@ -46,7 +46,7 @@ export type TableProps = {
   answer_of_ob: string;
   expeditor: string;
   destination_station: string;
-  km_to_dist: number;
+  km_to_dist: number | null;
   train_depart_date: string;
   train_depart_date_update: boolean;
   train_arrive_date: string;

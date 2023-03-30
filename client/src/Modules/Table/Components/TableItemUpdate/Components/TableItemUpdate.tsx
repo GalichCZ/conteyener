@@ -100,7 +100,7 @@ export const TableItemUpdate = ({}) => {
     answer_of_ob: null,
     expeditor: "",
     destination_station: "",
-    km_to_dist: 0,
+    km_to_dist: null,
     train_arrive_date: "",
     bid: 0,
     pickup: "",
@@ -609,13 +609,6 @@ export const TableItemUpdate = ({}) => {
               setSingleItem({ ...singleItem, stock_place: value })
             }
           />
-          <Form.Item label="Ставка">
-            <InputNumber
-              name="bid"
-              value={singleItem?.bid}
-              onChange={(value) => setSingleItem({ ...singleItem, bid: value })}
-            />
-          </Form.Item>
           <MyInput
             label="Автовывоз"
             onChange={(e: { target: HTMLInputElement }) => {

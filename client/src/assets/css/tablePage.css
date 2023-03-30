@@ -49,9 +49,7 @@
   overflow-x: overlay;
   position: relative;
   padding-bottom: 0 !important;
-}
-.table-page_fixed-table tbody tr td {
-  /* height: 45px; */
+  height: fit-content;
 }
 .table-page_fixed-table thead tr td,
 .table-page_unfixed-table thead tr td {

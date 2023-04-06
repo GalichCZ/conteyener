@@ -13,12 +13,14 @@ export type TableProps = {
   _id: string;
   request_date: string;
   order_number: string[];
+  inside_number: string[];
+  proform_number: string[];
   container: Container;
   simple_product_name: string;
   delivery_method: string;
   providers: string[];
   importers: string[];
-  conditions: string;
+  conditions: string[];
   store_name: string;
   store: string;
   delivery_channel: string;
@@ -70,7 +72,7 @@ export interface INewItem {
   delivery_method: string;
   providers: string[];
   importers: string[];
-  conditions: string;
+  conditions: string[];
   store_name: string;
   store: string;
   agent: string;
@@ -81,6 +83,8 @@ export interface INewItem {
 
 export interface IItem extends INewItem {
   _id: string;
+  inside_number: string[];
+  proform_number: string[];
   container_number?: string;
   container: Container;
   store_receiver?: string;

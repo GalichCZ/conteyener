@@ -1,14 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  Button,
-  Switch,
-  message,
-  InputNumber,
-  DatePicker,
-} from "antd";
+import { Modal, Form, Input, Button, Switch, message, DatePicker } from "antd";
 import { IItem } from "../../../../../Types/Types";
 import { Item, updateItem } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
@@ -29,6 +20,15 @@ import {
   handleAddOrder,
   handleDeleteOrder,
   handleOrderChange,
+  handleInsideNumberChange,
+  handleDeleteInsideNumber,
+  handleAddInsideNumber,
+  handleProformNumberChange,
+  handleDeleteProformNumber,
+  handleAddProformNumber,
+  handleConditionsChange,
+  handleDeleteConditions,
+  handleAddConditions,
 } from "../../../Functions/MultipleInputHandler";
 import {
   checkDuplicateOrders,
@@ -39,6 +39,7 @@ import { resetInputs } from "../Functions/ResetInputs";
 import { hideItem } from "../../../Functions/itemFuncs";
 import StockPlaceSelect from "../../../../../components/StockPlaceSelect";
 import moment from "moment";
+import { DeliveryMethodSelect } from "../../../../../components/DeliveryMethodSelect";
 
 const ItemFuncs = new Item();
 
@@ -54,6 +55,8 @@ export const TableItemUpdate = ({}) => {
   const [singleItem, setSingleItem] = useState<IItem>({
     _id: "",
     request_date: "",
+    inside_number: [],
+    proform_number: [],
     order_number: [],
     container: {
       _id: "",
@@ -64,7 +67,7 @@ export const TableItemUpdate = ({}) => {
     delivery_method: "",
     providers: [],
     importers: [],
-    conditions: "",
+    conditions: [],
     store: "",
     agent: "",
     store_name: "",
@@ -212,6 +215,90 @@ export const TableItemUpdate = ({}) => {
                   : moment(singleItem.request_date)
               }
             />
+          </Form.Item>
+          <DeliveryMethodSelect
+            value={singleItem.delivery_method}
+            onChange={(value) =>
+              setSingleItem({ ...singleItem, delivery_method: value })
+            }
+          />
+          <Form.Item label="Внутренний номер">
+            <>
+              {singleItem.inside_number.map((num, index) => {
+                return (
+                  <div key={index} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Внутренний номер"
+                      id={num}
+                      value={num}
+                      onChange={(event) =>
+                        handleInsideNumberChange(
+                          index,
+                          event,
+                          singleItem,
+                          setSingleItem
+                        )
+                      }
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        handleDeleteInsideNumber(
+                          index,
+                          singleItem,
+                          setSingleItem
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+              <Button
+                onClick={() => {
+                  handleAddInsideNumber(singleItem, setSingleItem);
+                }}
+              >
+                Добавить поле
+              </Button>
+            </>
+          </Form.Item>
+          <Form.Item label="Номер проформы">
+            <>
+              {singleItem.proform_number.map((num, index) => {
+                return (
+                  <div key={index} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Номер проформы"
+                      id={num}
+                      value={num}
+                      onChange={(event) =>
+                        handleProformNumberChange(
+                          index,
+                          event,
+                          singleItem,
+                          setSingleItem
+                        )
+                      }
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        handleDeleteProformNumber(
+                          index,
+                          singleItem,
+                          setSingleItem
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+              <Button
+                onClick={() => {
+                  handleAddProformNumber(singleItem, setSingleItem);
+                }}
+              >
+                Добавить поле
+              </Button>
+            </>
           </Form.Item>
           <Form.Item className="required-form" label="№ заказа">
             <>
@@ -380,14 +467,52 @@ export const TableItemUpdate = ({}) => {
               Добавить поле
             </Button>
           </Form.Item>
-          <MyInput
-            className="required-form"
-            label="Условия поставки"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({ ...singleItem, conditions: e.target.value });
-            }}
-            value={singleItem?.conditions}
-          />
+          <Form.Item className="required-form" label="Условия поставки">
+            <>
+              {singleItem.conditions.map((condition, index) => {
+                return (
+                  <div key={index} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Номер заказа"
+                      id={condition}
+                      value={condition}
+                      onChange={(event) =>
+                        handleConditionsChange(
+                          index,
+                          event,
+                          singleItem,
+                          undefined,
+                          setSingleItem,
+                          undefined
+                        )
+                      }
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        handleDeleteConditions(
+                          index,
+                          singleItem,
+                          setSingleItem
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+              <Button
+                onClick={() =>
+                  handleAddConditions(
+                    undefined,
+                    undefined,
+                    singleItem,
+                    setSingleItem
+                  )
+                }
+              >
+                Добавить поле
+              </Button>
+            </>
+          </Form.Item>
           <TechStoreSelect
             onChange={(value: string) => {
               console.log(value);

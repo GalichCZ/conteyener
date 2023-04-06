@@ -227,7 +227,7 @@ export const dropInput = (setItem: (c: Types.INewItem) => void) => {
     delivery_method: "",
     providers: [],
     importers: [],
-    conditions: "",
+    conditions: [],
     store_name: "",
     store: "",
     agent: "",
@@ -253,7 +253,7 @@ export const checkFilledPoles = (
 ) => {
   if (
     item.agent !== "" &&
-    item.conditions !== "" &&
+    item.conditions.length > 0 &&
     item.container_type !== "" &&
     item.delivery_method !== "" &&
     item.importers.length > 0 &&

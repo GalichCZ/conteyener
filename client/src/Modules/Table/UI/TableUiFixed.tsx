@@ -17,7 +17,9 @@ export const TableUiFixed: React.FC<ITableUi> = ({
 }) => {
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
+  const tdRefs = useRef<Array<HTMLTableDataCellElement | null>>([]);
   const [height, setHeight] = useState<Array<number | null | undefined>>([]);
+  const [widths, setWidths] = useState<Array<number | null | undefined>>([]);
   const heights = useAppSelector((state) => state.heightHandler.heights);
 
   const getHeight = () => {
@@ -54,6 +56,28 @@ export const TableUiFixed: React.FC<ITableUi> = ({
               }
             >
               {timeConvert(item.request_date)}
+            </td>
+            <td>
+              <table className="table-importers">
+                <tbody>
+                  <tr>
+                    {item.inside_number.map((num, key) => {
+                      return <td key={key}>{num}</td>;
+                    })}
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table className="table-importers">
+                <tbody>
+                  <tr>
+                    {item.proform_number.map((num, key) => {
+                      return <td key={key}>{num}</td>;
+                    })}
+                  </tr>
+                </tbody>
+              </table>
             </td>
             <td>
               <table className="table-importers">

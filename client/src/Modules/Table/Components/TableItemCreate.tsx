@@ -17,6 +17,9 @@ import {
   handleAddOrder,
   handleDeleteOrder,
   handleOrderChange,
+  handleConditionsChange,
+  handleDeleteConditions,
+  handleAddConditions,
 } from "../Functions/MultipleInputHandler";
 import { callError } from "../Functions/ErrorHandlers";
 import { dropInput } from "../Functions/TableHandlers";
@@ -35,7 +38,7 @@ export const TableItemCreate: React.FC = () => {
   const [filled, setFilled] = useState(false);
   const [item, setItem] = useState<INewItem>({
     agent: "",
-    conditions: "",
+    conditions: [],
     container_type: "",
     delivery_method: "",
     importers: [],
@@ -276,15 +279,49 @@ export const TableItemCreate: React.FC = () => {
                 </Button>
               </>
             </Form.Item>
-            <MyInput
-              name="name7"
+            <Form.Item
+              name="name2"
               className="required-form"
-              value={item.conditions}
               label="Условия поставки"
-              onChange={(e) => {
-                setItem({ ...item, conditions: e.target.value });
-              }}
-            />
+            >
+              <>
+                {item.conditions.map((condition, index) => {
+                  return (
+                    <div key={index} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Номер заказа"
+                        id={condition}
+                        value={condition}
+                        onChange={(event) =>
+                          handleConditionsChange(
+                            index,
+                            event,
+                            undefined,
+                            item,
+                            undefined,
+                            setItem
+                          )
+                        }
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          handleDeleteConditions(
+                            index,
+                            undefined,
+                            undefined,
+                            item,
+                            setItem
+                          );
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                <Button onClick={() => handleAddConditions(item, setItem)}>
+                  Добавить поле
+                </Button>
+              </>
+            </Form.Item>
             <TechStoreSelect
               name="name8"
               onChange={(value) => {

@@ -8,6 +8,7 @@ import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
+import { Alert, Button } from "antd";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 
 const ItemFuncs = new Item();
@@ -25,6 +26,26 @@ export const Table: React.FunctionComponent = () => {
   const [heights2, setHeights2] = useState<Array<number | null | undefined>>(
     []
   );
+
+  function downloadFile(url: string) {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "April 5, 2023 5:24 PM.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode?.removeChild(link);
+      });
+  }
+
+  const handleDownloadClick = () => {
+    downloadFile(
+      "http://localhost:4444/backupExcels/April 5, 2023 5:24 PM.xlsx"
+    );
+  };
 
   useEffect(() => {
     dispatch(
@@ -65,6 +86,21 @@ export const Table: React.FunctionComponent = () => {
 
   return (
     <>
+      <Alert
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "5px",
+          boxShadow: "1px 1px 10px gray",
+          fontWeight: "bold",
+        }}
+        message={"Подсказка"}
+        description={`Для скролла влево/вправо используйте комбинацию "shift+scroll"`}
+        type="info"
+        banner
+        closable
+      />
+      <Button onClick={handleDownloadClick}>Download</Button>
       <div className="table-page_table">
         <table className="table-page_fixed-table">
           <TableColNamesFixed

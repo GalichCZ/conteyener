@@ -1,5 +1,63 @@
 import { IItem, INewItem } from "../../../Types/Types";
 
+export const handleInsideNumberChange = (
+  index: number,
+  event: React.ChangeEvent<HTMLInputElement>,
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  const newInsideNumbers = [...singleItem.inside_number];
+  newInsideNumbers[index] = event.target.value;
+  setSingleItem({ ...singleItem, inside_number: newInsideNumbers });
+};
+export const handleAddInsideNumber = (
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  setSingleItem({
+    ...singleItem,
+    inside_number: [...singleItem.inside_number, ""],
+  });
+};
+export const handleDeleteInsideNumber = (
+  index: number,
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  const newInsideNumbers = [...singleItem.inside_number];
+  newInsideNumbers.splice(index, 1);
+  setSingleItem({ ...singleItem, inside_number: newInsideNumbers });
+};
+
+export const handleProformNumberChange = (
+  index: number,
+  event: React.ChangeEvent<HTMLInputElement>,
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  const newProformNumbers = [...singleItem.proform_number];
+  newProformNumbers[index] = event.target.value;
+  setSingleItem({ ...singleItem, proform_number: newProformNumbers });
+};
+export const handleAddProformNumber = (
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  setSingleItem({
+    ...singleItem,
+    proform_number: [...singleItem.proform_number, ""],
+  });
+};
+export const handleDeleteProformNumber = (
+  index: number,
+  singleItem: IItem,
+  setSingleItem: (c: IItem) => void
+) => {
+  const newProformNumbers = [...singleItem.proform_number];
+  newProformNumbers.splice(index, 1);
+  setSingleItem({ ...singleItem, proform_number: newProformNumbers });
+};
+
 export const handleProviderChange = (
   index: number,
   event: React.ChangeEvent<HTMLInputElement>,
@@ -188,5 +246,59 @@ export const handleDeleteOrder = (
     const newOrders = [...item.order_number];
     newOrders.splice(index, 1);
     setItem({ ...item, order_number: newOrders });
+  }
+};
+
+export const handleConditionsChange = (
+  index: number,
+  event: React.ChangeEvent<HTMLInputElement>,
+  singleItem?: IItem,
+  item?: INewItem,
+  setSingleItem?: (c: IItem) => void,
+  setItem?: (c: INewItem) => void
+) => {
+  if (setSingleItem && singleItem) {
+    const newConditions = [...singleItem.conditions];
+    newConditions[index] = event.target.value;
+    setSingleItem({ ...singleItem, conditions: newConditions });
+  }
+  if (setItem && item) {
+    const newConditions = [...item.conditions];
+    newConditions[index] = event.target.value;
+    setItem({ ...item, conditions: newConditions });
+  }
+};
+export const handleAddConditions = (
+  item?: INewItem,
+  setItem?: (c: INewItem) => void,
+  singleItem?: IItem,
+  setSingleItem?: (c: IItem) => void
+) => {
+  if (singleItem && setSingleItem) {
+    setSingleItem({
+      ...singleItem,
+      conditions: [...singleItem.conditions, ""],
+    });
+  }
+  if (item && setItem) {
+    setItem({ ...item, conditions: [...item.conditions, ""] });
+  }
+};
+export const handleDeleteConditions = (
+  index: number,
+  singleItem?: IItem,
+  setSingleItem?: (c: IItem) => void,
+  item?: INewItem,
+  setItem?: (c: INewItem) => void
+) => {
+  if (singleItem && setSingleItem) {
+    const newConditions = [...singleItem.conditions];
+    newConditions.splice(index, 1);
+    setSingleItem({ ...singleItem, conditions: newConditions });
+  }
+  if (item && setItem) {
+    const newConditions = [...item.conditions];
+    newConditions.splice(index, 1);
+    setItem({ ...item, conditions: newConditions });
   }
 };

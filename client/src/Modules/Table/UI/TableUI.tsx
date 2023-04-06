@@ -119,7 +119,17 @@ const TableUI: React.FC<ITableUi> = ({
                   </tbody>
                 </table>
               </td>
-              <td> {item.conditions} </td>
+              <td>
+                <table className="table-importers">
+                  <tbody>
+                    <tr>
+                      {item.conditions.map((condition, key) => {
+                        return <td key={key}> {condition} </td>;
+                      })}
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
               <td
                 style={{ cursor: "pointer" }}
                 onClick={() =>

@@ -4,6 +4,8 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
   setSingleItem({
     _id: "",
     request_date: "",
+    proform_number: [],
+    inside_number: [],
     order_number: [],
     container: {
       _id: "",
@@ -14,7 +16,7 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     delivery_method: "",
     providers: [],
     importers: [],
-    conditions: "",
+    conditions: [],
     store: "",
     agent: "",
     store_name: "",

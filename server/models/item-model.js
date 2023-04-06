@@ -6,6 +6,14 @@ const ItemSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    inside_number: {
+      type: Array,
+      default: null,
+    },
+    proform_number: {
+      type: Array,
+      default: null,
+    },
     order_number: {
       type: Array,
       required: true,
@@ -28,7 +36,7 @@ const ItemSchema = new mongoose.Schema(
       required: true,
     },
     conditions: {
-      type: String,
+      type: Array,
       required: true,
     },
     store_name: {

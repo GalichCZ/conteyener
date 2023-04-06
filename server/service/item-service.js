@@ -218,6 +218,8 @@ class ItemService {
           {
             request_date: req.body.request_date,
             order_number: req.body.order_number,
+            inside_number: req.body.inside_number,
+            proform_number: req.body.proform_number,
             container,
             providers: req.body.providers,
             importers: req.body.importers,

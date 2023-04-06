@@ -13,6 +13,7 @@ const UploadOnceController = require("./controllers/uploadOnce-controller");
 const StockPlaceController = require("./controllers/stockPlace-controller");
 const DeclarationController = require("./controllers/declaration-controller");
 const DeliveryChannelController = require("./controllers/deliveryChannel-controller");
+const CreateExcel = require("./service/createExcel-service");
 
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
@@ -111,3 +112,5 @@ const start = async () => {
 };
 
 start();
+
+CreateExcel.createFile();

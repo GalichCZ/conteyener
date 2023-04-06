@@ -35,6 +35,8 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
             }}
           />
         </td>
+        <td>Внутренний номер</td>
+        <td>Номер проформы</td>
         <td>
           Номер заказа
           <FilterFilled

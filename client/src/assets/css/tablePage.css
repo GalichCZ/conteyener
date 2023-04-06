@@ -23,17 +23,18 @@
   display: flex;
   width: 100%;
   overflow-x: hidden;
+  max-height: 80vh;
 }
 .table-page table tr {
   border: 1px solid black;
 }
 .table-page table td {
   border: 1px solid black;
-  padding: 5px;
   min-width: 120px;
   text-align: center;
   font-weight: 600;
   font-size: 15px;
+  min-height: 50px;
 }
 .table-importers tbody tr {
   display: flex;
@@ -44,12 +45,20 @@
   border: none;
 }
 
+.table-page_fixed-table thead {
+  /* position: fixed; */
+}
+.table-page_fixed-table tbody {
+  /* transform: translateY(83px); */
+}
+
 .table-page_unfixed-table {
   width: 100%;
   overflow-x: overlay;
   position: relative;
   padding-bottom: 0 !important;
   height: fit-content;
+  z-index: 1;
 }
 .table-page_fixed-table thead tr td,
 .table-page_unfixed-table thead tr td {

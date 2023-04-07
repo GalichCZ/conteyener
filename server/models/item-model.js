@@ -154,6 +154,7 @@ const ItemSchema = new mongoose.Schema(
       default: false,
     },
     stock_place: String,
+    stock_place_name: String,
     comment: String,
     fraht: String,
     bid: { type: Number, default: 0 },

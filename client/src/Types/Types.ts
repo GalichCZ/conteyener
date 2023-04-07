@@ -61,6 +61,7 @@ export type TableProps = {
   bid: number;
   note: string;
   creator: string;
+  stock_place_name: any;
   stock_place: any;
   hidden: boolean;
 };
@@ -119,6 +120,7 @@ export interface IItem extends INewItem {
   comment: string;
   note: string;
   fraht: string;
+  stock_place_name: any;
   stock_place: any;
   hidden: boolean;
 }

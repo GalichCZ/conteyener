@@ -100,7 +100,7 @@ export const Table: React.FunctionComponent = () => {
         banner
         closable
       />
-      <Button onClick={handleDownloadClick}>Download</Button>
+      {/* <Button onClick={handleDownloadClick}>Download</Button> */}
       <div className="table-page_table">
         <table className="table-page_fixed-table">
           <TableColNamesFixed

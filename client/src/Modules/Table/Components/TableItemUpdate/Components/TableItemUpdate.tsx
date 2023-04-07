@@ -111,6 +111,7 @@ export const TableItemUpdate = ({}) => {
     comment: "",
     note: "",
     stock_place: "",
+    stock_place_name: "",
     fraht: "",
     hidden: false,
   });

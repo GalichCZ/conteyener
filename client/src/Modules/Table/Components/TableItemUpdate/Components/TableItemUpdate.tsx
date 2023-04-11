@@ -29,6 +29,9 @@ import {
   handleConditionsChange,
   handleDeleteConditions,
   handleAddConditions,
+  handleSimpleProductNameChange,
+  handleDeleteSimpleProductName,
+  handleAddSimpleProductName,
 } from "../../../Functions/MultipleInputHandler";
 import {
   checkDuplicateOrders,
@@ -63,7 +66,7 @@ export const TableItemUpdate = ({}) => {
       container_number: "",
       container_type: "",
     },
-    simple_product_name: "",
+    simple_product_name: [],
     delivery_method: "",
     providers: [],
     importers: [],
@@ -356,7 +359,7 @@ export const TableItemUpdate = ({}) => {
             }}
             value={singleItem?.container?.container_number}
           />
-          <MyInput
+          {/* <MyInput
             label="Товар"
             className="required-form"
             onChange={(e: { target: HTMLInputElement }) => {
@@ -366,7 +369,53 @@ export const TableItemUpdate = ({}) => {
               });
             }}
             value={singleItem?.simple_product_name}
-          />
+          /> */}
+          <Form.Item name="name3" className="required-form" label="Товар">
+            <>
+              {singleItem.simple_product_name.map((simpleName, index) => {
+                return (
+                  <div key={index} style={{ display: "flex" }}>
+                    <Input
+                      placeholder="Товар"
+                      id={simpleName}
+                      value={simpleName}
+                      onChange={(event) =>
+                        handleSimpleProductNameChange(
+                          index,
+                          event,
+                          singleItem,
+                          undefined,
+                          setSingleItem,
+                          undefined
+                        )
+                      }
+                    />
+                    <CloseOutlined
+                      onClick={() => {
+                        handleDeleteSimpleProductName(
+                          index,
+                          singleItem,
+                          setSingleItem
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+              <Button
+                onClick={() =>
+                  handleAddSimpleProductName(
+                    undefined,
+                    undefined,
+                    singleItem,
+                    setSingleItem
+                  )
+                }
+              >
+                Добавить поле
+              </Button>
+            </>
+          </Form.Item>
           <MyInput
             label="Способ Доставки"
             className="required-form"
@@ -391,7 +440,9 @@ export const TableItemUpdate = ({}) => {
                         index,
                         event,
                         singleItem,
-                        setSingleItem
+                        setSingleItem,
+                        undefined,
+                        undefined
                       )
                     }
                   />

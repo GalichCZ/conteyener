@@ -1,5 +1,7 @@
 const IsDocsSchema = require("../models/isDocs-model");
 const ItemSchema = require("../models/item-model");
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 class IsDocsService {
   async createDocs(req, container) {
     try {
@@ -20,6 +22,11 @@ class IsDocsService {
 
       return docs;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCREATE DOCS ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
@@ -44,6 +51,11 @@ class IsDocsService {
 
       return doc.is_docs;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DOCS ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
@@ -54,6 +66,11 @@ class IsDocsService {
         await IsDocsSchema.deleteMany({ container });
       }
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELETE DOCS ERROR:\n${error}`
+      );
       console.log(error);
     }
   }

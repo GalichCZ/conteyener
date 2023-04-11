@@ -50,7 +50,7 @@ class FileService {
     });
 
     Promise.all(jsonDataFetch).then((res) => {
-      console.log(res);
+      // console.log(res);
 
       const workSheet = XLSX.utils.json_to_sheet(res);
       const workBook = XLSX.utils.book_new();

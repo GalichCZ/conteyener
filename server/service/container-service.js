@@ -1,5 +1,6 @@
 const ContainerSchema = require("../models/container-model");
-
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 class ContainerService {
   async createContainer(number, type) {
     try {
@@ -12,20 +13,33 @@ class ContainerService {
 
       return container;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCONTAINER CREATE ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
 
   async getContainer(req) {
-    const doc = await ContainerSchema.findOne({
-      container_number: req.body.container_number,
-    });
-    if (doc) {
-      return doc;
-    } else {
-      return await this.createContainer(
-        req.body.container_number,
-        req.body.container_type
+    try {
+      const doc = await ContainerSchema.findOne({
+        container_number: req.body.container_number,
+      });
+      if (doc) {
+        return doc;
+      } else {
+        return await this.createContainer(
+          req.body.container_number,
+          req.body.container_type
+        );
+      }
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCONTAINER GET ERROR:\n${error}`
       );
     }
   }
@@ -60,6 +74,11 @@ class ContainerService {
       }
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCONTAINER UPDATE ERROR:\n${error}`
+      );
     }
   }
 
@@ -69,6 +88,11 @@ class ContainerService {
         await ContainerSchema.deleteOne({ _id: item.container });
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCONTAINER DELETE ERROR:\n${error}`
+      );
     }
   }
 }

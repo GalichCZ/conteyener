@@ -20,14 +20,15 @@ import {
   handleConditionsChange,
   handleDeleteConditions,
   handleAddConditions,
+  handleSimpleProductNameChange,
+  handleDeleteSimpleProductName,
+  handleAddSimpleProductName,
 } from "../Functions/MultipleInputHandler";
 import { callError } from "../Functions/ErrorHandlers";
 import { dropInput } from "../Functions/TableHandlers";
 import { checkFilledPoles } from "../Functions/TableHandlers";
-import dayjs from "dayjs";
 
 const ItemFuncs = new Item();
-const TechStoreFuncs = new TechStore();
 
 export const TableItemCreate: React.FC = () => {
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -57,7 +58,7 @@ export const TableItemCreate: React.FC = () => {
     place_of_dispatch: "",
     providers: [],
     request_date: "",
-    simple_product_name: "",
+    simple_product_name: [],
     store_name: "",
     store: "",
   });
@@ -193,15 +194,47 @@ export const TableItemCreate: React.FC = () => {
                 </Button>
               </>
             </Form.Item>
-            <MyInput
-              name="name3"
-              className="required-form"
-              label="Товар"
-              value={item.simple_product_name}
-              onChange={(e) => {
-                setItem({ ...item, simple_product_name: e.target.value });
-              }}
-            />
+            <Form.Item name="name3" className="required-form" label="Товар">
+              <>
+                {item.simple_product_name.map((simpleName, index) => {
+                  return (
+                    <div key={index} style={{ display: "flex" }}>
+                      <Input
+                        placeholder="Товар"
+                        id={simpleName}
+                        value={simpleName}
+                        onChange={(event) =>
+                          handleSimpleProductNameChange(
+                            index,
+                            event,
+                            undefined,
+                            item,
+                            undefined,
+                            setItem
+                          )
+                        }
+                      />
+                      <CloseOutlined
+                        onClick={() => {
+                          handleDeleteSimpleProductName(
+                            index,
+                            undefined,
+                            undefined,
+                            item,
+                            setItem
+                          );
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+                <Button
+                  onClick={() => handleAddSimpleProductName(item, setItem)}
+                >
+                  Добавить поле
+                </Button>
+              </>
+            </Form.Item>
             <MyInput
               label="Способ Доставки"
               className="required-form"
@@ -235,7 +268,7 @@ export const TableItemCreate: React.FC = () => {
                       />
                       <CloseOutlined
                         onClick={() => {
-                          handleDeleteProvider(index);
+                          handleDeleteProvider(index, item, setItem);
                         }}
                       />
                     </div>

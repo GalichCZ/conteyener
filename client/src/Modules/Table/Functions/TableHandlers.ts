@@ -97,9 +97,13 @@ export const tableCommentHandler = (
   dispatch(setCommentValue(value));
 };
 
-export const uploadHandler = (dispatch: any, item_id: string) => {
+export const uploadHandler = (
+  dispatch: any,
+  item_id: string,
+  simple_product_name: string
+) => {
   dispatch(setOpenUpload());
-  dispatch(setUploadItemId(item_id));
+  dispatch(setUploadItemId({ item_id, simple_product_name }));
 };
 
 export const tableUpdateHandler = (dispatch: any, item: Types.IItem) => {
@@ -223,7 +227,7 @@ export const dropInput = (setItem: (c: Types.INewItem) => void) => {
   setItem({
     request_date: "",
     order_number: [],
-    simple_product_name: "",
+    simple_product_name: [],
     delivery_method: "",
     providers: [],
     importers: [],
@@ -261,7 +265,7 @@ export const checkFilledPoles = (
     item.place_of_dispatch !== "" &&
     item.providers.length > 0 &&
     item.request_date !== "" &&
-    item.simple_product_name !== "" &&
+    item.simple_product_name.length > 0 &&
     item.store !== ""
   ) {
     console.log("filled");

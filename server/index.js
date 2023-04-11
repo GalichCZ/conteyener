@@ -44,8 +44,16 @@ app.get("/api/activate/:link", UserController.activate);
 app.delete("/api/user/:email", UserController.deleteUser);
 app.post("/api/auth/signin", UserController.registration);
 
-app.post("/api/product/:item_id", FileWare, ProductController.createProduct);
-app.get("/api/product/:item_id", ProductController.getProduct);
+app.post(
+  "/api/product/:item_id/:simple_product_name",
+  FileWare,
+  ProductController.createProduct
+);
+app.get(
+  "/api/product/:item_id/:simple_product_name",
+  ProductController.getProduct
+);
+app.delete("/api/product/:_id", ProductController.deleteProduct);
 
 app.get("/api/item", ItemController.getItems);
 app.patch("/api/item", ItemController.updateItem);
@@ -114,3 +122,9 @@ const start = async () => {
 start();
 
 CreateExcel.createFile();
+// sendMessage("892514772", "Hello, it's me");
+
+// bot.on("message", (ctx) => {
+//   const chatId = ctx.message.chat.id;
+//   console.log(`Received message from chat ${chatId}: ${ctx.message.text}`);
+// });

@@ -4,11 +4,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface TableUpload {
   open: boolean;
   item_id: string;
+  simple_product_name: string;
 }
 
 const initialState: TableUpload = {
   open: false,
   item_id: "",
+  simple_product_name: "",
 };
 
 export const tableUploadSlice = createSlice({
@@ -18,8 +20,12 @@ export const tableUploadSlice = createSlice({
     setOpenUpload: (state) => {
       state.open = !state.open;
     },
-    setUploadItemId: (state, action: PayloadAction<string>) => {
-      state.item_id = action.payload;
+    setUploadItemId: (
+      state,
+      action: PayloadAction<{ item_id: string; simple_product_name: string }>
+    ) => {
+      state.item_id = action.payload.item_id;
+      state.simple_product_name = action.payload.simple_product_name;
     },
   },
 });

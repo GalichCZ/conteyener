@@ -1,6 +1,8 @@
 const DeliveryChannelSchema = require("../models/deliveryChannel-model");
 const ItemSchema = require("../models/item-model");
 const FormulaService = require("./formula-service");
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 
 class DeliveryChannelService {
   async createDeliveryChannel(req) {
@@ -24,6 +26,11 @@ class DeliveryChannelService {
       return newChannel;
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELIVERY CHANNEL CREATE ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -35,6 +42,11 @@ class DeliveryChannelService {
       return deliveryChannels;
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELIVERY CHANNEL GET ALL ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -97,6 +109,11 @@ class DeliveryChannelService {
       return { success: true };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELIVERY CHANNEL UPDATE ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }

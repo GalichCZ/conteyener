@@ -1,5 +1,6 @@
 const DeclarationSchema = require("../models/declaration-model");
-
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 class DeclarationService {
   async createDeclarationStatus(req) {
     try {
@@ -24,6 +25,11 @@ class DeclarationService {
       }
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nECLARATION STATUS CREATE ERROR:\n${error}`
+      );
     }
   }
 
@@ -34,6 +40,11 @@ class DeclarationService {
       if (doc) return doc;
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nECLARATION STATUS GET ERROR:\n${error}`
+      );
       return { message: "not found" };
     }
   }
@@ -42,6 +53,11 @@ class DeclarationService {
     try {
       await DeclarationSchema.deleteMany({ declaration_number });
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nECLARATION STATUS DELETE ALL ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
@@ -51,6 +67,11 @@ class DeclarationService {
       return await DeclarationSchema.deleteOne({ _id: req.params._id });
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nECLARATION STATUS DELETE ONE ERROR:\n${error}`
+      );
       return error;
     }
   }

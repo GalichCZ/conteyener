@@ -302,3 +302,60 @@ export const handleDeleteConditions = (
     setItem({ ...item, conditions: newConditions });
   }
 };
+
+export const handleSimpleProductNameChange = (
+  index: number,
+  event: React.ChangeEvent<HTMLInputElement>,
+  singleItem?: IItem,
+  item?: INewItem,
+  setSingleItem?: (c: IItem) => void,
+  setItem?: (c: INewItem) => void
+) => {
+  if (setSingleItem && singleItem) {
+    const newSimpleProductName = [...singleItem.simple_product_name];
+    newSimpleProductName[index] = event.target.value;
+    setSingleItem({ ...singleItem, simple_product_name: newSimpleProductName });
+  }
+  if (setItem && item) {
+    const newSimpleProductName = [...item.simple_product_name];
+    newSimpleProductName[index] = event.target.value;
+    setItem({ ...item, simple_product_name: newSimpleProductName });
+  }
+};
+export const handleAddSimpleProductName = (
+  item?: INewItem,
+  setItem?: (c: INewItem) => void,
+  singleItem?: IItem,
+  setSingleItem?: (c: IItem) => void
+) => {
+  if (singleItem && setSingleItem) {
+    setSingleItem({
+      ...singleItem,
+      simple_product_name: [...singleItem.simple_product_name, ""],
+    });
+  }
+  if (item && setItem) {
+    setItem({
+      ...item,
+      simple_product_name: [...item.simple_product_name, ""],
+    });
+  }
+};
+export const handleDeleteSimpleProductName = (
+  index: number,
+  singleItem?: IItem,
+  setSingleItem?: (c: IItem) => void,
+  item?: INewItem,
+  setItem?: (c: INewItem) => void
+) => {
+  if (singleItem && setSingleItem) {
+    const newSimpleProductName = [...singleItem.simple_product_name];
+    newSimpleProductName.splice(index, 1);
+    setSingleItem({ ...singleItem, simple_product_name: newSimpleProductName });
+  }
+  if (item && setItem) {
+    const newSimpleProductName = [...item.simple_product_name];
+    newSimpleProductName.splice(index, 1);
+    setItem({ ...item, simple_product_name: newSimpleProductName });
+  }
+};

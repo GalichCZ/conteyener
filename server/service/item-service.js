@@ -1,10 +1,12 @@
 const ItemSchema = require("../models/item-model");
 const TechStoreSchema = require("../models/techStore-model");
 const FormulaService = require("./formula-service");
+const ProductService = require("./product-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
-const dayjs = require("dayjs");
 
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 dayjs.extend(customParseFormat);
 class ItemService {
   async createItem(req, container) {
@@ -37,6 +39,11 @@ class ItemService {
 
       return true;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCREATE ITEM ERROR:\n${error}`
+      );
       console.log("ERROR LOG:", error);
       const array = Object.entries(error.keyValue).map(([key, value]) => {
         return { key, value };
@@ -53,6 +60,11 @@ class ItemService {
 
       return items;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ITEMS ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
@@ -65,6 +77,11 @@ class ItemService {
 
       return items;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET HIDDEN ITEMS ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -76,6 +93,11 @@ class ItemService {
       return await ItemSchema.updateOne({ _id }, { hidden: req.body.hidden });
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nHIDE ITEM ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -191,6 +213,8 @@ class ItemService {
           _id: req.body.stock_place,
         }));
 
+      const item = await ItemSchema.findById(_id).exec();
+
       const items = await ItemSchema.find({
         declaration_number: { $in: [req.body.declaration_number] },
       });
@@ -200,11 +224,26 @@ class ItemService {
 
       const exists = null;
 
+      const simple = req.body.simple_product_name.map(
+        async (simpleName, index) => {
+          await ProductService.updateProduct(
+            _id,
+            undefined,
+            simpleName,
+            item.simple_product_name[index]
+          );
+        }
+      );
+
+      Promise.all(simple).then((res) => {
+        return res;
+      });
+
       items.forEach((item) => {
         req.body.declaration_number.forEach((decl) => {
-          console.log(decl);
+          // console.log(decl);
           if (item.declaration_number.includes(decl)) {
-            console.log(decl, " d");
+            // console.log(decl, " d");
           }
         });
       });
@@ -256,6 +295,11 @@ class ItemService {
         return { message: "success" };
       }
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE ITEM ERROR:\n${error}`
+      );
       console.log(error);
       const array = Object.entries(error.keyValue).map(([key, value]) => {
         return { key, value };
@@ -344,6 +388,11 @@ class ItemService {
 
       // return item;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELETE ITEM ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -362,6 +411,11 @@ class ItemService {
       return { success: true };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DISTANCE ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }

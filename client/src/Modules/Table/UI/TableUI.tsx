@@ -8,7 +8,11 @@ interface ITableUi {
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   docsCount: (docs: IsDocsType) => number | "+";
-  uploadHandler?: (dispatch: any, item_id: string) => void;
+  uploadHandler?: (
+    dispatch: any,
+    item_id: string,
+    simple_product_name: string
+  ) => void;
   tableStoreHandler?: (dispatch: any, itemId: string, store: string) => void;
   dateChangeHandler?: (
     dispatch: any,
@@ -88,13 +92,30 @@ const TableUI: React.FC<ITableUi> = ({
               ref={(el) => (myRefs.current[key] = el)}
               key={key}
             >
-              <td
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  uploadHandler && uploadHandler(dispatch, item._id)
-                }
-              >
-                {item.simple_product_name}
+              <td>
+                <table className="table-importers">
+                  <tbody>
+                    <tr>
+                      {item.simple_product_name.map((simpleName, key) => {
+                        return (
+                          <td
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            onClick={() =>
+                              uploadHandler &&
+                              uploadHandler(dispatch, item._id, simpleName)
+                            }
+                            key={key}
+                          >
+                            {" "}
+                            {simpleName}{" "}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  </tbody>
+                </table>
               </td>
               <td>{item.delivery_method}</td>
               <td style={{ minWidth: "250px", textAlign: "justify" }}>
@@ -337,7 +358,7 @@ const TableUI: React.FC<ITableUi> = ({
                     tableStockHandler(dispatch, item.stock_place);
                 }}
               >
-                {item.stock_place}
+                {item.stock_place_name}
               </td>
               <td
                 onClick={() => {

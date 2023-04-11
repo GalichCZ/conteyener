@@ -24,7 +24,7 @@ const ItemSchema = new mongoose.Schema(
       // required: true,
     },
     simple_product_name: {
-      type: String,
+      type: Array,
       required: true,
     },
     providers: {

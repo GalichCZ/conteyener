@@ -23,8 +23,17 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const dispatch = useAppDispatch();
   const item_id = useAppSelector((state) => state.tableUpload.item_id);
   const open = useAppSelector((state) => state.tableUpload.open);
+  const simple_product_name = useAppSelector(
+    (state) => state.tableUpload.simple_product_name
+  );
 
   const [products, setProducts] = useState<Products[]>();
+
+  useEffect(() => {
+    if (open) {
+      console.log({ item_id, simple_product_name });
+    }
+  }, [open]);
 
   const handleOk = () => {
     dispatch(setOpenUpload());
@@ -35,14 +44,17 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   };
 
   const productHandler = async () => {
-    const response = await ProductFuncs.getProducts(item_id);
+    const response = await ProductFuncs.getProducts(
+      item_id,
+      simple_product_name
+    );
 
     setProducts(response);
   };
 
   const props: UploadProps = {
     name: "file",
-    action: `${URL}/product/${item_id}`,
+    action: `${URL}/product/${item_id}/${simple_product_name}`,
     headers: {
       authorization: "authorization-text",
     },

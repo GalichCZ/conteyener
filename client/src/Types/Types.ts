@@ -16,7 +16,7 @@ export type TableProps = {
   inside_number: string[];
   proform_number: string[];
   container: Container;
-  simple_product_name: string;
+  simple_product_name: string[];
   delivery_method: string;
   providers: string[];
   importers: string[];
@@ -69,7 +69,7 @@ export type TableProps = {
 export interface INewItem {
   request_date: Date | string | undefined;
   order_number: string[];
-  simple_product_name: string;
+  simple_product_name: string[];
   delivery_method: string;
   providers: string[];
   importers: string[];

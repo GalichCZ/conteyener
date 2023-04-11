@@ -15,6 +15,11 @@ class TechStoreService {
 
       return techStore;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCREATE TECH STORE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -26,6 +31,11 @@ class TechStoreService {
 
       return techStore;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ONE TECH STORE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -36,6 +46,11 @@ class TechStoreService {
       const techStore = await TechStoreSchema.find({ name }).exec();
       if (techStore) return techStore[0];
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ONE TECH STORE BY NAME ERROR:\n${error}`
+      );
       console.log(error);
     }
   }
@@ -46,6 +61,11 @@ class TechStoreService {
 
       return techStores;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ALL TECH STORE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -70,6 +90,11 @@ class TechStoreService {
 
       return newTechStore;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE TECH STORE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -80,6 +105,11 @@ class TechStoreService {
       await TechStoreSchema.findByIdAndDelete(_id);
       return true;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELETE TECH STORE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }

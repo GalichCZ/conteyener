@@ -14,6 +14,11 @@ class StockPlaceService {
 
       return stockPlace;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCREATE STOCK PLACE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -25,6 +30,11 @@ class StockPlaceService {
 
       return stockPlace;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ONE STOCK PLACE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -36,6 +46,11 @@ class StockPlaceService {
 
       return stockPlace;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ONE STOCK PLACE BY NAME ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -47,6 +62,11 @@ class StockPlaceService {
 
       return stockPlaces;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET ALL STOCK PLACE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }
@@ -70,6 +90,11 @@ class StockPlaceService {
 
       return newStockPlace;
     } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE STOCK PLACE ERROR:\n${error}`
+      );
       console.log(error);
       return error;
     }

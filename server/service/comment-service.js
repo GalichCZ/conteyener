@@ -1,5 +1,7 @@
 const CommentSchema = require("../models/comment-model");
 const UserSchema = require("../models/user-model");
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 class CommentService {
   async createComment(req, creator) {
     try {
@@ -18,6 +20,11 @@ class CommentService {
       return { comment, success: true };
     } catch (error) {
       console.log("COMMENT CREATE ERROR: ", error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCOMMENT CREATE ERROR:\n${error}`
+      );
       return { error, success: false };
     }
   }
@@ -31,6 +38,11 @@ class CommentService {
       return { comments, success: true };
     } catch (error) {
       console.log("COMMENT GET ERROR: ", error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCOMMENT GET ERROR:\n${error}`
+      );
       return { error, success: false };
     }
   }
@@ -44,6 +56,11 @@ class CommentService {
       return { success: true };
     } catch (error) {
       console.log("COMMENT UPDATE ERROR: ", error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nCOMMENT UPDATE ERROR:\n${error}`
+      );
       return { error, success: false };
     }
   }

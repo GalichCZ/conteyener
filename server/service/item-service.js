@@ -4,8 +4,9 @@ const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
-const dayjs = require("dayjs");
 
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 dayjs.extend(customParseFormat);
 class ItemService {
   async createItem(req, container) {
@@ -223,20 +224,26 @@ class ItemService {
 
       const exists = null;
 
-      req.body.simple_product_name.map(async (simpleName, index) => {
-        await ProductService.updateProduct(
-          _id,
-          undefined,
-          simpleName,
-          item.simple_product_name[index]
-        );
+      const simple = req.body.simple_product_name.map(
+        async (simpleName, index) => {
+          await ProductService.updateProduct(
+            _id,
+            undefined,
+            simpleName,
+            item.simple_product_name[index]
+          );
+        }
+      );
+
+      Promise.all(simple).then((res) => {
+        return res;
       });
 
       items.forEach((item) => {
         req.body.declaration_number.forEach((decl) => {
-          console.log(decl);
+          // console.log(decl);
           if (item.declaration_number.includes(decl)) {
-            console.log(decl, " d");
+            // console.log(decl, " d");
           }
         });
       });

@@ -21,6 +21,13 @@ class ProductController {
 
     res.json(response);
   }
+
+  async deleteProduct(req, res) {
+    const response = await ProductService.deleteProduct(req.params._id);
+
+    if (response.success) res.json(response);
+    else res.status(500).json(response);
+  }
 }
 
 module.exports = new ProductController();

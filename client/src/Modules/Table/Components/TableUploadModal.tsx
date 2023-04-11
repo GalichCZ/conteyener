@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UploadOutlined } from "@ant-design/icons";
+import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
 import { Products } from "../../../Types/Types";
@@ -8,7 +8,7 @@ import {
   setOpenUpload,
   setUploadItemId,
 } from "../../../store/slices/tableUploadSlice";
-import { Product } from "../Functions/productFuncs";
+import { deleteProduct, Product } from "../Functions/productFuncs";
 const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
@@ -49,7 +49,13 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
       simple_product_name
     );
 
+    console.log(response);
     setProducts(response);
+  };
+
+  const deleteProductHandler = async (_id: string) => {
+    const response = await deleteProduct(_id);
+    if (response.success) await productHandler();
   };
 
   const props: UploadProps = {
@@ -100,6 +106,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
             <td>Вес нетто</td>
             <td>Вес брутто</td>
             <td>Объем</td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
@@ -120,6 +127,18 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
                 <td>{product.weight_net}</td>
                 <td>{product.weight_gross}</td>
                 <td>{product.cbm}</td>
+                <td>
+                  <>
+                    <CloseOutlined
+                      onClick={() => deleteProductHandler(product._id)}
+                      style={{
+                        scale: "1.3",
+                        fontWeight: "bolder",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </>
+                </td>
               </tr>
             );
           })}

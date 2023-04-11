@@ -11,3 +11,18 @@ export class Product {
     return response;
   }
 }
+
+export const deleteProduct = async (_id: string) => {
+  const response = await fetch(URL + `/product/${_id}`, {
+    method: "DELETE",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+
+  return response;
+};

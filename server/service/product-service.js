@@ -1,5 +1,7 @@
 const ProductSchema = require("../models/product-model");
 const FileService = require("./file-service");
+const { SendBotMessage } = require("./bot-service");
+const dayjs = require("dayjs");
 
 class ProductService {
   async createProduct(file, item_id, simple_product_name) {
@@ -40,12 +42,10 @@ class ProductService {
 
   async updateProduct(item_id, file, simple_name, old_name) {
     try {
-      // await this.deleteProduct(item_id);
-
-      // const products = await FileService.createFile(file);
-
-      // return await this.createProduct(products);
-      await ProductSchema.updateMany({ item_id, old_name }, { simple_name });
+      const res = await ProductSchema.updateMany(
+        { item_id, simple_name: old_name },
+        { simple_name }
+      );
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -71,9 +71,10 @@ class ProductService {
     }
   }
 
-  async deleteProduct(item_id) {
+  async deleteProduct(product_id) {
     try {
-      await ProductSchema.deleteMany({ item_id });
+      await ProductSchema.findByIdAndDelete({ _id: product_id });
+      return { success: true };
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -81,6 +82,7 @@ class ProductService {
         )}\nDELETE PRODUCT ERROR:\n${error}`
       );
       console.log(error);
+      return { success: true, error };
     }
   }
 }

@@ -99,6 +99,9 @@ const TableUI: React.FC<ITableUi> = ({
                       {item.simple_product_name.map((simpleName, key) => {
                         return (
                           <td
+                            style={{
+                              cursor: "pointer",
+                            }}
                             onClick={() =>
                               uploadHandler &&
                               uploadHandler(dispatch, item._id, simpleName)

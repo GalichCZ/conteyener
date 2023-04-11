@@ -53,6 +53,7 @@ app.get(
   "/api/product/:item_id/:simple_product_name",
   ProductController.getProduct
 );
+app.delete("/api/product/:_id", ProductController.deleteProduct);
 
 app.get("/api/item", ItemController.getItems);
 app.patch("/api/item", ItemController.updateItem);

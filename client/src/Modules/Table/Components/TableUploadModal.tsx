@@ -106,6 +106,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
             <td>Вес нетто</td>
             <td>Вес брутто</td>
             <td>Объем</td>
+            <td>Производитель</td>
             <td></td>
           </tr>
         </thead>
@@ -127,6 +128,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
                 <td>{product.weight_net}</td>
                 <td>{product.weight_gross}</td>
                 <td>{product.cbm}</td>
+                <td>{product.manufacturer}</td>
                 <td>
                   <>
                     <CloseOutlined

@@ -36,6 +36,9 @@
   font-size: 15px;
   min-height: 50px;
 }
+.table-importers {
+  width: 100%;
+}
 .table-importers tbody tr {
   display: flex;
   border: none;

@@ -43,7 +43,11 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    store: String,
+    store: {
+      default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TechStore",
+    },
     delivery_channel: {
       type: String,
       default: "",
@@ -153,7 +157,10 @@ const ItemSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    stock_place: String,
+    stock_place: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StockPlace",
+    },
     stock_place_name: String,
     comment: String,
     fraht: String,

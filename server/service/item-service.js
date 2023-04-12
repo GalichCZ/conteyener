@@ -218,9 +218,11 @@ class ItemService {
       const items = await ItemSchema.find({
         declaration_number: { $in: [req.body.declaration_number] },
       });
-      const store_name = await TechStoreSchema.findById({
-        _id: req.body.store,
-      });
+      const store_name =
+        req.body.store &&
+        (await TechStoreSchema.findById({
+          _id: req.body.store,
+        }));
 
       const exists = null;
 
@@ -287,6 +289,7 @@ class ItemService {
             stock_place_name: stock_place && stock_place.name,
             stock_place: req.body.stock_place,
             store_name: store_name && store_name.name,
+            store: req.body.store,
             fraht: req.body.fraht,
             bid: req.body.bid,
             note: req.body.note,

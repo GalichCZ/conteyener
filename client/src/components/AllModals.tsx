@@ -66,7 +66,11 @@ const ChannelUpdate = lazy(() =>
     ({ ChannelUpdate }) => ({ default: ChannelUpdate })
   )
 );
-
+const DeleteConfirm = lazy(() =>
+  import("./DeleteConfirm").then(({ DeleteConfirm }) => ({
+    default: DeleteConfirm,
+  }))
+);
 export const AllModals = () => {
   return (
     <>

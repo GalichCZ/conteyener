@@ -1,6 +1,9 @@
 const TechStoreSchema = require("../models/techStore-model");
+const ItemSchema = require("../models/item-model");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 class TechStoreService {
   async createTechStore(address, name, receiver, contact, note) {
     try {
@@ -103,6 +106,10 @@ class TechStoreService {
 
   async deleteTechStore(_id) {
     try {
+      await ItemSchema.updateMany(
+        { store: _id },
+        { store_name: "", store: null }
+      );
       await TechStoreSchema.findByIdAndDelete(_id);
       return true;
     } catch (error) {

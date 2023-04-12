@@ -9,6 +9,7 @@ const ProductSchema = new mongoose.Schema(
     model: String,
     modification: String,
     product_name: String,
+    manufacturer: String,
     quantity_pieces: Number,
     quantity_places: Number,
     piece_price: Number,

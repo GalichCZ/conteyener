@@ -20,6 +20,7 @@ class ProductService {
           total_price: product["TOTAL PRICE, USD"],
           weight_net: product["NET/KG"],
           weight_gross: product["GROSS/KG"],
+          manufacturer: product["Manufacturer"],
           cbm: product["M³"],
           item_id,
           simple_name: simple_product_name,

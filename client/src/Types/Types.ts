@@ -149,6 +149,7 @@ export interface Products {
   weight_gross: number;
   cbm: number;
   container: string;
+  manufacturer: string;
 }
 
 export interface UserData {

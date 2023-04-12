@@ -95,6 +95,7 @@ app.get("/api/stock", StockPlaceController.getStockPlaces);
 app.post("/api/stock", StockPlaceController.createStockPlace);
 app.patch("/api/stock", StockPlaceController.updateStockPlaces);
 app.get("/api/stock/:_id", StockPlaceController.getOneStockPlace);
+app.delete("/api/stock/:_id", StockPlaceController.deleteStockPlace);
 app.get("/api/stock/:name/name", StockPlaceController.getOneStockPlaceByName);
 
 app.get("/api/comment/:comment_item", CommentController.getComments);

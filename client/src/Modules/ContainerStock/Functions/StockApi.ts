@@ -70,3 +70,18 @@ export const updateStockPlace = async (stockUpdate: IStockData) => {
     });
   return response;
 };
+
+export const deleteStockPlace = async (_id: string | undefined) => {
+  const response = await fetch(URL + `/stock/${_id}`, {
+    method: "DELETE",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  return response;
+};

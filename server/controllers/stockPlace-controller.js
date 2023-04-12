@@ -47,6 +47,13 @@ class StockPlaceController {
 
     res.json(result);
   }
+
+  async deleteStockPlace(req, res) {
+    const result = await StockPlaceService.deleteStockPlace(req.params._id);
+    console.log(result);
+    if (result.success) return res.status(200).json(result);
+    else return res.status(500).json(error);
+  }
 }
 
 module.exports = new StockPlaceController();

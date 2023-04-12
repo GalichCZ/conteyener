@@ -1,4 +1,5 @@
 const StockPlaceSchema = require("../models/stockPlace-model");
+const ItemSchema = require("../models/item-model");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 class StockPlaceService {
@@ -98,6 +99,27 @@ class StockPlaceService {
       );
       console.log(error);
       return error;
+    }
+  }
+
+  async deleteStockPlace(_id) {
+    try {
+      console.log(_id);
+      await ItemSchema.updateMany(
+        { stock_place: _id },
+        { stock_place: null, stock_place_name: "" }
+      );
+      await StockPlaceSchema.findByIdAndDelete(_id);
+
+      return { success: true };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELETE STOCK PLACE ERROR:\n${error}`
+      );
+      console.log(error);
+      return { success: true, error };
     }
   }
 }

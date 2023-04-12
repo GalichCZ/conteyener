@@ -3,6 +3,7 @@ import { Button, List } from "antd";
 import { TechStore } from "../Functions/techStoreFuncs";
 import { TechStoreData } from "../../../Types/Types";
 import { CloseOutlined } from "@ant-design/icons";
+import { DeleteConfirm } from "../../../components/DeleteConfirm";
 
 const TechStoreFuncs = new TechStore();
 
@@ -21,6 +22,8 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
 }) => {
   const [stores, setStores] = useState<TechStoreData[]>();
   const [err, setErr] = useState<string | null>();
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const [id, setId] = useState<string | undefined>("");
 
   const getStores = async () => {
     const response = await TechStoreFuncs.getTechStore();
@@ -28,9 +31,17 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
     else setStores(response);
   };
 
-  const deleteStore = async (_id: string | undefined) => {
-    const response = await TechStoreFuncs.deleteTechStore(_id);
-    if (response) await getStores();
+  const deleteStoreHandler = async (_id: string | undefined) => {
+    setOpenConfirm(true);
+    setId(_id);
+  };
+
+  const deleteStore = async () => {
+    const response = await TechStoreFuncs.deleteTechStore(id);
+    if (response) {
+      await getStores();
+      return true;
+    }
   };
 
   const modalHandler = (
@@ -57,6 +68,10 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
   }, []);
 
   useEffect(() => {
+    console.log(openConfirm);
+  }, [openConfirm]);
+
+  useEffect(() => {
     if (status) {
       getStores();
       setStatus(false);
@@ -64,37 +79,44 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
   }, [status]);
 
   return (
-    <div className="tech-store_draw">
-      <List style={{ padding: "15px" }}>
-        {stores?.map((store, key) => {
-          return (
-            <div className="stores-data" key={key}>
-              <strong>Название: {store.name}</strong>
-              <p style={{ margin: "0 15px" }}>Адрес: {store.address}</p>
-              <Button
-                onClick={() =>
-                  modalHandler(
-                    store.address,
-                    store.name,
-                    store.receiver,
-                    store.contact,
-                    store.note,
-                    store._id
-                  )
-                }
-                style={{ margin: "0 15px" }}
-              >
-                Изменить
-              </Button>
-              <CloseOutlined
-                onClick={() => {
-                  deleteStore(store._id);
-                }}
-              />
-            </div>
-          );
-        })}
-      </List>
-    </div>
+    <>
+      <DeleteConfirm
+        deleteFunction={deleteStore}
+        open={openConfirm}
+        setOpen={setOpenConfirm}
+      />
+      <div className="tech-store_draw">
+        <List style={{ padding: "15px" }}>
+          {stores?.map((store, key) => {
+            return (
+              <div className="stores-data" key={key}>
+                <strong>Название: {store.name}</strong>
+                <p style={{ margin: "0 15px" }}>Адрес: {store.address}</p>
+                <Button
+                  onClick={() =>
+                    modalHandler(
+                      store.address,
+                      store.name,
+                      store.receiver,
+                      store.contact,
+                      store.note,
+                      store._id
+                    )
+                  }
+                  style={{ margin: "0 15px" }}
+                >
+                  Изменить
+                </Button>
+                <CloseOutlined
+                  onClick={() => {
+                    deleteStoreHandler(store._id);
+                  }}
+                />
+              </div>
+            );
+          })}
+        </List>
+      </div>
+    </>
   );
 };

@@ -19,6 +19,8 @@ export const Table: React.FunctionComponent = () => {
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
   const [widths] = useState<number[]>([]);
+  const [tableHeight, setTableHeight] = useState<number>();
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
     []
@@ -48,6 +50,7 @@ export const Table: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
+    console.log(heights1, heights2, "from tables");
     dispatch(
       setHeights(
         heights1.map((num, index) =>
@@ -75,6 +78,12 @@ export const Table: React.FunctionComponent = () => {
       (await TableHandlers.SearchHandler(query, copyItems));
     filtered && setItems(filtered);
   };
+
+  useEffect(() => {
+    if (tableRef.current) {
+      setTableHeight(tableRef.current.offsetHeight);
+    }
+  }, [items]);
 
   useEffect(() => {
     getItems().catch((err) => console.log(err));
@@ -115,7 +124,7 @@ export const Table: React.FunctionComponent = () => {
             tableUpdateHandler={TableHandlers.tableUpdateHandler}
           />
         </table>
-        <div className="table-page_unfixed-table">
+        <div ref={tableRef} className="table-page_unfixed-table">
           <table>
             <TableColNames
               widthsArray={widths}

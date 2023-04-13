@@ -84,7 +84,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   return (
     <Modal
       className="declaration-modal"
-      title="Товар"
+      title={`Товар - ${simple_product_name}`}
       open={open}
       onOk={handleOk}
       onCancel={handleCancel}

@@ -5,6 +5,7 @@ import { Header } from "./UI/index";
 import "./App.css";
 import "antd/dist/antd.css";
 import { AllModals } from "./components/index";
+import { TestPage } from "./pages/TestPage";
 
 const TablePage = lazy(() =>
   wait(0).then(() =>
@@ -90,6 +91,7 @@ function App() {
           />
           <Route path="/table/hidden" element={<HiddenItemsPage />} />
           <Route path="/activation" element={<ActivationPage />} />
+          <Route path="/test" element={<TestPage />} />
         </Routes>
       </BrowserRouter>
     </>

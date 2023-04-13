@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { IItem, TableProps } from "../../../Types/Types";
@@ -40,12 +41,22 @@ export const TableUiFixed: React.FC<ITableUi> = ({
     getHeight();
   }, [items]);
 
+  function heightCheck(height: number) {
+    if (height < 50) return 50;
+    else return height;
+  }
+
+  function cutString(str: string, border: number) {
+    if (str) return str.substring(0, border);
+  }
+
   return (
     <tbody>
       {items?.map((item, key) => {
         return (
           <tr
-            style={{ height: `${heights[key]}px` }}
+            className="table-row"
+            style={{ height: `${heightCheck(heights[key])}px` }}
             ref={(el) => (myRefs.current[key] = el)}
             key={key}
           >
@@ -58,37 +69,29 @@ export const TableUiFixed: React.FC<ITableUi> = ({
               {timeConvert(item.request_date)}
             </td>
             <td>
-              <table className="table-importers">
-                <tbody>
-                  <tr>
-                    {item.inside_number.map((num, key) => {
-                      return <td key={key}>{num}</td>;
-                    })}
-                  </tr>
-                </tbody>
-              </table>
+              <div className="arr-info">
+                {item.inside_number.map((num, key) => {
+                  return <p key={key}>{num}</p>;
+                })}
+              </div>
             </td>
             <td>
-              <table className="table-importers">
-                <tbody>
-                  <tr>
-                    {item.proform_number.map((num, key) => {
-                      return <td key={key}>{num}</td>;
-                    })}
-                  </tr>
-                </tbody>
-              </table>
+              <div className="arr-info">
+                {item.proform_number.map((num, key) => {
+                  return <p key={key}>{num}</p>;
+                })}
+              </div>
             </td>
             <td>
-              <table className="table-importers">
-                <tbody>
-                  <tr>
-                    {item.order_number.map((num, key) => {
-                      return <td key={key}>{num}</td>;
-                    })}
-                  </tr>
-                </tbody>
-              </table>
+              <div className="arr-info">
+                {item.order_number.map((num, key) => {
+                  return (
+                    <Tooltip key={key} title={num}>
+                      <p key={key}>{cutString(num, 10)}</p>
+                    </Tooltip>
+                  );
+                })}
+              </div>
             </td>
             <td> {item.container?.container_number} </td>
           </tr>

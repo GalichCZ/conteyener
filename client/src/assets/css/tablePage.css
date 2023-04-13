@@ -3,13 +3,15 @@
   align-items: flex-start;
   justify-content: flex-start;
   height: 100vh;
-  background-color: rgb(220, 222, 252);
   flex-direction: column;
   padding: 90px 20px 0 20px;
 }
 .table-page table {
   color: black;
   background-color: white;
+}
+.table-row:nth-child(even) {
+  background: rgba(163, 163, 163, 0.171);
 }
 .table-page table thead tr td {
   position: relative;
@@ -23,41 +25,34 @@
   display: flex;
   width: 100%;
   overflow-x: hidden;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
   max-height: 80vh;
 }
 .table-page table tr {
   border: 1px solid black;
+  min-height: 50px !important;
+}
+.arr-info p {
+  line-height: 20px;
+}
+.arr-info_product p {
+  transition: 0.1s;
+}
+.arr-info_product p:hover {
+  scale: 1.05;
+  transition: 0.1s;
 }
 .table-page table td {
   border: 1px solid black;
   min-width: 120px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
-  min-height: 50px;
+  min-height: 50px !important;
 }
-.table-importers {
-  width: 100%;
-}
-.table-importers tbody tr {
-  display: flex;
-  border: none;
-  flex-direction: column;
-}
-.table-importers tbody tr td {
-  border: none;
-}
-
-.table-page_fixed-table thead {
-  /* position: fixed; */
-}
-.table-page_fixed-table tbody {
-  /* transform: translateY(83px); */
-}
-
 .table-page_unfixed-table {
   width: 100%;
-  overflow-x: overlay;
+  overflow-x: auto;
   position: relative;
   padding-bottom: 0 !important;
   height: fit-content;

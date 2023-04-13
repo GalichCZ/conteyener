@@ -2,6 +2,7 @@ import { Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { IsDocsType, TableProps } from "../../../Types/Types";
+import { Tooltip } from "antd";
 
 interface ITableUi {
   setHeights2?: (c: Array<number | null | undefined>) => void;
@@ -82,74 +83,78 @@ const TableUI: React.FC<ITableUi> = ({
     getHeight();
   }, [items]);
 
+  console.log(heights, "counted");
+
+  function heightCheck(height: number) {
+    if (height < 50) return 50;
+    else return height;
+  }
+
+  function cutString(str: string, border: number) {
+    const cutted = str && str.substring(0, border);
+    return cutted;
+    //TODO: check last symbol to cut if it is 1
+  }
+
   return (
     <>
       <tbody>
         {items?.map((item, key) => {
           return (
             <tr
-              style={{ height: `${heights[key]}px` }}
+              className="table-row"
+              style={{ height: `${heightCheck(heights[key])}px` }}
               ref={(el) => (myRefs.current[key] = el)}
               key={key}
             >
               <td>
-                <table className="table-importers">
-                  <tbody>
-                    <tr>
-                      {item.simple_product_name.map((simpleName, key) => {
-                        return (
-                          <td
-                            style={{
-                              cursor: "pointer",
-                            }}
-                            onClick={() =>
-                              uploadHandler &&
-                              uploadHandler(dispatch, item._id, simpleName)
-                            }
-                            key={key}
-                          >
-                            {" "}
-                            {simpleName}{" "}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="arr-info arr-info_product">
+                  {item.simple_product_name.map((simpleName, key) => {
+                    return (
+                      <Tooltip key={key} title={simpleName}>
+                        <p
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          onClick={() =>
+                            uploadHandler &&
+                            uploadHandler(dispatch, item._id, simpleName)
+                          }
+                          key={key}
+                        >
+                          {" "}
+                          {cutString(simpleName, 13)}{" "}
+                        </p>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
               </td>
               <td>{item.delivery_method}</td>
-              <td style={{ minWidth: "250px", textAlign: "justify" }}>
-                <table className="table-importers">
-                  <tbody>
-                    <tr>
-                      {item.providers.map((provider, key) => {
-                        return <td key={key}> {provider} </td>;
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+              <td style={{ minWidth: "250px" }}>
+                <div className="arr-info">
+                  {item.providers.map((provider, key) => {
+                    return (
+                      <Tooltip key={key} title={provider}>
+                        <p> {cutString(provider, 25)}... </p>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
               </td>
               <td>
-                <table className="table-importers">
-                  <tbody>
-                    <tr>
-                      {item.importers.map((importer, key) => {
-                        return <td key={key}> {importer} </td>;
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="arr-info">
+                  {item.importers.map((importer, key) => {
+                    return <p key={key}> {importer} </p>;
+                  })}
+                </div>
               </td>
               <td>
-                <table className="table-importers">
-                  <tbody>
-                    <tr>
-                      {item.conditions.map((condition, key) => {
-                        return <td key={key}> {condition} </td>;
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="arr-info">
+                  {item.conditions.map((condition, key) => {
+                    return <p key={key}> {condition} </p>;
+                  })}
+                </div>
               </td>
               <td
                 style={{ cursor: "pointer" }}
@@ -233,26 +238,21 @@ const TableUI: React.FC<ITableUi> = ({
                 )}
               </td>
               <td>
-                <table className="table-importers">
-                  <tbody>
-                    <tr>
-                      {item.declaration_number.map((num, key) => {
-                        return (
-                          <td
-                            key={key}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              declStatusHandler &&
-                                declStatusHandler(dispatch, num);
-                            }}
-                          >
-                            {num}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
+                <div className="arr-info">
+                  {item.declaration_number.map((num, key) => {
+                    return (
+                      <p
+                        key={key}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          declStatusHandler && declStatusHandler(dispatch, num);
+                        }}
+                      >
+                        {num}
+                      </p>
+                    );
+                  })}
+                </div>
               </td>
               <td
                 onClick={() => {
@@ -358,7 +358,7 @@ const TableUI: React.FC<ITableUi> = ({
                     tableStockHandler(dispatch, item.stock_place);
                 }}
               >
-                {item.stock_place_name}
+                {cutString(item.stock_place_name, 15)}
               </td>
               <td
                 onClick={() => {

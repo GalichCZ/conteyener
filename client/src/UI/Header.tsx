@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { useAppDispatch } from "../hooks/hooks";
+import { useAppDispatch } from "../hooks/hooksRedux";
 import SearchIcon from "../Modules/Search/UI/SearchIcon";
 import AuthContext from "../store/auth-context";
 import { DropDown } from "./DropDown";
@@ -31,6 +31,8 @@ export const Header = () => {
             </>
           ) : (
             <>
+              <Search />
+
               <Link onClick={authCtx.logout} to="/login">
                 Log Out
               </Link>

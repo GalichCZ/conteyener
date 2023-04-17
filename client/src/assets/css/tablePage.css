@@ -33,7 +33,7 @@
   min-height: 50px !important;
 }
 .arr-info p {
-  line-height: 20px;
+  line-height: normal;
 }
 .arr-info_product p {
   transition: 0.1s;

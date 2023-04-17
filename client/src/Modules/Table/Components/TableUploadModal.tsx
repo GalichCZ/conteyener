@@ -3,7 +3,7 @@ import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
 import { Products } from "../../../Types/Types";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import {
   setOpenUpload,
   setUploadItemId,
@@ -54,7 +54,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   };
 
   const deleteProductHandler = async (_id: string) => {
-    const response = await deleteProduct(_id);
+    const response = await deleteProduct(_id, item_id);
     if (response.success) await productHandler();
   };
 

@@ -5,11 +5,13 @@ const { Option } = Select;
 
 interface IDeliveryMethodSelectProps {
   value: string;
+  className?: string;
   onChange: (value: string) => void;
 }
 
 export const DeliveryMethodSelect: React.FC<IDeliveryMethodSelectProps> = ({
   value,
+  className,
   onChange,
 }) => {
   const options = [
@@ -37,7 +39,7 @@ export const DeliveryMethodSelect: React.FC<IDeliveryMethodSelectProps> = ({
   ];
 
   return (
-    <Form.Item label="Способ доставки">
+    <Form.Item className={className} label="Способ доставки">
       <>
         <Select
           onChange={onChange}
@@ -45,17 +47,6 @@ export const DeliveryMethodSelect: React.FC<IDeliveryMethodSelectProps> = ({
           options={options}
           placeholder="Способ доставки"
         />
-        {/* <Select>
-          {options.map((option, key) => {
-            return (
-              <Option
-                value="1"
-                label={<Tooltip title="Tooltip for Option 1">Option 1</Tooltip>}
-                children={undefined}
-              />
-            );
-          })}
-        </Select> */}
       </>
     </Form.Item>
   );

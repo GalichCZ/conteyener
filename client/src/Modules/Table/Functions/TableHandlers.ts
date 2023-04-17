@@ -248,6 +248,7 @@ export const dropInput = (setItem: (c: Types.INewItem) => void) => {
       ED: false,
       bill: false,
     },
+    direction: "",
   });
 };
 

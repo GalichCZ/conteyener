@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { TableColNames } from "../../../components";
-import { useAppSelector, useAppDispatch } from "../../../hooks/hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import { TableProps } from "../../../Types/Types";
 import { Item } from "../../Table/Functions/itemFuncs";

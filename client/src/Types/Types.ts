@@ -64,6 +64,7 @@ export type TableProps = {
   stock_place_name: any;
   stock_place: any;
   hidden: boolean;
+  direction: "";
 };
 
 export interface INewItem {
@@ -80,6 +81,7 @@ export interface INewItem {
   container_type?: string;
   place_of_dispatch: string;
   is_docs: IsDocsType;
+  direction: string;
 }
 
 export interface IItem extends INewItem {

@@ -5,7 +5,6 @@ import { Item } from "../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import { MyInput, TechStoreSelect } from "../../../components/index";
 import { Required } from "../../../UI/index";
-import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import {
   handleProviderChange,
@@ -27,6 +26,7 @@ import {
 import { callError } from "../Functions/ErrorHandlers";
 import { dropInput } from "../Functions/TableHandlers";
 import { checkFilledPoles } from "../Functions/TableHandlers";
+import { DeliveryMethodSelect } from "../../../components/DeliveryMethodSelect";
 
 const ItemFuncs = new Item();
 
@@ -61,6 +61,7 @@ export const TableItemCreate: React.FC = () => {
     simple_product_name: [],
     store_name: "",
     store: "",
+    direction: "",
   });
 
   const showModal = () => {
@@ -235,16 +236,10 @@ export const TableItemCreate: React.FC = () => {
                 </Button>
               </>
             </Form.Item>
-            <MyInput
-              label="Способ Доставки"
+            <DeliveryMethodSelect
               className="required-form"
-              value={item?.delivery_method}
-              onChange={(e: { target: HTMLInputElement }) => {
-                setItem({
-                  ...item,
-                  delivery_method: e.target.value,
-                });
-              }}
+              value={item.delivery_method}
+              onChange={(value) => setItem({ ...item, delivery_method: value })}
             />
             <Form.Item name="name5" className="required-form" label="Поставщик">
               <>
@@ -363,6 +358,14 @@ export const TableItemCreate: React.FC = () => {
               value={item.store}
               opened={open}
               className="required-form"
+            />
+            <MyInput
+              className="required-form"
+              label="Направление"
+              value={item.direction}
+              onChange={(e) => {
+                setItem({ ...item, direction: e.target.value });
+              }}
             />
             <MyInput
               name="name9"

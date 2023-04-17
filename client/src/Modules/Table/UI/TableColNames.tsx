@@ -68,6 +68,7 @@ export const TableColNames: React.FC<ITableColProps> = ({
               }}
             />
           </td>
+          <td>Направление</td>
           <td>
             Склад
             <FilterFilled

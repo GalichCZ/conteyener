@@ -23,7 +23,10 @@ class ProductController {
   }
 
   async deleteProduct(req, res) {
-    const response = await ProductService.deleteProduct(req.params._id);
+    const response = await ProductService.deleteProduct(
+      req.params._id,
+      req.params.itemId
+    );
 
     if (response.success) res.json(response);
     else res.status(500).json(response);

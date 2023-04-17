@@ -27,6 +27,7 @@ class ItemService {
         store_name: store_name && store_name.name,
         agent: req.body.agent,
         store: req.body.store,
+        direction: req.body.direction,
         container: {
           container_number: container.container_number,
           container_type: container.container_type,
@@ -281,6 +282,7 @@ class ItemService {
             declaration_number: req.body.declaration_number,
             availability_of_ob: req.body.availability_of_ob,
             answer_of_ob: req.body.answer_of_ob,
+            direction: req.body.direction,
             expeditor: req.body.expeditor,
             destination_station: req.body.destination_station,
             km_to_dist: req.body.km_to_dist,

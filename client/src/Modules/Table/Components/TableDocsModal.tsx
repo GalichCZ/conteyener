@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form } from "antd";
 import { IsDocsType } from "../../../Types/Types";
 import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import {
   setDocsId,
   setOpenDocs,

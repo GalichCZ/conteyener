@@ -24,4 +24,12 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
+ProductSchema.index(
+  { article: "text" },
+  {
+    language_override: "simple",
+    default_language: "none",
+  }
+);
+
 module.exports = mongoose.model("Product", ProductSchema);

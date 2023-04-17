@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "antd";
 import SearchIcon from "../UI/SearchIcon";
 import { SearchHandler, SearchInputHandler } from "../Functions/SearchHandler";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 
 const Search = () => {
   const dispatch = useAppDispatch();

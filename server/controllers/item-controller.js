@@ -88,9 +88,17 @@ class ItemController {
 
   async findItemsBySearch(req, res) {
     try {
+      console.log(req.body.query_string);
       const items = await ItemSchema.find({
         $text: { $search: req.body.query_string },
-      });
+      })
+        .populate({
+          path: product,
+          match: {
+            article: { $regex: new RegExp(req.body.query_string, "i") },
+          },
+        })
+        .exec();
       res.json(items);
     } catch (error) {
       console.log(error);

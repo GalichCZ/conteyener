@@ -63,5 +63,6 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     hidden: false,
     note: "",
     fraht: "",
+    direction: "",
   });
 };

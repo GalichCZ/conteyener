@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form, InputNumber } from "antd";
 import { MyInput } from "../../../components";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import { setOpenDistance } from "../../../store/slices/tableDistanceSlice";
 import { updateItemDistance } from "../Functions/itemFuncs";

@@ -1,10 +1,10 @@
 const DeclarationService = require("../service/declaration-service");
-const ContainerService = require("../service/container-service");
 const ProductService = require("../service/product-service");
 const IsDocsService = require("../service/isDocs-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
+const ProductSchema = require("../models/product-model");
 const UserSchema = require("../models/user-model");
 
 class ItemController {
@@ -14,11 +14,9 @@ class ItemController {
     if (!creator)
       return res.status(403).json({ message: "NO CREATOR FOUND !" });
 
-    const container = await ContainerService.getContainer(req);
+    const is_docs = await IsDocsService.createDocs(req);
 
-    const is_docs = await IsDocsService.createDocs(req, container);
-
-    const item = await ItemService.createItem(req, container);
+    const item = await ItemService.createItem(req);
 
     if (item.error) return res.status(400).json({ error: item.error });
 
@@ -69,12 +67,7 @@ class ItemController {
     try {
       const item = await ItemSchema.findById({ _id: req.body._id });
 
-      const container = await ContainerService.updateContainer(
-        item.container._id,
-        req
-      );
-
-      const response = await ItemService.updateItem(item._id, req, container);
+      const response = await ItemService.updateItem(item._id, req);
 
       console.log(response);
 
@@ -91,15 +84,28 @@ class ItemController {
       console.log(req.body.query_string);
       const items = await ItemSchema.find({
         $text: { $search: req.body.query_string },
-      })
-        .populate({
-          path: product,
-          match: {
-            article: { $regex: new RegExp(req.body.query_string, "i") },
+      }).exec();
+      if (items.length === 0) {
+        const products = await ProductSchema.find({
+          $text: {
+            $search: req.body.query_string,
           },
-        })
-        .exec();
-      res.json(items);
+        }).exec();
+        console.log(products);
+        const itemIds = products.map((product) => {
+          return product.item_id;
+        });
+        const uniqueIds = itemIds.filter((element, index) => {
+          return itemIds.indexOf(element) === index;
+        });
+
+        const getItems = uniqueIds.map(async (id) => {
+          return await ItemSchema.findById(id);
+        });
+        Promise.all(getItems).then((result) => {
+          return res.json(result);
+        });
+      } else res.json(items);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);

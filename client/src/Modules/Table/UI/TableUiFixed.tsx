@@ -91,7 +91,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                 })}
               </div>
             </td>
-            <td> {item.container?.container_number} </td>
+            <td> {item.container_number} </td>
           </tr>
         );
       })}

@@ -175,7 +175,7 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.store_name}
               </td>
               <td> {item.agent} </td>
-              <td> {item.container?.container_type} </td>
+              <td> {item.container_type} </td>
               <td> {item.place_of_dispatch} </td>
               <td> {item.line} </td>
               <td> {item.ready_date && timeConvert(item.ready_date)} </td>

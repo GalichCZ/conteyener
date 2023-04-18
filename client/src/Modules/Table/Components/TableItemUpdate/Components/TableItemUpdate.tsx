@@ -64,11 +64,8 @@ export const TableItemUpdate = ({}) => {
     inside_number: [],
     proform_number: [],
     order_number: [],
-    container: {
-      _id: "",
-      container_number: "",
-      container_type: "",
-    },
+    container_number: "",
+    container_type: "",
     simple_product_name: [],
     delivery_method: "",
     providers: [],
@@ -78,7 +75,6 @@ export const TableItemUpdate = ({}) => {
     agent: "",
     store_name: "",
     delivery_channel: "",
-    container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
     line: "",
@@ -356,13 +352,10 @@ export const TableItemUpdate = ({}) => {
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({
                 ...singleItem,
-                container: {
-                  ...singleItem.container,
-                  container_number: e.target.value,
-                },
+                container_number: e.target.value,
               });
             }}
-            value={singleItem?.container?.container_number}
+            value={singleItem?.container_number}
           />
           <Form.Item name="name3" className="required-form" label="Товар">
             <>
@@ -578,13 +571,10 @@ export const TableItemUpdate = ({}) => {
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({
                 ...singleItem,
-                container: {
-                  ...singleItem.container,
-                  container_type: e.target.value,
-                },
+                container_type: e.target.value,
               });
             }}
-            value={singleItem?.container?.container_type}
+            value={singleItem?.container_type}
           />
           <MyInput
             className="required-form"

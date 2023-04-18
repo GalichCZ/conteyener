@@ -4,7 +4,7 @@ import { TechStoreData } from "../../../Types/Types";
 import { TechStore } from "../../../Modules/TechStore/Functions/techStoreFuncs";
 import { Item } from "../Functions/itemFuncs";
 import { setOpenTableStore } from "../../../store/slices/tableStoreSlice";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { MyInput, TechStoreSelect } from "../../../components";
 
 const { TextArea } = Input;

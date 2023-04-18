@@ -1,6 +1,6 @@
 import { Button, List } from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { useAppDispatch } from "../../../hooks/hooks";
+import { useAppDispatch } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import {
   setChannel,

@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button } from "antd";
 import { Item } from "../Functions/itemFuncs";
 import { IUpdateComment, IComment } from "../../../Types/Types";
 import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import {
   setOpenComment,
   setCommentId,

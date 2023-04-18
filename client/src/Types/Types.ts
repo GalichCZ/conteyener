@@ -1,9 +1,3 @@
-type Container = {
-  container_number: string;
-  container_type: string;
-  _id: string;
-};
-
 export type StockPlace = {
   _id: string;
   name: string;
@@ -15,7 +9,8 @@ export type TableProps = {
   order_number: string[];
   inside_number: string[];
   proform_number: string[];
-  container: Container;
+  container_number: string;
+  container_type: string;
   simple_product_name: string[];
   delivery_method: string;
   providers: string[];
@@ -64,6 +59,7 @@ export type TableProps = {
   stock_place_name: any;
   stock_place: any;
   hidden: boolean;
+  direction: "";
 };
 
 export interface INewItem {
@@ -77,17 +73,17 @@ export interface INewItem {
   store_name: string;
   store: string;
   agent: string;
-  container_type?: string;
+  container_type: string;
   place_of_dispatch: string;
   is_docs: IsDocsType;
+  direction: string;
 }
 
 export interface IItem extends INewItem {
   _id: string;
   inside_number: string[];
   proform_number: string[];
-  container_number?: string;
-  container: Container;
+  container_number: string;
   store_receiver?: string;
   store_address?: string;
   store_contact?: string;

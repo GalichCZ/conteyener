@@ -3,7 +3,7 @@ import { DatePicker, Form, Modal } from "antd";
 import { FormulaDateUpdate } from "../../../Types/Types";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { setOpenFormula } from "../../../store/slices/tableFormulaDateSlice";
 import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
 import moment from "moment";

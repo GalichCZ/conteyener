@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { IStockData } from "../../ContainerStock/Types";
 import { getOneStockPlaceByName } from "../../ContainerStock/Functions/StockApi";
 import { setOpenTableStock } from "../../../store/slices/tableStockSlice";

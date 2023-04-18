@@ -49,7 +49,7 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
           Номер контейнера
           <FilterFilled
             onClick={() => {
-              sort("container");
+              sort("container_number");
             }}
           />
         </td>

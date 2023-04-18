@@ -4,7 +4,10 @@ import { IItem } from "../../../../../Types/Types";
 import { Item, updateItem } from "../../../Functions/itemFuncs";
 import { CloseOutlined } from "@ant-design/icons";
 import ReDrawContext from "../../../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../../hooks/hooksRedux";
 import { setOpenItemUpdate } from "../../../../../store/slices/tableItemUpdateSlice";
 import { MyInput, TechStoreSelect } from "../../../../../components";
 import {
@@ -61,11 +64,8 @@ export const TableItemUpdate = ({}) => {
     inside_number: [],
     proform_number: [],
     order_number: [],
-    container: {
-      _id: "",
-      container_number: "",
-      container_type: "",
-    },
+    container_number: "",
+    container_type: "",
     simple_product_name: [],
     delivery_method: "",
     providers: [],
@@ -75,7 +75,6 @@ export const TableItemUpdate = ({}) => {
     agent: "",
     store_name: "",
     delivery_channel: "",
-    container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
     line: "",
@@ -117,6 +116,7 @@ export const TableItemUpdate = ({}) => {
     stock_place_name: "",
     fraht: "",
     hidden: false,
+    direction: "",
   });
 
   const handleOk = async () => {
@@ -221,6 +221,7 @@ export const TableItemUpdate = ({}) => {
             />
           </Form.Item>
           <DeliveryMethodSelect
+            className="required-form"
             value={singleItem.delivery_method}
             onChange={(value) =>
               setSingleItem({ ...singleItem, delivery_method: value })
@@ -351,25 +352,11 @@ export const TableItemUpdate = ({}) => {
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({
                 ...singleItem,
-                container: {
-                  ...singleItem.container,
-                  container_number: e.target.value,
-                },
+                container_number: e.target.value,
               });
             }}
-            value={singleItem?.container?.container_number}
+            value={singleItem?.container_number}
           />
-          {/* <MyInput
-            label="Товар"
-            className="required-form"
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                simple_product_name: e.target.value,
-              });
-            }}
-            value={singleItem?.simple_product_name}
-          /> */}
           <Form.Item name="name3" className="required-form" label="Товар">
             <>
               {singleItem.simple_product_name.map((simpleName, index) => {
@@ -416,17 +403,6 @@ export const TableItemUpdate = ({}) => {
               </Button>
             </>
           </Form.Item>
-          <MyInput
-            label="Способ Доставки"
-            className="required-form"
-            value={singleItem?.delivery_method}
-            onChange={(e: { target: HTMLInputElement }) => {
-              setSingleItem({
-                ...singleItem,
-                delivery_method: e.target.value,
-              });
-            }}
-          />
           <Form.Item className="required-form" label="Поставщик">
             {singleItem.providers.map((provider, index) => {
               return (
@@ -565,6 +541,14 @@ export const TableItemUpdate = ({}) => {
               </Button>
             </>
           </Form.Item>
+          <MyInput
+            className="required-form"
+            label="Направление"
+            value={singleItem.direction}
+            onChange={(e) => {
+              setSingleItem({ ...singleItem, direction: e.target.value });
+            }}
+          />
           <TechStoreSelect
             onChange={(value: string) => {
               console.log(value);
@@ -587,13 +571,10 @@ export const TableItemUpdate = ({}) => {
             onChange={(e: { target: HTMLInputElement }) => {
               setSingleItem({
                 ...singleItem,
-                container: {
-                  ...singleItem.container,
-                  container_type: e.target.value,
-                },
+                container_type: e.target.value,
               });
             }}
-            value={singleItem?.container?.container_type}
+            value={singleItem?.container_type}
           />
           <MyInput
             className="required-form"

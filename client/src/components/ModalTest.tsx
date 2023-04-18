@@ -1,7 +1,7 @@
 import { Modal } from "antd";
 import React from "react";
 import { setOpen } from "../store/slices/testModalSlice";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooksRedux";
 
 export const ModalTest = () => {
   const open = useAppSelector((state) => state.testModal.open);

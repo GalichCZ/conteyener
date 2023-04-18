@@ -13,7 +13,7 @@ class FileService {
       return {
         "Дата заявки": item.request_date,
         "Номер заказа": await this.arrayToString(item.order_number),
-        "Номер Контейнера": item.container.container_number,
+        "Номер Контейнера": item.container_number,
         Товар: item.simple_product_name,
         "Способ Доставки": item.delivery_method,
         Поставщик: await this.arrayToString(item.providers),
@@ -21,7 +21,7 @@ class FileService {
         "Условия поставки": item.conditions,
         Склад: item.store_name,
         Агент: item.agent,
-        "Тип контейенра": item.container.container_type,
+        "Тип контейенра": item.container_type,
         "Место отправки": item.place_of_dispatch,
         Линия: item.line,
         "Дата готовности": item.ready_date,

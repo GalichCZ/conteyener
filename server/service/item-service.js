@@ -9,7 +9,7 @@ const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 dayjs.extend(customParseFormat);
 class ItemService {
-  async createItem(req, container) {
+  async createItem(req) {
     try {
       const delivery_method = req.body.delivery_method;
       const store_name = await TechStoreSchema.findById({
@@ -27,11 +27,8 @@ class ItemService {
         store_name: store_name && store_name.name,
         agent: req.body.agent,
         store: req.body.store,
-        container: {
-          container_number: container.container_number,
-          container_type: container.container_type,
-          _id: container._id,
-        },
+        direction: req.body.direction,
+        container_type: container.container_type,
         place_of_dispatch: req.body.place_of_dispatch,
       });
 
@@ -205,7 +202,7 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req, container) {
+  async updateItem(_id, req) {
     try {
       const stock_place =
         req.body.stock_place &&
@@ -261,7 +258,8 @@ class ItemService {
             order_number: req.body.order_number,
             inside_number: req.body.inside_number,
             proform_number: req.body.proform_number,
-            container,
+            container_number: req.body.container_number,
+            container_type: req.body.container_type,
             providers: req.body.providers,
             importers: req.body.importers,
             simple_product_name: req.body.simple_product_name,
@@ -281,6 +279,7 @@ class ItemService {
             declaration_number: req.body.declaration_number,
             availability_of_ob: req.body.availability_of_ob,
             answer_of_ob: req.body.answer_of_ob,
+            direction: req.body.direction,
             expeditor: req.body.expeditor,
             destination_station: req.body.destination_station,
             km_to_dist: req.body.km_to_dist,

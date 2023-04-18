@@ -1,4 +1,6 @@
 const ProductSchema = require("../models/product-model");
+const ItemSchema = require("../models/item-model");
+const mongoose = require("mongoose");
 const FileService = require("./file-service");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
@@ -28,7 +30,16 @@ class ProductService {
         const docs = await doc.save();
         return docs;
       });
-      return Promise.all(products).then((res) => {
+      return Promise.all(products).then(async (res) => {
+        const ids = res.map((i) => {
+          return i._id;
+        });
+        const beforeId = await ItemSchema.findById(item_id).exec();
+        await ItemSchema.findByIdAndUpdate(item_id, {
+          product: [...ids, ...beforeId.product],
+        });
+
+        console.log(ids);
         return res;
       });
     } catch (error) {
@@ -72,9 +83,17 @@ class ProductService {
     }
   }
 
-  async deleteProduct(product_id) {
+  async deleteProduct(product_id, itemId) {
     try {
       await ProductSchema.findByIdAndDelete({ _id: product_id });
+      const products = await ProductSchema.find({ item_id: itemId }).exec();
+
+      const newIds = products.map((prod) => {
+        return prod._id;
+      });
+
+      await ItemSchema.findByIdAndUpdate(itemId, { product: newIds });
+
       return { success: true };
     } catch (error) {
       SendBotMessage(
@@ -83,7 +102,7 @@ class ProductService {
         )}\nDELETE PRODUCT ERROR:\n${error}`
       );
       console.log(error);
-      return { success: true, error };
+      return { success: false, error };
     }
   }
 }

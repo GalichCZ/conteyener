@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { TableColNames } from "../../../components/index";
 import * as Types from "../../../Types/Types";
 import * as TableHandlers from "../Functions/TableHandlers";
-import { useAppSelector, useAppDispatch } from "../../../hooks/hooks";
+import { useAppSelector, useAppDispatch } from "../../../hooks/hooksRedux";
 import { Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
@@ -10,6 +10,7 @@ import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
 import { Alert, Button } from "antd";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
+import { debounce } from "lodash";
 
 const ItemFuncs = new Item();
 
@@ -50,7 +51,6 @@ export const Table: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    console.log(heights1, heights2, "from tables");
     dispatch(
       setHeights(
         heights1.map((num, index) =>
@@ -71,13 +71,14 @@ export const Table: React.FunctionComponent = () => {
     setCopyItems(data.items);
   };
 
-  const search = async () => {
+  const search = debounce(async () => {
+    console.log("searched");
     const filtered =
       items &&
       copyItems &&
       (await TableHandlers.SearchHandler(query, copyItems));
     filtered && setItems(filtered);
-  };
+  }, 1000);
 
   useEffect(() => {
     if (tableRef.current) {

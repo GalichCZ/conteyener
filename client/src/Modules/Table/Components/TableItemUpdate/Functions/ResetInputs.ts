@@ -7,11 +7,8 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     proform_number: [],
     inside_number: [],
     order_number: [],
-    container: {
-      _id: "",
-      container_number: "",
-      container_type: "",
-    },
+    container_number: "",
+    container_type: "",
     simple_product_name: [],
     delivery_method: "",
     providers: [],
@@ -21,7 +18,6 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     agent: "",
     store_name: "",
     delivery_channel: "",
-    container_type: "",
     place_of_dispatch: "",
     arrive_place: "",
     line: "",
@@ -63,5 +59,6 @@ export const resetInputs = (setSingleItem: (c: IItem) => void): void => {
     hidden: false,
     note: "",
     fraht: "",
+    direction: "",
   });
 };

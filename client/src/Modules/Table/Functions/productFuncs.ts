@@ -12,8 +12,8 @@ export class Product {
   }
 }
 
-export const deleteProduct = async (_id: string) => {
-  const response = await fetch(URL + `/product/${_id}`, {
+export const deleteProduct = async (_id: string, itemId: string) => {
+  const response = await fetch(URL + `/product/${_id}/${itemId}`, {
     method: "DELETE",
   })
     .then((response) => response.json())

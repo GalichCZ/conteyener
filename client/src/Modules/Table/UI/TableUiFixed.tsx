@@ -1,7 +1,8 @@
 import { Tooltip } from "antd";
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { IItem, TableProps } from "../../../Types/Types";
+import { useCutString } from "../../../hooks/useCutString";
 
 interface ITableUi {
   items: TableProps[] | undefined;
@@ -16,6 +17,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
   tableUpdateHandler,
   setHeights1,
 }) => {
+  const cutString = useCutString();
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
   const tdRefs = useRef<Array<HTMLTableDataCellElement | null>>([]);
@@ -46,10 +48,6 @@ export const TableUiFixed: React.FC<ITableUi> = ({
     else return height;
   }
 
-  function cutString(str: string, border: number) {
-    if (str) return str.substring(0, border);
-  }
-
   return (
     <tbody>
       {items?.map((item, key) => {
@@ -78,7 +76,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             <td>
               <div className="arr-info">
                 {item.proform_number.map((num, key) => {
-                  return <p key={key}>{num}</p>;
+                  return <p key={key}>{cutString(num, 12)}</p>;
                 })}
               </div>
             </td>
@@ -86,14 +84,14 @@ export const TableUiFixed: React.FC<ITableUi> = ({
               <div className="arr-info">
                 {item.order_number.map((num, key) => {
                   return (
-                    <Tooltip key={key} title={num}>
+                    <Tooltip destroyTooltipOnHide={true} key={key} title={num}>
                       <p key={key}>{cutString(num, 10)}</p>
                     </Tooltip>
                   );
                 })}
               </div>
             </td>
-            <td> {item.container?.container_number} </td>
+            <td> {item.container_number} </td>
           </tr>
         );
       })}

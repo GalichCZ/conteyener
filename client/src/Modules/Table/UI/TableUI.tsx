@@ -1,8 +1,9 @@
 import { Button } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { IsDocsType, TableProps } from "../../../Types/Types";
 import { Tooltip } from "antd";
+import { useCutString } from "../../../hooks/useCutString";
 
 interface ITableUi {
   setHeights2?: (c: Array<number | null | undefined>) => void;
@@ -64,6 +65,7 @@ const TableUI: React.FC<ITableUi> = ({
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
   const [height, setHeight] = useState<Array<number | null | undefined>>([]);
   const heights = useAppSelector((state) => state.heightHandler.heights);
+  const cutString = useCutString();
 
   const getHeight = () => {
     if (myRefs.current) {
@@ -83,18 +85,16 @@ const TableUI: React.FC<ITableUi> = ({
     getHeight();
   }, [items]);
 
-  console.log(heights, "counted");
-
   function heightCheck(height: number) {
     if (height < 50) return 50;
     else return height;
   }
 
-  function cutString(str: string, border: number) {
-    const cutted = str && str.substring(0, border);
-    return cutted;
-    //TODO: check last symbol to cut if it is 1
-  }
+  const toUpperCase = useMemo(() => {
+    return (str: string): string => {
+      return str && str.toUpperCase();
+    };
+  }, []);
 
   return (
     <>
@@ -111,7 +111,11 @@ const TableUI: React.FC<ITableUi> = ({
                 <div className="arr-info arr-info_product">
                   {item.simple_product_name.map((simpleName, key) => {
                     return (
-                      <Tooltip key={key} title={simpleName}>
+                      <Tooltip
+                        destroyTooltipOnHide={true}
+                        key={key}
+                        title={simpleName}
+                      >
                         <p
                           style={{
                             cursor: "pointer",
@@ -135,8 +139,12 @@ const TableUI: React.FC<ITableUi> = ({
                 <div className="arr-info">
                   {item.providers.map((provider, key) => {
                     return (
-                      <Tooltip key={key} title={provider}>
-                        <p> {cutString(provider, 25)}... </p>
+                      <Tooltip
+                        destroyTooltipOnHide={true}
+                        key={key}
+                        title={provider}
+                      >
+                        <p> {toUpperCase(cutString(provider, 23))}... </p>
                       </Tooltip>
                     );
                   })}
@@ -145,7 +153,7 @@ const TableUI: React.FC<ITableUi> = ({
               <td>
                 <div className="arr-info">
                   {item.importers.map((importer, key) => {
-                    return <p key={key}> {importer} </p>;
+                    return <p key={key}> {cutString(importer, 11)}... </p>;
                   })}
                 </div>
               </td>
@@ -156,6 +164,7 @@ const TableUI: React.FC<ITableUi> = ({
                   })}
                 </div>
               </td>
+              <td>{item.direction}</td>
               <td
                 style={{ cursor: "pointer" }}
                 onClick={() =>
@@ -166,7 +175,7 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.store_name}
               </td>
               <td> {item.agent} </td>
-              <td> {item.container?.container_type} </td>
+              <td> {item.container_type} </td>
               <td> {item.place_of_dispatch} </td>
               <td> {item.line} </td>
               <td> {item.ready_date && timeConvert(item.ready_date)} </td>

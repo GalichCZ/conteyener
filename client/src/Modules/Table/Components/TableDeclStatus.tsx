@@ -3,7 +3,7 @@ import { Modal, Form, Input, Button, DatePicker } from "antd";
 import { Declaration } from "../Functions/declarationFuncs";
 import { Writes } from "../../../Types/Types";
 import dayjs from "dayjs";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { setOpenDeclStatus } from "../../../store/slices/tableDeclStatusSlice";
 import { CloseOutlined } from "@ant-design/icons";
 

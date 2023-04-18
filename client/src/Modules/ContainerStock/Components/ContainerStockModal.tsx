@@ -2,7 +2,7 @@ import { Button, Form, Modal } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { MyInput } from "../../../components";
-import { useAppSelector } from "../../../hooks/hooks";
+import { useAppSelector } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import { setOpen } from "../../../store/slices/stockModalSlice";
 import { updateStockPlace } from "../Functions/StockApi";

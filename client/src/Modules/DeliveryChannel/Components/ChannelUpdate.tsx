@@ -4,7 +4,7 @@ import { MyInput } from "../../../components";
 import { IChannelObject } from "../../../Types/Types";
 import { updateChannel } from "../Functions/ChannelsApi";
 import ReDrawContext from "../../../store/redraw-context";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { setOpenUpdateChannel } from "../../../store/slices/updateChannelSlice";
 
 export const ChannelUpdate = () => {

@@ -2,7 +2,7 @@ import { Modal, Form, DatePicker } from "antd";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { SelectChannel } from "../../../components/SelectChannel";
-import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import { setOpenDateCalc } from "../../../store/slices/tableDateCalcModal";
 import { ICalcDate } from "../../../Types/Types";

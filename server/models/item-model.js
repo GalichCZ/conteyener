@@ -23,7 +23,7 @@ const ItemSchema = new mongoose.Schema(
       type: String,
       // required: true,
     },
-    container_number: {
+    container_type: {
       type: String,
     },
     simple_product_name: {

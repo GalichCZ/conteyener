@@ -355,7 +355,11 @@ export const TableItemUpdate = ({}) => {
                 container_number: e.target.value,
               });
             }}
-            value={singleItem?.container_number}
+            value={
+              singleItem?.container_number
+                ? singleItem?.container_number
+                : singleItem.container?.container_number
+            }
           />
           <Form.Item name="name3" className="required-form" label="Товар">
             <>
@@ -574,7 +578,11 @@ export const TableItemUpdate = ({}) => {
                 container_type: e.target.value,
               });
             }}
-            value={singleItem?.container_type}
+            value={
+              singleItem?.container_type
+                ? singleItem?.container_type
+                : singleItem.container?.container_type
+            }
           />
           <MyInput
             className="required-form"

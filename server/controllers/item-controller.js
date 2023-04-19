@@ -90,7 +90,7 @@ class ItemController {
         const products = await ProductSchema.find({
           $or: [
             { hs_code: searchTerm },
-            { article: { $regex: searchTerm, $options: "i" } }, // using $regex to search for a substring
+            { article: { $regex: searchTerm, $options: "i" } },
             { trade_mark: { $regex: searchTerm, $options: "i" } },
             { model: { $regex: searchTerm, $options: "i" } },
             { modification: { $regex: searchTerm, $options: "i" } },

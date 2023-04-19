@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const ProductSchema = new mongoose.Schema(
   {
     simple_name: { type: String, index: true },
-    hs_code: { type: Number, index: true },
+    hs_code: { type: String, index: true },
     article: { type: String, index: true },
     trade_mark: { type: String, index: true },
     model: { type: String, index: true },

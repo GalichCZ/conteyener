@@ -16,6 +16,7 @@
 .table-page table thead tr td {
   position: relative;
 }
+
 .table-page table thead tr td span {
   position: absolute;
   top: 5px;
@@ -27,6 +28,8 @@
   overflow-x: hidden;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
   max-height: 80vh;
+}
+.table-page_table table tr:nth-last-child() {
 }
 .table-page table tr {
   border: 1px solid black;
@@ -52,11 +55,13 @@
 }
 .table-page_unfixed-table {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: overlay;
   position: relative;
   padding-bottom: 0 !important;
   height: fit-content;
   z-index: 1;
+}
+.table-page_fixed-table {
 }
 .table-page_fixed-table thead tr td,
 .table-page_unfixed-table thead tr td {

@@ -103,7 +103,12 @@ const TableUI: React.FC<ITableUi> = ({
           return (
             <tr
               className="table-row"
-              style={{ height: `${heightCheck(heights[key])}px` }}
+              style={{
+                height:
+                  key === items.length - 1
+                    ? `${heightCheck(heights[key]) + 15}px`
+                    : `${heightCheck(heights[key])}px`,
+              }}
               ref={(el) => (myRefs.current[key] = el)}
               key={key}
             >
@@ -175,7 +180,12 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.store_name}
               </td>
               <td> {item.agent} </td>
-              <td> {item.container_type} </td>
+              <td>
+                {" "}
+                {item.container_type
+                  ? item.container_type
+                  : item.container?.container_type}{" "}
+              </td>
               <td> {item.place_of_dispatch} </td>
               <td> {item.line} </td>
               <td> {item.ready_date && timeConvert(item.ready_date)} </td>

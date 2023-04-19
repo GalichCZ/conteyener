@@ -9,6 +9,10 @@ export type TableProps = {
   order_number: string[];
   inside_number: string[];
   proform_number: string[];
+  container?: {
+    container_number: string;
+    container_type: string;
+  };
   container_number: string;
   container_type: string;
   simple_product_name: string[];
@@ -83,6 +87,10 @@ export interface IItem extends INewItem {
   _id: string;
   inside_number: string[];
   proform_number: string[];
+  container?: {
+    container_number: string;
+    container_type: string;
+  };
   container_number: string;
   store_receiver?: string;
   store_address?: string;

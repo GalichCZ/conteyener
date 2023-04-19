@@ -82,14 +82,21 @@ class ItemController {
   async findItemsBySearch(req, res) {
     try {
       console.log(req.body.query_string);
+      const searchTerm = req.body.query_string;
       const items = await ItemSchema.find({
         $text: { $search: req.body.query_string },
       }).exec();
       if (items.length === 0) {
         const products = await ProductSchema.find({
-          $text: {
-            $search: req.body.query_string,
-          },
+          $or: [
+            { hs_code: searchTerm },
+            { article: { $regex: searchTerm, $options: "i" } }, // using $regex to search for a substring
+            { trade_mark: { $regex: searchTerm, $options: "i" } },
+            { model: { $regex: searchTerm, $options: "i" } },
+            { modification: { $regex: searchTerm, $options: "i" } },
+            { product_name: { $regex: searchTerm, $options: "i" } },
+            { manufacturer: { $regex: searchTerm, $options: "i" } },
+          ],
         }).exec();
         console.log(products);
         const itemIds = products.map((product) => {

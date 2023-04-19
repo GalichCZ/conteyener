@@ -54,7 +54,12 @@ export const TableUiFixed: React.FC<ITableUi> = ({
         return (
           <tr
             className="table-row"
-            style={{ height: `${heightCheck(heights[key])}px` }}
+            style={{
+              height:
+                key === items.length - 1
+                  ? `${heightCheck(heights[key]) + 15}px`
+                  : `${heightCheck(heights[key])}px`,
+            }}
             ref={(el) => (myRefs.current[key] = el)}
             key={key}
           >
@@ -91,7 +96,12 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                 })}
               </div>
             </td>
-            <td> {item.container_number} </td>
+            <td>
+              {" "}
+              {item.container_number
+                ? item.container_number
+                : item.container?.container_number}{" "}
+            </td>
           </tr>
         );
       })}

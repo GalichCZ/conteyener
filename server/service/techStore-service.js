@@ -3,7 +3,6 @@ const ItemSchema = require("../models/item-model");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Types;
 class TechStoreService {
   async createTechStore(address, name, receiver, contact, note) {
     try {
@@ -77,6 +76,10 @@ class TechStoreService {
 
   async updateTechStores(req) {
     try {
+      await ItemSchema.updateMany(
+        { store: req.body._id },
+        { store_name: req.body.name }
+      );
       await TechStoreSchema.findByIdAndUpdate(
         {
           _id: req.body._id,

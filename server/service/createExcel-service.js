@@ -47,7 +47,7 @@ class FileService {
           "Дата прибытия по ЖД": item.train_arrive_date,
           Автовывоз: item.pickup,
           "Дата прибытия на склад": item.store_arrive_date,
-          "Сток Сдачи	": item.stock_place,
+          "Сток Сдачи	": item.stock_place_name,
         };
       });
 

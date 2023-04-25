@@ -31,11 +31,11 @@ class FileService {
           ETD: item.etd,
           ETA: item.eta,
           Релиз: item.release,
-          "BL/СМГС/CMR": item.bl_smgs_cmr,
-          ТД: item.td,
+          "BL/СМГС/CMR": item.bl_smgs_cmr ? "+" : "-",
+          ТД: item.td ? "+" : "-",
           "Дата ДО": item.date_do,
           Порт: item.port,
-          "Д/С для подачи": item.is_ds,
+          "Д/С для подачи": item.is_ds ? "+" : "-",
           "Номер декларации": await this.arrayToString(item.declaration_number),
           "Дата выпуска декларации": item.declaration_issue_date,
           "Наличие ОБ": item.availability_of_ob,
@@ -47,7 +47,7 @@ class FileService {
           "Дата прибытия по ЖД": item.train_arrive_date,
           Автовывоз: item.pickup,
           "Дата прибытия на склад": item.store_arrive_date,
-          "Сток Сдачи	": item.stock_place,
+          "Сток Сдачи	": item.stock_place_name,
         };
       });
 

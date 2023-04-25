@@ -11,6 +11,11 @@ import { TableUiFixed } from "../UI/TableUiFixed";
 import { Alert, Button } from "antd";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import { debounce } from "lodash";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
+import { TableNamesFixed } from "../UI/TableNamesFixed";
+import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
+import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 
 const ItemFuncs = new Item();
 
@@ -19,9 +24,11 @@ export const Table: React.FunctionComponent = () => {
   const reDraw = useContext(ReDrawContext);
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
+  const [downloading, setDownloading] = useState<boolean>(false);
   const [widths] = useState<number[]>([]);
   const [tableHeight, setTableHeight] = useState<number>();
   const tableRef = useRef<HTMLDivElement>(null);
+  const searchFilter = useAppSelector((state) => state.search.searchFilter);
 
   const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
     []
@@ -30,24 +37,15 @@ export const Table: React.FunctionComponent = () => {
     []
   );
 
-  function downloadFile(url: string) {
-    fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "April 5, 2023 5:24 PM.xlsx");
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode?.removeChild(link);
-      });
-  }
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-  const handleDownloadClick = () => {
-    downloadFile(
-      "http://localhost:4444/backupExcels/April 5, 2023 5:24 PM.xlsx"
-    );
+  const handleDownloadClick = async () => {
+    setDownloading(true);
+    const response = await createExcelFile();
+    if (response.success) {
+      await downloadFile(response.fileName);
+      setDownloading(false);
+    }
   };
 
   useEffect(() => {
@@ -76,7 +74,7 @@ export const Table: React.FunctionComponent = () => {
     const filtered =
       items &&
       copyItems &&
-      (await TableHandlers.SearchHandler(query, copyItems));
+      (await TableHandlers.SearchHandler(searchFilter, query, copyItems));
     filtered && setItems(filtered);
   }, 1000);
 
@@ -110,8 +108,16 @@ export const Table: React.FunctionComponent = () => {
         banner
         closable
       />
-      {/* <Button onClick={handleDownloadClick}>Download</Button> */}
+      <div style={{ marginBottom: "20px" }}>
+        <Button disabled={downloading} onClick={handleDownloadClick}>
+          Скачать актуальную таблицу
+        </Button>
+        {downloading && (
+          <Spin style={{ marginLeft: "10px" }} indicator={antIcon} />
+        )}
+      </div>
       <div className="table-page_table">
+        {/* <TableNamesFixed /> */}
         <table className="table-page_fixed-table">
           <TableColNamesFixed
             widthsArray={widths}
@@ -126,6 +132,7 @@ export const Table: React.FunctionComponent = () => {
           />
         </table>
         <div ref={tableRef} className="table-page_unfixed-table">
+          {/* <TableNamesUnfixed /> */}
           <table>
             <TableColNames
               widthsArray={widths}

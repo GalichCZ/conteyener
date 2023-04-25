@@ -25,6 +25,7 @@ export const TableHidden = () => {
   const dispatch = useAppDispatch();
 
   const query = useAppSelector((state) => state.search.value);
+  const searchFilter = useAppSelector((state) => state.search.searchFilter);
 
   const getItems = async () => {
     const data = await ItemFuncs.getHiddenItems();
@@ -54,7 +55,9 @@ export const TableHidden = () => {
 
   const search = async () => {
     const filtered =
-      items && copyItems && (await SearchHandler(query, copyItems));
+      items &&
+      copyItems &&
+      (await SearchHandler(searchFilter, query, copyItems));
     filtered && setItems(filtered);
   };
 

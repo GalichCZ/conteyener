@@ -29,8 +29,6 @@
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
   max-height: 80vh;
 }
-.table-page_table table tr:nth-last-child() {
-}
 .table-page table tr {
   border: 1px solid black;
   min-height: 50px !important;
@@ -60,8 +58,6 @@
   padding-bottom: 0 !important;
   height: fit-content;
   z-index: 1;
-}
-.table-page_fixed-table {
 }
 .table-page_fixed-table thead tr td,
 .table-page_unfixed-table thead tr td {
@@ -141,4 +137,49 @@
 }
 .comment-info p {
   margin: 0;
+}
+
+.table-head-fixed {
+  height: 82px;
+  width: 600px;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  text-align: center;
+  background-color: white;
+  z-index: 10;
+  align-items: center;
+}
+
+.head-cell-fixed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  border-style: solid;
+  border-color: black;
+  height: 82px;
+}
+.head-cell-fixed:nth-child(even) {
+  border-width: 1px 0px 0 0px;
+}
+.head-cell-fixed:nth-child(2),
+.head-cell-fixed:nth-child(4) {
+  border-width: 1px 0px 0px 0.5px;
+}
+.head-cell-fixed:nth-child(1),
+.head-cell-fixed:nth-child(3) {
+  border-width: 1px 0px 0px 1px;
+}
+.head-cell-fixed:nth-child(5) {
+  border-width: 1px 0px 0px 1px;
+}
+
+.table-head-unfixed {
+  display: flex;
+  position: fixed;
+  background-color: white;
+  height: 82px;
+  top: 0;
+  width: 100%;
 }

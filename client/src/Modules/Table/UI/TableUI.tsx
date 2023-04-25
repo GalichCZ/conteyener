@@ -308,7 +308,7 @@ const TableUI: React.FC<ITableUi> = ({
                 }}
               >
                 {" "}
-                {item.km_to_dist ? item.km_to_dist : ""}{" "}
+                {item.km_to_dist === null ? "" : item.km_to_dist}{" "}
               </td>
               <td
                 onClick={() => {

@@ -143,22 +143,29 @@ export const dateChangeHandler = (
 };
 
 export const SearchHandler = async (
+  searchFilter: "other" | "products",
   searchReq: string,
   itemsCopy: Types.TableProps[]
 ) => {
+  console.log(searchFilter);
   if (searchReq.length === 0) return itemsCopy;
-  const filtered = itemsCopy.filter((item) => {
-    const itemValues = Object.values(item)
-      .map((value) => (typeof value === "number" ? value.toString() : value))
-      .join(" ")
-      .toLowerCase();
-    return itemValues.includes(searchReq.toLowerCase());
-  });
-  if (filtered.length === 0) {
-    let items = await findItemsBySearch(searchReq);
+  if (searchFilter == "other") {
+    const filtered = itemsCopy.filter((item) => {
+      const itemValues = Object.values(item)
+        .map((value) => (typeof value === "number" ? value.toString() : value))
+        .join(" ")
+        .toLowerCase();
+      return itemValues.includes(searchReq.toLowerCase());
+    });
+    if (filtered.length === 0) {
+      let items = await findItemsBySearch(searchReq, "other");
+      return items;
+    }
+    return filtered;
+  } else if (searchFilter == "products") {
+    let items = await findItemsBySearch(searchReq, "products");
     return items;
-  }
-  return filtered;
+  } else return;
 };
 
 export const TableSortHandler = (

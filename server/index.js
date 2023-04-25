@@ -13,7 +13,7 @@ const UploadOnceController = require("./controllers/uploadOnce-controller");
 const StockPlaceController = require("./controllers/stockPlace-controller");
 const DeclarationController = require("./controllers/declaration-controller");
 const DeliveryChannelController = require("./controllers/deliveryChannel-controller");
-const CreateExcel = require("./service/createExcel-service");
+const CreateExcel = require("./controllers/createExcel-controller");
 
 const CheckAuth = require("./utils/check-auth");
 const FileWare = require("./utils/file-ware");
@@ -31,6 +31,9 @@ app.get("/api/", CheckAuth.checkToken, (req, res) => {
   console.log(req.userId);
   res.send("HELLO");
 });
+
+app.get("/api/file/create", CreateExcel.createFile);
+app.get("/api/file/download/:fileName", CreateExcel.downloadFile);
 
 app.get("/api/channel", DeliveryChannelController.getChannels);
 app.patch("/api/channel", DeliveryChannelController.updateChannel);
@@ -121,8 +124,6 @@ const start = async () => {
 };
 
 start();
-
-CreateExcel.createFile();
 // sendMessage("892514772", "Hello, it's me");
 
 // bot.on("message", (ctx) => {

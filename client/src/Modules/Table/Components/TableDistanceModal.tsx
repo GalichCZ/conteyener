@@ -15,7 +15,7 @@ export const TableDistanceModal = () => {
   const _id = useAppSelector((state) => state.tableDistance._id);
 
   const [km, setKm] = useState<{ km_to_dist: number | null; _id: string }>({
-    km_to_dist: 0,
+    km_to_dist: null,
     _id: "",
   });
 

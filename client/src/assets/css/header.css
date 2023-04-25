@@ -24,5 +24,36 @@
   scale: 2;
 }
 .search {
+  position: relative;
   transform: translateX(20px);
+}
+.search-choice {
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  border-radius: 3px;
+  font-size: 17px;
+  box-shadow: 1px 1px 10px rgba(129, 129, 129, 0.479);
+  top: 40px;
+}
+.search-choice p {
+  padding: 2px 3px;
+}
+.search-choice_chosen {
+  transition: 0.3s;
+  background-color: rgba(0, 119, 255, 0.062);
+}
+.search-choice_unchosen {
+  transition: 0.3s;
+}
+.choice {
+  cursor: pointer;
+}
+.search-arrow {
+  position: absolute;
+  scale: 1.25;
+  right: 10px;
+  top: 9px;
+  cursor: pointer;
+  transition: 0.4s;
 }

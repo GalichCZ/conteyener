@@ -148,10 +148,13 @@ export const hideItem = async (_id: string, hidden: boolean) => {
   return response;
 };
 
-export const findItemsBySearch = async (query_string: string) => {
+export const findItemsBySearch = async (
+  query_string: string,
+  search_filter: "other" | "products"
+) => {
   const response = await fetch(URL + "/item/search", {
     method: "POST",
-    body: JSON.stringify({ query_string }),
+    body: JSON.stringify({ query_string, search_filter }),
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",

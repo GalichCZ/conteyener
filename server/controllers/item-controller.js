@@ -81,11 +81,14 @@ class ItemController {
 
   async findItemsBySearch(req, res) {
     try {
-      console.log(req.body.query_string);
       const searchTerm = req.body.query_string;
-      const items = await ItemSchema.find({
-        $text: { $search: req.body.query_string },
-      }).exec();
+      const searchFilter = req.body.search_filter;
+      const items =
+        searchFilter == "other"
+          ? await ItemSchema.find({
+              $text: { $search: req.body.query_string },
+            }).exec()
+          : [];
       if (items.length === 0) {
         const products = await ProductSchema.find({
           $or: [
@@ -98,7 +101,6 @@ class ItemController {
             { manufacturer: { $regex: searchTerm, $options: "i" } },
           ],
         }).exec();
-        console.log(products);
         const itemIds = products.map((product) => {
           return product.item_id;
         });

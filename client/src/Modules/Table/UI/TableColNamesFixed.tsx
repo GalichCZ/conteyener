@@ -2,6 +2,7 @@ import { FilterFilled } from "@ant-design/icons";
 import { TableSortHandler } from "../Functions/TableHandlers";
 import React, { useState } from "react";
 import { TableProps } from "../../../Types/Types";
+import { FilterList } from "../Components/FilterList";
 
 interface ITableColProps {
   widthsArray?: number[];
@@ -34,6 +35,7 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
               sort("request_date");
             }}
           />
+          <FilterList />
         </td>
         <td>
           Внутренний <br /> номер

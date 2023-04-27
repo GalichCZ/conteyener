@@ -1,0 +1,10 @@
+.filter-list {
+  width: 200px;
+  height: fit-content;
+  padding: 10px;
+  position: absolute;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.226);
+  z-index: 10;
+  left: 0;
+  background-color: white;
+}

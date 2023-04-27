@@ -16,6 +16,7 @@ import { Spin } from "antd";
 import { TableNamesFixed } from "../UI/TableNamesFixed";
 import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
+import { FilterList } from "./FilterList";
 
 const ItemFuncs = new Item();
 

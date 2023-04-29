@@ -1,5 +1,9 @@
 import React from "react";
 
-export const FilterList = () => {
+interface IProps {
+  dataToFiltr: any[] | undefined;
+}
+
+export const FilterList: React.FC<IProps> = ({ dataToFiltr }) => {
   return <div className="filter-list">FilterList</div>;
 };

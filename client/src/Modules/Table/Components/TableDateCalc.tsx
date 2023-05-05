@@ -40,10 +40,6 @@ export const TableDateCalc = () => {
   };
 
   useEffect(() => {
-    console.log(calcDate);
-  }, [calcDate]);
-
-  useEffect(() => {
     if (open)
       setCalcDate({
         ...calcDate,

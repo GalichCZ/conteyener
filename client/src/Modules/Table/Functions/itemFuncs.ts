@@ -12,7 +12,6 @@ export class Item {
     const response = await fetch(URL + "/item")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         return data;
       })
       .catch((err) => console.log(err));
@@ -169,6 +168,16 @@ export const findItemsBySearch = async (
       return error;
     });
 
+  return response;
+};
+
+export const getItemsFilter = async (filter_query: string) => {
+  const response = await fetch(URL + `/item/filter${filter_query}`)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
   return response;
 };
 

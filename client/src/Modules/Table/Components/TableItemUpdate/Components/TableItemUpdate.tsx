@@ -181,10 +181,6 @@ export const TableItemUpdate = ({}) => {
     if (open && item !== null) setSingleItem({ ...item });
   }, [open]);
 
-  useEffect(() => {
-    console.log(singleItem);
-  }, [singleItem]);
-
   return (
     <>
       {contextHolder}
@@ -555,7 +551,6 @@ export const TableItemUpdate = ({}) => {
           />
           <TechStoreSelect
             onChange={(value: string) => {
-              console.log(value);
               setSingleItem({ ...singleItem, store: value });
             }}
             value={singleItem?.store}

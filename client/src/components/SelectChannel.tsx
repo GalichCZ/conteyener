@@ -39,12 +39,7 @@ export const SelectChannel: React.FC<ISelectChannel> = ({
     getChannelHandler();
   }, []);
 
-  useEffect(() => {
-    console.log(value, " in select channel");
-  }, [value]);
-
   return (
-    // <Form.Item className={className} name="select_delivery">
     <FormControl sx={{ m: 1, minWidth: 120 }}>
       <InputLabel id="demo-simple-select-helper-label">
         Канал Поставки

@@ -12,6 +12,7 @@ interface ITableColProps {
 interface IPopupData {
   td: HTMLTableCellElement;
   dataToFiltr: any[] | undefined;
+  key: string;
 }
 
 export const TableColNamesFixed: React.FC<ITableColProps> = ({
@@ -36,7 +37,9 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
 
       const dataToFiltr = data && getRequestDates<TableProps>(data, key);
 
-      setPopupData({ td, dataToFiltr });
+      const keyProp = key.toString();
+
+      setPopupData({ td, dataToFiltr, key: keyProp });
     } else setPopupData(null);
   }
 
@@ -54,8 +57,6 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
     if (popupData) {
       const tdRect = popupData.td.getBoundingClientRect();
       const popupEl = popupRef.current;
-
-      console.log(tdRect.left);
 
       if (popupEl) {
         popupEl.style.transform = `translateX(${tdRect.left - 100}px)`;
@@ -111,7 +112,10 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
       </thead>
       {popupData && (
         <div ref={popupRef} id="popup">
-          <FilterList dataToFiltr={popupData.dataToFiltr} />
+          <FilterList
+            dataToFiltr={popupData.dataToFiltr}
+            objectKey={popupData.key}
+          />
         </div>
       )}
     </>

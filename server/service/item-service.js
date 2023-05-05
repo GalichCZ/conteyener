@@ -66,6 +66,25 @@ class ItemService {
     }
   }
 
+  async getItemsFilter(query_keys) {
+    try {
+      const query = {};
+      Object.keys(query_keys).forEach((key) => {
+        query[key] = { $in: query_keys[key] };
+      });
+      const items = await ItemSchema.find(query).exec();
+      return { success: true, items };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET FILTERED ITEMS ERROR:\n${error}`
+      );
+      console.log(error);
+      return { success: false, error };
+    }
+  }
+
   async getHiddenItems() {
     try {
       const items = await ItemSchema.find({

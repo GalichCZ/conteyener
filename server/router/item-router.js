@@ -5,6 +5,7 @@ const CheckAuth = require("../utils/check-auth");
 const router = new Router();
 
 router.get("/api/item", ItemController.getItems);
+router.get("/api/item/filter", ItemController.getItemsFilter);
 router.patch("/api/item", ItemController.updateItem);
 router.delete("/api/item/:_id", ItemController.deleteItem);
 router.get("/api/item/hidden", ItemController.getHiddenItems);

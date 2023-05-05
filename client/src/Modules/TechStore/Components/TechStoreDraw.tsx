@@ -68,10 +68,6 @@ export const TechStoreDraw: React.FC<TechStoreDrawProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log(openConfirm);
-  }, [openConfirm]);
-
-  useEffect(() => {
     if (status) {
       getStores();
       setStatus(false);

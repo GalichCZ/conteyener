@@ -56,7 +56,6 @@ export const TableComment: React.FC<TabeCommentProps> = ({}) => {
   const createCommentHandler = async () => {
     reDraw.reDrawHandler(true);
     const result = await createComment(newComment);
-    console.log(result);
     if (result) {
       reDraw.reDrawHandler(false);
       setNewComment({ ...newComment, comment_text: "" });
@@ -123,7 +122,6 @@ export const Comment: React.FC<ICommentProps> = ({ value }) => {
     reDraw.reDrawHandler(true);
     const result = await updateComment(upComment);
     if (result) reDraw.reDrawHandler(false);
-    console.log(result, " res");
   };
 
   return (

@@ -55,10 +55,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
           <tr
             className="table-row"
             style={{
-              height:
-                key === items.length - 1
-                  ? `${heightCheck(heights[key]) + 15}px`
-                  : `${heightCheck(heights[key])}px`,
+              height: `${heightCheck(heights[key])}px`,
             }}
             ref={(el) => (myRefs.current[key] = el)}
             key={key}

@@ -77,7 +77,6 @@ export const deleteStockPlace = async (_id: string | undefined) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       return data;
     })
     .catch((error) => {

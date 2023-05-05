@@ -3,7 +3,7 @@ import { TableColNames } from "../../../components/index";
 import * as Types from "../../../Types/Types";
 import * as TableHandlers from "../Functions/TableHandlers";
 import { useAppSelector, useAppDispatch } from "../../../hooks/hooksRedux";
-import { Item } from "../Functions/itemFuncs";
+import { getItemsFilter, Item } from "../Functions/itemFuncs";
 import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
@@ -16,10 +16,12 @@ import { Spin } from "antd";
 import { TableNamesFixed } from "../UI/TableNamesFixed";
 import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
+import { useLocation } from "react-router-dom";
 
 const ItemFuncs = new Item();
 
 export const Table: React.FunctionComponent = () => {
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const reDraw = useContext(ReDrawContext);
   const [items, setItems] = useState<Types.TableProps[]>();
@@ -69,8 +71,13 @@ export const Table: React.FunctionComponent = () => {
     setCopyItems(data.items);
   };
 
+  const getFilteredItems = async () => {
+    const data = await getItemsFilter(location.search);
+    setItems(data);
+    setCopyItems(data);
+  };
+
   const search = debounce(async () => {
-    console.log("searched");
     const filtered =
       items &&
       copyItems &&
@@ -85,8 +92,10 @@ export const Table: React.FunctionComponent = () => {
   }, [items]);
 
   useEffect(() => {
-    getItems().catch((err) => console.log(err));
-  }, [reDraw.reDraw]);
+    if (location.search.length === 0)
+      getItems().catch((err) => console.log(err));
+    else getFilteredItems();
+  }, [reDraw.reDraw, location.search]);
 
   useEffect(() => {
     search();

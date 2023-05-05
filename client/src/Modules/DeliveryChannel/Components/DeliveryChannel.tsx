@@ -32,10 +32,6 @@ export const DeliveryChannel: React.FC = () => {
     if (response) setLoading(false);
   };
 
-  useEffect(() => {
-    console.log(channel);
-  }, [channel]);
-
   return (
     <div className="delivery-channel">
       <DeliveryChannelForm

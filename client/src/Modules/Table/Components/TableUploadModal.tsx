@@ -29,12 +29,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
 
   const [products, setProducts] = useState<Products[]>();
 
-  useEffect(() => {
-    if (open) {
-      console.log({ item_id, simple_product_name });
-    }
-  }, [open]);
-
   const handleOk = () => {
     dispatch(setOpenUpload());
   };
@@ -49,7 +43,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
       simple_product_name
     );
 
-    console.log(response);
     setProducts(response);
   };
 

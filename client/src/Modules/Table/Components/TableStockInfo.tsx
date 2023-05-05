@@ -9,13 +9,11 @@ export const TableStockInfo = () => {
   const dispatch = useAppDispatch();
   const open = useAppSelector((state) => state.tableStock.open);
   const info = useAppSelector((state) => state.tableStock.info);
-  console.log(info);
 
   const [data, setData] = useState<IStockData>();
 
   const getStockData = async () => {
     const result = await getOneStockPlaceByName(info);
-    console.log(result);
     if (result) setData(result);
   };
 

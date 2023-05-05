@@ -107,7 +107,6 @@ export const TableItemCreate: React.FC = () => {
 
   useEffect(() => {
     checkFilledPoles(item, setFilled);
-    console.log(item);
   }, [item]);
 
   return (

@@ -7,7 +7,7 @@ export const handleInsideNumberChange = (
   setSingleItem: (c: IItem) => void
 ) => {
   const newInsideNumbers = [...singleItem.inside_number];
-  newInsideNumbers[index] = event.target.value;
+  newInsideNumbers[index] = event.target.value.replace(/\s/g, "");
   setSingleItem({ ...singleItem, inside_number: newInsideNumbers });
 };
 export const handleAddInsideNumber = (
@@ -36,7 +36,7 @@ export const handleProformNumberChange = (
   setSingleItem: (c: IItem) => void
 ) => {
   const newProformNumbers = [...singleItem.proform_number];
-  newProformNumbers[index] = event.target.value;
+  newProformNumbers[index] = event.target.value.replace(/\s/g, "");
   setSingleItem({ ...singleItem, proform_number: newProformNumbers });
 };
 export const handleAddProformNumber = (
@@ -68,7 +68,7 @@ export const handleProviderChange = (
 ) => {
   if (singleItem && setSingleItem) {
     const newProviders = [...singleItem.providers];
-    newProviders[index] = event.target.value;
+    newProviders[index] = event.target.value.replace(/\s/g, "");
     setSingleItem({ ...singleItem, providers: newProviders });
   }
   if (item && setItem) {
@@ -119,7 +119,7 @@ export const handleDeclarationNumberChange = (
   setSingleItem: (c: IItem) => void
 ) => {
   const newDeclarationNumbers = [...singleItem.declaration_number];
-  newDeclarationNumbers[index] = event.target.value;
+  newDeclarationNumbers[index] = event.target.value.replace(/\s/g, "");
   setSingleItem({ ...singleItem, declaration_number: newDeclarationNumbers });
 };
 export const handleAddDeclarationNumber = (
@@ -151,12 +151,12 @@ export const handleImporterChange = (
 ) => {
   if (singleItem && setSingleItem) {
     const newImporters = [...singleItem.importers];
-    newImporters[index] = event.target.value;
+    newImporters[index] = event.target.value.replace(/\s/g, "");
     setSingleItem({ ...singleItem, importers: newImporters });
   }
   if (item && setItem) {
     const newImporters = [...item.importers];
-    newImporters[index] = event.target.value;
+    newImporters[index] = event.target.value.replace(/\s/g, "");
     setItem({ ...item, importers: newImporters });
   }
 };
@@ -205,12 +205,12 @@ export const handleOrderChange = (
 ) => {
   if (setSingleItem && singleItem) {
     const newOrderNumbers = [...singleItem.order_number];
-    newOrderNumbers[index] = event.target.value;
+    newOrderNumbers[index] = event.target.value.replace(/\s/g, "");
     setSingleItem({ ...singleItem, order_number: newOrderNumbers });
   }
   if (setItem && item) {
     const newOrderNumbers = [...item.order_number];
-    newOrderNumbers[index] = event.target.value;
+    newOrderNumbers[index] = event.target.value.replace(/\s/g, "");
     setItem({ ...item, order_number: newOrderNumbers });
   }
 };
@@ -259,12 +259,12 @@ export const handleConditionsChange = (
 ) => {
   if (setSingleItem && singleItem) {
     const newConditions = [...singleItem.conditions];
-    newConditions[index] = event.target.value;
+    newConditions[index] = event.target.value.replace(/\s/g, "");
     setSingleItem({ ...singleItem, conditions: newConditions });
   }
   if (setItem && item) {
     const newConditions = [...item.conditions];
-    newConditions[index] = event.target.value;
+    newConditions[index] = event.target.value.replace(/\s/g, "");
     setItem({ ...item, conditions: newConditions });
   }
 };
@@ -313,12 +313,12 @@ export const handleSimpleProductNameChange = (
 ) => {
   if (setSingleItem && singleItem) {
     const newSimpleProductName = [...singleItem.simple_product_name];
-    newSimpleProductName[index] = event.target.value;
+    newSimpleProductName[index] = event.target.value.replace(/\s/g, "");
     setSingleItem({ ...singleItem, simple_product_name: newSimpleProductName });
   }
   if (setItem && item) {
     const newSimpleProductName = [...item.simple_product_name];
-    newSimpleProductName[index] = event.target.value;
+    newSimpleProductName[index] = event.target.value.replace(/\s/g, "");
     setItem({ ...item, simple_product_name: newSimpleProductName });
   }
 };

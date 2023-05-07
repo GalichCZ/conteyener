@@ -22,6 +22,7 @@ const ItemSchema = new mongoose.Schema(
     container_number: {
       type: String,
       // required: true,
+      default: null,
     },
     container_type: {
       type: String,

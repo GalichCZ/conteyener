@@ -9,7 +9,6 @@ const routers = [
   require("./declaration-router"),
   require("./test-router"),
   require("./comment-router"),
-  require("./isDocs-router"),
   require("./techStore-router"),
 ];
 

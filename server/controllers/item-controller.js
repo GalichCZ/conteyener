@@ -1,6 +1,5 @@
 const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
-const IsDocsService = require("../service/isDocs-service");
 const ItemService = require("../service/item-service");
 
 const ItemSchema = require("../models/item-model");
@@ -13,8 +12,6 @@ class ItemController {
 
     if (!creator)
       return res.status(403).json({ message: "NO CREATOR FOUND !" });
-
-    const is_docs = await IsDocsService.createDocs(req);
 
     const item = await ItemService.createItem(req);
 
@@ -129,7 +126,6 @@ class ItemController {
       await ContainerService.deleteContainer(item);
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
       await ProductService.deleteProduct(item._id);
-      await IsDocsService.deleteDocs(item.container);
 
       res.json(200);
     } catch (error) {

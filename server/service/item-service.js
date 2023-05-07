@@ -28,7 +28,7 @@ class ItemService {
         agent: req.body.agent,
         store: req.body.store,
         direction: req.body.direction,
-        container_type: container.container_type,
+        container_type: req.body.container_type,
         place_of_dispatch: req.body.place_of_dispatch,
       });
 
@@ -70,8 +70,15 @@ class ItemService {
     try {
       const query = {};
       Object.keys(query_keys).forEach((key) => {
-        query[key] = { $in: query_keys[key] };
+        if (query_keys[key] === "[]") {
+          query[key] = { $size: 0 };
+        } else if (query_keys[key] === "null") {
+          query[key] = { $eq: null };
+        } else {
+          query[key] = { $in: query_keys[key] };
+        }
       });
+      console.log(query);
       const items = await ItemSchema.find(query).exec();
       return { success: true, items };
     } catch (error) {

@@ -84,6 +84,7 @@ export interface INewItem {
 }
 
 export interface IItem extends INewItem {
+  [key: string]: any;
   _id: string;
   inside_number: string[];
   proform_number: string[];

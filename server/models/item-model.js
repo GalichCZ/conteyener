@@ -21,7 +21,6 @@ const ItemSchema = new mongoose.Schema(
     },
     container_number: {
       type: String,
-      // required: true,
       default: null,
     },
     container_type: {
@@ -117,7 +116,9 @@ const ItemSchema = new mongoose.Schema(
     },
     port: String,
     is_ds: Boolean,
-    is_docs: Object,
+    is_docs: {
+      type: [Object],
+    },
     declaration_number: {
       type: Array,
     },

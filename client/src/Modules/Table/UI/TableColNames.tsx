@@ -1,12 +1,18 @@
 import { FilterFilled } from "@ant-design/icons";
 import { TableSortHandler } from "../Functions/TableHandlers";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TableProps } from "../../../Types/Types";
+import { FilterList } from "../Components/FilterList";
 
 interface ITableColProps {
   widthsArray?: number[];
   data: TableProps[] | undefined;
   setItems: (c: TableProps[]) => void;
+}
+interface IPopupData {
+  td: HTMLTableCellElement;
+  dataToFiltr: any[] | undefined;
+  key: string;
 }
 
 export const TableColNames: React.FC<ITableColProps> = ({
@@ -15,6 +21,27 @@ export const TableColNames: React.FC<ITableColProps> = ({
   setItems,
 }) => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [popupData, setPopupData] = useState<IPopupData | null>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  function getRequestDates<T>(arr: T[], key: keyof T): Array<T[keyof T]> {
+    return arr.map((obj) => obj[key]);
+  }
+
+  function handleTdClick<T extends Record<string, any>>(
+    event: React.MouseEvent<HTMLTableCellElement>,
+    key: keyof T & keyof TableProps
+  ) {
+    if (popupData === null) {
+      const td = event.target as HTMLTableCellElement;
+
+      const dataToFiltr = data && getRequestDates<TableProps>(data, key);
+
+      const keyProp = key.toString();
+
+      setPopupData({ td, dataToFiltr, key: keyProp });
+    } else setPopupData(null);
+  }
   function sort(key: keyof TableProps) {
     const sortedArray = TableSortHandler(
       key,
@@ -24,6 +51,17 @@ export const TableColNames: React.FC<ITableColProps> = ({
     );
     sortedArray && setItems(sortedArray);
   }
+
+  useEffect(() => {
+    if (popupData) {
+      const tdRect = popupData.td.getBoundingClientRect();
+      const popupEl = popupRef.current;
+
+      if (popupEl) {
+        popupEl.style.transform = `translateX(${tdRect.left - 650}px)`;
+      }
+    }
+  }, [popupData]);
   return (
     <>
       <thead>
@@ -31,40 +69,40 @@ export const TableColNames: React.FC<ITableColProps> = ({
           <td>
             Товар
             <FilterFilled
-              onClick={() => {
-                sort("simple_product_name");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "simple_product_name");
               }}
             />
           </td>
           <td>
             Способ доставки
             <FilterFilled
-              onClick={() => {
-                sort("delivery_method");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "delivery_method");
               }}
             />
           </td>
           <td>
             Поставщик
             <FilterFilled
-              onClick={() => {
-                sort("providers");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "providers");
               }}
             />
           </td>
           <td>
             Импортер
             <FilterFilled
-              onClick={() => {
-                sort("importers");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "importers");
               }}
             />
           </td>
           <td>
             Условия поставки
             <FilterFilled
-              onClick={() => {
-                sort("conditions");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "conditions");
               }}
             />
           </td>
@@ -72,226 +110,230 @@ export const TableColNames: React.FC<ITableColProps> = ({
           <td>
             Склад
             <FilterFilled
-              onClick={() => {
-                sort("store_name");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "store_name");
               }}
             />
           </td>
           <td>
             Агент
             <FilterFilled
-              onClick={() => {
-                sort("agent");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "agent");
               }}
             />
           </td>
           <td>
             Тип контейенра
             <FilterFilled
-              onClick={() => {
-                sort("order_number");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "order_number");
               }}
             />
           </td>
           <td>
             Место отправки
             <FilterFilled
-              onClick={() => {
-                sort("place_of_dispatch");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "place_of_dispatch");
               }}
             />
           </td>
           <td>
             Линия
             <FilterFilled
-              onClick={() => {
-                sort("line");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "line");
               }}
             />
           </td>
           <td>
             Дата готовности
             <FilterFilled
-              onClick={() => {
-                sort("ready_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "ready_date");
               }}
             />
           </td>
           <td>
             Дата загрузки
             <FilterFilled
-              onClick={() => {
-                sort("load_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "load_date");
               }}
             />
           </td>
           <td>
             ETD
             <FilterFilled
-              onClick={() => {
-                sort("etd");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "etd");
               }}
             />
           </td>
           <td>
             ETA
             <FilterFilled
-              onClick={() => {
-                sort("eta");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "eta");
               }}
             />
           </td>
           <td>
             Релиз
             <FilterFilled
-              onClick={() => {
-                sort("release");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "release");
               }}
             />
           </td>
           <td>
             BL/СМГС/CMR
             <FilterFilled
-              onClick={() => {
-                sort("bl_smgs_cmr");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "bl_smgs_cmr");
               }}
             />
           </td>
           <td>
             ТД
             <FilterFilled
-              onClick={() => {
-                sort("td");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "td");
               }}
             />
           </td>
           <td>
             Дата ДО
             <FilterFilled
-              onClick={() => {
-                sort("date_do");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "date_do");
               }}
             />
           </td>
           <td>
             Порт
             <FilterFilled
-              onClick={() => {
-                sort("port");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "port");
               }}
             />
           </td>
           <td>
             Д/С для подачи
             <FilterFilled
-              onClick={() => {
-                sort("is_ds");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "is_ds");
               }}
             />
           </td>
-          <td>
-            Документы для подачи
-            <FilterFilled
-              onClick={() => {
-                sort("is_docs");
-              }}
-            />
-          </td>
+          <td>Документы для подачи</td>
           <td>
             Номер декларации
             <FilterFilled
-              onClick={() => {
-                sort("declaration_number");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "declaration_number");
               }}
             />
           </td>
           <td>
             Дата выпуска декларации
             <FilterFilled
-              onClick={() => {
-                sort("declaration_issue_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "declaration_issue_date");
               }}
             />
           </td>
           <td>
             Наличие ОБ
             <FilterFilled
-              onClick={() => {
-                sort("availability_of_ob");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "availability_of_ob");
               }}
             />
           </td>
           <td>
             Ответ ОБ
             <FilterFilled
-              onClick={() => {
-                sort("answer_of_ob");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "answer_of_ob");
               }}
             />
           </td>
           <td>
             Экспедитор
             <FilterFilled
-              onClick={() => {
-                sort("expeditor");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "expeditor");
               }}
             />
           </td>
           <td>
             Станци прибытия
             <FilterFilled
-              onClick={() => {
-                sort("destination_station");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "destination_station");
               }}
             />
           </td>
           <td>
             Осталось км до ст. назначения
             <FilterFilled
-              onClick={() => {
-                sort("km_to_dist");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "km_to_dist");
               }}
             />
           </td>
           <td>
             Дата отправки по ЖД
             <FilterFilled
-              onClick={() => {
-                sort("train_arrive_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "train_depart_date");
               }}
             />
           </td>
           <td>
             Дата прибытия по ЖД
             <FilterFilled
-              onClick={() => {
-                sort("train_arrive_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "train_arrive_date");
               }}
             />
           </td>
           <td>
             Автовывоз
             <FilterFilled
-              onClick={() => {
-                sort("pickup");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "pickup");
               }}
             />
           </td>
           <td>
             Дата прибытия на склад
             <FilterFilled
-              onClick={() => {
-                sort("store_arrive_date");
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "store_arrive_date");
               }}
             />
           </td>
-          <td>Сток Сдачи</td>
+          <td
+            onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+              handleTdClick<TableProps>(event, "stock_place_name");
+            }}
+          >
+            Сток Сдачи
+          </td>
           <td>Комментарий</td>
-          {/* <td>Фрахт</td>
-        <td>Ставка</td>
-        <td>Примечания</td> */}
         </tr>
       </thead>
+      {popupData && (
+        <div ref={popupRef} id="popup">
+          <FilterList
+            dataToFiltr={popupData.dataToFiltr}
+            objectKey={popupData.key}
+          />
+        </div>
+      )}
     </>
   );
 };

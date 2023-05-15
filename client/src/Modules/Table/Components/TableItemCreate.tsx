@@ -75,12 +75,7 @@ export const TableItemCreate: React.FC = () => {
       const response = await ItemFuncs.createItem(item);
       if (response.error) {
         setConfirmLoading(false);
-        const duplicates = response.error.map(
-          (dup: { key: string; value: string }) => {
-            return dup.value;
-          }
-        );
-        callError(messageApi, `These orders already exists: ${duplicates}`);
+        callError(messageApi, `${response.error}`);
         reDrawCtx.reDrawHandler(false);
       } else {
         form.resetFields();

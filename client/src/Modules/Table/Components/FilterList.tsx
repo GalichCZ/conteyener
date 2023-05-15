@@ -3,6 +3,7 @@ import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { Button, Checkbox } from "antd";
 import { timeConvert } from "../Functions/TableHandlers";
 import dayjs from "dayjs";
+import { MyInput } from "../../../components";
 
 interface IProps {
   dataToFiltr: any[] | undefined;
@@ -81,6 +82,7 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
   return (
     <div className="filter-list">
       <b>Фильтрация</b>
+      <MyInput label="" />
       <div className="filters">
         <Checkbox value={null} checked={isChecked("null")} onChange={onCheck}>
           Пусто
@@ -93,7 +95,7 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
               value={el}
               onChange={onCheck}
             >
-              {el}
+              {objectKey === "request_date" ? timeConvert(el) : el}
             </Checkbox>
           );
         })}

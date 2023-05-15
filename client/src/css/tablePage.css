@@ -54,10 +54,8 @@
 .table-page_unfixed-table {
   width: 100%;
   overflow-x: overlay;
-  position: relative;
   padding-bottom: 0 !important;
   height: fit-content;
-  z-index: 1;
 }
 .table-page_fixed-table thead tr td,
 .table-page_unfixed-table thead tr td {

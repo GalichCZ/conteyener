@@ -3,13 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { IItem, TableProps } from "../../../Types/Types";
 import { useCutString } from "../../../hooks/useCutString";
-import useColorText from "../../../hooks/useColorText";
 
 interface ITableUi {
   items: TableProps[] | undefined;
   timeConvert: (time: string) => string;
   tableUpdateHandler?: (dispatch: any, item: IItem) => void;
   setHeights1?: (c: Array<number | null | undefined>) => void;
+  useColorTextHook: (value: string | undefined, searchValue: string) => object;
 }
 
 export const TableUiFixed: React.FC<ITableUi> = ({
@@ -17,6 +17,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
   timeConvert,
   tableUpdateHandler,
   setHeights1,
+  useColorTextHook,
 }) => {
   const cutString = useCutString();
   const dispatch = useAppDispatch();
@@ -63,7 +64,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             <td
               style={{
                 cursor: "pointer",
-                ...useColorText(item.request_date, searchValue),
+                ...useColorTextHook(item.request_date, searchValue),
               }}
               onClick={() =>
                 tableUpdateHandler && tableUpdateHandler(dispatch, item)
@@ -77,7 +78,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                   return (
                     <p
                       style={{
-                        ...useColorText(num, searchValue),
+                        ...useColorTextHook(num, searchValue),
                       }}
                       key={key}
                     >
@@ -93,7 +94,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                   return (
                     <p
                       style={{
-                        ...useColorText(num, searchValue),
+                        ...useColorTextHook(num, searchValue),
                       }}
                       key={key}
                     >
@@ -110,7 +111,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                     <Tooltip destroyTooltipOnHide={true} key={key} title={num}>
                       <p
                         style={{
-                          ...useColorText(num, searchValue),
+                          ...useColorTextHook(num, searchValue),
                         }}
                         key={key}
                       >
@@ -123,7 +124,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             </td>
             <td
               style={{
-                ...useColorText(
+                ...useColorTextHook(
                   item.container_number
                     ? item.container_number
                     : item.container?.container_number,

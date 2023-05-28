@@ -27,6 +27,8 @@ import { callError } from "../Functions/ErrorHandlers";
 import { dropInput } from "../Functions/TableHandlers";
 import { checkFilledPoles } from "../Functions/TableHandlers";
 import { DeliveryMethodSelect } from "../../../components/DeliveryMethodSelect";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
+import { setOpenItemCreate } from "../../../store/slices/tableItemCreateSlice";
 
 const ItemFuncs = new Item();
 
@@ -35,7 +37,7 @@ export const TableItemCreate: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const reDrawCtx = useContext(ReDrawContext);
   const [form] = Form.useForm();
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [filled, setFilled] = useState(false);
   const [item, setItem] = useState<INewItem>({
     agent: "",
@@ -43,17 +45,6 @@ export const TableItemCreate: React.FC = () => {
     container_type: "",
     delivery_method: "",
     importers: [],
-    is_docs: {
-      PI: false,
-      CI: false,
-      PL: false,
-      SS_DS: false,
-      contract_agrees: false,
-      cost_agrees: false,
-      instruction: false,
-      ED: false,
-      bill: false,
-    },
     order_number: [],
     place_of_dispatch: "",
     providers: [],
@@ -63,10 +54,8 @@ export const TableItemCreate: React.FC = () => {
     store: "",
     direction: "",
   });
-
-  const showModal = () => {
-    setOpen(true);
-  };
+  const open = useAppSelector((state) => state.tableItemCreate.open);
+  const dispatch = useAppDispatch();
 
   const handleOk = async () => {
     if (filled) {
@@ -82,13 +71,13 @@ export const TableItemCreate: React.FC = () => {
         dropInput(setItem);
         setConfirmLoading(false);
         reDrawCtx.reDrawHandler(false);
-        setOpen(false);
+        dispatch(setOpenItemCreate());
       }
     } else callError(messageApi, "Fill the all poles !");
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    dispatch(setOpenItemCreate());
   };
 
   const getName = async () => {
@@ -101,19 +90,13 @@ export const TableItemCreate: React.FC = () => {
   }, [item.store]);
 
   useEffect(() => {
+    console.log(item);
     checkFilledPoles(item, setFilled);
   }, [item]);
 
   return (
     <>
       {contextHolder}
-      <Button
-        style={{ marginBottom: "1rem" }}
-        type="primary"
-        onClick={showModal}
-      >
-        Создать новую запись
-      </Button>
       <Modal
         title="Новая запись"
         open={open}

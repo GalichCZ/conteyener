@@ -172,7 +172,6 @@
 .head-cell-fixed:nth-child(5) {
   border-width: 1px 0px 0px 1px;
 }
-
 .table-head-unfixed {
   display: flex;
   position: fixed;
@@ -180,4 +179,9 @@
   height: 82px;
   top: 0;
   width: 100%;
+}
+.table-utils {
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
 }

@@ -182,7 +182,6 @@ const ItemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
     },
     updator: {
       type: mongoose.Schema.Types.ObjectId,

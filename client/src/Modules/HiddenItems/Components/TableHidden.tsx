@@ -15,6 +15,7 @@ import { hideItem } from "../../Table/Functions/itemFuncs";
 import { TableColNamesFixed } from "../../Table/UI/TableColNamesFixed";
 import { TableUiFixed } from "../../Table/UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
+import useColorText from "../../../hooks/useColorText";
 
 const ItemFuncs = new Item();
 
@@ -84,12 +85,14 @@ export const TableHidden = () => {
             setHeights1={setHeights1}
             items={items}
             timeConvert={timeConvert}
+            useColorTextHook={useColorText}
           />
         </table>
         <div className="table-page_unfixed-table">
           <table>
             <TableColNames setItems={setItems} data={copyItems} />
             <TableUI
+              useColorTextHook={useColorText}
               setHeights2={setHeights2}
               items={items}
               checkTimeStyle={checkTimeStyle}

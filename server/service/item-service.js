@@ -2,6 +2,7 @@ const ItemSchema = require("../models/item-model");
 const TechStoreSchema = require("../models/techStore-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
+const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 const { checkDuplicates } = require("./check-duplicates");
@@ -15,6 +16,14 @@ function errorReturn(error) {
     success: false,
     error,
   };
+}
+
+function findNewElements(oldArray, newArray) {
+  const oldArraySet = new Set(oldArray);
+
+  const newElements = newArray.filter((element) => !oldArraySet.has(element));
+
+  return newElements;
 }
 
 class ItemService {
@@ -36,6 +45,23 @@ class ItemService {
         );
       }
 
+      const isDocsArray = [];
+
+      req.body.order_number.map((num) => {
+        isDocsArray.push({
+          PI: false,
+          CI: false,
+          PL: false,
+          SS_DS: false,
+          contract_agrees: false,
+          cost_agrees: false,
+          instruction: false,
+          ED: false,
+          bill: false,
+          order_number: num,
+        });
+      });
+
       const doc = await new ItemSchema({
         request_date: req.body.request_date,
         order_number: req.body.order_number,
@@ -50,6 +76,7 @@ class ItemService {
         direction: req.body.direction,
         container_type: req.body.container_type,
         place_of_dispatch: req.body.place_of_dispatch,
+        is_docs: isDocsArray,
       });
 
       await doc.save();
@@ -61,6 +88,32 @@ class ItemService {
         )}\nCREATE ITEM ERROR:\n${error}`
       );
       console.log("ERROR LOG:", error);
+      return { success: false, error };
+    }
+  }
+
+  async updateDocs(req) {
+    try {
+      const item = await ItemSchema.findById(req.body._id);
+
+      const oldArray = item.is_docs;
+
+      const newArray = oldArray.map((doc) =>
+        doc.order_number === req.body.is_docs.order_number
+          ? req.body.is_docs
+          : doc
+      );
+
+      await ItemSchema.updateOne({ _id: req.body._id }, { is_docs: newArray });
+
+      return { success: true };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DOCS ERROR:\n${error}`
+      );
+      console.log(error);
       return { success: false, error };
     }
   }
@@ -244,8 +297,11 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req) {
+  async updateItem(req) {
     try {
+      const _id = req.body._id;
+      const item = await ItemSchema.findById(_id).exec();
+
       const duplicatesOrder = await checkDuplicates(
         req.body.order_number,
         "order_number",
@@ -300,8 +356,6 @@ class ItemService {
           _id: req.body.stock_place,
         }));
 
-      const item = await ItemSchema.findById(_id).exec();
-
       const store_name =
         req.body.store &&
         (await TechStoreSchema.findById({
@@ -322,6 +376,29 @@ class ItemService {
       Promise.all(simple).then((res) => {
         return res;
       });
+
+      const newArray = req.body.is_docs;
+      const newOrderNumbers = findNewElements(
+        item.order_number,
+        req.body.order_number
+      );
+
+      if (newOrderNumbers.length > 0) {
+        newOrderNumbers.forEach((number) => {
+          newArray.push({
+            PI: false,
+            CI: false,
+            PL: false,
+            SS_DS: false,
+            contract_agrees: false,
+            cost_agrees: false,
+            instruction: false,
+            ED: false,
+            bill: false,
+            order_number: number,
+          });
+        });
+      }
 
       await ItemSchema.updateOne(
         {
@@ -408,6 +485,23 @@ class ItemService {
       );
       return { success: false, error };
     }
+  }
+
+  async uploadExcel(file) {
+    try {
+      const json = await FileService.createFile(file);
+      //TODO: parse all items in excel and change items by container number,
+      //also add column names to buffer "ctrl+v" on button click
+      console.log(json);
+    } catch (error) {
+      console.log(error);
+      return { success: false, error };
+    }
+  }
+
+  async findByKeyValue(req) {
+    const items = await ItemSchema.find().exec();
+    console.log(items[0]["inside_number"]);
   }
 }
 

@@ -8,7 +8,7 @@ import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
-import { Alert, Button } from "antd";
+import { Button } from "antd";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import { debounce } from "lodash";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -17,6 +17,11 @@ import { TableNamesFixed } from "../UI/TableNamesFixed";
 import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 import { useLocation } from "react-router-dom";
+import useColorText from "../../../hooks/useColorText";
+import { UploadFile } from "./UploadFile";
+import { TableHints } from "../UI/TableHints";
+import SideMenu from "../UI/SideMenu";
+import Search from "../../Search/Components/Search";
 
 const ItemFuncs = new Item();
 
@@ -103,28 +108,15 @@ export const Table: React.FunctionComponent = () => {
 
   return (
     <>
-      <Alert
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "5px",
-          boxShadow: "1px 1px 10px gray",
-          fontWeight: "bold",
-        }}
-        message={"Подсказка"}
-        description={`Для скролла влево/вправо используйте комбинацию "shift+scroll"`}
-        type="info"
-        banner
-        closable
-      />
-      <div style={{ marginBottom: "20px" }}>
-        <Button disabled={downloading} onClick={handleDownloadClick}>
-          Скачать актуальную таблицу
-        </Button>
-        {downloading && (
-          <Spin style={{ marginLeft: "10px" }} indicator={antIcon} />
-        )}
+      <div className="table-utils">
+        <SideMenu
+          downloading={downloading}
+          handleDownloadClick={handleDownloadClick}
+        />
+        <Search />
       </div>
+      <TableHints />
+
       <div className="table-page_table">
         {/* <TableNamesFixed /> */}
         <table className="table-page_fixed-table">
@@ -138,6 +130,7 @@ export const Table: React.FunctionComponent = () => {
             items={items}
             timeConvert={TableHandlers.timeConvert}
             tableUpdateHandler={TableHandlers.tableUpdateHandler}
+            useColorTextHook={useColorText}
           />
         </table>
         <div ref={tableRef} className="table-page_unfixed-table">
@@ -163,6 +156,7 @@ export const Table: React.FunctionComponent = () => {
               tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
               tableDistanceHandler={TableHandlers.distanceHandler}
               tableStockHandler={TableHandlers.tableStockInfoHandler}
+              useColorTextHook={useColorText}
             />
           </table>
         </div>

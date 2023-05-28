@@ -15,7 +15,7 @@ class ItemController {
 
     const item = await ItemService.createItem(req);
 
-    if (item.success) return res.status(200);
+    if (item.success) return res.sendStatus(200);
     else return res.status(400).json({ error: item.error });
   }
 
@@ -60,9 +60,7 @@ class ItemController {
   }
 
   async updateItem(req, res) {
-    const item = await ItemSchema.findById({ _id: req.body._id });
-
-    const response = await ItemService.updateItem(item._id, req);
+    const response = await ItemService.updateItem(req);
 
     console.log(response);
 
@@ -138,6 +136,25 @@ class ItemController {
 
     if (result.success) res.status(200).json(result.items);
     else res.status(400).json(result.error);
+  }
+
+  async updateDocs(req, res) {
+    const result = await ItemService.updateDocs(req);
+
+    if (result.success) res.status(200).json({ success: result.success });
+    else res.status(400).json(result.error);
+  }
+
+  async uploadExcel(req, res) {
+    const result = ItemService.uploadExcel(req.file.path);
+
+    res.sendStatus(200);
+  }
+
+  async findByKeyValue(req, res) {
+    const result = ItemService.findByKeyValue(req);
+
+    res.sendStatus(200);
   }
 }
 

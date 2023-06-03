@@ -21,6 +21,7 @@ const initialState: ITableDocs = {
     instruction: false,
     ED: false,
     bill: false,
+    order_number: "",
   },
 };
 

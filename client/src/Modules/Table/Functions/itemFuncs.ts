@@ -3,6 +3,7 @@ import {
   ICalcDate,
   IItem,
   INewItem,
+  IsDocsType,
 } from "../../../Types/Types";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -38,9 +39,8 @@ export class Item {
         Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       },
     })
-      .then((response) => response.json())
-      .then((data) => {
-        return data;
+      .then((response) => {
+        return response;
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -198,5 +198,35 @@ export const calculateDates = async (data: ICalcDate) => {
       console.error("Error:", error);
       return error;
     });
+  return response;
+};
+
+export const updateDocs = async (_id: string, is_docs: IsDocsType) => {
+  const response = await fetch(URL + "/item/docs", {
+    method: "PATCH",
+    body: JSON.stringify({ _id, is_docs }),
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      return error;
+    });
+  return response;
+};
+
+export const findByKeyValue = async (key: string, value: string) => {
+  const response = await fetch(URL + `/item/${key}/${value}`)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
   return response;
 };

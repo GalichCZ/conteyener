@@ -15,9 +15,8 @@ class ItemController {
 
     const item = await ItemService.createItem(req);
 
-    if (item.error) return res.status(400).json({ error: item.error });
-
-    return res.status(200).json(item);
+    if (item.success) return res.sendStatus(200);
+    else return res.status(400).json({ error: item.error });
   }
 
   async getItems(req, res) {
@@ -61,19 +60,12 @@ class ItemController {
   }
 
   async updateItem(req, res) {
-    try {
-      const item = await ItemSchema.findById({ _id: req.body._id });
+    const response = await ItemService.updateItem(req);
 
-      const response = await ItemService.updateItem(item._id, req);
+    console.log(response);
 
-      console.log(response);
-
-      if (response.error) return res.status(400).json({ error: response });
-
-      return res.json("success");
-    } catch (error) {
-      console.log(error);
-    }
+    if (response.success) res.status(200).json({ success: response.success });
+    else res.status(400).json({ error: response.error });
   }
 
   async findItemsBySearch(req, res) {
@@ -123,7 +115,6 @@ class ItemController {
       const item = await ItemSchema.findById(req.params._id).exec();
 
       await ItemService.deleteItem(req.params._id);
-      await ContainerService.deleteContainer(item);
       await DeclarationService.deleteDeclarationStatus(item.declaration_number);
       await ProductService.deleteProduct(item._id);
 
@@ -145,6 +136,26 @@ class ItemController {
 
     if (result.success) res.status(200).json(result.items);
     else res.status(400).json(result.error);
+  }
+
+  async updateDocs(req, res) {
+    const result = await ItemService.updateDocs(req);
+
+    if (result.success) res.status(200).json({ success: result.success });
+    else res.status(400).json(result.error);
+  }
+
+  async uploadExcel(req, res) {
+    const result = ItemService.uploadExcel(req.file.path);
+
+    res.sendStatus(200);
+  }
+
+  async findByKeyValue(req, res) {
+    const result = await ItemService.findByKeyValue(req);
+
+    if (result.success) res.status(200).json(result.response);
+    else res.status(400).json({ error: result.error });
   }
 }
 

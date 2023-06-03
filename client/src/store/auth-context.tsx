@@ -37,6 +37,7 @@ export const AuthContextProvider = (props: any) => {
     const _id = window.localStorage.getItem("_id");
     if (_id !== null) {
       const response = await User.getMe(_id);
+      if (response.message === "Bad token") return logoutHandler();
       setIsActivated(response?.is_activated);
       setRole(response?.role);
     }
@@ -47,10 +48,10 @@ export const AuthContextProvider = (props: any) => {
     getMe();
   }, [window.localStorage.getItem("_id")]);
 
-  const logoutHandler = () => {
+  function logoutHandler() {
     setToken("");
     window.localStorage.clear();
-  };
+  }
 
   const contextValue = {
     token,

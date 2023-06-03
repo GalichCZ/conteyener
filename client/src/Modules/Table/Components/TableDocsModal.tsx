@@ -9,9 +9,7 @@ import {
   setDocs,
 } from "../../../store/slices/tableDocsSlice";
 import { DocsSelect } from "../../../components";
-import Docs from "../Functions/isDocsFuncs";
-
-const DocsFuncs = new Docs();
+import { updateDocs } from "../Functions/itemFuncs";
 
 export const TableDocsModal: React.FC = ({}) => {
   const dispatch = useAppDispatch();
@@ -28,6 +26,7 @@ export const TableDocsModal: React.FC = ({}) => {
     instruction: false,
     ED: false,
     bill: false,
+    order_number: "",
   });
 
   const open = useAppSelector((state) => state.tableDocs.open);
@@ -41,9 +40,10 @@ export const TableDocsModal: React.FC = ({}) => {
   const handleOk = async () => {
     setConfirmLoading(true);
     reDraw.reDrawHandler(true);
-    const response = await DocsFuncs.updateDocs(isDocs, _id);
+    const response = await updateDocs(_id, isDocs);
+    console.log(response);
     if (response.error) setErr(response.error);
-    if (response === 200) {
+    if (response.success) {
       setConfirmLoading(false);
       dispatch(setOpenDocs());
       dispatch(setDocsId(""));
@@ -70,6 +70,7 @@ export const TableDocsModal: React.FC = ({}) => {
         instruction: false,
         ED: false,
         bill: false,
+        order_number: "",
       })
     );
   }
@@ -84,6 +85,7 @@ export const TableDocsModal: React.FC = ({}) => {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
+      <b>Номер заказа: {isDocs?.order_number}</b>
       <Form layout="vertical" className="docs-modal">
         <DocsSelect
           label="PI"

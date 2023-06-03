@@ -14,39 +14,36 @@ export const DeliveryMethodSelect: React.FC<IDeliveryMethodSelectProps> = ({
   className,
   onChange,
 }) => {
-  const options = [
-    {
-      value: "Морe",
-      label: "Морe",
-      tooltip: "Доставка контейнера морским путем",
-    },
-    {
-      value: "Поезд",
-      label: "Поезд",
-      tooltip: "Доставка контейнера прямым Ж/Д",
-    },
-    {
-      value: "Авто",
-      label: "Авто",
-      tooltip: "Доставка контейнера прямым авто",
-    },
-    {
-      value: "Авиа",
-      label: "Авиа",
-      tooltip: "Доставка груза прямым самолетом",
-    },
-    { value: "other", label: "Иное", tooltip: "Доставка контейнера" },
-  ];
-
   return (
     <Form.Item className={className} label="Способ доставки">
       <>
-        <Select
-          onChange={onChange}
-          value={value}
-          options={options}
-          placeholder="Способ доставки"
-        />
+        <Select onChange={onChange} value={value} placeholder="Способ доставки">
+          <Option value="Морe" label="Морe">
+            <Tooltip title="Доставка контейнера морским путем">
+              <p>Морe</p>
+            </Tooltip>
+          </Option>
+          <Option value="Поезд" label="Поезд">
+            <Tooltip title="Доставка контейнера прямым Ж/Д">
+              <p>Поезд</p>
+            </Tooltip>
+          </Option>
+          <Option value="Авто" label="Авто">
+            <Tooltip title="Доставка контейнера прямым авто">
+              <p>Авто</p>
+            </Tooltip>
+          </Option>
+          <Option value="Авиа" label="Авиа">
+            <Tooltip title="Доставка груза прямым самолетом">
+              <p>Авиа</p>
+            </Tooltip>
+          </Option>
+          <Option value="Иное" label="Иное">
+            <Tooltip title="Доставка контейнера">
+              <p>Иное</p>
+            </Tooltip>
+          </Option>
+        </Select>
       </>
     </Form.Item>
   );

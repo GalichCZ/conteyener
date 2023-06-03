@@ -147,7 +147,6 @@ export const SearchHandler = async (
   searchReq: string,
   itemsCopy: Types.TableProps[]
 ) => {
-  console.log(searchFilter);
   if (searchReq.length === 0) return itemsCopy;
   if (searchFilter == "other") {
     const filtered = itemsCopy.filter((item) => {
@@ -244,17 +243,6 @@ export const dropInput = (setItem: (c: Types.INewItem) => void) => {
     agent: "",
     container_type: "",
     place_of_dispatch: "",
-    is_docs: {
-      PI: false,
-      CI: false,
-      PL: false,
-      SS_DS: false,
-      contract_agrees: false,
-      cost_agrees: false,
-      instruction: false,
-      ED: false,
-      bill: false,
-    },
     direction: "",
   });
 };

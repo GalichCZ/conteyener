@@ -11,6 +11,7 @@ class FileService {
 
       return json;
     } catch (error) {
+      console.log(error);
       SendBotMessage(
         `${dayjs(new Date()).format(
           "MMMM D, YYYY h:mm A"

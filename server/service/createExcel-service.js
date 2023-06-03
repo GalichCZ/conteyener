@@ -9,7 +9,6 @@ class FileService {
 
   async createFile(file) {
     try {
-      console.log("download");
       const items = await ItemSchema.find().exec();
       const jsonDataFetch = items.map(async (item) => {
         return {

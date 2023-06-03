@@ -9,6 +9,7 @@ interface ITableUi {
   timeConvert: (time: string) => string;
   tableUpdateHandler?: (dispatch: any, item: IItem) => void;
   setHeights1?: (c: Array<number | null | undefined>) => void;
+  useColorTextHook: (value: string | undefined, searchValue: string) => object;
 }
 
 export const TableUiFixed: React.FC<ITableUi> = ({
@@ -16,14 +17,14 @@ export const TableUiFixed: React.FC<ITableUi> = ({
   timeConvert,
   tableUpdateHandler,
   setHeights1,
+  useColorTextHook,
 }) => {
   const cutString = useCutString();
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
-  const tdRefs = useRef<Array<HTMLTableDataCellElement | null>>([]);
   const [height, setHeight] = useState<Array<number | null | undefined>>([]);
-  const [widths, setWidths] = useState<Array<number | null | undefined>>([]);
   const heights = useAppSelector((state) => state.heightHandler.heights);
+  const searchValue = useAppSelector((state) => state.search.value);
 
   const getHeight = () => {
     if (myRefs.current) {
@@ -61,7 +62,10 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             key={key}
           >
             <td
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                ...useColorTextHook(item.request_date, searchValue),
+              }}
               onClick={() =>
                 tableUpdateHandler && tableUpdateHandler(dispatch, item)
               }
@@ -71,14 +75,32 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             <td>
               <div className="arr-info">
                 {item.inside_number.map((num, key) => {
-                  return <p key={key}>{num}</p>;
+                  return (
+                    <p
+                      style={{
+                        ...useColorTextHook(num, searchValue),
+                      }}
+                      key={key}
+                    >
+                      {num}
+                    </p>
+                  );
                 })}
               </div>
             </td>
             <td>
               <div className="arr-info">
                 {item.proform_number.map((num, key) => {
-                  return <p key={key}>{cutString(num, 12)}</p>;
+                  return (
+                    <p
+                      style={{
+                        ...useColorTextHook(num, searchValue),
+                      }}
+                      key={key}
+                    >
+                      {cutString(num, 12)}
+                    </p>
+                  );
                 })}
               </div>
             </td>
@@ -87,13 +109,29 @@ export const TableUiFixed: React.FC<ITableUi> = ({
                 {item.order_number.map((num, key) => {
                   return (
                     <Tooltip destroyTooltipOnHide={true} key={key} title={num}>
-                      <p key={key}>{cutString(num, 10)}</p>
+                      <p
+                        style={{
+                          ...useColorTextHook(num, searchValue),
+                        }}
+                        key={key}
+                      >
+                        {cutString(num, 10)}
+                      </p>
                     </Tooltip>
                   );
                 })}
               </div>
             </td>
-            <td>
+            <td
+              style={{
+                ...useColorTextHook(
+                  item.container_number
+                    ? item.container_number
+                    : item.container?.container_number,
+                  searchValue
+                ),
+              }}
+            >
               {" "}
               {item.container_number
                 ? item.container_number

@@ -38,7 +38,7 @@ export type TableProps = {
   date_do_update: boolean;
   port: string;
   is_ds: boolean;
-  is_docs: IsDocsType;
+  is_docs: IsDocsType[];
   declaration_number: string[];
   declaration_issue_date: string;
   declaration_issue_date_update: boolean;
@@ -79,11 +79,11 @@ export interface INewItem {
   agent: string;
   container_type: string;
   place_of_dispatch: string;
-  is_docs: IsDocsType;
   direction: string;
 }
 
 export interface IItem extends INewItem {
+  [key: string]: any;
   _id: string;
   inside_number: string[];
   proform_number: string[];
@@ -109,7 +109,7 @@ export interface IItem extends INewItem {
   port: string;
   is_ds: boolean;
   delivery_channel: string | null;
-  is_docs: IsDocsType;
+  is_docs: IsDocsType[];
   declaration_number: string[];
   declaration_issue_date: string;
   availability_of_ob: string | undefined | null;
@@ -177,6 +177,7 @@ export interface IsDocsType {
   instruction: boolean;
   ED: boolean;
   bill: boolean;
+  order_number: string;
 }
 
 export interface TechStoreData {

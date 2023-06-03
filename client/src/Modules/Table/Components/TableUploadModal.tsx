@@ -141,7 +141,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
       </table>
 
       <Upload {...props}>
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+        <Button icon={<UploadOutlined />}>Загрузить продукты</Button>
       </Upload>
     </Modal>
   );

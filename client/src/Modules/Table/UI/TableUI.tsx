@@ -41,6 +41,7 @@ interface ITableUi {
   tableStockHandler?: (dispatch: any, info: string) => void;
   hideItem?: (_id: string, hidden: boolean) => void;
   hidden?: boolean;
+  useColorTextHook: (value: string | undefined, searchValue: string) => object;
 }
 
 const TableUI: React.FC<ITableUi> = ({
@@ -60,11 +61,13 @@ const TableUI: React.FC<ITableUi> = ({
   hideItem,
   hidden,
   setHeights2,
+  useColorTextHook,
 }) => {
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
   const [height, setHeight] = useState<Array<number | null | undefined>>([]);
   const heights = useAppSelector((state) => state.heightHandler.heights);
+  const searchValue = useAppSelector((state) => state.search.value);
   const cutString = useCutString();
 
   const getHeight = () => {
@@ -121,6 +124,7 @@ const TableUI: React.FC<ITableUi> = ({
                         <p
                           style={{
                             cursor: "pointer",
+                            ...useColorTextHook(simpleName, searchValue),
                           }}
                           onClick={() =>
                             uploadHandler &&
@@ -136,7 +140,13 @@ const TableUI: React.FC<ITableUi> = ({
                   })}
                 </div>
               </td>
-              <td>{item.delivery_method}</td>
+              <td
+                style={{
+                  ...useColorTextHook(item.delivery_method, searchValue),
+                }}
+              >
+                {item.delivery_method}
+              </td>
               <td style={{ minWidth: "250px" }}>
                 <div className="arr-info">
                   {item.providers.map((provider, key) => {
@@ -146,7 +156,14 @@ const TableUI: React.FC<ITableUi> = ({
                         key={key}
                         title={provider}
                       >
-                        <p> {toUpperCase(cutString(provider, 23))}... </p>
+                        <p
+                          style={{
+                            ...useColorTextHook(provider, searchValue),
+                          }}
+                        >
+                          {" "}
+                          {toUpperCase(cutString(provider, 23))}...{" "}
+                        </p>
                       </Tooltip>
                     );
                   })}
@@ -155,20 +172,43 @@ const TableUI: React.FC<ITableUi> = ({
               <td>
                 <div className="arr-info">
                   {item.importers.map((importer, key) => {
-                    return <p key={key}> {cutString(importer, 11)}... </p>;
+                    return (
+                      <p
+                        style={{
+                          ...useColorTextHook(importer, searchValue),
+                        }}
+                        key={key}
+                      >
+                        {" "}
+                        {cutString(importer, 11)}...{" "}
+                      </p>
+                    );
                   })}
                 </div>
               </td>
               <td>
                 <div className="arr-info">
                   {item.conditions.map((condition, key) => {
-                    return <p key={key}> {condition} </p>;
+                    return (
+                      <p
+                        style={{
+                          ...useColorTextHook(condition, searchValue),
+                        }}
+                        key={key}
+                      >
+                        {" "}
+                        {condition}{" "}
+                      </p>
+                    );
                   })}
                 </div>
               </td>
               <td>{item.direction}</td>
               <td
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  ...useColorTextHook(item.store_name, searchValue),
+                }}
                 onClick={() =>
                   tableStoreHandler &&
                   tableStoreHandler(dispatch, item._id, item.store)
@@ -176,19 +216,63 @@ const TableUI: React.FC<ITableUi> = ({
               >
                 {item.store_name}
               </td>
-              <td> {item.agent} </td>
-              <td>
+              <td
+                style={{
+                  ...useColorTextHook(item.agent, searchValue),
+                }}
+              >
+                {item.agent}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(
+                    item.container_type
+                      ? item.container_type
+                      : item.container?.container_type,
+                    searchValue
+                  ),
+                }}
+              >
                 {" "}
                 {item.container_type
                   ? item.container_type
                   : item.container?.container_type}{" "}
               </td>
-              <td> {item.place_of_dispatch} </td>
-              <td> {item.line} </td>
-              <td> {item.ready_date && timeConvert(item.ready_date)} </td>
-              <td> {item.load_date && timeConvert(item.load_date)} </td>
               <td
-                style={{ cursor: "pointer" }}
+                style={{
+                  ...useColorTextHook(item.place_of_dispatch, searchValue),
+                }}
+              >
+                {" "}
+                {item.place_of_dispatch}{" "}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.line, searchValue),
+                }}
+              >
+                {item.line}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.ready_date, searchValue),
+                }}
+              >
+                {item.ready_date && timeConvert(item.ready_date)}{" "}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.load_date, searchValue),
+                }}
+              >
+                {" "}
+                {item.load_date && timeConvert(item.load_date)}{" "}
+              </td>
+              <td
+                style={{
+                  cursor: "pointer",
+                  ...useColorTextHook(item.etd, searchValue),
+                }}
                 onClick={() => {
                   tableCalcDateHandler &&
                     tableCalcDateHandler(
@@ -203,6 +287,9 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.etd && timeConvert(item.etd)}{" "}
               </td>
               <td
+                style={{
+                  ...useColorTextHook(item.eta, searchValue),
+                }}
                 className={checkTimeStyle(item.eta, item.eta_update)}
                 onClick={() => {
                   dateChangeHandler &&
@@ -217,7 +304,14 @@ const TableUI: React.FC<ITableUi> = ({
               >
                 {item.eta === null ? "-" : timeConvert(item.eta)}
               </td>
-              <td> {item.release && timeConvert(item.release)} </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.release, searchValue),
+                }}
+              >
+                {" "}
+                {item.release && timeConvert(item.release)}{" "}
+              </td>
               <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
               <td> {item.td ? "+" : "-"} </td>
               <td
@@ -231,27 +325,43 @@ const TableUI: React.FC<ITableUi> = ({
                       item.date_do
                     );
                 }}
+                style={{
+                  ...useColorTextHook(item.date_do, searchValue),
+                }}
                 className={checkTimeStyle(item.date_do, item.date_do_update)}
               >
                 {item.date_do === null ? "-" : timeConvert(item.date_do)}
               </td>
-              <td> {item.port} </td>
-              <td> {item.is_ds ? "+" : "-"} </td>
               <td
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  tableDocsHandler &&
-                    tableDocsHandler(dispatch, item._id, item.is_docs);
+                style={{
+                  ...useColorTextHook(item.port, searchValue),
                 }}
               >
-                {docsCount(item.is_docs) === "+" ? (
-                  docsCount(item.is_docs)
-                ) : (
-                  <>
-                    {docsCount(item.is_docs)}
-                    /9
-                  </>
-                )}
+                {" "}
+                {item.port}{" "}
+              </td>
+              <td> {item.is_ds ? "+" : "-"} </td>
+              <td>
+                <div>
+                  {item.is_docs.map((doc, key) => (
+                    <p
+                      key={key}
+                      onClick={() => {
+                        tableDocsHandler &&
+                          tableDocsHandler(dispatch, item._id, doc);
+                      }}
+                    >
+                      {docsCount(doc) === "+" ? (
+                        docsCount(doc)
+                      ) : (
+                        <>
+                          {docsCount(doc)}
+                          /9
+                        </>
+                      )}
+                    </p>
+                  ))}
+                </div>
               </td>
               <td>
                 <div className="arr-info">
@@ -259,7 +369,10 @@ const TableUI: React.FC<ITableUi> = ({
                     return (
                       <p
                         key={key}
-                        style={{ cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          ...useColorTextHook(num, searchValue),
+                        }}
                         onClick={() => {
                           declStatusHandler && declStatusHandler(dispatch, num);
                         }}
@@ -285,20 +398,51 @@ const TableUI: React.FC<ITableUi> = ({
                   item.declaration_issue_date,
                   item.declaration_issue_date_update
                 )}
+                style={{
+                  ...useColorTextHook(item.declaration_issue_date, searchValue),
+                }}
               >
                 {item.declaration_issue_date === null
                   ? "-"
                   : timeConvert(item.declaration_issue_date)}
               </td>
-              <td>
+              <td
+                style={{
+                  ...useColorTextHook(item.availability_of_ob, searchValue),
+                }}
+              >
                 {item.availability_of_ob &&
                   timeConvert(item.availability_of_ob)}
               </td>
-              <td> {item.answer_of_ob && timeConvert(item.answer_of_ob)} </td>
-              <td> {item.expeditor} </td>
-              <td> {item.destination_station} </td>
               <td
-                style={{ cursor: "pointer" }}
+                style={{
+                  ...useColorTextHook(item.answer_of_ob, searchValue),
+                }}
+              >
+                {" "}
+                {item.answer_of_ob && timeConvert(item.answer_of_ob)}{" "}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.expeditor, searchValue),
+                }}
+              >
+                {" "}
+                {item.expeditor}{" "}
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(item.destination_station, searchValue),
+                }}
+              >
+                {" "}
+                {item.destination_station}{" "}
+              </td>
+              <td
+                style={{
+                  cursor: "pointer",
+                  ...useColorTextHook(item.km_to_dist?.toString(), searchValue),
+                }}
                 onClick={() => {
                   tableDistanceHandler &&
                     tableDistanceHandler(dispatch, item.km_to_dist, item._id);
@@ -322,6 +466,9 @@ const TableUI: React.FC<ITableUi> = ({
                   item.train_depart_date,
                   item.train_depart_date_update
                 )}
+                style={{
+                  ...useColorTextHook(item.train_depart_date, searchValue),
+                }}
               >
                 {item.train_depart_date === null
                   ? "-"
@@ -342,6 +489,9 @@ const TableUI: React.FC<ITableUi> = ({
                   item.train_arrive_date,
                   item.train_arrive_date_update
                 )}
+                style={{
+                  ...useColorTextHook(item.train_arrive_date, searchValue),
+                }}
               >
                 {item.train_arrive_date === null
                   ? "-"
@@ -363,6 +513,9 @@ const TableUI: React.FC<ITableUi> = ({
                   item.store_arrive_date,
                   item.store_arrive_date_update
                 )}
+                style={{
+                  ...useColorTextHook(item.store_arrive_date, searchValue),
+                }}
               >
                 {item.store_arrive_date === null
                   ? "-"
@@ -372,6 +525,9 @@ const TableUI: React.FC<ITableUi> = ({
                 onClick={() => {
                   tableStockHandler &&
                     tableStockHandler(dispatch, item.stock_place);
+                }}
+                style={{
+                  ...useColorTextHook(item.stock_place_name, searchValue),
                 }}
               >
                 {cutString(item.stock_place_name, 15)}

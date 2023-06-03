@@ -2,12 +2,36 @@ const ItemSchema = require("../models/item-model");
 const TechStoreSchema = require("../models/techStore-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
+const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
+const { checkDuplicates, checkDuplicatesArray } = require("./check-duplicates");
 
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 dayjs.extend(customParseFormat);
+
+function errorReturn(error) {
+  return {
+    success: false,
+    error,
+  };
+}
+
+function findNewElements(oldArray, newArray) {
+  const oldArraySet = new Set(oldArray);
+
+  const newElements = newArray.filter((element) => !oldArraySet.has(element));
+
+  return newElements;
+}
+
+function filterDuplicates(array) {
+  return array.filter((element, index) => {
+    return dataToFiltr.indexOf(element) === index && element !== null;
+  });
+}
+
 class ItemService {
   async createItem(req) {
     try {
@@ -15,6 +39,34 @@ class ItemService {
       const store_name = await TechStoreSchema.findById({
         _id: req.body.store,
       }).exec();
+
+      const duplicatesOrder = await checkDuplicates(
+        req.body.order_number,
+        "order_number"
+      );
+
+      if (duplicatesOrder.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № заказа: ${duplicatesOrder.duplicates}`
+        );
+      }
+
+      const isDocsArray = [];
+
+      req.body.order_number.map((num) => {
+        isDocsArray.push({
+          PI: false,
+          CI: false,
+          PL: false,
+          SS_DS: false,
+          contract_agrees: false,
+          cost_agrees: false,
+          instruction: false,
+          ED: false,
+          bill: false,
+          order_number: num,
+        });
+      });
 
       const doc = await new ItemSchema({
         request_date: req.body.request_date,
@@ -30,11 +82,11 @@ class ItemService {
         direction: req.body.direction,
         container_type: req.body.container_type,
         place_of_dispatch: req.body.place_of_dispatch,
+        is_docs: isDocsArray,
       });
 
-      const item = await doc.save();
-
-      return true;
+      await doc.save();
+      return { success: true };
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -42,10 +94,33 @@ class ItemService {
         )}\nCREATE ITEM ERROR:\n${error}`
       );
       console.log("ERROR LOG:", error);
-      const array = Object.entries(error.keyValue).map(([key, value]) => {
-        return { key, value };
-      });
-      return { error: array };
+      return { success: false, error };
+    }
+  }
+
+  async updateDocs(req) {
+    try {
+      const item = await ItemSchema.findById(req.body._id);
+
+      const oldArray = item.is_docs;
+
+      const newArray = oldArray.map((doc) =>
+        doc.order_number === req.body.is_docs.order_number
+          ? req.body.is_docs
+          : doc
+      );
+
+      await ItemSchema.updateOne({ _id: req.body._id }, { is_docs: newArray });
+
+      return { success: true };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DOCS ERROR:\n${error}`
+      );
+      console.log(error);
+      return { success: false, error };
     }
   }
 
@@ -228,26 +303,81 @@ class ItemService {
     }
   }
 
-  async updateItem(_id, req) {
+  async updateItem(req) {
     try {
+      const _id = req.body._id;
+      const item = await ItemSchema.findById(_id).exec();
+
+      const duplicatesOrder = await checkDuplicatesArray(
+        req.body.order_number,
+        "order_number",
+        _id
+      );
+
+      if (duplicatesOrder.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № заказа: ${duplicatesOrder.duplicates}`
+        );
+      }
+
+      const duplicateContainerNumber = await checkDuplicates(
+        req.body.container_number,
+        "container_number"
+      );
+
+      if (duplicateContainerNumber.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № контейнера: ${duplicateContainerNumber.duplicate}`
+        );
+      }
+
+      const duplicatesInside = await checkDuplicatesArray(
+        req.body.inside_number,
+        "inside_number",
+        _id
+      );
+
+      if (duplicatesInside.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
+        );
+      }
+
+      const duplicatesProform = await checkDuplicatesArray(
+        req.body.proform_number,
+        "proform_number",
+        _id
+      );
+
+      if (duplicatesProform.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № проформы: ${duplicatesProform.duplicates}`
+        );
+      }
+
+      const duplicatesDeclaration = await checkDuplicatesArray(
+        req.body.declaration_number,
+        "declaration_number",
+        _id
+      );
+
+      if (duplicatesDeclaration.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № декларации: ${duplicatesDeclaration.duplicates}`
+        );
+      }
+
       const stock_place =
         req.body.stock_place &&
         (await StockPlaceSchema.findById({
           _id: req.body.stock_place,
         }));
 
-      const item = await ItemSchema.findById(_id).exec();
-
-      const items = await ItemSchema.find({
-        declaration_number: { $in: [req.body.declaration_number] },
-      });
       const store_name =
         req.body.store &&
         (await TechStoreSchema.findById({
           _id: req.body.store,
         }));
-
-      const exists = null;
 
       const simple = req.body.simple_product_name.map(
         async (simpleName, index) => {
@@ -264,64 +394,75 @@ class ItemService {
         return res;
       });
 
-      items.forEach((item) => {
-        req.body.declaration_number.forEach((decl) => {
-          // console.log(decl);
-          if (item.declaration_number.includes(decl)) {
-            // console.log(decl, " d");
-          }
-        });
-      });
+      const newArray = req.body.is_docs;
+      const newOrderNumbers = findNewElements(
+        item.order_number,
+        req.body.order_number
+      );
 
-      if (exists !== null) return { error: "Declaration", duplicates: exists };
-      else {
-        await ItemSchema.updateOne(
-          {
-            _id,
-          },
-          {
-            request_date: req.body.request_date,
-            order_number: req.body.order_number,
-            inside_number: req.body.inside_number,
-            proform_number: req.body.proform_number,
-            container_number: req.body.container_number,
-            container_type: req.body.container_type,
-            providers: req.body.providers,
-            importers: req.body.importers,
-            simple_product_name: req.body.simple_product_name,
-            delivery_method: req.body.delivery_method,
-            conditions: req.body.conditions,
-            agent: req.body.agent,
-            place_of_dispatch: req.body.place_of_dispatch,
-            line: req.body.line,
-            ready_date: req.body.ready_date,
-            load_date: req.body.load_date,
-            release: req.body.release,
-            bl_smgs_cmr: req.body.bl_smgs_cmr,
-            td: req.body.td,
-            port: req.body.port,
-            is_ds: req.body.is_ds,
-            is_docs: req.body.is_docs,
-            declaration_number: req.body.declaration_number,
-            availability_of_ob: req.body.availability_of_ob,
-            answer_of_ob: req.body.answer_of_ob,
-            direction: req.body.direction,
-            expeditor: req.body.expeditor,
-            destination_station: req.body.destination_station,
-            km_to_dist: req.body.km_to_dist,
-            pickup: req.body.pickup,
-            comment: req.body.comment,
-            stock_place_name: stock_place && stock_place.name,
-            stock_place: req.body.stock_place,
-            store_name: store_name && store_name.name,
-            store: req.body.store,
-            fraht: req.body.fraht,
-            bid: req.body.bid,
-            note: req.body.note,
-          }
-        );
-        return { message: "success" };
+      if (newOrderNumbers.length > 0) {
+        newOrderNumbers.forEach((number) => {
+          newArray.push({
+            PI: false,
+            CI: false,
+            PL: false,
+            SS_DS: false,
+            contract_agrees: false,
+            cost_agrees: false,
+            instruction: false,
+            ED: false,
+            bill: false,
+            order_number: number,
+          });
+        });
       }
+
+      await ItemSchema.updateOne(
+        {
+          _id,
+        },
+        {
+          request_date: req.body.request_date,
+          order_number: req.body.order_number,
+          inside_number: req.body.inside_number,
+          proform_number: req.body.proform_number,
+          container_number: req.body.container_number,
+          container_type: req.body.container_type,
+          providers: req.body.providers,
+          importers: req.body.importers,
+          simple_product_name: req.body.simple_product_name,
+          delivery_method: req.body.delivery_method,
+          conditions: req.body.conditions,
+          agent: req.body.agent,
+          place_of_dispatch: req.body.place_of_dispatch,
+          line: req.body.line,
+          ready_date: req.body.ready_date,
+          load_date: req.body.load_date,
+          release: req.body.release,
+          bl_smgs_cmr: req.body.bl_smgs_cmr,
+          td: req.body.td,
+          port: req.body.port,
+          is_ds: req.body.is_ds,
+          is_docs: req.body.is_docs,
+          declaration_number: req.body.declaration_number,
+          availability_of_ob: req.body.availability_of_ob,
+          answer_of_ob: req.body.answer_of_ob,
+          direction: req.body.direction,
+          expeditor: req.body.expeditor,
+          destination_station: req.body.destination_station,
+          km_to_dist: req.body.km_to_dist,
+          pickup: req.body.pickup,
+          comment: req.body.comment,
+          stock_place_name: stock_place && stock_place.name,
+          stock_place: req.body.stock_place,
+          store_name: store_name && store_name.name,
+          store: req.body.store,
+          fraht: req.body.fraht,
+          bid: req.body.bid,
+          note: req.body.note,
+        }
+      );
+      return { success: true };
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -329,10 +470,7 @@ class ItemService {
         )}\nUPDATE ITEM ERROR:\n${error}`
       );
       console.log(error);
-      const array = Object.entries(error.keyValue).map(([key, value]) => {
-        return { key, value };
-      });
-      return { error: array };
+      return { success: false, error };
     }
   }
 
@@ -363,6 +501,34 @@ class ItemService {
         )}\nUPDATE DISTANCE ERROR:\n${error}`
       );
       return { success: false, error };
+    }
+  }
+
+  async uploadExcel(file) {
+    try {
+      const json = await FileService.createFile(file);
+      //TODO: parse all items in excel and change items by container number,
+      //also add column names to buffer "ctrl+v" on button click
+      console.log(json);
+    } catch (error) {
+      console.log(error);
+      return { success: false, error };
+    }
+  }
+
+  async findByKeyValue(req) {
+    try {
+      const key = req.params.key;
+      const value = req.params.keyValue;
+      const query = {};
+      query[key] = { $regex: value, $options: "i" };
+      const items = await ItemSchema.find(query).exec();
+      console.log(items[key]);
+      const response = filterDuplicates(items[key]);
+
+      return { success: true, response };
+    } catch (error) {
+      return errorReturn(error);
     }
   }
 }

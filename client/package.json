@@ -13,6 +13,7 @@
     "@ant-design/icons": "^4.8.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.13",
     "@reduxjs/toolkit": "^1.9.1",
     "@types/lodash": "^4.14.194",
@@ -31,9 +32,11 @@
     "react-scroll-horizontal": "^1.6.6"
   },
   "devDependencies": {
+    "@types/node": "^20.2.5",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "@vitejs/plugin-react": "^2.2.0",
+    "dependency-cruiser": "^13.0.2",
     "typescript": "^4.6.4",
     "vite": "^3.2.0"
   },

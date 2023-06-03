@@ -26,6 +26,7 @@
 .search {
   position: relative;
   transform: translateX(20px);
+  z-index: 1;
 }
 .search-choice {
   position: absolute;
@@ -48,6 +49,9 @@
 }
 .choice {
   cursor: pointer;
+}
+.search-choice_unchosen:hover {
+  background-color: rgba(0, 119, 255, 0.012);
 }
 .search-arrow {
   position: absolute;

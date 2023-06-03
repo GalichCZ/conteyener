@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Modal, Form, Input, Button, Switch, message, DatePicker } from "antd";
 import { IItem } from "../../../../../Types/Types";
 import { Item, updateItem } from "../../../Functions/itemFuncs";
@@ -36,10 +36,7 @@ import {
   handleDeleteSimpleProductName,
   handleAddSimpleProductName,
 } from "../../../Functions/MultipleInputHandler";
-import {
-  checkDuplicateOrders,
-  checkDuplicateDeclarations,
-} from "../Functions/DuplicateHandler";
+import { checkDuplicate } from "../Functions/DuplicateHandler";
 import { callError } from "../../../Functions/ErrorHandlers";
 import { resetInputs } from "../Functions/ResetInputs";
 import { hideItem } from "../../../Functions/itemFuncs";
@@ -88,17 +85,20 @@ export const TableItemUpdate = ({}) => {
     date_do: "",
     port: "",
     is_ds: false,
-    is_docs: {
-      PI: false,
-      CI: false,
-      PL: false,
-      SS_DS: false,
-      contract_agrees: false,
-      cost_agrees: false,
-      instruction: false,
-      ED: false,
-      bill: false,
-    },
+    is_docs: [
+      {
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+        order_number: "",
+      },
+    ],
     declaration_number: [],
     declaration_issue_date: "",
     availability_of_ob: null,
@@ -120,37 +120,52 @@ export const TableItemUpdate = ({}) => {
   });
 
   const handleOk = async () => {
-    const duplicatesOrdersCheck = checkDuplicateOrders(singleItem);
-    const duplicatesDeclarationsCheck = checkDuplicateDeclarations(singleItem);
+    const duplicatesOrders = checkDuplicate(singleItem, "order_number");
+    const duplicatesDeclarations = checkDuplicate(
+      singleItem,
+      "declaration_number"
+    );
+    const duplicatesProform = checkDuplicate(singleItem, "proform_number");
+    const duplicatesInside = checkDuplicate(singleItem, "declaration_number");
     reDraw.reDrawHandler(true);
-    if (duplicatesOrdersCheck.success && duplicatesDeclarationsCheck.success) {
+    if (
+      duplicatesOrders.success &&
+      duplicatesDeclarations.success &&
+      duplicatesProform.success &&
+      duplicatesInside.success
+    ) {
       setConfirmLoading(true);
       const response = await updateItem(singleItem);
       if (response.error) {
         setConfirmLoading(false);
-        const duplicates = response.error.map(
-          (dup: { key: string; value: string }) => {
-            return dup.value;
-          }
-        );
-        callError(messageApi, `These orders already exists: ${duplicates}`);
+        return callError(messageApi, response.error);
       }
-      if (response === "success") {
+      if (response.success) {
         resetInputs(setSingleItem);
         setConfirmLoading(false);
         dispatch(setOpenItemUpdate());
         reDraw.reDrawHandler(false);
       }
     } else {
-      duplicatesOrdersCheck.duplicates &&
+      duplicatesOrders.duplicates &&
         callError(
           messageApi,
-          `These orders already exists: ${duplicatesOrdersCheck.duplicates}`
+          `Повторяющийся № заказа: ${duplicatesOrders.duplicates}`
         );
-      duplicatesDeclarationsCheck.duplicates &&
+      duplicatesDeclarations.duplicates &&
         callError(
           messageApi,
-          `These declarations already exists: ${duplicatesDeclarationsCheck.duplicates}`
+          `Повторяющийся № декларации: ${duplicatesDeclarations.duplicates}`
+        );
+      duplicatesInside.duplicates &&
+        callError(
+          messageApi,
+          `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
+        );
+      duplicatesProform.duplicates &&
+        callError(
+          messageApi,
+          `Повторяющийся № проформы: ${duplicatesProform.duplicates}`
         );
     }
   };

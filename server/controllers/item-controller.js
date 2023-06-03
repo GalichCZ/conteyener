@@ -152,9 +152,10 @@ class ItemController {
   }
 
   async findByKeyValue(req, res) {
-    const result = ItemService.findByKeyValue(req);
+    const result = await ItemService.findByKeyValue(req);
 
-    res.sendStatus(200);
+    if (result.success) res.status(200).json(result.response);
+    else res.status(400).json({ error: result.error });
   }
 }
 

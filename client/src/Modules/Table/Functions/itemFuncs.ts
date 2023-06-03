@@ -39,10 +39,8 @@ export class Item {
         Authorization: `Bearer ${window.localStorage.getItem("token")}`,
       },
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        return data;
+      .then((response) => {
+        return response;
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -220,5 +218,15 @@ export const updateDocs = async (_id: string, is_docs: IsDocsType) => {
       console.error("Error:", error);
       return error;
     });
+  return response;
+};
+
+export const findByKeyValue = async (key: string, value: string) => {
+  const response = await fetch(URL + `/item/${key}/${value}`)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
   return response;
 };

@@ -5,7 +5,7 @@ const ProductService = require("./product-service");
 const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
-const { checkDuplicates } = require("./check-duplicates");
+const { checkDuplicates, checkDuplicatesArray } = require("./check-duplicates");
 
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
@@ -24,6 +24,12 @@ function findNewElements(oldArray, newArray) {
   const newElements = newArray.filter((element) => !oldArraySet.has(element));
 
   return newElements;
+}
+
+function filterDuplicates(array) {
+  return array.filter((element, index) => {
+    return dataToFiltr.indexOf(element) === index && element !== null;
+  });
 }
 
 class ItemService {
@@ -302,7 +308,7 @@ class ItemService {
       const _id = req.body._id;
       const item = await ItemSchema.findById(_id).exec();
 
-      const duplicatesOrder = await checkDuplicates(
+      const duplicatesOrder = await checkDuplicatesArray(
         req.body.order_number,
         "order_number",
         _id
@@ -314,7 +320,18 @@ class ItemService {
         );
       }
 
-      const duplicatesInside = await checkDuplicates(
+      const duplicateContainerNumber = await checkDuplicates(
+        req.body.container_number,
+        "container_number"
+      );
+
+      if (duplicateContainerNumber.isDuplicate) {
+        return errorReturn(
+          `Повторяющийся № контейнера: ${duplicateContainerNumber.duplicate}`
+        );
+      }
+
+      const duplicatesInside = await checkDuplicatesArray(
         req.body.inside_number,
         "inside_number",
         _id
@@ -326,7 +343,7 @@ class ItemService {
         );
       }
 
-      const duplicatesProform = await checkDuplicates(
+      const duplicatesProform = await checkDuplicatesArray(
         req.body.proform_number,
         "proform_number",
         _id
@@ -338,7 +355,7 @@ class ItemService {
         );
       }
 
-      const duplicatesDeclaration = await checkDuplicates(
+      const duplicatesDeclaration = await checkDuplicatesArray(
         req.body.declaration_number,
         "declaration_number",
         _id
@@ -500,8 +517,19 @@ class ItemService {
   }
 
   async findByKeyValue(req) {
-    const items = await ItemSchema.find().exec();
-    console.log(items[0]["inside_number"]);
+    try {
+      const key = req.params.key;
+      const value = req.params.keyValue;
+      const query = {};
+      query[key] = { $regex: value, $options: "i" };
+      const items = await ItemSchema.find(query).exec();
+      console.log(items[key]);
+      const response = filterDuplicates(items[key]);
+
+      return { success: true, response };
+    } catch (error) {
+      return errorReturn(error);
+    }
   }
 }
 

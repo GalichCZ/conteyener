@@ -85,17 +85,20 @@ export const TableItemUpdate = ({}) => {
     date_do: "",
     port: "",
     is_ds: false,
-    is_docs: {
-      PI: false,
-      CI: false,
-      PL: false,
-      SS_DS: false,
-      contract_agrees: false,
-      cost_agrees: false,
-      instruction: false,
-      ED: false,
-      bill: false,
-    },
+    is_docs: [
+      {
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+        order_number: "",
+      },
+    ],
     declaration_number: [],
     declaration_issue_date: "",
     availability_of_ob: null,
@@ -123,7 +126,6 @@ export const TableItemUpdate = ({}) => {
       "declaration_number"
     );
     const duplicatesProform = checkDuplicate(singleItem, "proform_number");
-    console.log(duplicatesProform);
     const duplicatesInside = checkDuplicate(singleItem, "declaration_number");
     reDraw.reDrawHandler(true);
     if (

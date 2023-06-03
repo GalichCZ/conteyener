@@ -41,6 +41,10 @@ const SideMenu: React.FC<ISideMenu> = ({
       setState({ ...state, [anchor]: open });
     };
 
+  const onClose = (anchor: Anchor, open: boolean) => {
+    setState({ ...state, [anchor]: open });
+  };
+
   const list = (anchor: Anchor) => {
     const dispatch = useAppDispatch();
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -48,8 +52,6 @@ const SideMenu: React.FC<ISideMenu> = ({
       <Box
         sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
         role="presentation"
-        onClick={toggleDrawer(anchor, false)}
-        onKeyDown={toggleDrawer(anchor, false)}
       >
         <List>
           <ListItem className="side-menu">
@@ -70,7 +72,7 @@ const SideMenu: React.FC<ISideMenu> = ({
                 <Spin style={{ marginLeft: "10px" }} indicator={antIcon} />
               )}
             </div>
-            <UploadFile />
+            <UploadFile anchor={anchor} onClose={onClose} />
           </ListItem>
         </List>
       </Box>

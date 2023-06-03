@@ -61,10 +61,11 @@ export const TableItemCreate: React.FC = () => {
     if (filled) {
       reDrawCtx.reDrawHandler(true);
       setConfirmLoading(true);
-      const response = await ItemFuncs.createItem(item);
-      if (response.error) {
+      const response: any = await ItemFuncs.createItem(item);
+      console.log(response);
+      if (!response.ok) {
         setConfirmLoading(false);
-        callError(messageApi, `${response.error}`);
+        callError(messageApi, "Ошибка при создании записи");
         reDrawCtx.reDrawHandler(false);
       } else {
         form.resetFields();
@@ -79,15 +80,6 @@ export const TableItemCreate: React.FC = () => {
   const handleCancel = () => {
     dispatch(setOpenItemCreate());
   };
-
-  const getName = async () => {
-    // const response = await TechStoreFuncs.getOneTechStore(item.store);
-    // setItem({ ...item, store_name: response.name });
-  };
-
-  useEffect(() => {
-    getName();
-  }, [item.store]);
 
   useEffect(() => {
     console.log(item);

@@ -1,7 +1,7 @@
 const ItemSchema = require("../models/item-model");
 
 class CheckDuplicates {
-  async checkDuplicates(array, key, id) {
+  async checkDuplicatesArray(array, key, id) {
     const results = await Promise.all(
       array.map(async (item) => {
         const query = {
@@ -24,6 +24,15 @@ class CheckDuplicates {
       });
       return { isDuplicate: true, duplicates: duplicates.toString() };
     }
+  }
+
+  async checkDuplicates(value, key) {
+    const query = {};
+    query[key] = value;
+    const item = await ItemSchema.find(query).exec();
+
+    if (item.length > 0) return { isDuplicate: true, duplicate: item[0][key] };
+    else return { isDuplicate: false };
   }
 }
 

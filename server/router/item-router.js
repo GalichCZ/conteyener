@@ -9,7 +9,7 @@ const router = new Router();
 router.get("/api/item", ItemController.getItems);
 router.get("/api/item/filter", ItemController.getItemsFilter);
 router.get("/api/item/hidden", ItemController.getHiddenItems);
-router.get("/api/item/:keyValue", ItemController.findByKeyValue);
+router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 //post
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);
 router.post("/api/item/search", ItemController.findItemsBySearch);

@@ -1,7 +1,7 @@
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { NavigateFunction } from "react-router-dom";
+import { findByKeyValue } from "./itemFuncs";
 import { timeConvert } from "./TableHandlers";
-const URL = import.meta.env.VITE_API_URL;
 
 /* 
   TODO: make pagination to get filter values, 
@@ -46,7 +46,7 @@ export const onCheck = (
   }
 };
 
-export const onType = <T>(
+export const onType = async <T>(
   value: string,
   filterValues: T[] | undefined,
   setData: (c: T[] | undefined) => void,
@@ -55,7 +55,7 @@ export const onType = <T>(
 ) => {
   type DateNamesType = keyof typeof DateNames;
   const dateName = objectKey as DateNamesType;
-  prepareData();
+
   if (value.length === 0) return prepareData();
   const searchedFilter = filterValues?.filter((filterValue) => {
     const filter = filterValue as unknown as string;
@@ -64,6 +64,12 @@ export const onType = <T>(
       if (convertedTime.includes(value)) return filter;
     } else return filter.toLowerCase().includes(value);
   });
+
+  if (searchedFilter?.length === 0) {
+    const result = await findByKeyValue(objectKey, value);
+    setData(result);
+  }
+
   setData(searchedFilter);
 };
 

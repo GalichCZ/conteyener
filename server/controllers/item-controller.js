@@ -20,10 +20,11 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    const items = await ItemService.getItems();
+    const result = await ItemService.getItems(req.params.page);
 
     res.json({
-      items,
+      items: result.items,
+      totalPages: result.totalPages,
     });
   }
 
@@ -153,6 +154,15 @@ class ItemController {
 
   async findByKeyValue(req, res) {
     const result = await ItemService.findByKeyValue(req);
+
+    if (result.success) res.status(200).json(result.response);
+    else res.status(400).json({ error: result.error });
+  }
+
+  async uploadGlobal(req, res) {
+    const result = await ItemService.uploadGlobal(req.file.path);
+
+    console.log(result);
 
     if (result.success) res.status(200).json(result.response);
     else res.status(400).json({ error: result.error });

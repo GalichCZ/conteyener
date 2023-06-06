@@ -341,6 +341,7 @@ const TableUI: React.FC<ITableUi> = ({
                 {item.port}{" "}
               </td>
               <td> {item.is_ds ? "+" : "-"} </td>
+              <td> {item.fraht_account} </td>
               <td>
                 <div>
                   {item.is_docs.map((doc, key) => (

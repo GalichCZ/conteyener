@@ -227,6 +227,14 @@ export const TableColNames: React.FC<ITableColProps> = ({
               }}
             />
           </td>
+          <td>
+            Фрахтовый счет
+            <FilterFilled
+              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                handleTdClick<TableProps>(event, "fraht_account");
+              }}
+            />
+          </td>
           <td>Документы для подачи</td>
           <td>
             Номер декларации
@@ -269,7 +277,7 @@ export const TableColNames: React.FC<ITableColProps> = ({
             />
           </td>
           <td>
-            Станци прибытия
+            Станция прибытия
             <FilterFilled
               onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
                 handleTdClick<TableProps>(event, "destination_station");

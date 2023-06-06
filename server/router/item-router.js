@@ -6,7 +6,7 @@ const FileWare = require("../utils/file-ware");
 const router = new Router();
 
 //get
-router.get("/api/item", ItemController.getItems);
+router.get("/api/item/:page", ItemController.getItems);
 router.get("/api/item/filter", ItemController.getItemsFilter);
 router.get("/api/item/hidden", ItemController.getHiddenItems);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
@@ -14,6 +14,7 @@ router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);
 router.post("/api/item/search", ItemController.findItemsBySearch);
 router.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
+router.post("/api/item/global", FileWare, ItemController.uploadGlobal);
 //patch
 router.patch("/api/item", ItemController.updateItem);
 router.patch("/api/item/comment", ItemController.updateComment);

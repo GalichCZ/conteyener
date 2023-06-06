@@ -38,6 +38,7 @@ export type TableProps = {
   date_do_update: boolean;
   port: string;
   is_ds: boolean;
+  fraht_account: string;
   is_docs: IsDocsType[];
   declaration_number: string[];
   declaration_issue_date: string;
@@ -108,6 +109,7 @@ export interface IItem extends INewItem {
   date_do: string;
   port: string;
   is_ds: boolean;
+  fraht_account: string;
   delivery_channel: string | null;
   is_docs: IsDocsType[];
   declaration_number: string[];

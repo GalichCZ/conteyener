@@ -185,3 +185,13 @@
   width: 50%;
   justify-content: space-between;
 }
+.page-counter {
+  width: 100%;
+  margin-top: 15px;
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+.page-counter input {
+  width: 50px;
+}

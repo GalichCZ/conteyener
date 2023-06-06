@@ -8,17 +8,14 @@ import ReDrawContext from "../../../store/redraw-context";
 import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
-import { Button } from "antd";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import { debounce } from "lodash";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { RightCircleOutlined } from "@ant-design/icons";
 import { TableNamesFixed } from "../UI/TableNamesFixed";
 import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 import { useLocation } from "react-router-dom";
 import useColorText from "../../../hooks/useColorText";
-import { UploadFile } from "./UploadFile";
 import { TableHints } from "../UI/TableHints";
 import SideMenu from "../UI/SideMenu";
 import Search from "../../Search/Components/Search";
@@ -35,6 +32,8 @@ export const Table: React.FunctionComponent = () => {
   const [widths] = useState<number[]>([]);
   const [tableHeight, setTableHeight] = useState<number>();
   const tableRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState(1);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
 
   const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
@@ -43,8 +42,6 @@ export const Table: React.FunctionComponent = () => {
   const [heights2, setHeights2] = useState<Array<number | null | undefined>>(
     []
   );
-
-  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
   const handleDownloadClick = async () => {
     setDownloading(true);
@@ -70,9 +67,11 @@ export const Table: React.FunctionComponent = () => {
 
   const query = useAppSelector((state) => state.search.value);
 
-  const getItems = async () => {
-    const data = await ItemFuncs.getItems();
+  const getItems = async (pagination?: boolean) => {
+    const data = await ItemFuncs.getItems(page);
+    if (pagination && items) setItems([...items, data.items]);
     setItems(data.items);
+    setTotalPages(data.totalPages);
     setCopyItems(data.items);
   };
 
@@ -101,6 +100,10 @@ export const Table: React.FunctionComponent = () => {
       getItems().catch((err) => console.log(err));
     else getFilteredItems();
   }, [reDraw.reDraw, location.search]);
+
+  useEffect(() => {
+    getItems(true);
+  }, [page]);
 
   useEffect(() => {
     search();
@@ -160,6 +163,16 @@ export const Table: React.FunctionComponent = () => {
             />
           </table>
         </div>
+      </div>
+
+      <div className="page-counter">
+        <input
+          type="text"
+          value={page}
+          onChange={(e) => setPage(parseInt(e.target.value))}
+        />
+        /{totalPages}{" "}
+        <RightCircleOutlined onClick={() => setPage((p) => p + 1)} />
       </div>
     </>
   );

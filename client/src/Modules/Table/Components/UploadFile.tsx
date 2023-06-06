@@ -31,8 +31,6 @@ export const UploadFile: FC<Props> = ({ onClose, anchor }) => {
     },
   };
 
-  console.log(props);
-
   return (
     <Upload {...props}>
       <Button icon={<UploadOutlined />}>Загрузить файл</Button>

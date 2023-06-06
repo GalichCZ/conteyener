@@ -6,7 +6,7 @@ const routers = require("./router/index");
 
 dotenv.config();
 
-const url = process.env.DB_URL_DOCKER;
+const url = process.env.DB_URL;
 const PORT = 4444;
 
 const app = express();

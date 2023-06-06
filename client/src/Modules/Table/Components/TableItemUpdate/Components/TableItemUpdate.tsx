@@ -85,6 +85,7 @@ export const TableItemUpdate = ({}) => {
     date_do: "",
     port: "",
     is_ds: false,
+    fraht_account: "",
     is_docs: [
       {
         PI: false,
@@ -692,6 +693,13 @@ export const TableItemUpdate = ({}) => {
               }}
             />
           </Form.Item>
+          <MyInput
+            label="Фрахтовый счет"
+            onChange={(e: { target: HTMLInputElement }) => {
+              setSingleItem({ ...singleItem, fraht_account: e.target.value });
+            }}
+            value={singleItem?.fraht_account}
+          />
           <Form.Item className="required-form" label="№ декларации">
             {singleItem.declaration_number.map((declaration, index) => {
               return (

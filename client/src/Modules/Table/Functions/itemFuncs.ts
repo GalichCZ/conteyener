@@ -9,8 +9,8 @@ import {
 const URL = import.meta.env.VITE_API_URL;
 
 export class Item {
-  async getItems() {
-    const response = await fetch(URL + "/item")
+  async getItems(page: number) {
+    const response = await fetch(URL + `/item/${page}`)
       .then((res) => res.json())
       .then((data) => {
         return data;

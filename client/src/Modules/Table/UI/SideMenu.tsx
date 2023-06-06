@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import { Button, Spin } from "antd";
@@ -8,19 +8,27 @@ import { setOpenItemCreate } from "../../../store/slices/tableItemCreateSlice";
 import { useAppDispatch } from "../../../hooks/hooksRedux";
 import { LoadingOutlined } from "@ant-design/icons";
 import { UploadFile } from "../Components/UploadFile";
+import { UsersHandlerClass } from "../../UsersHandle/Functions/UsersHandler";
+import GlobalUpload from "../Components/GlobalUpload";
+import { UserData } from "@/Types/Types";
 
 type Anchor = "top" | "left" | "bottom" | "right";
+
+const ALLOWED_MAILS = "k.beregovoi@onlypatriot.com galichmsk1515@gmail.com";
 
 interface ISideMenu {
   downloading: boolean;
   handleDownloadClick: () => void;
 }
 
+const UsersHandler = new UsersHandlerClass();
+
 const SideMenu: React.FC<ISideMenu> = ({
   downloading,
   handleDownloadClick,
 }) => {
-  const [state, setState] = React.useState({
+  const [user, setUser] = useState<UserData | undefined>({} as UserData);
+  const [state, setState] = useState({
     top: false,
     left: false,
     bottom: false,
@@ -44,6 +52,15 @@ const SideMenu: React.FC<ISideMenu> = ({
   const onClose = (anchor: Anchor, open: boolean) => {
     setState({ ...state, [anchor]: open });
   };
+
+  const userHandler = async () => {
+    const user = await UsersHandler.getMe(window.localStorage.getItem("_id"));
+    setUser(user);
+  };
+
+  useEffect(() => {
+    userHandler();
+  }, []);
 
   const list = (anchor: Anchor) => {
     const dispatch = useAppDispatch();
@@ -73,6 +90,11 @@ const SideMenu: React.FC<ISideMenu> = ({
               )}
             </div>
             <UploadFile anchor={anchor} onClose={onClose} />
+            <div style={{ marginTop: "20px" }}>
+              {user && ALLOWED_MAILS.includes(user.email) && (
+                <GlobalUpload anchor={anchor} onClose={onClose} />
+              )}
+            </div>
           </ListItem>
         </List>
       </Box>

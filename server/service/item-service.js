@@ -124,13 +124,25 @@ class ItemService {
     }
   }
 
-  async getItems() {
+  async getItems(page) {
     try {
-      const items = await ItemSchema.find({
+      const perPage = 100;
+      const itemCount = await ItemSchema.countDocuments({
         hidden: false,
       }).exec();
 
-      return items;
+      const totalPages = Math.ceil(itemCount / perPage);
+
+      const skipDocuments = (page - 1) * perPage;
+
+      const items = await ItemSchema.find({
+        hidden: false,
+      })
+        .skip(skipDocuments)
+        .limit(perPage)
+        .exec();
+
+      return { items, totalPages };
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -443,6 +455,7 @@ class ItemService {
           td: req.body.td,
           port: req.body.port,
           is_ds: req.body.is_ds,
+          fraht_account: req.body.fraht_account,
           is_docs: req.body.is_docs,
           declaration_number: req.body.declaration_number,
           availability_of_ob: req.body.availability_of_ob,
@@ -529,6 +542,82 @@ class ItemService {
       return { success: true, response };
     } catch (error) {
       return errorReturn(error);
+    }
+  }
+
+  async uploadGlobal(file) {
+    try {
+      const json = await FileService.createFile(file);
+
+      function checkBoolean(value) {
+        if (value === "+") return true;
+        return false;
+      }
+      function checkDate(value) {
+        if (value instanceof Date) return value;
+        else return null;
+      }
+      function splitStrings(value) {
+        if (value !== undefined && typeof value === "string")
+          return value.split("\n");
+        else return [];
+      }
+      function castToNum(value) {
+        if (value && typeof value === "string") {
+          const number = parseInt(value.replace(/[^\d.-]/g, ""));
+          return number;
+        } else return value;
+      }
+      splitStrings(json[0][1]["Поставщик"]);
+      const items = json[0].map(async (item) => {
+        const doc = new ItemSchema({
+          request_date: checkDate(item["Дата получения заявки"]),
+          inside_number: splitStrings(item["Внутренний Номер"]),
+          proform_number: splitStrings(item["Номер проформы"]),
+          order_number: splitStrings(item["Номер заказа"]),
+          container_number: item["Номер контейнера"],
+          simple_product_name: splitStrings(item["Товар"]),
+          delivery_method: item["способ доставки"],
+          providers: splitStrings(item["Поставщик"]),
+          importers: splitStrings(item["Импортер"]),
+          conditions: splitStrings(item["Условия поставки"]),
+          direction: item["Направление"],
+          store_name: item["Склад"],
+          agent: item["агент"],
+          container_type: item["Тип конт."],
+          place_of_dispatch: item["Место отправки"],
+          line: item["Линия"],
+          ready_date: checkDate(item["Дата готовн."]),
+          load_date: checkDate(item["Дата загрузки"]),
+          etd: checkDate(item.ETD),
+          eta: checkDate(item.ETA),
+          release: checkDate(item["Релиз"]),
+          bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+          date_do: checkDate(item["Дата ДО"]),
+          port: item["Порт"],
+          is_ds: checkBoolean(item["Д/С для подачи"]),
+          fraht_account: item["фр счет"],
+          declaration_number: splitStrings(item["Номер декларации"]),
+          declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+          answer_of_ob: checkDate(item["ответ ОБ"]),
+          expeditor: item["Экспедитор"],
+          destination_station: item["ст. прибытия"],
+          km_to_dist: castToNum(item["Осталось км до ст. н."]),
+          train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+          pickup: item["Автовывоз"],
+          train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+          store_arrive_date: checkDate(item["Дата выгрузки"]),
+        });
+        const docs = await doc.save();
+        return docs;
+      });
+
+      const response = Promise.all(items).then(async (result) => {});
+
+      return { success: true, response };
+    } catch (error) {
+      console.log(error);
+      return { success: false, error };
     }
   }
 }

@@ -4,7 +4,6 @@ const ItemSchema = new mongoose.Schema(
   {
     request_date: {
       type: Date,
-      required: true,
     },
     inside_number: {
       type: Array,
@@ -16,8 +15,6 @@ const ItemSchema = new mongoose.Schema(
     },
     order_number: {
       type: Array,
-      required: true,
-      unique: true,
     },
     container_number: {
       type: String,
@@ -28,26 +25,21 @@ const ItemSchema = new mongoose.Schema(
     },
     simple_product_name: {
       type: Array,
-      required: true,
     },
     providers: {
       type: Array,
-      required: true,
     },
     importers: {
       type: Array,
-      required: true,
     },
     conditions: {
       type: Array,
-      required: true,
     },
     direction: {
       type: String,
     },
     store_name: {
       type: String,
-      required: true,
     },
     store: {
       default: null,
@@ -66,11 +58,9 @@ const ItemSchema = new mongoose.Schema(
     ],
     agent: {
       type: String,
-      required: true,
     },
     place_of_dispatch: {
       type: String,
-      required: true,
     },
     delivery_method: String,
     line: String,
@@ -116,6 +106,7 @@ const ItemSchema = new mongoose.Schema(
     },
     port: String,
     is_ds: Boolean,
+    fraht_account: String,
     is_docs: {
       type: [Object],
     },

@@ -24,6 +24,7 @@ export const TableNamesUnfixed = () => {
       <div>Дата ДО</div>
       <div>Порт</div>
       <div>Д/С для подачи</div>
+      <div>Фрахтовый счет</div>
       <div>Документы для подачи</div>
       <div>Номер декларации</div>
       <div>Дата выпуска декларации</div>

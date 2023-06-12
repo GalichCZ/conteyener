@@ -9,14 +9,7 @@ import { TechStoreData } from "../Types/Types";
 export const TechStorePage = () => {
   const [status, setStatus] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [data, setData] = useState<TechStoreData>({
-    name: "",
-    address: "",
-    receiver: "",
-    contact: "",
-    note: "",
-    _id: "",
-  });
+  const [data, setData] = useState<TechStoreData>({} as TechStoreData);
 
   return (
     <section className="users-page">

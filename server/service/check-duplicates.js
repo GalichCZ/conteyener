@@ -26,8 +26,10 @@ class CheckDuplicates {
     }
   }
 
-  async checkDuplicates(value, key) {
-    const query = {};
+  async checkDuplicates(value, key, id) {
+    const query = {
+      _id: { $ne: id },
+    };
     query[key] = value;
     const item = await ItemSchema.find(query).exec();
 

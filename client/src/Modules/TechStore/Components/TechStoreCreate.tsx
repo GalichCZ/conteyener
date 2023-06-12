@@ -14,13 +14,7 @@ interface TechStoreCreateProps {
 export const TechStoreCreate: React.FC<TechStoreCreateProps> = ({
   setStatus,
 }) => {
-  const [data, setData] = useState<TechStoreData>({
-    name: "",
-    address: "",
-    receiver: "",
-    contact: "",
-    note: "",
-  });
+  const [data, setData] = useState<TechStoreData>({} as TechStoreData);
   const [disable, setDisabel] = useState<boolean>(true);
   const [err, setErr] = useState<string | null>();
 
@@ -44,8 +38,7 @@ export const TechStoreCreate: React.FC<TechStoreCreateProps> = ({
       data.name != "" &&
       data.address != "" &&
       data.receiver != "" &&
-      data.contact != "" &&
-      data.note != ""
+      data.contact != ""
     )
       setDisabel(false);
     else setDisabel(true);

@@ -126,6 +126,7 @@ class ItemService {
 
   async getItems(page) {
     try {
+      const _page = page === "0" ? 1 : page;
       const perPage = 100;
       const itemCount = await ItemSchema.countDocuments({
         hidden: false,
@@ -133,7 +134,7 @@ class ItemService {
 
       const totalPages = Math.ceil(itemCount / perPage);
 
-      const skipDocuments = (page - 1) * perPage;
+      const skipDocuments = (_page - 1) * perPage;
 
       const items = await ItemSchema.find({
         hidden: false,
@@ -156,9 +157,19 @@ class ItemService {
   async getItemsFilter(query_keys) {
     try {
       const query = {};
+      console.log(query_keys);
       Object.keys(query_keys).forEach((key) => {
         if (query_keys[key] === "[]") {
           query[key] = { $size: 0 };
+        } else if (query_keys[key] === "null") {
+          query[key] = {
+            $and: [
+              { key: { $exists: true, $not: { $size: 0 }, $type: "array" } },
+              { key: { $exists: true, $type: "date", $ne: null } },
+              { key: { $exists: true, $type: "string", $ne: "" } },
+              { key: { $exists: true, $type: "number", $ne: null } },
+            ],
+          };
         } else if (query_keys[key] === "null") {
           query[key] = { $eq: null };
         } else {
@@ -332,9 +343,12 @@ class ItemService {
         );
       }
 
+      console.log(_id);
+
       const duplicateContainerNumber = await checkDuplicates(
         req.body.container_number,
-        "container_number"
+        "container_number",
+        _id
       );
 
       if (duplicateContainerNumber.isDuplicate) {
@@ -568,45 +582,50 @@ class ItemService {
           return number;
         } else return value;
       }
-      splitStrings(json[0][1]["Поставщик"]);
+
+      console.log(json[0][0]);
       const items = json[0].map(async (item) => {
         const doc = new ItemSchema({
-          request_date: checkDate(item["Дата получения заявки"]),
-          inside_number: splitStrings(item["Внутренний Номер"]),
+          request_date: checkDate(item["Дата заявки"]),
+          inside_number: splitStrings(item["Внутренний номер"]),
           proform_number: splitStrings(item["Номер проформы"]),
           order_number: splitStrings(item["Номер заказа"]),
           container_number: item["Номер контейнера"],
+          /*----------------------------------------*/
           simple_product_name: splitStrings(item["Товар"]),
-          delivery_method: item["способ доставки"],
+          delivery_method: item["Способ доставки"],
           providers: splitStrings(item["Поставщик"]),
           importers: splitStrings(item["Импортер"]),
           conditions: splitStrings(item["Условия поставки"]),
           direction: item["Направление"],
           store_name: item["Склад"],
-          agent: item["агент"],
-          container_type: item["Тип конт."],
+          agent: item["Агент"],
+          container_type: item["Тип контейнера"],
           place_of_dispatch: item["Место отправки"],
           line: item["Линия"],
-          ready_date: checkDate(item["Дата готовн."]),
+          ready_date: checkDate(item["Дата готовности"]),
           load_date: checkDate(item["Дата загрузки"]),
           etd: checkDate(item.ETD),
           eta: checkDate(item.ETA),
           release: checkDate(item["Релиз"]),
           bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+          td: checkBoolean(item["ТД"]),
           date_do: checkDate(item["Дата ДО"]),
           port: item["Порт"],
           is_ds: checkBoolean(item["Д/С для подачи"]),
-          fraht_account: item["фр счет"],
+          fraht_account: item["Фрахтовый счет"],
           declaration_number: splitStrings(item["Номер декларации"]),
           declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
-          answer_of_ob: checkDate(item["ответ ОБ"]),
+          availability_of_ob: checkDate(item["Наличие ОБ"]),
+          answer_of_ob: checkDate(item["Ответ ОБ"]),
           expeditor: item["Экспедитор"],
-          destination_station: item["ст. прибытия"],
-          km_to_dist: castToNum(item["Осталось км до ст. н."]),
+          destination_station: item["Станция прибытия"],
+          km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
           train_depart_date: checkDate(item["Дата отправки по ЖД"]),
-          pickup: item["Автовывоз"],
           train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
-          store_arrive_date: checkDate(item["Дата выгрузки"]),
+          pickup: item["Автовывоз"],
+          store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+          stock_place_name: item["Сток Сдачи"],
         });
         const docs = await doc.save();
         return docs;

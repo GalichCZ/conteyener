@@ -20,8 +20,8 @@ class ItemController {
   }
 
   async getItems(req, res) {
+    console.log("d");
     const result = await ItemService.getItems(req.params.page);
-
     res.json({
       items: result.items,
       totalPages: result.totalPages,
@@ -73,6 +73,7 @@ class ItemController {
     try {
       const searchTerm = req.body.query_string;
       const searchFilter = req.body.search_filter;
+
       const items =
         searchFilter == "other"
           ? await ItemSchema.find({
@@ -135,7 +136,7 @@ class ItemController {
   async getItemsFilter(req, res) {
     const result = await ItemService.getItemsFilter(req.query);
 
-    if (result.success) res.status(200).json(result.items);
+    if (result.success) res.status(200).json({ items: result.items });
     else res.status(400).json(result.error);
   }
 

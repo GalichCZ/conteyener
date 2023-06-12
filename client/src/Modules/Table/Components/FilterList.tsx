@@ -31,12 +31,16 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
       if (Array.isArray(dataToFiltr[0])) {
         const concatenatedArray = [].concat(...dataToFiltr);
         const unique = concatenatedArray.filter((element, index) => {
-          return concatenatedArray.indexOf(element) === index && element !== "";
+          return (
+            concatenatedArray.indexOf(element) === index &&
+            element !== "" &&
+            element
+          );
         });
         setData(unique);
       } else {
         const unique = dataToFiltr.filter((element, index) => {
-          return dataToFiltr.indexOf(element) === index && element !== null;
+          return dataToFiltr.indexOf(element) === index && element;
         });
         setData(unique);
       }
@@ -70,7 +74,13 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
         >
           Пусто
         </Checkbox>
-
+        {/* <Checkbox
+          value={"not_null"}
+          checked={isChecked("not_null", objectKey, searchParams)}
+          onChange={onCheckHandler}
+        >
+          Не пустая
+        </Checkbox> */}
         {data?.map((el, key) => {
           return (
             <Checkbox

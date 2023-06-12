@@ -172,7 +172,7 @@ export const findItemsBySearch = async (
 };
 
 export const getItemsFilter = async (filter_query: string) => {
-  const response = await fetch(URL + `/item/filter${filter_query}`)
+  const response = await fetch(URL + `/filter${filter_query}`)
     .then((res) => res.json())
     .then((data) => {
       return data;

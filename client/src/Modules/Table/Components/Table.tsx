@@ -77,8 +77,8 @@ export const Table: React.FunctionComponent = () => {
 
   const getFilteredItems = async () => {
     const data = await getItemsFilter(location.search);
-    setItems(data);
-    setCopyItems(data);
+    setItems(data.items);
+    setCopyItems(data.items);
   };
 
   const search = debounce(async () => {
@@ -102,6 +102,7 @@ export const Table: React.FunctionComponent = () => {
   }, [reDraw.reDraw, location.search]);
 
   useEffect(() => {
+    console.log("f");
     getItems(true);
   }, [page]);
 
@@ -169,7 +170,10 @@ export const Table: React.FunctionComponent = () => {
         <input
           type="text"
           value={page}
-          onChange={(e) => setPage(parseInt(e.target.value))}
+          min={0}
+          onChange={(e) =>
+            setPage(parseInt(e.target.value ? e.target.value : "0"))
+          }
         />
         /{totalPages}{" "}
         <RightCircleOutlined onClick={() => setPage((p) => p + 1)} />

@@ -10,6 +10,7 @@ import {
 } from "../../../store/slices/tableDocsSlice";
 import { DocsSelect } from "../../../components";
 import { updateDocs } from "../Functions/itemFuncs";
+import AuthContext from "@/store/auth-context";
 
 export const TableDocsModal: React.FC = ({}) => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export const TableDocsModal: React.FC = ({}) => {
   useEffect(() => {
     if (docs) setIsDocs(docs);
   }, [docs]);
+  const authCtx = useContext(AuthContext);
 
   const handleOk = async () => {
     setConfirmLoading(true);
@@ -75,6 +77,8 @@ export const TableDocsModal: React.FC = ({}) => {
     );
   }
 
+  const isAdmin = authCtx.role === "manager_int";
+
   return (
     <Modal
       title="Документы для подачи"
@@ -88,6 +92,7 @@ export const TableDocsModal: React.FC = ({}) => {
       <b>Номер заказа: {isDocs?.order_number}</b>
       <Form layout="vertical" className="docs-modal">
         <DocsSelect
+          disabled={!isAdmin}
           label="PI"
           checked={isDocs?.PI}
           onChange={(e) => {
@@ -95,6 +100,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           label="CI"
           checked={isDocs?.CI}
           onChange={(e) => {
@@ -102,6 +108,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           label="PL"
           checked={isDocs?.PL}
           onChange={(e) => {
@@ -109,6 +116,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           label="СС/ДС"
           checked={isDocs?.SS_DS}
           onChange={(e) => {
@@ -116,6 +124,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           checked={isDocs?.contract_agrees}
           label="Контракт и действующие доп. соглашения"
           onChange={(e) => {
@@ -123,6 +132,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           checked={isDocs?.cost_agrees}
           label="Стоимостные доп. соглашения"
           onChange={(e) => {
@@ -130,6 +140,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           checked={isDocs?.instruction}
           label="Инструкция"
           onChange={(e) => {
@@ -137,6 +148,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           checked={isDocs?.ED}
           label="ED"
           onChange={(e) => {
@@ -144,6 +156,7 @@ export const TableDocsModal: React.FC = ({}) => {
           }}
         />
         <DocsSelect
+          disabled={!isAdmin}
           checked={isDocs?.bill}
           label="Счет"
           onChange={(e) => {

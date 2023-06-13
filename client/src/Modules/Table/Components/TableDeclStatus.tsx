@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Modal, Form, Input, Button, DatePicker } from "antd";
 import { Declaration } from "../Functions/declarationFuncs";
 import { Writes } from "../../../Types/Types";
@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { setOpenDeclStatus } from "../../../store/slices/tableDeclStatusSlice";
 import { CloseOutlined } from "@ant-design/icons";
+import AuthContext from "@/store/auth-context";
 
 const DeclarationFuncs = new Declaration();
 
@@ -75,6 +76,8 @@ export const TableDeclStatus = () => {
     });
   };
 
+  const authCtx = useContext(AuthContext);
+
   useEffect(() => {
     setDeclarationData({
       ...declarationData,
@@ -86,6 +89,8 @@ export const TableDeclStatus = () => {
     if (open) getHandler();
   }, [open]);
 
+  const isAdmin = authCtx.role === "manager_int";
+
   return (
     <Modal
       title="Статус декларации"
@@ -95,40 +100,44 @@ export const TableDeclStatus = () => {
       className="declaration-modal"
       destroyOnClose
     >
-      <Form layout="vertical">
-        <Form.Item label="Дата">
-          <DatePicker
-            format="DD/MM/YYYY"
-            onChange={(date, dateString) => {
-              setDeclarationData({
-                ...declarationData,
-                declaration_status_date: date?.toISOString(),
-              });
-            }}
-          />
-        </Form.Item>
-        <Form.Item style={{ margin: "0 10px" }} label="Статус">
-          <Input
-            onChange={(e) => {
-              setDeclarationData({
-                ...declarationData,
-                declaration_status: e.target.value,
-              });
-            }}
-          />
-        </Form.Item>
-        <Form.Item label="Сообщение">
-          <Input
-            onChange={(e) => {
-              setDeclarationData({
-                ...declarationData,
-                declaration_status_message: e.target.value,
-              });
-            }}
-          />
-        </Form.Item>
-      </Form>
-      <Button onClick={() => createHandler()}>Создать запись</Button>
+      {isAdmin && (
+        <>
+          <Form layout="vertical">
+            <Form.Item label="Дата">
+              <DatePicker
+                format="DD/MM/YYYY"
+                onChange={(date, dateString) => {
+                  setDeclarationData({
+                    ...declarationData,
+                    declaration_status_date: date?.toISOString(),
+                  });
+                }}
+              />
+            </Form.Item>
+            <Form.Item style={{ margin: "0 10px" }} label="Статус">
+              <Input
+                onChange={(e) => {
+                  setDeclarationData({
+                    ...declarationData,
+                    declaration_status: e.target.value,
+                  });
+                }}
+              />
+            </Form.Item>
+            <Form.Item label="Сообщение">
+              <Input
+                onChange={(e) => {
+                  setDeclarationData({
+                    ...declarationData,
+                    declaration_status_message: e.target.value,
+                  });
+                }}
+              />
+            </Form.Item>
+          </Form>
+          <Button onClick={() => createHandler()}>Создать запись</Button>
+        </>
+      )}
 
       <table>
         <thead>

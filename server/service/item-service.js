@@ -582,8 +582,27 @@ class ItemService {
           return number;
         } else return value;
       }
+      function isDocsHandler(order_number) {
+        const orders = splitStrings(order_number);
+        const isDocsArray = [];
 
-      console.log(json[0][0]);
+        orders.map((num) => {
+          isDocsArray.push({
+            PI: false,
+            CI: false,
+            PL: false,
+            SS_DS: false,
+            contract_agrees: false,
+            cost_agrees: false,
+            instruction: false,
+            ED: false,
+            bill: false,
+            order_number: num,
+          });
+        });
+        return isDocsArray;
+      }
+
       const items = json[0].map(async (item) => {
         const doc = new ItemSchema({
           request_date: checkDate(item["Дата заявки"]),
@@ -612,6 +631,7 @@ class ItemService {
           td: checkBoolean(item["ТД"]),
           date_do: checkDate(item["Дата ДО"]),
           port: item["Порт"],
+          is_docs: isDocsHandler(item["Номер заказа"]),
           is_ds: checkBoolean(item["Д/С для подачи"]),
           fraht_account: item["Фрахтовый счет"],
           declaration_number: splitStrings(item["Номер декларации"]),

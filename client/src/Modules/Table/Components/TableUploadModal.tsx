@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Modal } from "antd";
@@ -9,6 +9,7 @@ import {
   setUploadItemId,
 } from "../../../store/slices/tableUploadSlice";
 import { deleteProduct, Product } from "../Functions/productFuncs";
+import AuthContext from "@/store/auth-context";
 const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
@@ -26,6 +27,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const simple_product_name = useAppSelector(
     (state) => state.tableUpload.simple_product_name
   );
+  const authCtx = useContext(AuthContext);
 
   const [products, setProducts] = useState<Products[]>();
 
@@ -100,7 +102,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
             <td>Вес брутто</td>
             <td>Объем</td>
             <td>Производитель</td>
-            <td></td>
+            {authCtx.role === "manager_int" && <td></td>}
           </tr>
         </thead>
         <tbody>
@@ -122,27 +124,32 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
                 <td>{product.weight_gross}</td>
                 <td>{product.cbm}</td>
                 <td>{product.manufacturer}</td>
-                <td>
-                  <>
-                    <CloseOutlined
-                      onClick={() => deleteProductHandler(product._id)}
-                      style={{
-                        scale: "1.3",
-                        fontWeight: "bolder",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </>
-                </td>
+                {authCtx.role === "manager_int" && (
+                  <td>
+                    <>
+                      <CloseOutlined
+                        onClick={() => deleteProductHandler(product._id)}
+                        style={{
+                          scale: "1.3",
+                          fontWeight: "bolder",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </>
+                  </td>
+                )}
               </tr>
             );
           })}
         </tbody>
       </table>
 
-      <Upload {...props}>
-        <Button icon={<UploadOutlined />}>Загрузить продукты</Button>
-      </Upload>
+      {authCtx.role === "manager_int" && (
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Загрузить продукты</Button>
+          const authCtx = useContext(AuthContext);
+        </Upload>
+      )}
     </Modal>
   );
 };

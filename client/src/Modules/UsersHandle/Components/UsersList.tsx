@@ -31,58 +31,17 @@ export const UsersList = () => {
 
   useEffect(() => {
     loadMoreData();
-  }, []);
+  }, [loading]);
 
   return (
     <div className="users-list">
       <UsersListUI
         data={data}
         loading={loading}
-        admin={authCtx.role === "admin"}
+        admin={authCtx.role === "manager_int"}
         handleChange={handleChange}
         handleDelete={handleDelete}
       />
-      {/* <List
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item key={item.email}>
-            <List.Item.Meta
-              title={
-                <p>
-                  {item.first_name} {item.last_name}
-                </p>
-              }
-              description={item.email}
-            />
-            <Select
-              value={item.role}
-              style={{ width: 120 }}
-              onChange={(e) => handleChange(e, item.email)}
-              loading={loading}
-              options={[
-                {
-                  value: "moderator",
-                  label: "Модератор",
-                },
-                {
-                  value: "admin",
-                  label: "Админ",
-                },
-                {
-                  value: "user",
-                  label: "Пользователь",
-                },
-              ]}
-            />
-            {authCtx.role === "admin" && (
-              <CloseOutlined
-                onClick={() => handleDelete(item.email)}
-                style={{ marginLeft: "10px", scale: "1.25" }}
-              />
-            )}
-          </List.Item>
-        )}
-      /> */}
     </div>
   );
 };

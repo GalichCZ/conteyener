@@ -34,21 +34,37 @@ const UsersListUI: React.FC<IUsersListUI> = ({
             />
             <Select
               value={item.role}
-              style={{ width: 120 }}
+              style={{ width: 200 }}
               onChange={(e) => handleChange(e, item.email)}
               loading={loading}
               options={[
                 {
-                  value: "moderator",
-                  label: "Модератор",
+                  value: "manager_patriot",
+                  label: "Патриот менеджер",
                 },
                 {
-                  value: "admin",
-                  label: "Админ",
+                  value: "manager_buyer",
+                  label: "Менеджер закупок",
                 },
                 {
-                  value: "user",
-                  label: "Пользователь",
+                  value: "head",
+                  label: "Руководитель",
+                },
+                {
+                  value: "manager_int",
+                  label: "Международный менеджер",
+                },
+                {
+                  value: "manager_sales",
+                  label: "Менеджер продаж",
+                },
+                {
+                  value: "manager_treasury",
+                  label: "Менеджер казначейства",
+                },
+                {
+                  value: "manager_store",
+                  label: "Менеджер склада",
                 },
               ]}
             />

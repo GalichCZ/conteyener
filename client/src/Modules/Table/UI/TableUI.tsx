@@ -1,9 +1,11 @@
 import { Button } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
-import { IsDocsType, TableProps } from "../../../Types/Types";
+import { IsDocsType, TableProps, UserData } from "../../../Types/Types";
 import { Tooltip } from "antd";
 import { useCutString } from "../../../hooks/useCutString";
+import { checkRole } from "@/utils/checkRole";
+import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
 
 interface ITableUi {
   setHeights2?: (c: Array<number | null | undefined>) => void;
@@ -42,6 +44,7 @@ interface ITableUi {
   hideItem?: (_id: string, hidden: boolean) => void;
   hidden?: boolean;
   useColorTextHook: (value: string | undefined, searchValue: string) => object;
+  userRole?: string;
 }
 
 const TableUI: React.FC<ITableUi> = ({
@@ -62,6 +65,7 @@ const TableUI: React.FC<ITableUi> = ({
   hidden,
   setHeights2,
   useColorTextHook,
+  userRole,
 }) => {
   const dispatch = useAppDispatch();
   const myRefs = useRef<Array<HTMLTableRowElement | null>>([]);
@@ -112,162 +116,175 @@ const TableUI: React.FC<ITableUi> = ({
               ref={(el) => (myRefs.current[key] = el)}
               key={key}
             >
-              <td>
-                <div className="arr-info arr-info_product">
-                  {item.simple_product_name.map((simpleName, key) => {
-                    return (
-                      <Tooltip
-                        destroyTooltipOnHide={true}
-                        key={key}
-                        title={simpleName}
-                      >
+              {checkRole(userRole, "simple_product_name") && (
+                <td>
+                  <div className="arr-info arr-info_product">
+                    {item.simple_product_name.map((simpleName, key) => {
+                      return (
+                        <Tooltip
+                          destroyTooltipOnHide={true}
+                          key={key}
+                          title={simpleName}
+                        >
+                          <p
+                            style={{
+                              cursor: "pointer",
+                              ...useColorTextHook(simpleName, searchValue),
+                            }}
+                            onClick={() =>
+                              uploadHandler &&
+                              uploadHandler(dispatch, item._id, simpleName)
+                            }
+                            key={key}
+                          >
+                            {cutString(simpleName, 13)}
+                          </p>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
+                </td>
+              )}
+              {checkRole(userRole, "delivery_method") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.delivery_method, searchValue),
+                  }}
+                >
+                  {item.delivery_method}
+                </td>
+              )}
+              {checkRole(userRole, "providers") && (
+                <td style={{ minWidth: "250px" }}>
+                  <div className="arr-info">
+                    {item.providers.map((provider, key) => {
+                      return (
+                        <Tooltip
+                          destroyTooltipOnHide={true}
+                          key={key}
+                          title={provider}
+                        >
+                          <p
+                            style={{
+                              ...useColorTextHook(provider, searchValue),
+                            }}
+                          >
+                            {" "}
+                            {toUpperCase(cutString(provider, 23))}...{" "}
+                          </p>
+                        </Tooltip>
+                      );
+                    })}
+                  </div>
+                </td>
+              )}
+              {checkRole(userRole, "importers") && (
+                <td>
+                  <div className="arr-info">
+                    {item.importers.map((importer, key) => {
+                      return (
                         <p
                           style={{
-                            cursor: "pointer",
-                            ...useColorTextHook(simpleName, searchValue),
+                            ...useColorTextHook(importer, searchValue),
                           }}
-                          onClick={() =>
-                            uploadHandler &&
-                            uploadHandler(dispatch, item._id, simpleName)
-                          }
                           key={key}
                         >
                           {" "}
-                          {cutString(simpleName, 13)}{" "}
+                          {cutString(importer, 11)}...{" "}
                         </p>
-                      </Tooltip>
-                    );
-                  })}
-                </div>
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.delivery_method, searchValue),
-                }}
-              >
-                {item.delivery_method}
-              </td>
-              <td style={{ minWidth: "250px" }}>
-                <div className="arr-info">
-                  {item.providers.map((provider, key) => {
-                    return (
-                      <Tooltip
-                        destroyTooltipOnHide={true}
-                        key={key}
-                        title={provider}
-                      >
+                      );
+                    })}
+                  </div>
+                </td>
+              )}
+              {checkRole(userRole, "conditions") && (
+                <td>
+                  <div className="arr-info">
+                    {item.conditions.map((condition, key) => {
+                      return (
                         <p
                           style={{
-                            ...useColorTextHook(provider, searchValue),
+                            ...useColorTextHook(condition, searchValue),
                           }}
+                          key={key}
                         >
                           {" "}
-                          {toUpperCase(cutString(provider, 23))}...{" "}
+                          {condition}{" "}
                         </p>
-                      </Tooltip>
-                    );
-                  })}
-                </div>
-              </td>
-              <td>
-                <div className="arr-info">
-                  {item.importers.map((importer, key) => {
-                    return (
-                      <p
-                        style={{
-                          ...useColorTextHook(importer, searchValue),
-                        }}
-                        key={key}
-                      >
-                        {" "}
-                        {cutString(importer, 11)}...{" "}
-                      </p>
-                    );
-                  })}
-                </div>
-              </td>
-              <td>
-                <div className="arr-info">
-                  {item.conditions.map((condition, key) => {
-                    return (
-                      <p
-                        style={{
-                          ...useColorTextHook(condition, searchValue),
-                        }}
-                        key={key}
-                      >
-                        {" "}
-                        {condition}{" "}
-                      </p>
-                    );
-                  })}
-                </div>
-              </td>
-              <td>{item.direction}</td>
-              <td
-                style={{
-                  cursor: "pointer",
-                  ...useColorTextHook(item.store_name, searchValue),
-                }}
-                onClick={() =>
-                  tableStoreHandler &&
-                  tableStoreHandler(dispatch, item._id, item.store)
-                }
-              >
-                {item.store_name}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.agent, searchValue),
-                }}
-              >
-                {item.agent}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(
-                    item.container_type
-                      ? item.container_type
-                      : item.container?.container_type,
-                    searchValue
-                  ),
-                }}
-              >
-                {" "}
-                {item.container_type
-                  ? item.container_type
-                  : item.container?.container_type}{" "}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.place_of_dispatch, searchValue),
-                }}
-              >
-                {" "}
-                {item.place_of_dispatch}{" "}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.line, searchValue),
-                }}
-              >
-                {item.line}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.ready_date, searchValue),
-                }}
-              >
-                {item.ready_date && timeConvert(item.ready_date)}{" "}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.load_date, searchValue),
-                }}
-              >
-                {" "}
-                {item.load_date && timeConvert(item.load_date)}{" "}
-              </td>
+                      );
+                    })}
+                  </div>
+                </td>
+              )}
+              {checkRole(userRole, "direction") && <td>{item.direction}</td>}
+              {checkRole(userRole, "store_name") && (
+                <td
+                  style={{
+                    cursor: "pointer",
+                    ...useColorTextHook(item.store_name, searchValue),
+                  }}
+                  onClick={() =>
+                    tableStoreHandler &&
+                    tableStoreHandler(dispatch, item._id, item.store)
+                  }
+                >
+                  {item.store_name}
+                </td>
+              )}
+              {checkRole(userRole, "agent") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.agent, searchValue),
+                  }}
+                >
+                  {item.agent}
+                </td>
+              )}
+              {checkRole(userRole, "container_type") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.container_type, searchValue),
+                  }}
+                >
+                  {item.container_type}
+                </td>
+              )}
+              {checkRole(userRole, "place_of_dispatch") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.place_of_dispatch, searchValue),
+                  }}
+                >
+                  {item.place_of_dispatch}
+                </td>
+              )}
+              {checkRole(userRole, "line") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.line, searchValue),
+                  }}
+                >
+                  {item.line}
+                </td>
+              )}
+              {checkRole(userRole, "ready_date") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.ready_date, searchValue),
+                  }}
+                >
+                  {item.ready_date && timeConvert(item.ready_date)}{" "}
+                </td>
+              )}
+              {checkRole(userRole, "load_date") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.load_date, searchValue),
+                  }}
+                >
+                  {item.load_date && timeConvert(item.load_date)}
+                </td>
+              )}
               <td
                 style={{
                   cursor: "pointer",
@@ -304,86 +321,99 @@ const TableUI: React.FC<ITableUi> = ({
               >
                 {item.eta === null ? "-" : timeConvert(item.eta)}
               </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.release, searchValue),
-                }}
-              >
-                {" "}
-                {item.release && timeConvert(item.release)}{" "}
-              </td>
-              <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
-              <td> {item.td ? "+" : "-"} </td>
-              <td
-                onClick={() => {
-                  dateChangeHandler &&
-                    dateChangeHandler(
-                      dispatch,
-                      2,
-                      item._id,
-                      item.delivery_channel,
-                      item.date_do
-                    );
-                }}
-                style={{
-                  ...useColorTextHook(item.date_do, searchValue),
-                }}
-                className={checkTimeStyle(item.date_do, item.date_do_update)}
-              >
-                {item.date_do === null ? "-" : timeConvert(item.date_do)}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.port, searchValue),
-                }}
-              >
-                {" "}
-                {item.port}{" "}
-              </td>
-              <td> {item.is_ds ? "+" : "-"} </td>
+              {checkRole(userRole, "release") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.release, searchValue),
+                  }}
+                >
+                  {item.release && timeConvert(item.release)}
+                </td>
+              )}
+              {checkRole(userRole, "bl_smgs_cmr") && (
+                <td> {item.bl_smgs_cmr ? "+" : "-"} </td>
+              )}
+              {checkRole(userRole, "td") && <td> {item.td ? "+" : "-"} </td>}
+              {checkRole(userRole, "date_do") && (
+                <td
+                  onClick={() => {
+                    dateChangeHandler &&
+                      dateChangeHandler(
+                        dispatch,
+                        2,
+                        item._id,
+                        item.delivery_channel,
+                        item.date_do
+                      );
+                  }}
+                  style={{
+                    ...useColorTextHook(item.date_do, searchValue),
+                  }}
+                  className={checkTimeStyle(item.date_do, item.date_do_update)}
+                >
+                  {item.date_do === null ? "-" : timeConvert(item.date_do)}
+                </td>
+              )}
+              {checkRole(userRole, "port") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.port, searchValue),
+                  }}
+                >
+                  {item.port}
+                </td>
+              )}
+              {checkRole(userRole, "is_ds") && (
+                <td> {item.is_ds ? "+" : "-"} </td>
+              )}
               <td> {item.fraht_account} </td>
-              <td>
-                <div>
-                  {item.is_docs.map((doc, key) => (
-                    <p
-                      key={key}
-                      onClick={() => {
-                        tableDocsHandler &&
-                          tableDocsHandler(dispatch, item._id, doc);
-                      }}
-                    >
-                      {docsCount(doc) === "+" ? (
-                        docsCount(doc)
-                      ) : (
-                        <>
-                          {docsCount(doc)}
-                          /9
-                        </>
-                      )}
-                    </p>
-                  ))}
-                </div>
-              </td>
-              <td>
-                <div className="arr-info">
-                  {item.declaration_number.map((num, key) => {
-                    return (
+              {checkRole(userRole, "is_docs") && (
+                <td>
+                  <div>
+                    {item.is_docs.map((doc, key) => (
                       <p
                         key={key}
-                        style={{
-                          cursor: "pointer",
-                          ...useColorTextHook(num, searchValue),
-                        }}
                         onClick={() => {
-                          declStatusHandler && declStatusHandler(dispatch, num);
+                          tableDocsHandler &&
+                            tableDocsHandler(dispatch, item._id, doc);
                         }}
                       >
-                        {num}
+                        {docsCount(doc) === "+" ? (
+                          docsCount(doc)
+                        ) : (
+                          <>
+                            {docsCount(doc)}
+                            /9
+                          </>
+                        )}
                       </p>
-                    );
-                  })}
-                </div>
-              </td>
+                    ))}
+                  </div>
+                </td>
+              )}
+              {checkRole(userRole, "declaration_number") && (
+                <td>
+                  <div className="arr-info">
+                    {item.declaration_number.map((num, key) => {
+                      return (
+                        <p
+                          key={key}
+                          style={{
+                            cursor: "pointer",
+                            ...useColorTextHook(num, searchValue),
+                          }}
+                          onClick={() => {
+                            declStatusHandler &&
+                              declStatusHandler(dispatch, num);
+                          }}
+                        >
+                          {num}
+                        </p>
+                      );
+                    })}
+                  </div>
+                </td>
+              )}
               <td
                 onClick={() => {
                   dateChangeHandler &&
@@ -407,98 +437,111 @@ const TableUI: React.FC<ITableUi> = ({
                   ? "-"
                   : timeConvert(item.declaration_issue_date)}
               </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.availability_of_ob, searchValue),
-                }}
-              >
-                {item.availability_of_ob &&
-                  timeConvert(item.availability_of_ob)}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.answer_of_ob, searchValue),
-                }}
-              >
-                {" "}
-                {item.answer_of_ob && timeConvert(item.answer_of_ob)}{" "}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.expeditor, searchValue),
-                }}
-              >
-                {" "}
-                {item.expeditor}{" "}
-              </td>
-              <td
-                style={{
-                  ...useColorTextHook(item.destination_station, searchValue),
-                }}
-              >
-                {" "}
-                {item.destination_station}{" "}
-              </td>
-              <td
-                style={{
-                  cursor: "pointer",
-                  ...useColorTextHook(item.km_to_dist?.toString(), searchValue),
-                }}
-                onClick={() => {
-                  tableDistanceHandler &&
-                    tableDistanceHandler(dispatch, item.km_to_dist, item._id);
-                }}
-              >
-                {" "}
-                {item.km_to_dist === null ? "" : item.km_to_dist}{" "}
-              </td>
-              <td
-                onClick={() => {
-                  dateChangeHandler &&
-                    dateChangeHandler(
-                      dispatch,
-                      4,
-                      item._id,
-                      item.delivery_channel,
-                      item.train_depart_date
-                    );
-                }}
-                className={checkTimeStyle(
-                  item.train_depart_date,
-                  item.train_depart_date_update
-                )}
-                style={{
-                  ...useColorTextHook(item.train_depart_date, searchValue),
-                }}
-              >
-                {item.train_depart_date === null
-                  ? "-"
-                  : timeConvert(item.train_depart_date)}
-              </td>
-              <td
-                onClick={() => {
-                  dateChangeHandler &&
-                    dateChangeHandler(
-                      dispatch,
-                      5,
-                      item._id,
-                      item.delivery_channel,
-                      item.train_arrive_date
-                    );
-                }}
-                className={checkTimeStyle(
-                  item.train_arrive_date,
-                  item.train_arrive_date_update
-                )}
-                style={{
-                  ...useColorTextHook(item.train_arrive_date, searchValue),
-                }}
-              >
-                {item.train_arrive_date === null
-                  ? "-"
-                  : timeConvert(item.train_arrive_date)}
-              </td>
-              <td> {item.pickup} </td>
+              {checkRole(userRole, "availability_of_ob") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.availability_of_ob, searchValue),
+                  }}
+                >
+                  {item.availability_of_ob &&
+                    timeConvert(item.availability_of_ob)}
+                </td>
+              )}
+              {checkRole(userRole, "answer_of_ob") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.answer_of_ob, searchValue),
+                  }}
+                >
+                  {item.answer_of_ob && timeConvert(item.answer_of_ob)}
+                </td>
+              )}
+              {checkRole(userRole, "expeditor") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.expeditor, searchValue),
+                  }}
+                >
+                  {item.expeditor}
+                </td>
+              )}
+              {checkRole(userRole, "destination_station") && (
+                <td
+                  style={{
+                    ...useColorTextHook(item.destination_station, searchValue),
+                  }}
+                >
+                  {item.destination_station}
+                </td>
+              )}
+              {checkRole(userRole, "km_to_dist") && (
+                <td
+                  style={{
+                    cursor: "pointer",
+                    ...useColorTextHook(
+                      item.km_to_dist?.toString(),
+                      searchValue
+                    ),
+                  }}
+                  onClick={() => {
+                    tableDistanceHandler &&
+                      tableDistanceHandler(dispatch, item.km_to_dist, item._id);
+                  }}
+                >
+                  {item.km_to_dist === null ? "" : item.km_to_dist}
+                </td>
+              )}
+              {checkRole(userRole, "train_depart_date") && (
+                <td
+                  onClick={() => {
+                    dateChangeHandler &&
+                      dateChangeHandler(
+                        dispatch,
+                        4,
+                        item._id,
+                        item.delivery_channel,
+                        item.train_depart_date
+                      );
+                  }}
+                  className={checkTimeStyle(
+                    item.train_depart_date,
+                    item.train_depart_date_update
+                  )}
+                  style={{
+                    ...useColorTextHook(item.train_depart_date, searchValue),
+                  }}
+                >
+                  {item.train_depart_date === null
+                    ? "-"
+                    : timeConvert(item.train_depart_date)}
+                </td>
+              )}
+              {checkRole(userRole, "train_arrive_date") && (
+                <td
+                  onClick={() => {
+                    dateChangeHandler &&
+                      dateChangeHandler(
+                        dispatch,
+                        5,
+                        item._id,
+                        item.delivery_channel,
+                        item.train_arrive_date
+                      );
+                  }}
+                  className={checkTimeStyle(
+                    item.train_arrive_date,
+                    item.train_arrive_date_update
+                  )}
+                  style={{
+                    ...useColorTextHook(item.train_arrive_date, searchValue),
+                  }}
+                >
+                  {item.train_arrive_date === null
+                    ? "-"
+                    : timeConvert(item.train_arrive_date)}
+                </td>
+              )}
+              {checkRole(userRole, "pickup") && <td> {item.pickup} </td>}
               <td
                 onClick={() => {
                   dateChangeHandler &&
@@ -522,26 +565,30 @@ const TableUI: React.FC<ITableUi> = ({
                   ? "-"
                   : timeConvert(item.store_arrive_date)}
               </td>
-              <td
-                onClick={() => {
-                  tableStockHandler &&
-                    tableStockHandler(dispatch, item.stock_place);
-                }}
-                style={{
-                  ...useColorTextHook(item.stock_place_name, searchValue),
-                }}
-              >
-                {cutString(item.stock_place_name, 15)}
-              </td>
-              <td
-                onClick={() => {
-                  tableCommentHandler &&
-                    tableCommentHandler(dispatch, item._id, item.comment);
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                {item.comment?.substring(0, 10)}...
-              </td>
+              {checkRole(userRole, "stock_place_name") && (
+                <td
+                  onClick={() => {
+                    tableStockHandler &&
+                      tableStockHandler(dispatch, item.stock_place);
+                  }}
+                  style={{
+                    ...useColorTextHook(item.stock_place_name, searchValue),
+                  }}
+                >
+                  {cutString(item.stock_place_name, 15)}
+                </td>
+              )}
+              {checkRole(userRole, "comment") && (
+                <td
+                  onClick={() => {
+                    tableCommentHandler &&
+                      tableCommentHandler(dispatch, item._id, item.comment);
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {item.comment?.substring(0, 10)}...
+                </td>
+              )}
               {hidden && (
                 <td>
                   <Button

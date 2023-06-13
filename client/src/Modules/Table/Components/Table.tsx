@@ -11,21 +11,25 @@ import { TableUiFixed } from "../UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import { debounce } from "lodash";
 import { RightCircleOutlined } from "@ant-design/icons";
-import { TableNamesFixed } from "../UI/TableNamesFixed";
-import { TableNamesUnfixed } from "../UI/TableNamesUnfixed";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 import { useLocation } from "react-router-dom";
 import useColorText from "../../../hooks/useColorText";
 import { TableHints } from "../UI/TableHints";
 import SideMenu from "../UI/SideMenu";
 import Search from "../../Search/Components/Search";
+import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
+import AuthContext from "@/store/auth-context";
 
 const ItemFuncs = new Item();
+const UsersHandler = new UsersHandlerClass();
 
 export const Table: React.FunctionComponent = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const reDraw = useContext(ReDrawContext);
+  const [user, setUser] = useState<Types.UserData | undefined>(
+    {} as Types.UserData
+  );
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
   const [downloading, setDownloading] = useState<boolean>(false);
@@ -42,6 +46,15 @@ export const Table: React.FunctionComponent = () => {
   const [heights2, setHeights2] = useState<Array<number | null | undefined>>(
     []
   );
+
+  const userHandler = async () => {
+    const user = await UsersHandler.getMe(window.localStorage.getItem("_id"));
+    setUser(user);
+  };
+
+  useEffect(() => {
+    userHandler();
+  }, []);
 
   const handleDownloadClick = async () => {
     setDownloading(true);
@@ -110,24 +123,29 @@ export const Table: React.FunctionComponent = () => {
     search();
   }, [query]);
 
+  const userRole = user && user.role;
+  const authCtx = useContext(AuthContext);
+
   return (
     <>
       <div className="table-utils">
-        <SideMenu
-          downloading={downloading}
-          handleDownloadClick={handleDownloadClick}
-        />
+        {authCtx.role === "manager_int" && (
+          <SideMenu
+            downloading={downloading}
+            handleDownloadClick={handleDownloadClick}
+          />
+        )}
         <Search />
       </div>
       <TableHints />
 
       <div className="table-page_table">
-        {/* <TableNamesFixed /> */}
         <table className="table-page_fixed-table">
           <TableColNamesFixed
             widthsArray={widths}
             data={copyItems}
             setItems={setItems}
+            userRole={userRole}
           />
           <TableUiFixed
             setHeights1={setHeights1}
@@ -135,15 +153,16 @@ export const Table: React.FunctionComponent = () => {
             timeConvert={TableHandlers.timeConvert}
             tableUpdateHandler={TableHandlers.tableUpdateHandler}
             useColorTextHook={useColorText}
+            userRole={userRole}
           />
         </table>
         <div ref={tableRef} className="table-page_unfixed-table">
-          {/* <TableNamesUnfixed /> */}
           <table>
             <TableColNames
               widthsArray={widths}
               data={copyItems}
               setItems={setItems}
+              userRole={userRole}
             />
             <TableUI
               setHeights2={setHeights2}
@@ -161,6 +180,7 @@ export const Table: React.FunctionComponent = () => {
               tableDistanceHandler={TableHandlers.distanceHandler}
               tableStockHandler={TableHandlers.tableStockInfoHandler}
               useColorTextHook={useColorText}
+              userRole={userRole}
             />
           </table>
         </div>

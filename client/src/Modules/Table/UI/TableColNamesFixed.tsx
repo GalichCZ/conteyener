@@ -3,11 +3,13 @@ import { TableSortHandler } from "../Functions/TableHandlers";
 import React, { useEffect, useRef, useState } from "react";
 import { TableProps } from "../../../Types/Types";
 import { FilterList } from "../Components/FilterList";
+import { checkRole } from "@/utils/checkRole";
 
 interface ITableColProps {
   widthsArray?: number[];
   data: TableProps[] | undefined;
   setItems: (c: TableProps[]) => void;
+  userRole?: string;
 }
 interface IPopupData {
   td: HTMLTableCellElement;
@@ -19,6 +21,7 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
   widthsArray,
   data,
   setItems,
+  userRole,
 }) => {
   const [popupData, setPopupData] = useState<IPopupData | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -64,18 +67,22 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
     }
   }, [popupData]);
 
+  console.log(checkRole(userRole, "request_date"), userRole);
+
   return (
     <>
       <thead>
         <tr>
-          <td>
-            Дата заявки
-            <FilterFilled
-              onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
-                handleTdClick<TableProps>(event, "request_date");
-              }}
-            />
-          </td>
+          {checkRole(userRole, "request_date") && (
+            <td>
+              Дата заявки
+              <FilterFilled
+                onClick={(event: React.MouseEvent<HTMLTableCellElement>) => {
+                  handleTdClick<TableProps>(event, "request_date");
+                }}
+              />
+            </td>
+          )}
           <td>
             Внутренний <br /> номер
             <FilterFilled

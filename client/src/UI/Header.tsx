@@ -14,12 +14,11 @@ export const Header = () => {
       <Link to="/">Conteyener</Link>
       {authCtx.isLoggedIn ? (
         <>
-          {authCtx.isActivated ? (
+          {authCtx.isActivated && authCtx.role !== "new_one" ? (
             <>
               <Link to="/table">Table</Link>
               <Link to="/table/hidden">Доставленные</Link>
-              {authCtx.role === "moderator" ||
-                (authCtx.role === "admin" && <DropDown />)}
+              {authCtx.role === "manager_int" && <DropDown />}
               <Link
                 style={{ transform: "translateX(20px)" }}
                 onClick={authCtx.logout}
@@ -30,8 +29,6 @@ export const Header = () => {
             </>
           ) : (
             <>
-              <Search />
-
               <Link onClick={authCtx.logout} to="/login">
                 Log Out
               </Link>

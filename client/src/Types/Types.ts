@@ -64,7 +64,7 @@ export type TableProps = {
   stock_place_name: any;
   stock_place: any;
   hidden: boolean;
-  direction: "";
+  direction: string;
 };
 
 export interface INewItem {
@@ -237,4 +237,15 @@ export interface ICalcDate {
   etd: string | null | undefined;
   delivery_channel: string;
   itemId: string;
+}
+
+export interface IRoles {
+  [key: string]: string[];
+  manager_patriot: string[];
+  manager_buyer: string[];
+  head: string[];
+  manager_int: string[];
+  manager_sales: string[];
+  manager_treasury: string[];
+  manager_store: string[];
 }

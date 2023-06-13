@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { IItem, TableProps } from "../../../Types/Types";
 import { useCutString } from "../../../hooks/useCutString";
+import { checkRole } from "@/utils/checkRole";
 
 interface ITableUi {
   items: TableProps[] | undefined;
@@ -10,6 +11,7 @@ interface ITableUi {
   tableUpdateHandler?: (dispatch: any, item: IItem) => void;
   setHeights1?: (c: Array<number | null | undefined>) => void;
   useColorTextHook: (value: string | undefined, searchValue: string) => object;
+  userRole?: string;
 }
 
 export const TableUiFixed: React.FC<ITableUi> = ({
@@ -18,6 +20,7 @@ export const TableUiFixed: React.FC<ITableUi> = ({
   tableUpdateHandler,
   setHeights1,
   useColorTextHook,
+  userRole,
 }) => {
   const cutString = useCutString();
   const dispatch = useAppDispatch();
@@ -49,6 +52,8 @@ export const TableUiFixed: React.FC<ITableUi> = ({
     else return height;
   }
 
+  console.log(checkRole(userRole, "request_date"), userRole);
+
   return (
     <tbody>
       {items?.map((item, key) => {
@@ -61,17 +66,21 @@ export const TableUiFixed: React.FC<ITableUi> = ({
             ref={(el) => (myRefs.current[key] = el)}
             key={key}
           >
-            <td
-              style={{
-                cursor: "pointer",
-                ...useColorTextHook(item.request_date, searchValue),
-              }}
-              onClick={() =>
-                tableUpdateHandler && tableUpdateHandler(dispatch, item)
-              }
-            >
-              {timeConvert(item.request_date)}
-            </td>
+            {checkRole(userRole, "request_date") && (
+              <td
+                style={{
+                  cursor: "pointer",
+                  ...useColorTextHook(item.request_date, searchValue),
+                }}
+                onClick={() =>
+                  userRole === "manager_int" &&
+                  tableUpdateHandler &&
+                  tableUpdateHandler(dispatch, item)
+                }
+              >
+                {timeConvert(item.request_date)}
+              </td>
+            )}
             <td>
               <div className="arr-info">
                 {item.inside_number.map((num, key) => {

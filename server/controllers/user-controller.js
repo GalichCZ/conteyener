@@ -18,6 +18,7 @@ class UserController {
         last_name: req.body.last_name,
         password_hash: hash,
         activation_link,
+        role: "new_one",
       });
 
       const user = await doc.save();
@@ -25,7 +26,6 @@ class UserController {
       await MailService.sendActivationMail(
         req.body.email,
         `https://www.conteyener.com/activation/?activation=${activation_link}`
-        // `http://localhost:5173/activation/?activation=${activation_link}`
       );
 
       const token = jwt.sign(
@@ -111,7 +111,7 @@ class UserController {
         (user) => user._id.toString() !== me._id.toString()
       );
 
-      res.json(newUsers);
+      res.json(users);
     } catch (error) {
       console.log(error);
       res.status(500).json({

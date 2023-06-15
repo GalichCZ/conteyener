@@ -16,7 +16,9 @@ class CheckDuplicates {
       if (result[0] !== undefined) return result[0];
       else return;
     });
-    const items = unfilteredItems.filter((value) => value !== undefined);
+    const items = unfilteredItems.filter((value) => {
+      value !== undefined && value["inside_number"] !== "-";
+    });
     if (items.length === 0) return { isDuplicate: false };
     else {
       const duplicates = items.map((item) => {
@@ -33,7 +35,8 @@ class CheckDuplicates {
     query[key] = value;
     const item = await ItemSchema.find(query).exec();
 
-    if (item.length > 0) return { isDuplicate: true, duplicate: item[0][key] };
+    if (item.length > 0 && item[0].container_number !== null)
+      return { isDuplicate: true, duplicate: item[0][key] };
     else return { isDuplicate: false };
   }
 }

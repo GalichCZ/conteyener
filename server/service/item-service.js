@@ -143,6 +143,8 @@ class ItemService {
         .limit(perPage)
         .exec();
 
+      console.log(items[0], "un hidden");
+
       return { items, totalPages };
     } catch (error) {
       SendBotMessage(
@@ -196,6 +198,8 @@ class ItemService {
         hidden: true,
       }).exec();
 
+      console.log(items[0], "hidden");
+
       return items;
     } catch (error) {
       SendBotMessage(
@@ -226,25 +230,14 @@ class ItemService {
   async updateFormulaDates(_id, req) {
     try {
       const item = await ItemSchema.findById(_id).exec();
-
-      const {
-        eta,
-        eta_update,
-        date_do,
-        date_do_update,
-        declaration_issue_date,
-        declaration_issue_date_update,
-        train_depart_date,
-        train_depart_date_update,
-        train_arrive_date,
-        train_arrive_date_update,
-        store_arrive_date,
-        store_arrive_date_update,
-      } = await FormulaService.updateFormulaDates(req, item);
-
-      await ItemSchema.updateOne(
-        { _id },
-        {
+      const keys = Object.keys(req.body);
+      const queryKey = keys[keys.length - 1];
+      const query = {};
+      query[queryKey] = null;
+      if (req.body[keys[keys.length - 1]] === null) {
+        await ItemSchema.updateOne({ _id }, query);
+      } else {
+        const {
           eta,
           eta_update,
           date_do,
@@ -257,8 +250,26 @@ class ItemService {
           train_arrive_date_update,
           store_arrive_date,
           store_arrive_date_update,
-        }
-      );
+        } = await FormulaService.updateFormulaDates(req, item);
+
+        await ItemSchema.updateOne(
+          { _id },
+          {
+            eta,
+            eta_update,
+            date_do,
+            date_do_update,
+            declaration_issue_date,
+            declaration_issue_date_update,
+            train_depart_date,
+            train_depart_date_update,
+            train_arrive_date,
+            train_arrive_date_update,
+            store_arrive_date,
+            store_arrive_date_update,
+          }
+        );
+      }
 
       return { message: "success" };
     } catch (error) {
@@ -286,39 +297,45 @@ class ItemService {
       const _id = req.body.itemId;
       const item = await ItemSchema.findById(_id);
 
-      let delivery_channel = "";
-      let etd = null;
+      if (req.body.etd === null) {
+        await ItemSchema.updateOne({ _id }, { etd: req.body.etd });
+      } else {
+        let delivery_channel = "";
+        let etd = null;
+        console.log(req.body);
 
-      if (req.body.etd) etd = req.body.etd;
-      else if (item.etd) etd = item.etd;
-      else etd = null;
+        if (req.body.etd) etd = req.body.etd;
+        else if (item.etd) etd = item.etd;
+        else etd = null;
 
-      if (req.body.delivery_channel.length > 0)
-        delivery_channel = req.body.delivery_channel;
-      else if (item.delivery_channel.length > 0)
-        delivery_channel = item.delivery_channel;
-      else delivery_channel = "";
+        if (req.body.delivery_channel.length > 0)
+          delivery_channel = req.body.delivery_channel;
+        else if (item.delivery_channel.length > 0)
+          delivery_channel = item.delivery_channel;
+        else delivery_channel = "";
 
-      const formulaRes = await FormulaService.dateFormula(
-        etd,
-        delivery_channel
-      );
-
-      await ItemSchema.updateOne(
-        {
-          _id,
-        },
-        {
+        const formulaRes = await FormulaService.dateFormula(
           etd,
-          eta: formulaRes.eta,
-          date_do: formulaRes.date_do,
-          declaration_issue_date: formulaRes.declaration_issue_date,
-          train_depart_date: formulaRes.train_depart_date,
-          train_arrive_date: formulaRes.train_arrive_date,
-          store_arrive_date: formulaRes.store_arrive_date,
-          delivery_channel,
-        }
-      );
+          delivery_channel
+        );
+
+        await ItemSchema.updateOne(
+          {
+            _id,
+          },
+          {
+            etd,
+            eta: formulaRes.eta,
+            date_do: formulaRes.date_do,
+            declaration_issue_date: formulaRes.declaration_issue_date,
+            train_depart_date: formulaRes.train_depart_date,
+            train_arrive_date: formulaRes.train_arrive_date,
+            store_arrive_date: formulaRes.store_arrive_date,
+            delivery_channel,
+          }
+        );
+      }
+
       return { success: true };
     } catch (error) {
       console.log(error);
@@ -619,7 +636,7 @@ class ItemService {
           direction: item["Направление"],
           store_name: item["Склад"],
           agent: item["Агент"],
-          container_type: item["Тип контейнера"],
+          container_type: item["Тип контейенра"],
           place_of_dispatch: item["Место отправки"],
           line: item["Линия"],
           ready_date: checkDate(item["Дата готовности"]),
@@ -646,6 +663,7 @@ class ItemService {
           pickup: item["Автовывоз"],
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
           stock_place_name: item["Сток Сдачи"],
+          hidden: false,
         });
         const docs = await doc.save();
         return docs;

@@ -192,12 +192,12 @@ export interface TechStoreData {
 }
 
 export interface FormulaDateUpdate {
-  eta?: Date | string;
-  date_do?: Date | string;
-  declaration_issue_date?: Date | string;
-  train_depart_date?: Date | string;
-  train_arrive_date?: Date | string;
-  store_arrive_date?: Date | string;
+  eta?: Date | string | null;
+  date_do?: Date | string | null;
+  declaration_issue_date?: Date | string | null;
+  train_depart_date?: Date | string | null;
+  train_arrive_date?: Date | string | null;
+  store_arrive_date?: Date | string | null;
   _id: string;
   eta_update?: boolean;
   date_do_update?: boolean;

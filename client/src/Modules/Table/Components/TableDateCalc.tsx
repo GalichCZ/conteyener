@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { Modal, Form, DatePicker } from "antd";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
@@ -67,6 +68,14 @@ export const TableDateCalc = () => {
               });
             }}
             value={calcDate.etd === null ? null : moment(calcDate.etd)}
+          />
+          <CloseOutlined
+            onClick={() =>
+              setCalcDate({
+                ...calcDate,
+                etd: null,
+              })
+            }
           />
         </Form.Item>
         <SelectChannel

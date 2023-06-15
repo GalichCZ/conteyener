@@ -11,8 +11,11 @@ class FileService {
     try {
       const items = await ItemSchema.find().exec();
       const jsonDataFetch = items.map(async (item) => {
+        console.log(item.container_type);
         return {
           "Дата заявки": item.request_date,
+          "Внутренний номер": await this.arrayToString(item.inside_number),
+          "Номер проформы": await this.arrayToString(item.proform_number),
           "Номер заказа": await this.arrayToString(item.order_number),
           "Номер Контейнера": item.container_number,
           Товар: await this.arrayToString(item.simple_product_name),
@@ -35,6 +38,8 @@ class FileService {
           "Дата ДО": item.date_do,
           Порт: item.port,
           "Д/С для подачи": item.is_ds ? "+" : "-",
+          "Фрахтовый счет": item.fraht_account,
+          "Документы для подачи": "",
           "Номер декларации": await this.arrayToString(item.declaration_number),
           "Дата выпуска декларации": item.declaration_issue_date,
           "Наличие ОБ": item.availability_of_ob,
@@ -47,6 +52,7 @@ class FileService {
           Автовывоз: item.pickup,
           "Дата прибытия на склад": item.store_arrive_date,
           "Сток Сдачи	": item.stock_place_name,
+          Комментарий: item.comment?.length,
         };
       });
 

@@ -6,9 +6,9 @@ const FileWare = require("../utils/file-ware");
 const router = new Router();
 
 //get
+router.get("/api/item/hidden", ItemController.getHiddenItems);
 router.get("/api/item/:page", ItemController.getItems);
 router.get("/api/filter", ItemController.getItemsFilter);
-router.get("/api/item/hidden", ItemController.getHiddenItems);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 //post
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);

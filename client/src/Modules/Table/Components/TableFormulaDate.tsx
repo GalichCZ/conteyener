@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
 import { setOpenFormula } from "../../../store/slices/tableFormulaDateSlice";
 import { DatePickerUpdate } from "../../../components/DatePickerUpdate";
 import moment from "moment";
+import { CloseOutlined } from "@ant-design/icons";
 const ItemFuncs = new Item();
 
 export const TableFormulaDate = () => {
@@ -126,6 +127,14 @@ export const TableFormulaDate = () => {
             }}
             value={data.eta === null ? null : moment(data.eta)}
           />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                eta: null,
+              })
+            }
+          />
         </Form.Item>
       )}
       {dateType === 2 && (
@@ -139,6 +148,14 @@ export const TableFormulaDate = () => {
               });
             }}
             value={data.date_do === null ? null : moment(data.date_do)}
+          />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                date_do: null,
+              })
+            }
           />
         </Form.Item>
       )}
@@ -156,6 +173,14 @@ export const TableFormulaDate = () => {
               data.declaration_issue_date === null
                 ? null
                 : moment(data.declaration_issue_date)
+            }
+          />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                declaration_issue_date: null,
+              })
             }
           />
         </Form.Item>
@@ -176,6 +201,14 @@ export const TableFormulaDate = () => {
                 : moment(data.train_depart_date)
             }
           />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                train_depart_date: null,
+              })
+            }
+          />
         </Form.Item>
       )}
       {dateType === 5 && (
@@ -194,6 +227,14 @@ export const TableFormulaDate = () => {
                 : moment(data.train_arrive_date)
             }
           />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                train_arrive_date: null,
+              })
+            }
+          />
         </Form.Item>
       )}
       {dateType === 6 && (
@@ -210,6 +251,14 @@ export const TableFormulaDate = () => {
               data.store_arrive_date === null
                 ? null
                 : moment(data.store_arrive_date)
+            }
+          />
+          <CloseOutlined
+            onClick={() =>
+              setData({
+                ...data,
+                store_arrive_date: null,
+              })
             }
           />
         </Form.Item>

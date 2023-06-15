@@ -20,7 +20,6 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    console.log("d");
     const result = await ItemService.getItems(req.params.page);
     res.json({
       items: result.items,

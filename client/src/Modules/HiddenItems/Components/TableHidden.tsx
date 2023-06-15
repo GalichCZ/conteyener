@@ -16,6 +16,7 @@ import { TableColNamesFixed } from "../../Table/UI/TableColNamesFixed";
 import { TableUiFixed } from "../../Table/UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import useColorText from "../../../hooks/useColorText";
+import AuthContext from "@/store/auth-context";
 
 const ItemFuncs = new Item();
 
@@ -76,22 +77,34 @@ export const TableHidden = () => {
     search();
   }, [query]);
 
+  const authCtx = useContext(AuthContext);
+
   return (
     <>
       <div className="table-page_table">
         <table className="table-page_fixed-table">
-          <TableColNamesFixed data={copyItems} setItems={setItems} />
+          <TableColNamesFixed
+            userRole={authCtx.role}
+            data={copyItems}
+            setItems={setItems}
+          />
           <TableUiFixed
             setHeights1={setHeights1}
             items={items}
             timeConvert={timeConvert}
             useColorTextHook={useColorText}
+            userRole={authCtx.role}
           />
         </table>
         <div className="table-page_unfixed-table">
           <table>
-            <TableColNames setItems={setItems} data={copyItems} />
+            <TableColNames
+              userRole={authCtx.role}
+              setItems={setItems}
+              data={copyItems}
+            />
             <TableUI
+              userRole={authCtx.role}
               useColorTextHook={useColorText}
               setHeights2={setHeights2}
               items={items}

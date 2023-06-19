@@ -115,7 +115,6 @@ export const Table: React.FunctionComponent = () => {
   }, [reDraw.reDraw, location.search]);
 
   useEffect(() => {
-    console.log("f");
     getItems(true);
   }, [page]);
 

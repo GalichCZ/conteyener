@@ -43,7 +43,6 @@ export const TableDocsModal: React.FC = ({}) => {
     setConfirmLoading(true);
     reDraw.reDrawHandler(true);
     const response = await updateDocs(_id, isDocs);
-    console.log(response);
     if (response.error) setErr(response.error);
     if (response.success) {
       setConfirmLoading(false);

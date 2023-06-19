@@ -264,7 +264,6 @@ export const checkFilledPoles = (
     item.simple_product_name.length > 0 &&
     item.store !== ""
   ) {
-    console.log("filled");
     setFilled(true);
   } else setFilled(false);
 };

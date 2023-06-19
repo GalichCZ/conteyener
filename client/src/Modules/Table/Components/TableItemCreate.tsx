@@ -62,7 +62,6 @@ export const TableItemCreate: React.FC = () => {
       reDrawCtx.reDrawHandler(true);
       setConfirmLoading(true);
       const response: any = await ItemFuncs.createItem(item);
-      console.log(response);
       if (!response.ok) {
         setConfirmLoading(false);
         callError(messageApi, "Ошибка при создании записи");
@@ -82,7 +81,6 @@ export const TableItemCreate: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(item);
     checkFilledPoles(item, setFilled);
   }, [item]);
 

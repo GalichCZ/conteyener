@@ -52,8 +52,6 @@ export const TableUiFixed: React.FC<ITableUi> = ({
     else return height;
   }
 
-  console.log(checkRole(userRole, "request_date"), userRole);
-
   return (
     <tbody>
       {items?.map((item, key) => {

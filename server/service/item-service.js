@@ -6,6 +6,12 @@ const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 const { checkDuplicates, checkDuplicatesArray } = require("./check-duplicates");
+const {
+  checkBoolean,
+  checkDate,
+  splitStrings,
+  castToNum,
+} = require("../utils/tableDataHandle");
 
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
@@ -16,6 +22,9 @@ function errorReturn(error) {
     success: false,
     error,
   };
+}
+function successReturn(result) {
+  return { success: true, result };
 }
 
 function findNewElements(oldArray, newArray) {
@@ -143,8 +152,6 @@ class ItemService {
         .limit(perPage)
         .exec();
 
-      console.log(items[0], "un hidden");
-
       return { items, totalPages };
     } catch (error) {
       SendBotMessage(
@@ -197,8 +204,6 @@ class ItemService {
       const items = await ItemSchema.find({
         hidden: true,
       }).exec();
-
-      console.log(items[0], "hidden");
 
       return items;
     } catch (error) {
@@ -548,18 +553,6 @@ class ItemService {
     }
   }
 
-  async uploadExcel(file) {
-    try {
-      const json = await FileService.createFile(file);
-      //TODO: parse all items in excel and change items by container number,
-      //also add column names to buffer "ctrl+v" on button click
-      console.log(json);
-    } catch (error) {
-      console.log(error);
-      return { success: false, error };
-    }
-  }
-
   async findByKeyValue(req) {
     try {
       const key = req.params.key;
@@ -567,7 +560,6 @@ class ItemService {
       const query = {};
       query[key] = { $regex: value, $options: "i" };
       const items = await ItemSchema.find(query).exec();
-      console.log(items[key]);
       const response = filterDuplicates(items[key]);
 
       return { success: true, response };
@@ -576,29 +568,87 @@ class ItemService {
     }
   }
 
+  async uploadExcel(file) {
+    try {
+      const json = await FileService.createFile(file);
+      //TODO: parse all items in excel and change items by container number,
+      //also add column names to buffer "ctrl+v" on button click
+
+      const containerNums = json[0].map((item) => {
+        return item["Номер контейнера"];
+      });
+
+      const itemsUpdate = containerNums.map(async (num, index) => {
+        console.log(json[0][index]["Условия поставки"]);
+        await ItemSchema.findOneAndUpdate(
+          { container_number: num },
+          {
+            request_date: checkDate(json[0][index]["Дата заявки"]),
+            inside_number: splitStrings(json[0][index]["Внутренний номер"]),
+            proform_number: splitStrings(json[0][index]["Номер проформы"]),
+            order_number: splitStrings(json[0][index]["Номер заказа"]),
+            container_number: json[0][index]["Номер контейнера"],
+            /*----------------------------------------*/
+            simple_product_name: splitStrings(json[0][index]["Товар"]),
+            delivery_method: json[0][index]["Способ доставки"],
+            providers: splitStrings(json[0][index]["Поставщик"]),
+            importers: splitStrings(json[0][index]["Импортер"]),
+            conditions: splitStrings(json[0][index]["Условия поставки"]),
+            direction: json[0][index]["Направление"],
+            store_name: json[0][index]["Склад"],
+            agent: json[0][index]["Агент"],
+            container_type: json[0][index]["Тип контейенра"],
+            place_of_dispatch: json[0][index]["Место отправки"],
+            line: json[0][index]["Линия"],
+            ready_date: checkDate(json[0][index]["Дата готовности"]),
+            load_date: checkDate(json[0][index]["Дата загрузки"]),
+            etd: checkDate(json[0][index]["ETD"]),
+            eta: checkDate(json[0][index]["ETA"]),
+            release: checkDate(json[0][index]["Релиз"]),
+            bl_smgs_cmr: checkBoolean(json[0][index]["BL/СМГС/CMR"]),
+            td: checkBoolean(json[0][index]["ТД"]),
+            date_do: checkDate(json[0][index]["Дата ДО"]),
+            port: json[0][index]["Порт"],
+            is_ds: checkBoolean(json[0][index]["Д/С для подачи"]),
+            fraht_account: json[0][index]["Фрахтовый счет"],
+            declaration_number: splitStrings(
+              json[0][index]["Номер декларации"]
+            ),
+            declaration_issue_date: checkDate(
+              json[0][index]["Дата выпуска декларации"]
+            ),
+            availability_of_ob: checkDate(json[0][index]["Наличие ОБ"]),
+            answer_of_ob: checkDate(json[0][index]["Ответ ОБ"]),
+            expeditor: json[0][index]["Экспедитор"],
+            destination_station: json[0][index]["Станция прибытия"],
+            km_to_dist: castToNum(
+              json[0][index]["Осталось км до ст. назначения"]
+            ),
+            train_depart_date: checkDate(json[0][index]["Дата отправки по ЖД"]),
+            train_arrive_date: checkDate(json[0][index]["Дата прибытия по ЖД"]),
+            pickup: json[0][index]["Автовывоз"],
+            store_arrive_date: checkDate(
+              json[0][index]["Дата прибытия на склад"]
+            ),
+            stock_place_name: json[0][index]["Сток Сдачи"],
+            hidden: false,
+          }
+        );
+
+        Promise.all(itemsUpdate);
+      });
+
+      console.log(containerNums);
+    } catch (error) {
+      console.log(error);
+      return { success: false, error };
+    }
+  }
+
   async uploadGlobal(file) {
     try {
       const json = await FileService.createFile(file);
 
-      function checkBoolean(value) {
-        if (value === "+") return true;
-        return false;
-      }
-      function checkDate(value) {
-        if (value instanceof Date) return value;
-        else return null;
-      }
-      function splitStrings(value) {
-        if (value !== undefined && typeof value === "string")
-          return value.split("\n");
-        else return [];
-      }
-      function castToNum(value) {
-        if (value && typeof value === "string") {
-          const number = parseInt(value.replace(/[^\d.-]/g, ""));
-          return number;
-        } else return value;
-      }
       function isDocsHandler(order_number) {
         const orders = splitStrings(order_number);
         const isDocsArray = [];
@@ -641,8 +691,8 @@ class ItemService {
           line: item["Линия"],
           ready_date: checkDate(item["Дата готовности"]),
           load_date: checkDate(item["Дата загрузки"]),
-          etd: checkDate(item.ETD),
-          eta: checkDate(item.ETA),
+          etd: checkDate(item["ETD"]),
+          eta: checkDate(item["ETA"]),
           release: checkDate(item["Релиз"]),
           bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
           td: checkBoolean(item["ТД"]),
@@ -671,10 +721,10 @@ class ItemService {
 
       const response = Promise.all(items).then(async (result) => {});
 
-      return { success: true, response };
+      return successReturn(response);
     } catch (error) {
       console.log(error);
-      return { success: false, error };
+      return errorReturn(error);
     }
   }
 }

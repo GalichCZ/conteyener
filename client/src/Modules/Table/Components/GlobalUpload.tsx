@@ -24,7 +24,6 @@ const GlobalUpload: FC<Props> = ({ onClose, anchor }) => {
       }
       if (info.file.status !== "uploading") {
         setLoading(false);
-        console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);

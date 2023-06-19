@@ -24,7 +24,6 @@ export const ContainerStockCreate = () => {
       redrawCtx.reDrawHandler(false);
       dropInput(setData);
     }
-    console.log(result);
   };
 
   function checkFilled() {

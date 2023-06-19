@@ -67,8 +67,6 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
     }
   }, [popupData]);
 
-  console.log(checkRole(userRole, "request_date"), userRole);
-
   return (
     <>
       <thead>

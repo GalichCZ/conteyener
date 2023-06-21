@@ -8,6 +8,7 @@ class TableDataHandle {
   checkDate(value) {
     if (!value) return null;
     if (value instanceof Date) return value;
+    if (typeof value === "number") return null;
     if (value.includes(".")) return new Date(dayjs(value, "DD.MM.YYYY"));
   }
   splitStrings(value) {

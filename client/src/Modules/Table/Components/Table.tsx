@@ -10,7 +10,7 @@ import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import { debounce } from "lodash";
-import { RightCircleOutlined } from "@ant-design/icons";
+import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 import { useLocation } from "react-router-dom";
 import useColorText from "../../../hooks/useColorText";
@@ -82,7 +82,7 @@ export const Table: React.FunctionComponent = () => {
 
   const getItems = async (pagination?: boolean) => {
     const data = await ItemFuncs.getItems(page);
-    if (pagination && items) setItems([...items, data.items]);
+    if (pagination && items) setItems(data.items);
     setItems(data.items);
     setTotalPages(data.totalPages);
     setCopyItems(data.items);
@@ -186,6 +186,9 @@ export const Table: React.FunctionComponent = () => {
       </div>
 
       <div className="page-counter">
+        <LeftCircleOutlined
+          onClick={() => setPage((p) => (p > 1 ? p - 1 : 1))}
+        />
         <input
           type="text"
           value={page}
@@ -195,7 +198,9 @@ export const Table: React.FunctionComponent = () => {
           }
         />
         /{totalPages}{" "}
-        <RightCircleOutlined onClick={() => setPage((p) => p + 1)} />
+        <RightCircleOutlined
+          onClick={() => setPage((p) => (p < totalPages ? p + 1 : totalPages))}
+        />
       </div>
     </>
   );

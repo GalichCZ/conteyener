@@ -1,9 +1,7 @@
 import { FilterFilled } from "@ant-design/icons";
-import { TableSortHandler } from "../Functions/TableHandlers";
 import React, { useEffect, useRef, useState } from "react";
-import { TableProps, UserData } from "../../../Types/Types";
+import { TableProps } from "@/Types/Types";
 import { FilterList } from "../Components/FilterList";
-import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
 import { checkRole } from "@/utils/checkRole";
 
 interface ITableColProps {
@@ -24,12 +22,11 @@ export const TableColNames: React.FC<ITableColProps> = ({
   setItems,
   userRole,
 }) => {
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [popupData, setPopupData] = useState<IPopupData | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
   function getRequestDates<T>(arr: T[], key: keyof T): Array<T[keyof T]> {
-    return arr.map((obj) => obj[key]);
+    return arr?.map((obj) => obj[key]);
   }
 
   function handleTdClick<T extends Record<string, any>>(
@@ -45,15 +42,6 @@ export const TableColNames: React.FC<ITableColProps> = ({
 
       setPopupData({ td, dataToFiltr, key: keyProp });
     } else setPopupData(null);
-  }
-  function sort(key: keyof TableProps) {
-    const sortedArray = TableSortHandler(
-      key,
-      data,
-      sortDirection,
-      setSortDirection
-    );
-    sortedArray && setItems(sortedArray);
   }
 
   useEffect(() => {

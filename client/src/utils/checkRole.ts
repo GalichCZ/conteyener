@@ -2,6 +2,9 @@ import { IRoles } from "@/Types/Types";
 
 const Roles: IRoles = {
   manager_patriot: [
+    "eta",
+    "etd",
+    "fraht_account",
     "request_date",
     "inside_number",
     "proform_number",
@@ -12,7 +15,9 @@ const Roles: IRoles = {
     "provider",
     "importer",
     "direction",
+    "declaration_issue_date",
     "store_name",
+    "store_arrive_date",
     "agent",
     "container_type",
     "ready_date",
@@ -25,6 +30,11 @@ const Roles: IRoles = {
     "train_arrive_date",
   ],
   manager_buyer: [
+    "etd",
+    "eta",
+    "fraht_account",
+    "store_arrive_date",
+    
     "request_date",
     "inside_number",
     "proform_number",
@@ -36,6 +46,7 @@ const Roles: IRoles = {
     "importer",
     "direction",
     "store_name",
+    "declaration_issue_date",
     "container_type",
     "ready_date",
     "load_date",
@@ -48,18 +59,27 @@ const Roles: IRoles = {
   head: ["all"],
   manager_int: ["all"],
   manager_sales: [
+    "etd",
+    "fraht_account",
+    "eta",
+    "store_arrive_date",
     //5
     "inside_number",
     "proform_number",
     "order_number",
     "container_number",
     "simple_product_name",
+    "declaration_issue_date",
     "direction",
     "store_name",
     "load_date",
     "km_to_dist",
   ],
   manager_treasury: [
+    "etd",
+    "fraht_account",
+    "eta",
+    "store_arrive_date",
     //6
     "inside_number",
     "proform_number",
@@ -67,10 +87,15 @@ const Roles: IRoles = {
     "container_number",
     "provider",
     "importer",
+    "declaration_issue_date",
     "declaration_number",
   ],
   manager_store: [
+    "etd",
     //7
+    "fraht_account",
+    "eta",
+    "store_arrive_date",
     "inside_number",
     "proform_number",
     "order_number",
@@ -79,6 +104,7 @@ const Roles: IRoles = {
     "direction",
     "store_name",
     "container_type",
+    "declaration_issue_date",
   ],
 };
 

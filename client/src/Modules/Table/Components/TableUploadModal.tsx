@@ -147,7 +147,6 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
       {authCtx.role === "manager_int" && (
         <Upload {...props}>
           <Button icon={<UploadOutlined />}>Загрузить продукты</Button>
-          const authCtx = useContext(AuthContext);
         </Upload>
       )}
     </Modal>

@@ -74,13 +74,13 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
         >
           Пусто
         </Checkbox>
-        {/* <Checkbox
+        <Checkbox
           value={"not_null"}
           checked={isChecked("not_null", objectKey, searchParams)}
           onChange={onCheckHandler}
         >
           Не пустая
-        </Checkbox> */}
+        </Checkbox>
         {data?.map((el, key) => {
           return (
             <Checkbox

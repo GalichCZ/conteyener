@@ -166,26 +166,17 @@ class ItemService {
   async getItemsFilter(query_keys) {
     try {
       const query = {};
-      console.log(query_keys);
       Object.keys(query_keys).forEach((key) => {
         if (query_keys[key] === "[]") {
           query[key] = { $size: 0 };
         } else if (query_keys[key] === "null") {
-          query[key] = {
-            $and: [
-              { key: { $exists: true, $not: { $size: 0 }, $type: "array" } },
-              { key: { $exists: true, $type: "date", $ne: null } },
-              { key: { $exists: true, $type: "string", $ne: "" } },
-              { key: { $exists: true, $type: "number", $ne: null } },
-            ],
-          };
-        } else if (query_keys[key] === "null") {
           query[key] = { $eq: null };
+        } else if (query_keys[key] === "not_null") {
+          query[key] = { $ne: null };
         } else {
           query[key] = { $in: query_keys[key] };
         }
       });
-      console.log(query);
       const items = await ItemSchema.find(query).exec();
       return { success: true, items };
     } catch (error) {
@@ -631,6 +622,32 @@ class ItemService {
               json[0][index]["Дата прибытия на склад"]
             ),
             stock_place_name: json[0][index]["Сток Сдачи"],
+            eta_update: Boolean(checkDate(json[0][index]["ETA"]))
+              ? true
+              : false,
+            date_do_update: Boolean(checkDate(json[0][index]["Дата ДО"]))
+              ? true
+              : false,
+            declaration_issue_date_update: Boolean(
+              checkDate(json[0][index]["Дата выпуска декларации"])
+            )
+              ? true
+              : false,
+            train_depart_date_update: Boolean(
+              checkDate(json[0][index]["Дата отправки по ЖД"])
+            )
+              ? true
+              : false,
+            train_arrive_date_update: Boolean(
+              checkDate(json[0][index]["Дата прибытия по ЖД"])
+            )
+              ? true
+              : false,
+            store_arrive_date_update: Boolean(
+              checkDate(json[0][index]["Дата прибытия на склад"])
+            )
+              ? true
+              : false,
             hidden: false,
           }
         );
@@ -713,6 +730,30 @@ class ItemService {
           pickup: item["Автовывоз"],
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
           stock_place_name: item["Сток Сдачи"],
+          eta_update: Boolean(checkDate(json[0][index]["ETA"])) ? true : false,
+          date_do_update: Boolean(checkDate(json[0][index]["Дата ДО"]))
+            ? true
+            : false,
+          declaration_issue_date_update: Boolean(
+            checkDate(json[0][index]["Дата выпуска декларации"])
+          )
+            ? true
+            : false,
+          train_depart_date_update: Boolean(
+            checkDate(json[0][index]["Дата отправки по ЖД"])
+          )
+            ? true
+            : false,
+          train_arrive_date_update: Boolean(
+            checkDate(json[0][index]["Дата прибытия по ЖД"])
+          )
+            ? true
+            : false,
+          store_arrive_date_update: Boolean(
+            checkDate(json[0][index]["Дата прибытия на склад"])
+          )
+            ? true
+            : false,
           hidden: false,
         });
         const docs = await doc.save();

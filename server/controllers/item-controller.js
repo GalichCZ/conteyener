@@ -72,6 +72,7 @@ class ItemController {
     try {
       const searchTerm = req.body.query_string;
       const searchFilter = req.body.search_filter;
+      console.log(searchTerm)
 
       const items =
         searchFilter == "other"

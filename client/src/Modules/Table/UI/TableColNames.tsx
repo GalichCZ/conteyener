@@ -65,7 +65,7 @@ export const TableColNames: React.FC<ITableColProps> = ({
               checkRole(userRole, name.key) && (
                 <td>
                   {name.name}
-                  {/* {name.hasFilter ? (
+                  {name.hasFilter ? (
                     <FilterFilled
                       onClick={(
                         event: React.MouseEvent<HTMLTableCellElement>
@@ -78,7 +78,7 @@ export const TableColNames: React.FC<ITableColProps> = ({
                     />
                   ) : (
                     ""
-                  )} */}
+                  )}
                 </td>
               )
             );

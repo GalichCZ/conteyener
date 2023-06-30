@@ -72,7 +72,6 @@ class ItemController {
     try {
       const searchTerm = req.body.query_string;
       const searchFilter = req.body.search_filter;
-      console.log(searchTerm)
 
       const items =
         searchFilter == "other"
@@ -80,6 +79,7 @@ class ItemController {
               $text: { $search: req.body.query_string },
             }).exec()
           : [];
+
       if (items.length === 0) {
         const products = await ProductSchema.find({
           $or: [
@@ -103,9 +103,11 @@ class ItemController {
           return await ItemSchema.findById(id);
         });
         Promise.all(getItems).then((result) => {
-          return res.json(result);
+          return res.json(result.filter((res) => res !== null));
         });
-      } else res.json(items);
+      } else {
+        res.json(items.filter((item) => item !== null));
+      }
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);

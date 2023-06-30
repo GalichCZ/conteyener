@@ -10,6 +10,7 @@ import {
   resetFilters,
 } from "../Functions/FilterFuncs";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import { DateNames, DateNamesType } from "../utils/enums";
 
 interface IProps {
   dataToFiltr: any[] | undefined;
@@ -89,7 +90,10 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
               value={el}
               onChange={onCheckHandler}
             >
-              {objectKey === "request_date" ? timeConvert(el) : el}
+              {}
+              {DateNames[objectKey as DateNamesType] !== undefined
+                ? timeConvert(el)
+                : el}
             </Checkbox>
           );
         })}

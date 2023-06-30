@@ -5,6 +5,7 @@ const ItemService = require("../service/item-service");
 const ItemSchema = require("../models/item-model");
 const ProductSchema = require("../models/product-model");
 const UserSchema = require("../models/user-model");
+const dayjs = require("dayjs");
 
 class ItemController {
   async itemCreate(req, res) {
@@ -70,15 +71,71 @@ class ItemController {
 
   async findItemsBySearch(req, res) {
     try {
-      const searchTerm = req.body.query_string;
+      console.log(
+        isNaN(
+          new Date(dayjs(req.body.query_string).format("DD/MM/YYYY")).getTime()
+        )
+          ? req.body.query_string
+          : new Date(dayjs(req.body.query_string).format("DD/MM/YYYY"))
+      );
+
+      const isDate = isNaN(
+        new Date(dayjs(req.body.query_string).format("DD/MM/YYYY")).getTime()
+      )
+        ? false
+        : true;
+
+      const searchDate = new Date(
+        dayjs(req.body.query_string).format("DD/MM/YYYY")
+      );
+
+      const startDate = new Date(
+        searchDate.getFullYear(),
+        searchDate.getMonth(),
+        searchDate.getDate()
+      );
+      const endDate = new Date(
+        searchDate.getFullYear(),
+        searchDate.getMonth(),
+        searchDate.getDate() + 1
+      );
+
+      const searchTerm = isDate
+        ? req.body.query_string
+        : new Date(dayjs(req.body.query_string).format("DD/MM/YYYY"));
+
       const searchFilter = req.body.search_filter;
 
+      const dateQuery = {
+        $or: [
+          { request_date: { $gte: startDate, $lt: endDate } },
+          { ready_date: { $gte: startDate, $lt: endDate } },
+          { etd: { $gte: startDate, $lt: endDate } },
+          { load_date: { $gte: startDate, $lt: endDate } },
+          { eta: { $gte: startDate, $lt: endDate } },
+          { release: { $gte: startDate, $lt: endDate } },
+          { date_do: { $gte: startDate, $lt: endDate } },
+          { declaration_issue_date: { $gte: startDate, $lt: endDate } },
+          { availability_of_ob: { $gte: startDate, $lt: endDate } },
+          { answer_of_ob: { $gte: startDate, $lt: endDate } },
+          { train_arrive_date: { $gte: startDate, $lt: endDate } },
+          { train_depart_date: { $gte: startDate, $lt: endDate } },
+          { store_arrive_date: { $gte: startDate, $lt: endDate } },
+        ],
+      };
+
       const items =
-        searchFilter == "other"
-          ? await ItemSchema.find({
-              $text: { $search: req.body.query_string },
-            }).exec()
+        searchFilter === "other"
+          ? await ItemSchema.find(
+              isDate
+                ? dateQuery
+                : {
+                    $text: { $search: req.body.query_string },
+                  }
+            ).exec()
           : [];
+
+      console.log(items);
 
       if (items.length === 0) {
         const products = await ProductSchema.find({
@@ -103,6 +160,7 @@ class ItemController {
           return await ItemSchema.findById(id);
         });
         Promise.all(getItems).then((result) => {
+          console.log(result);
           return res.json(result.filter((res) => res !== null));
         });
       } else {

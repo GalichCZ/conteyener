@@ -2,26 +2,12 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { NavigateFunction } from "react-router-dom";
 import { findByKeyValue } from "./itemFuncs";
 import { timeConvert } from "./TableHandlers";
+import { DateNames, DateNamesType } from "../utils/enums";
 
 /* 
   TODO: make pagination to get filter values, 
   make search through getted values
 */
-enum DateNames {
-  "request_date",
-  "ready_date",
-  "load_date",
-  "etd",
-  "eta",
-  "release",
-  "date_do",
-  "declaration_issue_date",
-  "availability_of_ob",
-  "answer_of_ob",
-  "train_depart_date",
-  "train_arrive_date",
-  "store_arrive_date_update",
-}
 
 export const onCheck = (
   e: CheckboxChangeEvent,
@@ -53,7 +39,6 @@ export const onType = async <T>(
   prepareData: () => void,
   objectKey: string
 ) => {
-  type DateNamesType = keyof typeof DateNames;
   const dateName = objectKey as DateNamesType;
 
   if (value.length === 0) return prepareData();
@@ -83,20 +68,22 @@ export function isChecked(
   searchParams: URLSearchParams
 ): boolean {
   let value = el;
+  console.log(value)
   if (
     (objectKey === "proform_number" && el === "null") ||
     (objectKey === "inside_number" && el === "null")
   ) {
     value = "[]";
     const urlParams = searchParams.toString();
+    console.log(urlParams)
     return urlParams.includes(objectKey + "=" + encodeURI(value));
-  } else if (objectKey === "request_date") {
+  } else if (DateNames[objectKey as DateNamesType] !== undefined) {
     const urlParams = searchParams.toString();
     return urlParams.includes(
       objectKey + "=" + encodeURIComponent(value.toString())
     );
   } else {
     const urlParams = searchParams.toString();
-    return urlParams.includes(objectKey + "=" + value);
+    return urlParams.includes(objectKey + "=" + encodeURIComponent(value.toString()));
   }
 }

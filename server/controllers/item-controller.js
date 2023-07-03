@@ -71,19 +71,9 @@ class ItemController {
 
   async findItemsBySearch(req, res) {
     try {
-      console.log(
-        isNaN(
-          new Date(dayjs(req.body.query_string).format("DD/MM/YYYY")).getTime()
-        )
-          ? req.body.query_string
-          : new Date(dayjs(req.body.query_string).format("DD/MM/YYYY"))
-      );
-
       const isDate = isNaN(
         new Date(dayjs(req.body.query_string).format("DD/MM/YYYY")).getTime()
-      )
-        ? false
-        : true;
+      );
 
       const searchDate = new Date(
         dayjs(req.body.query_string).format("DD/MM/YYYY")
@@ -128,14 +118,12 @@ class ItemController {
         searchFilter === "other"
           ? await ItemSchema.find(
               isDate
-                ? dateQuery
-                : {
+                ? {
                     $text: { $search: req.body.query_string },
                   }
+                : dateQuery
             ).exec()
           : [];
-
-      console.log(items);
 
       if (items.length === 0) {
         const products = await ProductSchema.find({
@@ -160,7 +148,6 @@ class ItemController {
           return await ItemSchema.findById(id);
         });
         Promise.all(getItems).then((result) => {
-          console.log(result);
           return res.json(result.filter((res) => res !== null));
         });
       } else {

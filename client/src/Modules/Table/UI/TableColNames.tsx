@@ -60,10 +60,10 @@ export const TableColNames: React.FC<ITableColProps> = ({
     <>
       <thead>
         <tr>
-          {colNames.map((name) => {
+          {colNames.map((name, key) => {
             return (
               checkRole(userRole, name.key) && (
-                <td>
+                <td key={key}>
                   {name.name}
                   {name.hasFilter ? (
                     <FilterFilled

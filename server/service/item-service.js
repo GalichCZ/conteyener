@@ -562,8 +562,6 @@ class ItemService {
   async uploadExcel(file) {
     try {
       const json = await FileService.createFile(file);
-      //TODO: parse all items in excel and change items by container number,
-      //also add column names to buffer "ctrl+v" on button click
 
       const containerNums = json[0].map((item) => {
         return item["Номер контейнера"];
@@ -572,9 +570,8 @@ class ItemService {
       const itemsUpdate = containerNums
         .filter((num) => Boolean(num))
         .map(async (num, index) => {
-          console.log(json[0][index]["Условия поставки"]);
           await ItemSchema.findOneAndUpdate(
-            { container_number: num },
+            { container_number: num, hidden: false },
             {
               request_date: checkDate(json[0][index]["Дата заявки"]),
               inside_number: splitStrings(json[0][index]["Внутренний номер"]),
@@ -654,7 +651,6 @@ class ItemService {
               )
                 ? true
                 : false,
-              hidden: false,
             }
           );
 

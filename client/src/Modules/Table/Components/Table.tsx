@@ -138,50 +138,59 @@ export const Table: React.FunctionComponent = () => {
       </div>
       <TableHints />
 
-      <div className="table-page_table">
-        <table className="table-page_fixed-table">
-          <TableColNamesFixed
-            widthsArray={widths}
-            data={copyItems}
-            setItems={setItems}
-            userRole={userRole}
-          />
-          <TableUiFixed
-            setHeights1={setHeights1}
-            items={items}
-            timeConvert={TableHandlers.timeConvert}
-            tableUpdateHandler={TableHandlers.tableUpdateHandler}
-            useColorTextHook={useColorText}
-            userRole={userRole}
-          />
-        </table>
-        <div ref={tableRef} className="table-page_unfixed-table">
-          <table>
-            <TableColNames
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
+        <div className="table-page_table">
+          <table className="table-page_fixed-table">
+            <TableColNamesFixed
               widthsArray={widths}
               data={copyItems}
               setItems={setItems}
               userRole={userRole}
             />
-            <TableUI
-              setHeights2={setHeights2}
+            <TableUiFixed
+              setHeights1={setHeights1}
               items={items}
               timeConvert={TableHandlers.timeConvert}
-              docsCount={TableHandlers.docsCount}
-              uploadHandler={TableHandlers.uploadHandler}
-              tableStoreHandler={TableHandlers.tableStoreHandler}
-              dateChangeHandler={TableHandlers.dateChangeHandler}
-              tableDocsHandler={TableHandlers.tableDocsHandler}
-              declStatusHandler={TableHandlers.declStatusHandler}
-              tableCommentHandler={TableHandlers.tableCommentHandler}
-              checkTimeStyle={TableHandlers.checkTimeStyle}
-              tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
-              tableDistanceHandler={TableHandlers.distanceHandler}
-              tableStockHandler={TableHandlers.tableStockInfoHandler}
+              tableUpdateHandler={TableHandlers.tableUpdateHandler}
               useColorTextHook={useColorText}
               userRole={userRole}
             />
           </table>
+          <div ref={tableRef} className="table-page_unfixed-table">
+            <table>
+              <TableColNames
+                widthsArray={widths}
+                data={copyItems}
+                setItems={setItems}
+                userRole={userRole}
+              />
+              <TableUI
+                setHeights2={setHeights2}
+                items={items}
+                timeConvert={TableHandlers.timeConvert}
+                docsCount={TableHandlers.docsCount}
+                uploadHandler={TableHandlers.uploadHandler}
+                tableStoreHandler={TableHandlers.tableStoreHandler}
+                dateChangeHandler={TableHandlers.dateChangeHandler}
+                tableDocsHandler={TableHandlers.tableDocsHandler}
+                declStatusHandler={TableHandlers.declStatusHandler}
+                tableCommentHandler={TableHandlers.tableCommentHandler}
+                checkTimeStyle={TableHandlers.checkTimeStyle}
+                tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
+                tableDistanceHandler={TableHandlers.distanceHandler}
+                tableStockHandler={TableHandlers.tableStockInfoHandler}
+                useColorTextHook={useColorText}
+                userRole={userRole}
+              />
+            </table>
+          </div>
         </div>
       </div>
 

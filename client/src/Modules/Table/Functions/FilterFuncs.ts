@@ -68,14 +68,12 @@ export function isChecked(
   searchParams: URLSearchParams
 ): boolean {
   let value = el;
-  console.log(value)
   if (
     (objectKey === "proform_number" && el === "null") ||
     (objectKey === "inside_number" && el === "null")
   ) {
     value = "[]";
     const urlParams = searchParams.toString();
-    console.log(urlParams)
     return urlParams.includes(objectKey + "=" + encodeURI(value));
   } else if (DateNames[objectKey as DateNamesType] !== undefined) {
     const urlParams = searchParams.toString();
@@ -84,6 +82,8 @@ export function isChecked(
     );
   } else {
     const urlParams = searchParams.toString();
-    return urlParams.includes(objectKey + "=" + encodeURIComponent(value.toString()));
+    return urlParams.includes(
+      objectKey + "=" + encodeURIComponent(value.toString())
+    );
   }
 }

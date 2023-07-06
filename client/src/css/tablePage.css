@@ -24,7 +24,7 @@
 }
 .table-page_table {
   display: flex;
-  width: 100%;
+  width: fit-content;
   overflow-x: hidden;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
   max-height: 80vh;
@@ -52,7 +52,6 @@
   min-height: 50px !important;
 }
 .table-page_unfixed-table {
-  width: 100%;
   overflow-x: overlay;
   padding-bottom: 0 !important;
   height: fit-content;

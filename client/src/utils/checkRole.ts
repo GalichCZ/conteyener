@@ -15,6 +15,7 @@ const Roles: IRoles = {
     "provider",
     "importer",
     "direction",
+    "conditions",
     "declaration_issue_date",
     "store_name",
     "store_arrive_date",
@@ -34,7 +35,7 @@ const Roles: IRoles = {
     "eta",
     "fraht_account",
     "store_arrive_date",
-    
+    "conditions",
     "request_date",
     "inside_number",
     "proform_number",
@@ -63,6 +64,7 @@ const Roles: IRoles = {
     "fraht_account",
     "eta",
     "store_arrive_date",
+    "conditions",
     //5
     "inside_number",
     "proform_number",
@@ -104,6 +106,7 @@ const Roles: IRoles = {
     "direction",
     "store_name",
     "container_type",
+    "conditions",
     "declaration_issue_date",
   ],
 };

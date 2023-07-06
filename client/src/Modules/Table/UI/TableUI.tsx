@@ -208,8 +208,7 @@ const TableUI: React.FC<ITableUi> = ({
                           }}
                           key={key}
                         >
-                          {" "}
-                          {condition}{" "}
+                          {condition}
                         </p>
                       );
                     })}
@@ -291,7 +290,8 @@ const TableUI: React.FC<ITableUi> = ({
                   ...useColorTextHook(item.etd, searchValue),
                 }}
                 onClick={() => {
-                  tableCalcDateHandler &&
+                  userRole === "manager_int" &&
+                    tableCalcDateHandler &&
                     tableCalcDateHandler(
                       dispatch,
                       item._id,
@@ -309,7 +309,8 @@ const TableUI: React.FC<ITableUi> = ({
                 }}
                 className={checkTimeStyle(item.eta, item.eta_update)}
                 onClick={() => {
-                  dateChangeHandler &&
+                  userRole === "manager_int" &&
+                    dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
                       1,
@@ -337,7 +338,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "date_do") && (
                 <td
                   onClick={() => {
-                    dateChangeHandler &&
+                    userRole === "manager_int" &&
+                      dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
                         2,
@@ -416,7 +418,8 @@ const TableUI: React.FC<ITableUi> = ({
               )}
               <td
                 onClick={() => {
-                  dateChangeHandler &&
+                  userRole === "manager_int" &&
+                    dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
                       3,
@@ -484,7 +487,8 @@ const TableUI: React.FC<ITableUi> = ({
                     ),
                   }}
                   onClick={() => {
-                    tableDistanceHandler &&
+                    userRole === "manager_int" &&
+                      tableDistanceHandler &&
                       tableDistanceHandler(dispatch, item.km_to_dist, item._id);
                   }}
                 >
@@ -494,7 +498,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "train_depart_date") && (
                 <td
                   onClick={() => {
-                    dateChangeHandler &&
+                    userRole === "manager_int" &&
+                      dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
                         4,
@@ -519,7 +524,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "train_arrive_date") && (
                 <td
                   onClick={() => {
-                    dateChangeHandler &&
+                    userRole === "manager_int" &&
+                      dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
                         5,
@@ -544,7 +550,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "pickup") && <td> {item.pickup} </td>}
               <td
                 onClick={() => {
-                  dateChangeHandler &&
+                  userRole === "manager_int" &&
+                    dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
                       6,
@@ -568,7 +575,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "stock_place_name") && (
                 <td
                   onClick={() => {
-                    tableStockHandler &&
+                    userRole === "manager_int" &&
+                      tableStockHandler &&
                       tableStockHandler(dispatch, item.stock_place);
                   }}
                   style={{
@@ -581,7 +589,8 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "comment") && (
                 <td
                   onClick={() => {
-                    tableCommentHandler &&
+                    userRole === "manager_int" &&
+                      tableCommentHandler &&
                       tableCommentHandler(dispatch, item._id, item.comment);
                   }}
                   style={{ cursor: "pointer" }}
@@ -593,7 +602,9 @@ const TableUI: React.FC<ITableUi> = ({
                 <td>
                   <Button
                     onClick={() => {
-                      hideItem && hideItem(item._id, !item.hidden);
+                      userRole === "manager_int" &&
+                        hideItem &&
+                        hideItem(item._id, !item.hidden);
                     }}
                   >
                     Открыть запись

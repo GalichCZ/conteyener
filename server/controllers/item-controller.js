@@ -97,6 +97,7 @@ class ItemController {
       const searchFilter = req.body.search_filter;
 
       const dateQuery = {
+        hidden: false,
         $or: [
           { request_date: { $gte: startDate, $lt: endDate } },
           { ready_date: { $gte: startDate, $lt: endDate } },
@@ -119,6 +120,7 @@ class ItemController {
           ? await ItemSchema.find(
               isDate
                 ? {
+                    hidden: false,
                     $text: { $search: req.body.query_string },
                   }
                 : dateQuery
@@ -148,7 +150,7 @@ class ItemController {
           return await ItemSchema.findById(id);
         });
         Promise.all(getItems).then((result) => {
-          return res.json(result.filter((res) => res !== null));
+          return res.json(result.filter((res) => res !== null && !res.hidden));
         });
       } else {
         res.json(items.filter((item) => item !== null));

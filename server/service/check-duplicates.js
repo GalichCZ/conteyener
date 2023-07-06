@@ -30,6 +30,7 @@ class CheckDuplicates {
 
   async checkDuplicates(value, key, id) {
     const query = {
+      hidden: false,
       _id: { $ne: id },
     };
     query[key] = value;

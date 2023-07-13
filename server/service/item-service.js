@@ -732,27 +732,25 @@ class ItemService {
           pickup: item["Автовывоз"],
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
           stock_place_name: item["Сток Сдачи"],
-          eta_update: Boolean(checkDate(json[0][index]["ETA"])) ? true : false,
-          date_do_update: Boolean(checkDate(json[0][index]["Дата ДО"]))
-            ? true
-            : false,
+          eta_update: Boolean(checkDate(json[0]["ETA"])) ? true : false,
+          date_do_update: Boolean(checkDate(json[0]["Дата ДО"])) ? true : false,
           declaration_issue_date_update: Boolean(
-            checkDate(json[0][index]["Дата выпуска декларации"])
+            checkDate(json[0]["Дата выпуска декларации"])
           )
             ? true
             : false,
           train_depart_date_update: Boolean(
-            checkDate(json[0][index]["Дата отправки по ЖД"])
+            checkDate(json[0]["Дата отправки по ЖД"])
           )
             ? true
             : false,
           train_arrive_date_update: Boolean(
-            checkDate(json[0][index]["Дата прибытия по ЖД"])
+            checkDate(json[0]["Дата прибытия по ЖД"])
           )
             ? true
             : false,
           store_arrive_date_update: Boolean(
-            checkDate(json[0][index]["Дата прибытия на склад"])
+            checkDate(json[0]["Дата прибытия на склад"])
           )
             ? true
             : false,

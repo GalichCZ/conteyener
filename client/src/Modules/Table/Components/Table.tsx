@@ -99,7 +99,7 @@ export const Table: React.FunctionComponent = () => {
       items &&
       copyItems &&
       (await TableHandlers.SearchHandler(searchFilter, query, copyItems));
-    filtered && setItems(filtered);
+    filtered ? setItems(filtered) : setItems([]);
   }, 1000);
 
   useEffect(() => {

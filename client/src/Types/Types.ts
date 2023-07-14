@@ -16,6 +16,7 @@ export type TableProps = {
   container_number: string;
   container_type: string;
   simple_product_name: string[];
+  product: string[];
   delivery_method: string;
   providers: string[];
   importers: string[];

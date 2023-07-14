@@ -24,6 +24,8 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const dispatch = useAppDispatch();
   const item_id = useAppSelector((state) => state.tableUpload.item_id);
   const open = useAppSelector((state) => state.tableUpload.open);
+  const products_id = useAppSelector((state) => state.tableUpload.products_id);
+  console.log(products_id);
   const simple_product_name = useAppSelector(
     (state) => state.tableUpload.simple_product_name
   );
@@ -40,10 +42,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   };
 
   const productHandler = async () => {
-    const response = await ProductFuncs.getProducts(
-      item_id,
-      simple_product_name
-    );
+    const response = await ProductFuncs.getProducts(products_id);
 
     setProducts(response);
   };

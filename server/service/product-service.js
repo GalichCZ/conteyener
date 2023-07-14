@@ -1,7 +1,5 @@
 const ProductSchema = require("../models/product-model");
 const ItemSchema = require("../models/item-model");
-const mongoose = require("mongoose");
-const FileService = require("./file-service");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 
@@ -80,6 +78,25 @@ class ProductService {
         )}\nGET PRODUCT ERROR:\n${error}`
       );
       console.log(error);
+    }
+  }
+
+  async getProducts(products_id) {
+    try {
+      const findProducts = products_id.map(
+        async (id) => await ProductSchema.findById(id)
+      );
+      const products = await Promise.all(findProducts);
+
+      return { success: true, products };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nDELETE PRODUCT ERROR:\n${error}`
+      );
+      console.log(error);
+      return { success: false, error };
     }
   }
 

@@ -15,7 +15,8 @@ interface ITableUi {
   uploadHandler?: (
     dispatch: any,
     item_id: string,
-    simple_product_name: string
+    simple_product_name: string,
+    products_id: string[]
   ) => void;
   tableStoreHandler?: (dispatch: any, itemId: string, store: string) => void;
   dateChangeHandler?: (
@@ -133,7 +134,12 @@ const TableUI: React.FC<ITableUi> = ({
                             }}
                             onClick={() =>
                               uploadHandler &&
-                              uploadHandler(dispatch, item._id, simpleName)
+                              uploadHandler(
+                                dispatch,
+                                item._id,
+                                simpleName,
+                                item.product
+                              )
                             }
                             key={key}
                           >

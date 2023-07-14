@@ -23,6 +23,13 @@ class ProductController {
     res.json(response);
   }
 
+  async getProducts(req, res) {
+    const response = await ProductService.getProducts(req.body.products_id);
+
+    if (response.success) res.json(response.products);
+    else res.status(500).json(response);
+  }
+
   async deleteProduct(req, res) {
     const response = await ProductService.deleteProduct(
       req.params._id,

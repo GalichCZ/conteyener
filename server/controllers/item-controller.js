@@ -97,7 +97,6 @@ class ItemController {
       const searchFilter = req.body.search_filter;
 
       const dateQuery = {
-        hidden: false,
         $or: [
           { request_date: { $gte: startDate, $lt: endDate } },
           { ready_date: { $gte: startDate, $lt: endDate } },
@@ -153,11 +152,11 @@ class ItemController {
           return res.json(result.filter((res) => res !== null && !res.hidden));
         });
       } else {
-        res.json(items.filter((item) => item !== null));
+        res.json(items.filter((item) => item !== null && !item.hidden));
       }
     } catch (error) {
       console.log(error);
-      return res.sendStatus(400);
+      return res.status(400).json([]);
     }
   }
 

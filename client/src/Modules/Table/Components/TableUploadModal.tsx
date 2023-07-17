@@ -10,6 +10,7 @@ import {
 } from "../../../store/slices/tableUploadSlice";
 import { deleteProduct, Product } from "../Functions/productFuncs";
 import AuthContext from "@/store/auth-context";
+import ReDrawContext from "@/store/redraw-context";
 const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
@@ -25,7 +26,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const item_id = useAppSelector((state) => state.tableUpload.item_id);
   const open = useAppSelector((state) => state.tableUpload.open);
   const products_id = useAppSelector((state) => state.tableUpload.products_id);
-  console.log(products_id);
+  const redrawCtx = useContext(ReDrawContext);
   const simple_product_name = useAppSelector(
     (state) => state.tableUpload.simple_product_name
   );
@@ -60,13 +61,16 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
     },
     onChange(info) {
       if (info.file.status !== "uploading") {
+        redrawCtx.reDrawHandler(true);
         console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
-        productHandler();
         message.success(`${info.file.name} file uploaded successfully`);
+        redrawCtx.reDrawHandler(false);
+        productHandler();
       } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
+        redrawCtx.reDrawHandler(false);
       }
     },
   };

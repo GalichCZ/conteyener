@@ -19,6 +19,7 @@ import SideMenu from "../UI/SideMenu";
 import Search from "../../Search/Components/Search";
 import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
 import AuthContext from "@/store/auth-context";
+import useDebounce from "@/hooks/useDebounce";
 
 const ItemFuncs = new Item();
 const UsersHandler = new UsersHandlerClass();
@@ -94,13 +95,13 @@ export const Table: React.FunctionComponent = () => {
     setCopyItems(data.items);
   };
 
-  const search = debounce(async () => {
+  const search = useDebounce(async () => {
     const filtered =
       items &&
       copyItems &&
       (await TableHandlers.SearchHandler(searchFilter, query, copyItems));
-    filtered ? setItems(filtered) : setItems([]);
-  }, 1000);
+    filtered && setItems(filtered);
+  }, 200);
 
   useEffect(() => {
     if (tableRef.current) {

@@ -568,7 +568,7 @@ class ItemService {
       });
 
       const itemsUpdate = containerNums
-        .filter((num) => Boolean(num))
+        .filter((num) => num !== null)
         .map(async (num, index) => {
           await ItemSchema.findOneAndUpdate(
             { container_number: num, hidden: false },
@@ -625,39 +625,31 @@ class ItemService {
                 json[0][index]["Дата прибытия на склад"]
               ),
               stock_place_name: json[0][index]["Сток Сдачи"],
-              eta_update: Boolean(checkDate(json[0][index]["ETA"]))
-                ? true
-                : false,
-              date_do_update: Boolean(checkDate(json[0][index]["Дата ДО"]))
-                ? true
-                : false,
-              declaration_issue_date_update: Boolean(
-                checkDate(json[0][index]["Дата выпуска декларации"])
-              )
-                ? true
-                : false,
-              train_depart_date_update: Boolean(
-                checkDate(json[0][index]["Дата отправки по ЖД"])
-              )
-                ? true
-                : false,
-              train_arrive_date_update: Boolean(
-                checkDate(json[0][index]["Дата прибытия по ЖД"])
-              )
-                ? true
-                : false,
-              store_arrive_date_update: Boolean(
-                checkDate(json[0][index]["Дата прибытия на склад"])
-              )
-                ? true
-                : false,
+              eta_update:
+                checkDate(json[0][index]["ETA"]) !== null ? true : false,
+              date_do_update:
+                checkDate(json[0][index]["Дата ДО"]) !== null ? true : false,
+              declaration_issue_date_update:
+                checkDate(json[0][index]["Дата выпуска декларации"]) !== null
+                  ? true
+                  : false,
+              train_depart_date_update:
+                checkDate(json[0][index]["Дата отправки по ЖД"]) !== null
+                  ? true
+                  : false,
+              train_arrive_date_update:
+                checkDate(json[0][index]["Дата прибытия по ЖД"]) !== null
+                  ? true
+                  : false,
+              store_arrive_date_update:
+                checkDate(json[0][index]["Дата прибытия на склад"]) !== null
+                  ? true
+                  : false,
             }
           );
 
           Promise.all(itemsUpdate);
         });
-
-      console.log(containerNums);
     } catch (error) {
       console.log(error);
       return { success: false, error };
@@ -732,28 +724,16 @@ class ItemService {
           pickup: item["Автовывоз"],
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
           stock_place_name: item["Сток Сдачи"],
-          eta_update: Boolean(checkDate(json[0]["ETA"])) ? true : false,
-          date_do_update: Boolean(checkDate(json[0]["Дата ДО"])) ? true : false,
-          declaration_issue_date_update: Boolean(
-            checkDate(json[0]["Дата выпуска декларации"])
-          )
-            ? true
-            : false,
-          train_depart_date_update: Boolean(
-            checkDate(json[0]["Дата отправки по ЖД"])
-          )
-            ? true
-            : false,
-          train_arrive_date_update: Boolean(
-            checkDate(json[0]["Дата прибытия по ЖД"])
-          )
-            ? true
-            : false,
-          store_arrive_date_update: Boolean(
-            checkDate(json[0]["Дата прибытия на склад"])
-          )
-            ? true
-            : false,
+          eta_update: checkDate(item["ETA"]) !== null ? true : false,
+          date_do_update: checkDate(item["Дата ДО"]) !== null ? true : false,
+          declaration_issue_date_update:
+            checkDate(item["Дата выпуска декларации"]) !== null ? true : false,
+          train_depart_date_update:
+            checkDate(item["Дата отправки по ЖД"]) !== null ? true : false,
+          train_arrive_date_update:
+            checkDate(item["Дата прибытия по ЖД"]) !== null ? true : false,
+          store_arrive_date_update:
+            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
           hidden: false,
         });
         const docs = await doc.save();

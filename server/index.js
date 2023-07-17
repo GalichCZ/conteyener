@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const routers = require("./router/index");
+const ItemSchema = require("./models/item-model");
+const ProductSchema = require("./models/product-model");
 
 dotenv.config();
 
@@ -31,6 +33,28 @@ const start = async () => {
       .connect(url)
       .then(() => console.log("DB IS OK"))
       .catch((e) => console.log(e));
+
+    mongoose.connection.once("open", () => {
+      ItemSchema.createIndexes((err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("Indexes created successfully");
+        }
+        mongoose.connection.close();
+      });
+    });
+
+    mongoose.connection.once("open", () => {
+      ProductSchema.createIndexes((err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log("Indexes created successfully");
+        }
+        mongoose.connection.close();
+      });
+    });
   } catch (error) {
     console.log(error);
   }

@@ -52,7 +52,8 @@ export const onType = async <T>(
 
   if (searchedFilter?.length === 0) {
     const result = await findByKeyValue(objectKey, value);
-    setData(result);
+    const arr = [].concat(...result);
+    return setData(arr);
   }
 
   setData(searchedFilter);

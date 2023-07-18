@@ -548,13 +548,14 @@ class ItemService {
     try {
       const key = req.params.key;
       const value = req.params.keyValue;
+      const regex = new RegExp(value, "i");
       const query = {};
-      query[key] = { $regex: value, $options: "i" };
+      query[key] = { $regex: regex };
       const items = await ItemSchema.find(query).exec();
-      const response = filterDuplicates(items[key]);
-
+      const response = [...new Set(items.map((item) => item[key]))];
       return { success: true, response };
     } catch (error) {
+      console.log(error);
       return errorReturn(error);
     }
   }
@@ -567,89 +568,88 @@ class ItemService {
         return item["Номер контейнера"];
       });
 
-      const itemsUpdate = containerNums
-        .filter((num) => num !== null)
-        .map(async (num, index) => {
-          await ItemSchema.findOneAndUpdate(
-            { container_number: num, hidden: false },
-            {
-              request_date: checkDate(json[0][index]["Дата заявки"]),
-              inside_number: splitStrings(json[0][index]["Внутренний номер"]),
-              proform_number: splitStrings(json[0][index]["Номер проформы"]),
-              order_number: splitStrings(json[0][index]["Номер заказа"]),
-              container_number: json[0][index]["Номер контейнера"],
-              /*----------------------------------------*/
-              simple_product_name: splitStrings(json[0][index]["Товар"]),
-              delivery_method: json[0][index]["Способ доставки"],
-              providers: splitStrings(json[0][index]["Поставщик"]),
-              importers: splitStrings(json[0][index]["Импортер"]),
-              conditions: splitStrings(json[0][index]["Условия поставки"]),
-              direction: json[0][index]["Направление"],
-              store_name: json[0][index]["Склад"],
-              agent: json[0][index]["Агент"],
-              container_type: json[0][index]["Тип контейенра"],
-              place_of_dispatch: json[0][index]["Место отправки"],
-              line: json[0][index]["Линия"],
-              ready_date: checkDate(json[0][index]["Дата готовности"]),
-              load_date: checkDate(json[0][index]["Дата загрузки"]),
-              etd: checkDate(json[0][index]["ETD"]),
-              eta: checkDate(json[0][index]["ETA"]),
-              release: checkDate(json[0][index]["Релиз"]),
-              bl_smgs_cmr: checkBoolean(json[0][index]["BL/СМГС/CMR"]),
-              td: checkBoolean(json[0][index]["ТД"]),
-              date_do: checkDate(json[0][index]["Дата ДО"]),
-              port: json[0][index]["Порт"],
-              is_ds: checkBoolean(json[0][index]["Д/С для подачи"]),
-              fraht_account: json[0][index]["Фрахтовый счет"],
-              declaration_number: splitStrings(
-                json[0][index]["Номер декларации"]
-              ),
-              declaration_issue_date: checkDate(
-                json[0][index]["Дата выпуска декларации"]
-              ),
-              availability_of_ob: checkDate(json[0][index]["Наличие ОБ"]),
-              answer_of_ob: checkDate(json[0][index]["Ответ ОБ"]),
-              expeditor: json[0][index]["Экспедитор"],
-              destination_station: json[0][index]["Станция прибытия"],
-              km_to_dist: castToNum(
-                json[0][index]["Осталось км до ст. назначения"]
-              ),
-              train_depart_date: checkDate(
-                json[0][index]["Дата отправки по ЖД"]
-              ),
-              train_arrive_date: checkDate(
-                json[0][index]["Дата прибытия по ЖД"]
-              ),
-              pickup: json[0][index]["Автовывоз"],
-              store_arrive_date: checkDate(
-                json[0][index]["Дата прибытия на склад"]
-              ),
-              stock_place_name: json[0][index]["Сток Сдачи"],
-              eta_update:
-                checkDate(json[0][index]["ETA"]) !== null ? true : false,
-              date_do_update:
-                checkDate(json[0][index]["Дата ДО"]) !== null ? true : false,
-              declaration_issue_date_update:
-                checkDate(json[0][index]["Дата выпуска декларации"]) !== null
-                  ? true
-                  : false,
-              train_depart_date_update:
-                checkDate(json[0][index]["Дата отправки по ЖД"]) !== null
-                  ? true
-                  : false,
-              train_arrive_date_update:
-                checkDate(json[0][index]["Дата прибытия по ЖД"]) !== null
-                  ? true
-                  : false,
-              store_arrive_date_update:
-                checkDate(json[0][index]["Дата прибытия на склад"]) !== null
-                  ? true
-                  : false,
-            }
-          );
+      const filteredContainers = containerNums.filter(
+        (num) => num !== null && num !== undefined
+      );
+      console.log(filteredContainers);
 
-          Promise.all(itemsUpdate);
-        });
+      const itemsUpdate = filteredContainers.map(async (num, index) => {
+        await ItemSchema.findOneAndUpdate(
+          { container_number: num, hidden: false },
+          {
+            request_date: checkDate(json[0][index]["Дата заявки"]),
+            inside_number: splitStrings(json[0][index]["Внутренний номер"]),
+            proform_number: splitStrings(json[0][index]["Номер проформы"]),
+            order_number: splitStrings(json[0][index]["Номер заказа"]),
+            container_number: json[0][index]["Номер контейнера"],
+            /*----------------------------------------*/
+            simple_product_name: splitStrings(json[0][index]["Товар"]),
+            delivery_method: json[0][index]["Способ доставки"],
+            providers: splitStrings(json[0][index]["Поставщик"]),
+            importers: splitStrings(json[0][index]["Импортер"]),
+            conditions: splitStrings(json[0][index]["Условия поставки"]),
+            direction: json[0][index]["Направление"],
+            store_name: json[0][index]["Склад"],
+            agent: json[0][index]["Агент"],
+            container_type: json[0][index]["Тип контейенра"],
+            place_of_dispatch: json[0][index]["Место отправки"],
+            line: json[0][index]["Линия"],
+            ready_date: checkDate(json[0][index]["Дата готовности"]),
+            load_date: checkDate(json[0][index]["Дата загрузки"]),
+            etd: checkDate(json[0][index]["ETD"]),
+            eta: checkDate(json[0][index]["ETA"]),
+            release: checkDate(json[0][index]["Релиз"]),
+            bl_smgs_cmr: checkBoolean(json[0][index]["BL/СМГС/CMR"]),
+            td: checkBoolean(json[0][index]["ТД"]),
+            date_do: checkDate(json[0][index]["Дата ДО"]),
+            port: json[0][index]["Порт"],
+            is_ds: checkBoolean(json[0][index]["Д/С для подачи"]),
+            fraht_account: json[0][index]["Фрахтовый счет"],
+            declaration_number: splitStrings(
+              json[0][index]["Номер декларации"]
+            ),
+            declaration_issue_date: checkDate(
+              json[0][index]["Дата выпуска декларации"]
+            ),
+            availability_of_ob: checkDate(json[0][index]["Наличие ОБ"]),
+            answer_of_ob: checkDate(json[0][index]["Ответ ОБ"]),
+            expeditor: json[0][index]["Экспедитор"],
+            destination_station: json[0][index]["Станция прибытия"],
+            km_to_dist: castToNum(
+              json[0][index]["Осталось км до ст. назначения"]
+            ),
+            train_depart_date: checkDate(json[0][index]["Дата отправки по ЖД"]),
+            train_arrive_date: checkDate(json[0][index]["Дата прибытия по ЖД"]),
+            pickup: json[0][index]["Автовывоз"],
+            store_arrive_date: checkDate(
+              json[0][index]["Дата прибытия на склад"]
+            ),
+            stock_place_name: json[0][index]["Сток Сдачи"],
+            eta_update:
+              checkDate(json[0][index]["ETA"]) !== null ? true : false,
+            date_do_update:
+              checkDate(json[0][index]["Дата ДО"]) !== null ? true : false,
+            declaration_issue_date_update:
+              checkDate(json[0][index]["Дата выпуска декларации"]) !== null
+                ? true
+                : false,
+            train_depart_date_update:
+              checkDate(json[0][index]["Дата отправки по ЖД"]) !== null
+                ? true
+                : false,
+            train_arrive_date_update:
+              checkDate(json[0][index]["Дата прибытия по ЖД"]) !== null
+                ? true
+                : false,
+            store_arrive_date_update:
+              checkDate(json[0][index]["Дата прибытия на склад"]) !== null
+                ? true
+                : false,
+          }
+        );
+
+        Promise.all(itemsUpdate);
+      });
     } catch (error) {
       console.log(error);
       return { success: false, error };

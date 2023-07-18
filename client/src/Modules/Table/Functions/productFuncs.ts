@@ -1,18 +1,9 @@
 const URL = import.meta.env.VITE_API_URL;
 import { Products } from "@/Types/Types";
 export class Product {
-  async getProducts(products_id: string[]): Promise<Products[]> {
-    const response = await fetch(URL + "/product", {
-      method: "POST",
-      body: JSON.stringify({ products_id }),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => {
-        return res.json();
-      })
+  async getProducts(_id: string, simple_product_name: string) {
+    const response = await fetch(URL + `/product/${_id}/${simple_product_name}`)
+      .then((res) => res.json())
       .then((data) => {
         return data;
       })
@@ -20,6 +11,25 @@ export class Product {
         console.error("Error:", error);
       });
     return response;
+    // async getProducts(products_id: string[]): Promise<Products[]> {
+    //   const response = await fetch(URL + "/product", {
+    //     method: "POST",
+    //     body: JSON.stringify({ products_id }),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //     },
+    //   })
+    //     .then((res) => {
+    //       return res.json();
+    //     })
+    //     .then((data) => {
+    //       return data;
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error:", error);
+    //     });
+    //   return response;
   }
 }
 

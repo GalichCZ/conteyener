@@ -5,7 +5,7 @@ export interface TableUpload {
   open: boolean;
   item_id: string;
   simple_product_name: string;
-  products_id: string[];
+  products_id?: string[];
 }
 
 const initialState: TableUpload = {
@@ -27,7 +27,7 @@ export const tableUploadSlice = createSlice({
       action: PayloadAction<{
         item_id: string;
         simple_product_name: string;
-        products_id: string[];
+        products_id?: string[];
       }>
     ) => {
       state.item_id = action.payload.item_id;

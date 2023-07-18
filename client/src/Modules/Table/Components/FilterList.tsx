@@ -20,6 +20,7 @@ interface IProps {
 export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
   const navigate = useNavigate();
   const [data, setData] = useState<any[] | undefined>();
+  const [fetched, setFetched] = useState<any[]>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [keySearchValue, setKeySearchValue] = useState<string | null>(null);
 
@@ -28,7 +29,7 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
   };
 
   const prepareData = () => {
-    if (dataToFiltr) {
+    if (dataToFiltr && (fetched?.length === 0 || fetched === undefined)) {
       if (Array.isArray(dataToFiltr[0])) {
         const concatenatedArray = [].concat(...dataToFiltr);
         const unique = concatenatedArray.filter((element, index) => {
@@ -45,6 +46,8 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
         });
         setData(unique);
       }
+    } else {
+      setData(fetched);
     }
   };
 
@@ -55,7 +58,9 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
   useEffect(() => {
     prepareData();
     if (keySearchValue !== null) {
-      onType(keySearchValue, data, setData, prepareData, objectKey);
+      onType(keySearchValue, data, setFetched, prepareData, objectKey);
+    } else {
+      prepareData();
     }
   }, [keySearchValue]);
 

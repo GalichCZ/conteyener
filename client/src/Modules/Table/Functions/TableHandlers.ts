@@ -101,7 +101,7 @@ export const uploadHandler = (
   dispatch: any,
   item_id: string,
   simple_product_name: string,
-  products_id: string[]
+  products_id?: string[]
 ) => {
   dispatch(setOpenUpload());
   dispatch(setUploadItemId({ item_id, simple_product_name, products_id }));

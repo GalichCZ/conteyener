@@ -69,7 +69,8 @@ class ProductService {
   async getProduct(item_id, simple_name) {
     try {
       const products = await ProductSchema.find({ item_id, simple_name });
-
+      // console.log(products);
+      console.log(item_id, simple_name);
       return products;
     } catch (error) {
       SendBotMessage(

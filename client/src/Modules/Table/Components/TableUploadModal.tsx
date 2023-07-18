@@ -43,13 +43,17 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   };
 
   const productHandler = async () => {
-    const response = await ProductFuncs.getProducts(products_id);
+    const response = await ProductFuncs.getProducts(
+      item_id,
+      simple_product_name
+    );
 
     setProducts(response);
   };
 
   const deleteProductHandler = async (_id: string) => {
     const response = await deleteProduct(_id, item_id);
+    setProducts([]);
     if (response.success) await productHandler();
   };
 

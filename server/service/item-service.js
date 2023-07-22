@@ -165,11 +165,33 @@ class ItemService {
 
   async getItemsFilter(query_keys) {
     try {
-      const query = {};
+      let isAggregate = false;
+      let query = {};
+      const isArrayPole = (key) =>
+        key === "declaration_number" ||
+        key === "order_number" ||
+        key === "proform_number" ||
+        key === "inside_number" ||
+        key === "simple_product_name" ||
+        key === "providers" ||
+        key === "importers" ||
+        key === "conditions";
       Object.keys(query_keys).forEach((key) => {
-        if (query_keys[key] === "[]") {
-          query[key] = { $size: 0 };
-        } else if (query_keys[key] === "null") {
+        if (query_keys[key] === "null" && isArrayPole(key)) {
+          return (query[key] = { $size: 0 });
+        } else if (query_keys[key] === "not_null" && isArrayPole(key)) {
+          isAggregate = true;
+          return (query = [
+            {
+              $match: {
+                $expr: {
+                  $gt: [{ $size: `$${key}` }, 0],
+                },
+              },
+            },
+          ]);
+        }
+        if (query_keys[key] === "null") {
           query[key] = { $eq: null };
         } else if (query_keys[key] === "not_null") {
           query[key] = { $ne: null };
@@ -177,7 +199,9 @@ class ItemService {
           query[key] = { $in: query_keys[key] };
         }
       });
-      const items = await ItemSchema.find(query).exec();
+      const items = isAggregate
+        ? await ItemSchema.aggregate(query).exec()
+        : await ItemSchema.find(query).exec();
       return { success: true, items };
     } catch (error) {
       SendBotMessage(

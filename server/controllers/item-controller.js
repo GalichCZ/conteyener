@@ -127,17 +127,21 @@ class ItemController {
           : [];
 
       if (items.length === 0) {
+        const regex = new RegExp(searchTerm, "i");
+        const query = { $regex: regex };
+
         const products = await ProductSchema.find({
           $or: [
-            { hs_code: searchTerm },
-            { article: { $regex: searchTerm, $options: "i" } },
-            { trade_mark: { $regex: searchTerm, $options: "i" } },
-            { model: { $regex: searchTerm, $options: "i" } },
-            { modification: { $regex: searchTerm, $options: "i" } },
-            { product_name: { $regex: searchTerm, $options: "i" } },
-            { manufacturer: { $regex: searchTerm, $options: "i" } },
+            { hs_code: query },
+            { article: query },
+            { trade_mark: query },
+            { model: query },
+            { modification: query },
+            { product_name: query },
+            { manufacturer: query },
           ],
         }).exec();
+
         const itemIds = products.map((product) => {
           return product.item_id;
         });

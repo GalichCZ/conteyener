@@ -159,7 +159,16 @@ export const SearchHandler = async (
     });
     if (filtered.length === 0) {
       let items = await findItemsBySearch(searchReq, "other");
-      return items;
+      const filteredOut = items.filter((item: Types.TableProps) => {
+        const itemValues = Object.values(item)
+          .map((value) =>
+            typeof value === "number" ? value.toString() : value
+          )
+          .join(" ")
+          .toLowerCase();
+        return itemValues.includes(searchReq.toLowerCase());
+      });
+      return filteredOut;
     }
     return filtered;
   } else if (searchFilter == "products") {

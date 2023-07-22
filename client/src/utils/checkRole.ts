@@ -112,7 +112,7 @@ const Roles: IRoles = {
 };
 
 export const checkRole = (role: string | undefined, column_name: string) => {
-  if ((role && role === "head") || role === "manager_int") return true;
+  if (role && (role === "head" || role === "manager_int")) return true;
   if (role && Roles[role]?.find((col) => col === column_name)) return true;
   return false;
 };

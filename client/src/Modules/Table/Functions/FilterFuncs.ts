@@ -22,8 +22,8 @@ export const onCheck = (
   )
     value = "[]";
   const before = searchParams.toString();
-  if (before.includes(objectKey + "=" + encodeURIComponent(value))) {
-    let after = before.replace(objectKey + "=" + encodeURIComponent(value), "");
+  if (before.includes(objectKey + "=" + customURLEncode(value))) {
+    let after = before.replace(objectKey + "=" + customURLEncode(value), "");
     if (after[after.length - 1] === "&") after = after.slice(0, -1);
     setSearchParams(after);
   } else {
@@ -63,28 +63,48 @@ export function resetFilters(navigate: NavigateFunction) {
   navigate(location.pathname, { replace: true });
 }
 
+function customURLEncode(str: string) {
+  if (str === "+") {
+    return str.replace("+", "%2B");
+  }
+  if (typeof str === "string") {
+    // Replace spaces with '+'
+    let encodedString = str.replace(/ /g, "+");
+
+    // Replace specific characters with their literal forms
+    encodedString = encodedString.replace(/\(/g, "%28");
+    encodedString = encodedString.replace(/\)/g, "%29");
+    encodedString = encodedString.replace(/,/g, "%2C");
+    encodedString = encodedString.replace(/"/g, "%22");
+    encodedString = encodedString.replace(/\r/g, "%0D");
+    encodedString = encodedString.replace(/\//g, "%2F");
+    encodedString = encodedString.replace(/:/g, "%3A");
+    encodedString = encodedString.replace(/:/g, "%3A");
+
+    encodedString = encodedString.replace(/[А-Яа-яЁё]/g, function (char) {
+      return encodeURIComponent(char);
+    });
+
+    return encodedString;
+  } else return str;
+}
+
 export function isChecked(
   el: string,
   objectKey: string,
   searchParams: URLSearchParams
 ): boolean {
-  let value = el;
+  let value = typeof el === "string" ? el.replace(/ /g, "+") : el;
+  const urlParams = searchParams.toString();
   if (
     (objectKey === "proform_number" && el === "null") ||
     (objectKey === "inside_number" && el === "null")
   ) {
     value = "[]";
-    const urlParams = searchParams.toString();
-    return urlParams.includes(objectKey + "=" + encodeURI(value));
+    return urlParams.includes(objectKey + "=" + customURLEncode(value));
   } else if (DateNames[objectKey as DateNamesType] !== undefined) {
-    const urlParams = searchParams.toString();
-    return urlParams.includes(
-      objectKey + "=" + encodeURIComponent(value.toString())
-    );
+    return urlParams.includes(objectKey + "=" + customURLEncode(value));
   } else {
-    const urlParams = searchParams.toString();
-    return urlParams.includes(
-      objectKey + "=" + encodeURIComponent(value.toString())
-    );
+    return urlParams.includes(objectKey + "=" + customURLEncode(value));
   }
 }

@@ -166,7 +166,7 @@ class ItemService {
   async getItemsFilter(query_keys) {
     try {
       let isAggregate = false;
-      let query = {};
+      let query = { hidden: false };
       const isArrayPole = (key) =>
         key === "declaration_number" ||
         key === "order_number" ||
@@ -199,6 +199,7 @@ class ItemService {
           query[key] = { $in: query_keys[key] };
         }
       });
+      console.log(query);
       const items = isAggregate
         ? await ItemSchema.aggregate(query).exec()
         : await ItemSchema.find(query).exec();

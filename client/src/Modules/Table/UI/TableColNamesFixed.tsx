@@ -1,5 +1,4 @@
 import { FilterFilled } from "@ant-design/icons";
-import { TableSortHandler } from "../Functions/TableHandlers";
 import React, { useEffect, useRef, useState } from "react";
 import { TableProps } from "../../../Types/Types";
 import { FilterList } from "../Components/FilterList";
@@ -44,16 +43,6 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
 
       setPopupData({ td, dataToFiltr, key: keyProp });
     } else setPopupData(null);
-  }
-
-  function sort(key: keyof TableProps) {
-    const sortedArray = TableSortHandler(
-      key,
-      data,
-      sortDirection,
-      setSortDirection
-    );
-    sortedArray && setItems(sortedArray);
   }
 
   useEffect(() => {

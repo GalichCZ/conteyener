@@ -32,21 +32,30 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
     if (dataToFiltr && (fetched?.length === 0 || fetched === undefined)) {
       if (Array.isArray(dataToFiltr[0])) {
         const concatenatedArray = [].concat(...dataToFiltr);
-        const unique = concatenatedArray.filter((element, index) => {
-          return (
-            concatenatedArray.indexOf(element) === index &&
-            element !== "" &&
-            element
+        const unique = [...new Set(concatenatedArray)];
+        if (keySearchValue !== "" && keySearchValue !== null) {
+          return setData(
+            unique.filter((string: string) => string.includes(keySearchValue))
           );
-        });
+        }
         setData(unique);
       } else {
         const unique = dataToFiltr.filter((element, index) => {
           return dataToFiltr.indexOf(element) === index && element;
         });
+        if (keySearchValue !== "" && keySearchValue !== null) {
+          return setData(
+            unique.filter((string: string) => string.includes(keySearchValue))
+          );
+        }
         setData(unique);
       }
     } else {
+      if (keySearchValue !== "" && keySearchValue !== null) {
+        return setData(
+          fetched?.filter((string: string) => string.includes(keySearchValue))
+        );
+      }
       setData(fetched);
     }
   };
@@ -87,7 +96,7 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
         >
           Не пустая
         </Checkbox>
-        {data?.map((el, key) => {
+        {[...new Set(data)]?.map((el, key) => {
           return (
             <Checkbox
               key={key}

@@ -220,6 +220,21 @@ class ItemController {
     if (result.success) res.status(200).json(result.response);
     else res.status(400).json({ error: result.error });
   }
+
+  async hideDelivered(req, res) {
+    try {
+      await ItemSchema.updateMany(
+        {
+          store_arrive_date: { $ne: null },
+          store_arrive_date_update: true,
+        },
+        { hidden: true }
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = new ItemController();

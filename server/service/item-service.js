@@ -603,35 +603,35 @@ class ItemService {
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
           {
-            delivery_method: json[0][index]["Способ доставки"], //
-            direction: json[0][index]["Направление"], //
-            store_name: json[0][index]["Склад"], //
-            agent: json[0][index]["Агент"], //
-            place_of_dispatch: json[0][index]["Место отправки"], //
+            delivery_method: json[0][index]["Способ доставки"],
+            direction: json[0][index]["Направление"],
+            store_name: json[0][index]["Склад"],
+            agent: json[0][index]["Агент"],
+            place_of_dispatch: json[0][index]["Место отправки"],
             line: json[0][index]["Линия"], //
-            ready_date: checkDate(json[0][index]["Дата готовности"]), //
-            load_date: checkDate(json[0][index]["Дата загрузки"]), //
-            etd: checkDate(json[0][index]["ETD"]), //
-            eta: checkDate(json[0][index]["ETA"]), //
-            date_do: checkDate(json[0][index]["Дата ДО"]), //
-            port: json[0][index]["Порт"], //
+            ready_date: checkDate(json[0][index]["Дата готовности"]),
+            load_date: checkDate(json[0][index]["Дата загрузки"]),
+            etd: checkDate(json[0][index]["ETD"]),
+            eta: checkDate(json[0][index]["ETA"]),
+            date_do: checkDate(json[0][index]["Дата ДО"]),
+            port: json[0][index]["Порт"],
             declaration_number: splitStrings(
               json[0][index]["Номер декларации"]
-            ), //
+            ),
             declaration_issue_date: checkDate(
               json[0][index]["Дата выпуска декларации"]
-            ), //
-            expeditor: json[0][index]["Экспедитор"], //
-            destination_station: json[0][index]["Станция прибытия"], //
+            ),
+            expeditor: json[0][index]["Экспедитор"],
+            destination_station: json[0][index]["Станция прибытия"],
             km_to_dist: castToNum(
               json[0][index]["Осталось км до ст. назначения"]
-            ), //
-            train_depart_date: checkDate(json[0][index]["Дата отправки по ЖД"]), //
-            train_arrive_date: checkDate(json[0][index]["Дата прибытия по ЖД"]), //
-            pickup: json[0][index]["Автовывоз"], //
+            ),
+            train_depart_date: checkDate(json[0][index]["Дата отправки по ЖД"]),
+            train_arrive_date: checkDate(json[0][index]["Дата прибытия по ЖД"]),
+            pickup: json[0][index]["Автовывоз"],
             store_arrive_date: checkDate(
               json[0][index]["Дата прибытия на склад"]
-            ), //
+            ),
             eta_update:
               checkDate(json[0][index]["ETA"]) !== null ? true : false,
             date_do_update:

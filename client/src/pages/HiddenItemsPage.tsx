@@ -1,4 +1,3 @@
-import React from "react";
 import { TableHidden } from "../Modules/HiddenItems/Components/TableHidden";
 
 export const HiddenItemsPage = () => {

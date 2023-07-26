@@ -10,6 +10,7 @@ router.get("/api/item/hidden", ItemController.getHiddenItems);
 router.get("/api/item/:page", ItemController.getItems);
 router.get("/api/filter", ItemController.getItemsFilter);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
+router.get("/api/item/hideall", ItemController.hideDelivered);
 //post
 router.post("/api/item/search", ItemController.findItemsBySearch);
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);

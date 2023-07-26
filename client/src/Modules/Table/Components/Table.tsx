@@ -9,7 +9,6 @@ import TableUI from "../UI/TableUI";
 import { TableColNamesFixed } from "../UI/TableColNamesFixed";
 import { TableUiFixed } from "../UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
-import { debounce } from "lodash";
 import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import { createExcelFile, downloadFile } from "../Functions/ExcelApi";
 import { useLocation } from "react-router-dom";
@@ -199,15 +198,7 @@ export const Table: React.FunctionComponent = () => {
         <LeftCircleOutlined
           onClick={() => setPage((p) => (p > 1 ? p - 1 : 1))}
         />
-        <input
-          type="text"
-          value={page}
-          min={0}
-          onChange={(e) =>
-            setPage(parseInt(e.target.value ? e.target.value : "0"))
-          }
-        />
-        /{totalPages}{" "}
+        {page}/{totalPages}{" "}
         <RightCircleOutlined
           onClick={() => setPage((p) => (p < totalPages ? p + 1 : totalPages))}
         />

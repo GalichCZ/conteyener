@@ -81,50 +81,21 @@ export const TableHidden = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          justifyContent: "center",
-        }}
-      >
-        <div className="table-page_table">
-          <table className="table-page_fixed-table">
-            <TableColNamesFixed
-              userRole={authCtx.role}
-              data={copyItems}
-              setItems={setItems}
-            />
-            <TableUiFixed
-              setHeights1={setHeights1}
-              items={items}
-              timeConvert={timeConvert}
-              useColorTextHook={useColorText}
-              userRole={authCtx.role}
-            />
-          </table>
-          <div className="table-page_unfixed-table">
-            <table>
-              <TableColNames
-                userRole={authCtx.role}
-                setItems={setItems}
-                data={copyItems}
-              />
-              <TableUI
-                userRole={authCtx.role}
-                useColorTextHook={useColorText}
-                setHeights2={setHeights2}
-                items={items}
-                checkTimeStyle={checkTimeStyle}
-                timeConvert={timeConvert}
-                docsCount={docsCount}
-                hideItem={hideItemHandler}
-                hidden={true}
-              />
-            </table>
-          </div>
-        </div>
+      <div className="table-page_table">
+        <table>
+          <TableColNames userRole={authCtx.role} data={copyItems} />
+          <TableUI
+            userRole={authCtx.role}
+            useColorTextHook={useColorText}
+            setHeights2={setHeights2}
+            items={items}
+            checkTimeStyle={checkTimeStyle}
+            timeConvert={timeConvert}
+            docsCount={docsCount}
+            hideItem={hideItemHandler}
+            hidden={true}
+          />
+        </table>
       </div>
     </>
   );

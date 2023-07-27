@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooksRedux";
-import { IsDocsType, TableProps, UserData } from "../../../Types/Types";
+import { IItem, IsDocsType, TableProps, UserData } from "../../../Types/Types";
 import { Tooltip } from "antd";
 import { useCutString } from "../../../hooks/useCutString";
 import { checkRole } from "@/utils/checkRole";
@@ -46,6 +46,7 @@ interface ITableUi {
   hidden?: boolean;
   useColorTextHook: (value: string | undefined, searchValue: string) => object;
   userRole?: string;
+  tableUpdateHandler?: (dispatch: any, item: IItem) => void;
 }
 
 const TableUI: React.FC<ITableUi> = ({
@@ -65,6 +66,7 @@ const TableUI: React.FC<ITableUi> = ({
   hideItem,
   hidden,
   setHeights2,
+  tableUpdateHandler,
   useColorTextHook,
   userRole,
 }) => {
@@ -117,6 +119,90 @@ const TableUI: React.FC<ITableUi> = ({
               ref={(el) => (myRefs.current[key] = el)}
               key={key}
             >
+              {checkRole(userRole, "request_date") && (
+                <td
+                  style={{
+                    cursor: "pointer",
+                    ...useColorTextHook(item.request_date, searchValue),
+                  }}
+                  onClick={() =>
+                    userRole === "manager_int" &&
+                    tableUpdateHandler &&
+                    tableUpdateHandler(dispatch, item)
+                  }
+                >
+                  {timeConvert(item.request_date)}
+                </td>
+              )}
+              <td>
+                <div className="arr-info">
+                  {item.inside_number.map((num, key) => {
+                    return (
+                      <p
+                        style={{
+                          ...useColorTextHook(num, searchValue),
+                        }}
+                        key={key}
+                      >
+                        {num}
+                      </p>
+                    );
+                  })}
+                </div>
+              </td>
+              <td>
+                <div className="arr-info">
+                  {item.proform_number.map((num, key) => {
+                    return (
+                      <p
+                        style={{
+                          ...useColorTextHook(num, searchValue),
+                        }}
+                        key={key}
+                      >
+                        {cutString(num, 12)}
+                      </p>
+                    );
+                  })}
+                </div>
+              </td>
+              <td>
+                <div className="arr-info">
+                  {item.order_number.map((num, key) => {
+                    return (
+                      <Tooltip
+                        destroyTooltipOnHide={true}
+                        key={key}
+                        title={num}
+                      >
+                        <p
+                          style={{
+                            ...useColorTextHook(num, searchValue),
+                          }}
+                          key={key}
+                        >
+                          {cutString(num, 10)}
+                        </p>
+                      </Tooltip>
+                    );
+                  })}
+                </div>
+              </td>
+              <td
+                style={{
+                  ...useColorTextHook(
+                    item.container_number
+                      ? item.container_number
+                      : item.container?.container_number,
+                    searchValue
+                  ),
+                }}
+              >
+                {" "}
+                {item.container_number
+                  ? item.container_number
+                  : item.container?.container_number}{" "}
+              </td>
               {checkRole(userRole, "simple_product_name") && (
                 <td>
                   <div className="arr-info arr-info_product">

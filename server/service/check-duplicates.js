@@ -17,7 +17,9 @@ class CheckDuplicates {
       else return;
     });
     const items = unfilteredItems.filter((value) => {
-      value !== undefined && value["inside_number"] !== "-";
+      value !== undefined &&
+        value["inside_number"] !== "-" &&
+        value["proform_number"] !== "-";
     });
     if (items.length === 0) return { isDuplicate: false };
     else {

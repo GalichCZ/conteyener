@@ -741,7 +741,8 @@ class ItemService {
             checkDate(item["Дата прибытия по ЖД"]) !== null ? true : false,
           store_arrive_date_update:
             checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
-          hidden: false,
+          hidden:
+            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
         });
         const docs = await doc.save();
         return docs;

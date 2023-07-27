@@ -6,10 +6,6 @@
   flex-direction: column;
   padding: 90px 20px 0 20px;
 }
-.table-page table {
-  color: black;
-  background-color: white;
-}
 .table-row:nth-child(even) {
   background: rgba(163, 163, 163, 0.171);
 }
@@ -24,14 +20,19 @@
 }
 .table-page_table {
   display: flex;
-  width: fit-content;
-  overflow-x: hidden;
+  width: 100%;
+  overflow: auto;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
   max-height: 80vh;
 }
-.table-page table tr {
-  border: 1px solid black;
-  min-height: 50px !important;
+.table-page_table table {
+  position: relative;
+}
+.table-page_table table thead {
+  position: sticky;
+  height: 65px;
+  top: 0;
+  background-color: rgb(197, 195, 195);
 }
 .arr-info p {
   line-height: normal;
@@ -45,11 +46,11 @@
 }
 .table-page table td {
   border: 1px solid black;
-  min-width: 120px;
+  min-width: 140px;
   text-align: center;
   font-weight: 500;
+  height: 50px;
   font-size: 15px;
-  min-height: 50px !important;
 }
 .table-page_unfixed-table {
   overflow-x: overlay;
@@ -193,4 +194,8 @@
 }
 .page-counter input {
   width: 50px;
+}
+.tooltip {
+  background: none !important;
+  color: black !important;
 }

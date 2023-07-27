@@ -6,7 +6,8 @@ export function checkDuplicate(singleItem: IItem, key: string) {
   singleItem[key].forEach((order: string, index: number) => {
     if (
       singleItem[key].indexOf(order, index + 1) !== -1 &&
-      duplicates.indexOf(order) === -1
+      duplicates.indexOf(order) === -1 &&
+      order !== "-"
     ) {
       duplicates.push(order);
     }

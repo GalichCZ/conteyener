@@ -9,9 +9,8 @@ class FileService {
 
   async createFile(file) {
     try {
-      const items = await ItemSchema.find().exec();
+      const items = await ItemSchema.find({ hidden: false }).exec();
       const jsonDataFetch = items.map(async (item) => {
-        console.log(item.container_type);
         return {
           "Дата заявки": item.request_date,
           "Внутренний номер": await this.arrayToString(item.inside_number),

@@ -6,9 +6,18 @@ class FileService {
     try {
       const workbook = XLSX.readFile(file, { cellDates: true });
       const worksheet = workbook.SheetNames.map((sheet) => {
+        if (workbook.Sheets[sheet]["!merges"]) {
+          workbook.Sheets[sheet]["!merges"].map((merge) => {
+            const value = XLSX.utils.encode_range(merge).split(":")[0];
+            for (let col = merge.s.c; col <= merge.e.c; col++)
+              for (let row = merge.s.r; row <= merge.e.r; row++)
+                workbook.Sheets[sheet][
+                  String.fromCharCode(65 + col) + (row + 1)
+                ] = workbook.Sheets[sheet][value];
+          });
+        }
         return XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
       });
-      // const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
       return worksheet;
     } catch (error) {

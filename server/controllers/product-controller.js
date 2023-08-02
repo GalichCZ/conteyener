@@ -3,7 +3,6 @@ const FileService = require("../service/file-service");
 
 class ProductController {
   async createProduct(req, res) {
-    console.log(req.file);
     const products = await FileService.createFile(req.file.path);
     const response = await ProductService.createProduct(
       products,

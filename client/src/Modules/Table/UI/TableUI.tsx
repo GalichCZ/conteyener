@@ -455,7 +455,12 @@ const TableUI: React.FC<ITableUi> = ({
               {checkRole(userRole, "is_ds") && (
                 <td> {item.is_ds ? "+" : "-"} </td>
               )}
-              <td> {item.fraht_account} </td>
+              <td
+                style={{ ...useColorTextHook(item.fraht_account, searchValue) }}
+              >
+                {" "}
+                {item.fraht_account}{" "}
+              </td>
               {checkRole(userRole, "is_docs") && (
                 <td>
                   <div>
@@ -634,7 +639,12 @@ const TableUI: React.FC<ITableUi> = ({
                     : timeConvert(item.train_arrive_date)}
                 </td>
               )}
-              {checkRole(userRole, "pickup") && <td> {item.pickup} </td>}
+              {checkRole(userRole, "pickup") && (
+                <td style={{ ...useColorTextHook(item.pickup, searchValue) }}>
+                  {" "}
+                  {item.pickup}{" "}
+                </td>
+              )}
               <td
                 onClick={() => {
                   userRole === "manager_int" &&

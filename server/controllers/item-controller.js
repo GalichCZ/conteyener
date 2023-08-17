@@ -75,16 +75,41 @@ class ItemController {
 
       const searchFilter = req.body.search_filter;
 
+      const regex = new RegExp(searchTerm, "i");
+      const query = { $regex: regex };
+
       const items =
         searchFilter === "other"
-          ? await ItemSchema.find(
-              isDate
-                ? {
-                    hidden: false,
-                    $text: { $search: req.body.query_string },
-                  }
-                : dateQuery
-            ).exec()
+          ? await ItemSchema.find({
+              $or: [
+                { inside_number: query },
+                { proform_number: query },
+                { order_number: query },
+                { simple_product_name: query },
+                { providers: query },
+                { importers: query },
+                { container_number: query },
+                { container_type: query },
+                { conditions: query },
+                { direction: query },
+                { store_name: query },
+                { agent: query },
+                { fraht: query },
+                { fraht_account: query },
+                { place_of_dispatch: query },
+                { delivery_method: query },
+                { line: query },
+                { port: query },
+                { declaration_number: query },
+                { expeditor: query },
+                { destination_station: query },
+                { pickup: query },
+                { stock_place_name: query },
+                { stock_place_name: query },
+              ],
+              hidden: false,
+              // $text: { $search: req.body.query_string },
+            }).exec()
           : [];
 
       if (items.length === 0) {
@@ -102,9 +127,6 @@ class ItemController {
             { manufacturer: query },
           ],
         }).exec();
-
-        console.log(searchTerm + "\n");
-        console.log(products);
 
         const itemIds = products.map((product) => {
           return product.item_id;

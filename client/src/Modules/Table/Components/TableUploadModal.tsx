@@ -11,6 +11,7 @@ import {
 import { deleteProduct, Product } from "../Functions/productFuncs";
 import AuthContext from "@/store/auth-context";
 import ReDrawContext from "@/store/redraw-context";
+import { formatNumber } from "@/utils/formatNumber";
 const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
@@ -125,11 +126,11 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
                 <td>{product.modification}</td>
                 <td>{product.quantity_pieces}</td>
                 <td>{product.quantity_places}</td>
-                <td>{product.piece_price}</td>
-                <td>{product.total_price}</td>
-                <td>{product.weight_net}</td>
-                <td>{product.weight_gross}</td>
-                <td>{product.cbm}</td>
+                <td>{formatNumber(product.piece_price, "en-US")}</td>
+                <td>{formatNumber(product.total_price, "en-US")}</td>
+                <td>{formatNumber(product.weight_net, "en-US")}</td>
+                <td>{formatNumber(product.weight_gross, "en-US")}</td>
+                <td>{formatNumber(product.cbm, "en-US")}</td>
                 <td>{product.manufacturer}</td>
                 {authCtx.role === "manager_int" && (
                   <td>

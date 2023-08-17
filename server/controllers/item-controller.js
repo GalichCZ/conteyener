@@ -71,48 +71,9 @@ class ItemController {
 
   async findItemsBySearch(req, res) {
     try {
-      const isDate = isNaN(
-        new Date(dayjs(req.body.query_string).format("DD/MM/YYYY")).getTime()
-      );
-
-      const searchDate = new Date(
-        dayjs(req.body.query_string).format("DD/MM/YYYY")
-      );
-
-      const startDate = new Date(
-        searchDate.getFullYear(),
-        searchDate.getMonth(),
-        searchDate.getDate()
-      );
-      const endDate = new Date(
-        searchDate.getFullYear(),
-        searchDate.getMonth(),
-        searchDate.getDate() + 1
-      );
-
-      const searchTerm = isDate
-        ? req.body.query_string
-        : new Date(dayjs(req.body.query_string).format("DD/MM/YYYY"));
+      const searchTerm = req.body.query_string;
 
       const searchFilter = req.body.search_filter;
-
-      const dateQuery = {
-        $or: [
-          { request_date: { $gte: startDate, $lt: endDate } },
-          { ready_date: { $gte: startDate, $lt: endDate } },
-          { etd: { $gte: startDate, $lt: endDate } },
-          { load_date: { $gte: startDate, $lt: endDate } },
-          { eta: { $gte: startDate, $lt: endDate } },
-          { release: { $gte: startDate, $lt: endDate } },
-          { date_do: { $gte: startDate, $lt: endDate } },
-          { declaration_issue_date: { $gte: startDate, $lt: endDate } },
-          { availability_of_ob: { $gte: startDate, $lt: endDate } },
-          { answer_of_ob: { $gte: startDate, $lt: endDate } },
-          { train_arrive_date: { $gte: startDate, $lt: endDate } },
-          { train_depart_date: { $gte: startDate, $lt: endDate } },
-          { store_arrive_date: { $gte: startDate, $lt: endDate } },
-        ],
-      };
 
       const items =
         searchFilter === "other"
@@ -141,6 +102,9 @@ class ItemController {
             { manufacturer: query },
           ],
         }).exec();
+
+        console.log(searchTerm + "\n");
+        console.log(products);
 
         const itemIds = products.map((product) => {
           return product.item_id;

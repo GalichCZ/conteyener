@@ -177,6 +177,17 @@ class ItemController {
     else res.status(400).json(result.error);
   }
 
+  async getKeyFilters(req, res) {
+    const key_name = req.query.key_name;
+    const isHidden = req.query.isHidden;
+    const { values, success, error } = await ItemService.getKeyFilters(
+      key_name,
+      isHidden
+    );
+    if (success) res.status(200).json({ values });
+    else res.status(400).json(error);
+  }
+
   async getItemsFilter(req, res) {
     const result = await ItemService.getItemsFilter(req.query);
 

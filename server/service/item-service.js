@@ -163,8 +163,39 @@ class ItemService {
     }
   }
 
+  /**
+   * create api request that returns all values of exact key
+   * get requesrt
+   * param?key_name=
+   * returns array of values
+   */
+
+  removeDuplicates(arr) {
+    return arr.filter((item, index) => arr.indexOf(item) === index);
+  }
+
+  async getKeyFilters(key_name, isHidden) {
+    try {
+      const declarationNumbers = await ItemSchema.find(
+        { hidden: isHidden },
+        key_name
+      );
+      const valuesArrays = declarationNumbers.map((num) => num[key_name]);
+      const values = Array.isArray(valuesArrays[0])
+        ? [].concat(...valuesArrays)
+        : valuesArrays;
+      return {
+        success: true,
+        values: this.removeDuplicates(values.filter((val) => val !== null)),
+      };
+    } catch (error) {
+      return { success: false, error };
+    }
+  }
+
   async getItemsFilter(query_keys) {
     try {
+      console.log("hi");
       let isAggregate = false;
       let query = { hidden: false };
       const isArrayPole = (key) =>

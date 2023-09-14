@@ -4,6 +4,7 @@ export type StockPlace = {
 };
 
 export type TableProps = {
+  empty?: "";
   _id: string;
   request_date: string;
   order_number: string[];

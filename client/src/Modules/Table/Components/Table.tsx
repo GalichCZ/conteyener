@@ -140,7 +140,7 @@ export const Table: React.FunctionComponent = () => {
 
       <div className="table-page_table">
         <table>
-          <TableColNames data={copyItems} userRole={userRole} />
+          <TableColNames userRole={userRole} />
           <TableUI
             setHeights2={setHeights2}
             items={items}

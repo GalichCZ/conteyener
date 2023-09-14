@@ -108,7 +108,6 @@ class ItemController {
                 { stock_place_name: query },
               ],
               hidden: false,
-              // $text: { $search: req.body.query_string },
             }).exec()
           : [];
 
@@ -169,6 +168,17 @@ class ItemController {
 
     if (result.success) res.status(200).json({ message: "success" });
     else res.status(400).json(result.error);
+  }
+
+  async getKeyFilters(req, res) {
+    const key_name = req.query.key_name;
+    const isHidden = req.query.isHidden;
+    const { values, success, error } = await ItemService.getKeyFilters(
+      key_name,
+      isHidden
+    );
+    if (success) res.status(200).json({ values });
+    else res.status(400).json(error);
   }
 
   async getItemsFilter(req, res) {

@@ -9,6 +9,7 @@ const router = new Router();
 router.get("/api/item/hidden", ItemController.getHiddenItems);
 router.get("/api/item/:page", ItemController.getItems);
 router.get("/api/filter", ItemController.getItemsFilter);
+router.get("/api/filter/key", ItemController.getKeyFilters);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 router.get("/api/item/hideall", ItemController.hideDelivered);
 //post

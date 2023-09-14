@@ -17,6 +17,8 @@ import { TableUiFixed } from "../../Table/UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import useColorText from "../../../hooks/useColorText";
 import AuthContext from "@/store/auth-context";
+import { useLocation } from "react-router-dom";
+import Search from "@/Modules/Search/Components/Search";
 
 const ItemFuncs = new Item();
 
@@ -25,7 +27,8 @@ export const TableHidden = () => {
   const [items, setItems] = useState<TableProps[]>();
   const [copyItems, setCopyItems] = useState<TableProps[]>();
   const dispatch = useAppDispatch();
-
+  const location = useLocation();
+  const isHidden = location.pathname.includes("hidden");
   const query = useAppSelector((state) => state.search.value);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
 
@@ -59,7 +62,7 @@ export const TableHidden = () => {
     const filtered =
       items &&
       copyItems &&
-      (await SearchHandler(searchFilter, query, copyItems));
+      (await SearchHandler(searchFilter, query, isHidden, copyItems));
     filtered && setItems(filtered);
   };
 
@@ -81,6 +84,9 @@ export const TableHidden = () => {
 
   return (
     <>
+      <div className="table-utils">
+        <Search />
+      </div>
       <div className="table-page_table">
         <table>
           <TableColNames userRole={authCtx.role} data={copyItems} />

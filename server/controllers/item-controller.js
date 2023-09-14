@@ -75,6 +75,8 @@ class ItemController {
 
       const searchFilter = req.body.search_filter;
 
+      const isHidden = req.body.isHidden;
+
       const regex = new RegExp(searchTerm, "i");
       const query = { $regex: regex };
 
@@ -107,7 +109,7 @@ class ItemController {
                 { stock_place_name: query },
                 { stock_place_name: query },
               ],
-              hidden: false,
+              hidden: isHidden,
               // $text: { $search: req.body.query_string },
             }).exec()
           : [];
@@ -139,10 +141,14 @@ class ItemController {
           return await ItemSchema.findById(id);
         });
         Promise.all(getItems).then((result) => {
-          return res.json(result.filter((res) => res !== null && !res.hidden));
+          return res.json(
+            result.filter((res) => res !== null && res.hidden === isHidden)
+          );
         });
       } else {
-        res.json(items.filter((item) => item !== null && !item.hidden));
+        res.json(
+          items.filter((item) => item !== null && item.hidden === isHidden)
+        );
       }
     } catch (error) {
       console.log(error);

@@ -146,33 +146,22 @@ export const dateChangeHandler = (
 export const SearchHandler = async (
   searchFilter: "other" | "products",
   searchReq: string,
+  isHidden: boolean,
   itemsCopy: Types.TableProps[]
 ) => {
   if (searchReq.length === 0) return itemsCopy;
   if (searchFilter == "other") {
-    const filtered = itemsCopy.filter((item) => {
+    let items = await findItemsBySearch(searchReq, "other", isHidden);
+    const filteredOut = items.filter((item: Types.TableProps) => {
       const itemValues = Object.values(item)
         .map((value) => (typeof value === "number" ? value.toString() : value))
         .join(" ")
         .toLowerCase();
       return itemValues.includes(searchReq.toLowerCase());
     });
-    if (filtered.length === 0) {
-      let items = await findItemsBySearch(searchReq, "other");
-      const filteredOut = items.filter((item: Types.TableProps) => {
-        const itemValues = Object.values(item)
-          .map((value) =>
-            typeof value === "number" ? value.toString() : value
-          )
-          .join(" ")
-          .toLowerCase();
-        return itemValues.includes(searchReq.toLowerCase());
-      });
-      return filteredOut;
-    }
-    return filtered;
+    return filteredOut;
   } else if (searchFilter == "products") {
-    let items = await findItemsBySearch(searchReq, "products");
+    let items = await findItemsBySearch(searchReq, "products", isHidden);
     return items;
   } else return;
 };

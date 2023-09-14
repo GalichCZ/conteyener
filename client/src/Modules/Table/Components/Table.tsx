@@ -39,6 +39,7 @@ export const Table: React.FunctionComponent = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(1);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
+  const isHidden = location.pathname.includes("hidden");
 
   const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
     []
@@ -98,7 +99,12 @@ export const Table: React.FunctionComponent = () => {
     const filtered =
       items &&
       copyItems &&
-      (await TableHandlers.SearchHandler(searchFilter, query, copyItems));
+      (await TableHandlers.SearchHandler(
+        searchFilter,
+        query,
+        isHidden,
+        copyItems
+      ));
     filtered && setItems(filtered);
   }, 200);
 

@@ -11,74 +11,44 @@ import {
 } from "../Functions/FilterFuncs";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { DateNames, DateNamesType } from "../utils/enums";
+import { useGetItemFilters } from "@/hooks/useGetItemFilters";
 
 interface IProps {
-  dataToFiltr: any[] | undefined;
   objectKey: string;
 }
 
-export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
+export const FilterList: React.FC<IProps> = ({ objectKey }) => {
   const navigate = useNavigate();
-  const [data, setData] = useState<any[] | undefined>();
-  const [fetched, setFetched] = useState<any[]>();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [keySearchValue, setKeySearchValue] = useState<string | null>(null);
+  const [keySearchValue, setKeySearchValue] = useState<string>("");
+  const isHidden = location.pathname.includes("hidden");
+  const { values, error, isLoading } = useGetItemFilters(objectKey, isHidden);
+  const [mapThrough, setMapThrough] = useState([]);
 
   const onCheckHandler = (e: CheckboxChangeEvent) => {
     onCheck(e, objectKey, searchParams, setSearchParams);
   };
 
-  const prepareData = () => {
-    if (dataToFiltr && (fetched?.length === 0 || fetched === undefined)) {
-      if (Array.isArray(dataToFiltr[0])) {
-        const concatenatedArray = [].concat(...dataToFiltr);
-        const unique = [...new Set(concatenatedArray)];
-        if (keySearchValue !== "" && keySearchValue !== null) {
-          return setData(
-            unique.filter((string: string) => string.includes(keySearchValue))
-          );
-        }
-        setData(unique);
-      } else {
-        const unique = dataToFiltr.filter((element, index) => {
-          return dataToFiltr.indexOf(element) === index && element;
-        });
-        if (keySearchValue !== "" && keySearchValue !== null) {
-          return setData(
-            unique.filter((string: string) => string.includes(keySearchValue))
-          );
-        }
-        setData(unique);
-      }
-    } else {
-      if (keySearchValue !== "" && keySearchValue !== null) {
-        return setData(
-          fetched?.filter((string: string) => string.includes(keySearchValue))
-        );
-      }
-      setData(fetched);
-    }
-  };
-
   useEffect(() => {
-    prepareData();
-  }, [dataToFiltr]);
-
-  useEffect(() => {
-    prepareData();
-    if (keySearchValue !== null) {
-      onType(keySearchValue, data, setFetched, prepareData, objectKey);
+    if (keySearchValue) {
+      console.log(keySearchValue);
+      setMapThrough(
+        values.filter((val: string) =>
+          val.toLowerCase().includes(keySearchValue.toLowerCase())
+        )
+      );
     } else {
-      prepareData();
+      setMapThrough(values);
     }
-  }, [keySearchValue]);
+  }, [keySearchValue, setMapThrough, values]);
 
   return (
     <div className="filter-list">
       <b>Фильтрация</b>
       <MyInput
         label=""
-        value={keySearchValue !== null ? keySearchValue : ""}
+        value={keySearchValue}
         onChange={(e) => setKeySearchValue(e.target.value)}
       />
       <div className="filters">
@@ -96,7 +66,7 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
         >
           Не пустая
         </Checkbox>
-        {[...new Set(data)]?.map((el, key) => {
+        {mapThrough.map((el, key) => {
           return (
             <Checkbox
               key={key}
@@ -104,7 +74,6 @@ export const FilterList: React.FC<IProps> = ({ dataToFiltr, objectKey }) => {
               value={el}
               onChange={onCheckHandler}
             >
-              {}
               {DateNames[objectKey as DateNamesType] !== undefined
                 ? timeConvert(el)
                 : el}

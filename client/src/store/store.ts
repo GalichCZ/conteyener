@@ -15,6 +15,7 @@ import updateChannelReducer from "./slices/updateChannelSlice";
 import tableStockReducer from "./slices/tableStockSlice";
 import heightHandlerReducer from "./slices/heightHandlerSlice";
 import tableItemCreateSlice from "./slices/tableItemCreateSlice";
+import { itemFiltersApi } from "./api/itemFiltersApi";
 
 export const store = configureStore({
   reducer: {
@@ -34,7 +35,10 @@ export const store = configureStore({
     tableStock: tableStockReducer,
     heightHandler: heightHandlerReducer,
     tableItemCreate: tableItemCreateSlice,
+    [itemFiltersApi.reducerPath]: itemFiltersApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(itemFiltersApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

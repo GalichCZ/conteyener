@@ -83,7 +83,7 @@ export const TableHidden = () => {
     <>
       <div className="table-page_table">
         <table>
-          <TableColNames userRole={authCtx.role} data={copyItems} />
+          <TableColNames userRole={authCtx.role} />
           <TableUI
             userRole={authCtx.role}
             useColorTextHook={useColorText}

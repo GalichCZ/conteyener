@@ -1,5 +1,5 @@
 import { FilterFilled } from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { TableProps } from "@/Types/Types";
 import { FilterList } from "../Components/FilterList";
 import { checkRole } from "@/utils/checkRole";
@@ -8,36 +8,33 @@ import { Tooltip } from "react-tooltip";
 import { createPortal } from "react-dom";
 
 interface ITableColProps {
-  data: TableProps[] | undefined;
   userRole?: string;
 }
 interface IPopupData {
-  dataToFiltr: any[] | undefined;
   key: string;
 }
 
-export const TableColNames: React.FC<ITableColProps> = ({ data, userRole }) => {
+export const TableColNames: React.FC<ITableColProps> = ({ userRole }) => {
   const [popupData, setPopupData] = useState<IPopupData | null>(null);
-
-  function getRequestDates<T>(arr: T[], key: keyof T): Array<T[keyof T]> {
-    return arr?.map((obj) => obj[key]);
-  }
 
   function handleTdClick<T extends Record<string, any>>(
     key: keyof T & keyof TableProps
   ) {
     if (popupData === null) {
-      const dataToFiltr = data && getRequestDates<TableProps>(data, key);
-
       const keyProp = key.toString();
 
-      setPopupData({ dataToFiltr, key: keyProp });
+      setPopupData({ key: keyProp });
     } else setPopupData(null);
   }
 
   const [tooltipId, setTooltipId] = useState("");
   const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
 
+  function dropTooltip() {
+    setTooltipId("");
+    setTooltipIsOpen(false);
+    handleTdClick<TableProps>("empty");
+  }
   return (
     <>
       <thead>
@@ -129,21 +126,21 @@ export const TableColNames: React.FC<ITableColProps> = ({ data, userRole }) => {
         </tr>
       </thead>
 
-      {popupData && (
-        <Tooltip
-          className="tooltip"
-          opacity="1"
-          clickable
-          id={tooltipId}
-          isOpen={tooltipIsOpen}
-          style={{ zIndex: 10 }}
-        >
-          <FilterList
-            dataToFiltr={popupData.dataToFiltr}
-            objectKey={popupData.key}
-          />
-        </Tooltip>
-      )}
+      {popupData &&
+        createPortal(
+          <Tooltip
+            className="tooltip"
+            opacity="1"
+            clickable
+            id={tooltipId}
+            isOpen={tooltipIsOpen}
+            style={{ zIndex: 10 }}
+            closeOnEsc
+          >
+            <FilterList objectKey={popupData.key} />
+          </Tooltip>,
+          document.body
+        )}
     </>
   );
 };

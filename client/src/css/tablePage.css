@@ -21,10 +21,24 @@
 .table-page_table {
   display: flex;
   width: 100%;
-  overflow: auto;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
-  max-height: 80vh;
 }
+.test {
+  display: flex;
+  overflow: auto;
+  width: 100%;
+}
+.test_table {
+}
+.test_table table {
+  position: relative;
+}
+.test_table table thead {
+  position: sticky;
+  height: 65px;
+  top: 0;
+  background-color: rgb(197, 195, 195);
+}
+
 .table-page_table table {
   position: relative;
 }
@@ -70,7 +84,6 @@
   padding: 0 !important;
 }
 .table-form div {
-  /* min-width: 200px; */
   max-width: 250px;
 }
 .required-form {

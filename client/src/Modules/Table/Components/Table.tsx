@@ -19,6 +19,7 @@ import Search from "../../Search/Components/Search";
 import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
 import AuthContext from "@/store/auth-context";
 import useDebounce from "@/hooks/useDebounce";
+import TableFixedColNames from "../UI/TableFixedColNames";
 
 const ItemFuncs = new Item();
 const UsersHandler = new UsersHandlerClass();
@@ -33,7 +34,6 @@ export const Table: React.FunctionComponent = () => {
   const [items, setItems] = useState<Types.TableProps[]>();
   const [copyItems, setCopyItems] = useState<Types.TableProps[]>();
   const [downloading, setDownloading] = useState<boolean>(false);
-  const [widths] = useState<number[]>([]);
   const [tableHeight, setTableHeight] = useState<number>();
   const tableRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState<number>(1);
@@ -138,29 +138,44 @@ export const Table: React.FunctionComponent = () => {
       </div>
       <TableHints />
 
-      <div className="table-page_table">
-        <table>
-          <TableColNames data={copyItems} userRole={userRole} />
-          <TableUI
-            setHeights2={setHeights2}
-            items={items}
-            timeConvert={TableHandlers.timeConvert}
-            docsCount={TableHandlers.docsCount}
-            uploadHandler={TableHandlers.uploadHandler}
-            tableStoreHandler={TableHandlers.tableStoreHandler}
-            dateChangeHandler={TableHandlers.dateChangeHandler}
-            tableDocsHandler={TableHandlers.tableDocsHandler}
-            declStatusHandler={TableHandlers.declStatusHandler}
-            tableCommentHandler={TableHandlers.tableCommentHandler}
-            checkTimeStyle={TableHandlers.checkTimeStyle}
-            tableUpdateHandler={TableHandlers.tableUpdateHandler}
-            tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
-            tableDistanceHandler={TableHandlers.distanceHandler}
-            tableStockHandler={TableHandlers.tableStockInfoHandler}
-            useColorTextHook={useColorText}
-            userRole={userRole}
-          />
-        </table>
+      <div className="test">
+        <div className="test_table">
+          <table>
+            <TableFixedColNames data={copyItems} userRole={userRole} />
+            <TableUiFixed
+              setHeights1={setHeights1}
+              items={items}
+              timeConvert={TableHandlers.timeConvert}
+              tableUpdateHandler={TableHandlers.tableUpdateHandler}
+              useColorTextHook={useColorText}
+              userRole={userRole}
+            />
+          </table>
+        </div>
+        <div className="table-page_table">
+          <table>
+            <TableColNames data={copyItems} userRole={userRole} />
+            <TableUI
+              setHeights2={setHeights2}
+              items={items}
+              timeConvert={TableHandlers.timeConvert}
+              docsCount={TableHandlers.docsCount}
+              uploadHandler={TableHandlers.uploadHandler}
+              tableStoreHandler={TableHandlers.tableStoreHandler}
+              dateChangeHandler={TableHandlers.dateChangeHandler}
+              tableDocsHandler={TableHandlers.tableDocsHandler}
+              declStatusHandler={TableHandlers.declStatusHandler}
+              tableCommentHandler={TableHandlers.tableCommentHandler}
+              checkTimeStyle={TableHandlers.checkTimeStyle}
+              tableUpdateHandler={TableHandlers.tableUpdateHandler}
+              tableCalcDateHandler={TableHandlers.tableCalcDateHandler}
+              tableDistanceHandler={TableHandlers.distanceHandler}
+              tableStockHandler={TableHandlers.tableStockInfoHandler}
+              useColorTextHook={useColorText}
+              userRole={userRole}
+            />
+          </table>
+        </div>
       </div>
 
       <div className="page-counter">

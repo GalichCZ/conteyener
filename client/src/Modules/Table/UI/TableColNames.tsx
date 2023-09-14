@@ -1,11 +1,10 @@
 import { FilterFilled } from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { TableProps } from "@/Types/Types";
 import { FilterList } from "../Components/FilterList";
 import { checkRole } from "@/utils/checkRole";
 import { colNames } from "./colNames";
 import { Tooltip } from "react-tooltip";
-import { createPortal } from "react-dom";
 
 interface ITableColProps {
   data: TableProps[] | undefined;
@@ -42,68 +41,6 @@ export const TableColNames: React.FC<ITableColProps> = ({ data, userRole }) => {
     <>
       <thead>
         <tr>
-          {checkRole(userRole, "request_date") && (
-            <td>
-              Дата заявки
-              <FilterFilled
-                data-tooltip-id="request_date"
-                data-tooltip-place="top"
-                onClick={() => {
-                  setTooltipId("request_date");
-                  setTooltipIsOpen(!tooltipIsOpen);
-                  handleTdClick<TableProps>("request_date");
-                }}
-              />
-            </td>
-          )}
-          <td>
-            Внутренний <br /> номер
-            <FilterFilled
-              data-tooltip-id="inside_number"
-              data-tooltip-place="top"
-              onClick={() => {
-                setTooltipId("inside_number");
-                setTooltipIsOpen(!tooltipIsOpen);
-                handleTdClick<TableProps>("inside_number");
-              }}
-            />
-          </td>
-          <td>
-            Номер <br /> проформы
-            <FilterFilled
-              data-tooltip-id="proform_number"
-              data-tooltip-place="top"
-              onClick={() => {
-                setTooltipId("proform_number");
-                setTooltipIsOpen(!tooltipIsOpen);
-                handleTdClick<TableProps>("proform_number");
-              }}
-            />
-          </td>
-          <td>
-            Номер заказа
-            <FilterFilled
-              data-tooltip-id="order_number"
-              data-tooltip-place="top"
-              onClick={() => {
-                setTooltipId("order_number");
-                setTooltipIsOpen(!tooltipIsOpen);
-                handleTdClick<TableProps>("order_number");
-              }}
-            />
-          </td>
-          <td>
-            Номер <br /> контейнера
-            <FilterFilled
-              data-tooltip-id="container_number"
-              data-tooltip-place="top"
-              onClick={() => {
-                setTooltipId("container_number");
-                setTooltipIsOpen(!tooltipIsOpen);
-                handleTdClick<TableProps>("container_number");
-              }}
-            />
-          </td>
           {colNames.map((name, key) => {
             return (
               checkRole(userRole, name.key) && (

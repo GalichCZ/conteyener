@@ -3,7 +3,7 @@ import { TableColNames } from "../../../components";
 import { useAppSelector, useAppDispatch } from "../../../hooks/hooksRedux";
 import ReDrawContext from "../../../store/redraw-context";
 import { TableProps } from "../../../Types/Types";
-import { Item } from "../../Table/Functions/itemFuncs";
+import { Item, getItemsFilter } from "../../Table/Functions/itemFuncs";
 import {
   checkTimeStyle,
   docsCount,
@@ -19,6 +19,8 @@ import useColorText from "../../../hooks/useColorText";
 import AuthContext from "@/store/auth-context";
 import { useLocation } from "react-router-dom";
 import Search from "@/Modules/Search/Components/Search";
+import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
+import useDebounce from "@/hooks/useDebounce";
 
 const ItemFuncs = new Item();
 
@@ -31,10 +33,14 @@ export const TableHidden = () => {
   const isHidden = location.pathname.includes("hidden");
   const query = useAppSelector((state) => state.search.value);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const getItems = async () => {
-    const data = await ItemFuncs.getHiddenItems();
+  const getItems = async (pagination?: boolean) => {
+    const data = await ItemFuncs.getItems(page);
+    if (pagination && items) setItems(data.items);
     setItems(data.items);
+    setTotalPages(data.totalPages);
     setCopyItems(data.items);
   };
 
@@ -58,13 +64,25 @@ export const TableHidden = () => {
     );
   }, [heights1, heights2]);
 
-  const search = async () => {
+  const getFilteredItems = async () => {
+    const data = await getItemsFilter(location.search, isHidden);
+    setItems(data.items);
+    setCopyItems(data.items);
+  };
+
+  useEffect(() => {
+    if (location.search.length === 0)
+      getItems().catch((err) => console.log(err));
+    else getFilteredItems();
+  }, [reDraw.reDraw, location.search]);
+
+  const search = useDebounce(async () => {
     const filtered =
       items &&
       copyItems &&
       (await SearchHandler(searchFilter, query, isHidden, copyItems));
     filtered && setItems(filtered);
-  };
+  }, 200);
 
   const hideItemHandler = async (_id: string, hidden: boolean) => {
     reDraw.reDrawHandler(true);
@@ -73,8 +91,8 @@ export const TableHidden = () => {
   };
 
   useEffect(() => {
-    getItems().catch((err) => console.log(err));
-  }, [reDraw.reDraw]);
+    getItems(true);
+  }, [page]);
 
   useEffect(() => {
     search();
@@ -102,6 +120,16 @@ export const TableHidden = () => {
             hidden={true}
           />
         </table>
+      </div>
+
+      <div className="page-counter">
+        <LeftCircleOutlined
+          onClick={() => setPage((p) => (p > 1 ? p - 1 : 1))}
+        />
+        {page}/{totalPages}{" "}
+        <RightCircleOutlined
+          onClick={() => setPage((p) => (p < totalPages ? p + 1 : totalPages))}
+        />
       </div>
     </>
   );

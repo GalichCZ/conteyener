@@ -6,10 +6,10 @@ const FileWare = require("../utils/file-ware");
 const router = new Router();
 
 //get
-router.get("/api/item/hidden", ItemController.getHiddenItems);
+router.get("/api/item/hidden/:page", ItemController.getHiddenItems);
 router.get("/api/item/:page", ItemController.getItems);
-router.get("/api/filter", ItemController.getItemsFilter);
 router.get("/api/filter/key", ItemController.getKeyFilters);
+router.get("/api/filter/:isHidden", ItemController.getItemsFilter);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 router.get("/api/item/hideall", ItemController.hideDelivered);
 //post

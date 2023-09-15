@@ -21,10 +21,10 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    const result = await ItemService.getItems(req.params.page);
+    const { items, totalPages } = await ItemService.getItems(req.params.page);
     res.json({
-      items: result.items,
-      totalPages: result.totalPages,
+      items,
+      totalPages,
     });
   }
 
@@ -36,9 +36,11 @@ class ItemController {
   }
 
   async getHiddenItems(req, res) {
-    const items = await ItemService.getHiddenItems();
+    const { items, totalPages } = await ItemService.getHiddenItems(
+      req.params.page
+    );
 
-    res.json({ items });
+    res.json({ items, totalPages });
   }
 
   async hideItem(req, res) {
@@ -179,7 +181,7 @@ class ItemController {
 
   async getKeyFilters(req, res) {
     const key_name = req.query.key_name;
-    const isHidden = req.query.isHidden;
+    const isHidden = req.query.isHidden === "true";
     const { values, success, error } = await ItemService.getKeyFilters(
       key_name,
       isHidden
@@ -189,7 +191,8 @@ class ItemController {
   }
 
   async getItemsFilter(req, res) {
-    const result = await ItemService.getItemsFilter(req.query);
+    const isHidden = req.params.isHidden === "true";
+    const result = await ItemService.getItemsFilter(req.query, isHidden);
 
     if (result.success) res.status(200).json({ items: result.items });
     else res.status(400).json(result.error);

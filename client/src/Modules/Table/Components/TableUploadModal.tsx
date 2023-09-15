@@ -12,6 +12,7 @@ import { deleteProduct, Product } from "../Functions/productFuncs";
 import AuthContext from "@/store/auth-context";
 import ReDrawContext from "@/store/redraw-context";
 import { formatNumber } from "@/utils/formatNumber";
+import { useIsHidden } from "@/hooks/useIsHidden";
 const URL = import.meta.env.VITE_API_URL;
 
 interface TableUploadProps {
@@ -27,6 +28,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
   const item_id = useAppSelector((state) => state.tableUpload.item_id);
   const open = useAppSelector((state) => state.tableUpload.open);
   const products_id = useAppSelector((state) => state.tableUpload.products_id);
+  const isHidden = useIsHidden();
   const redrawCtx = useContext(ReDrawContext);
   const simple_product_name = useAppSelector(
     (state) => state.tableUpload.simple_product_name
@@ -84,6 +86,8 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
     if (open) productHandler();
   }, [open]);
 
+  const isHiddenAndRole = authCtx.role === "manager_int" && !isHidden;
+
   return (
     <Modal
       className="declaration-modal"
@@ -110,7 +114,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
             <td>Вес брутто</td>
             <td>Объем</td>
             <td>Производитель</td>
-            {authCtx.role === "manager_int" && <td></td>}
+            {isHiddenAndRole && <td></td>}
           </tr>
         </thead>
         <tbody>
@@ -132,7 +136,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
                 <td>{formatNumber(product.weight_gross, "en-US")}</td>
                 <td>{formatNumber(product.cbm, "en-US")}</td>
                 <td>{product.manufacturer}</td>
-                {authCtx.role === "manager_int" && (
+                {isHiddenAndRole && (
                   <td>
                     <>
                       <CloseOutlined
@@ -152,7 +156,7 @@ export const TableUploadModal: React.FC<TableUploadProps> = ({}) => {
         </tbody>
       </table>
 
-      {authCtx.role === "manager_int" && (
+      {isHiddenAndRole && (
         <Upload {...props}>
           <Button icon={<UploadOutlined />}>Загрузить продукты</Button>
         </Upload>

@@ -9,11 +9,10 @@ import {
   docsCount,
   SearchHandler,
   timeConvert,
+  uploadHandler,
 } from "../../Table/Functions/TableHandlers";
 import TableUI from "../../Table/UI/TableUI";
 import { hideItem } from "../../Table/Functions/itemFuncs";
-import { TableColNamesFixed } from "../../Table/UI/TableColNamesFixed";
-import { TableUiFixed } from "../../Table/UI/TableUiFixed";
 import { setHeights } from "../../../store/slices/heightHandlerSlice";
 import useColorText from "../../../hooks/useColorText";
 import AuthContext from "@/store/auth-context";
@@ -21,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import Search from "@/Modules/Search/Components/Search";
 import { LeftCircleOutlined, RightCircleOutlined } from "@ant-design/icons";
 import useDebounce from "@/hooks/useDebounce";
+import { useIsHidden } from "@/hooks/useIsHidden";
 
 const ItemFuncs = new Item();
 
@@ -30,14 +30,14 @@ export const TableHidden = () => {
   const [copyItems, setCopyItems] = useState<TableProps[]>();
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const isHidden = location.pathname.includes("hidden");
+  const isHidden = useIsHidden();
   const query = useAppSelector((state) => state.search.value);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const getItems = async (pagination?: boolean) => {
-    const data = await ItemFuncs.getItems(page);
+    const data = await ItemFuncs.getHiddenItems(page);
     if (pagination && items) setItems(data.items);
     setItems(data.items);
     setTotalPages(data.totalPages);
@@ -117,6 +117,7 @@ export const TableHidden = () => {
             timeConvert={timeConvert}
             docsCount={docsCount}
             hideItem={hideItemHandler}
+            uploadHandler={uploadHandler}
             hidden={true}
           />
         </table>

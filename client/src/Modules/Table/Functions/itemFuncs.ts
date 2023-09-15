@@ -152,7 +152,6 @@ export const findItemsBySearch = async (
   search_filter: "other" | "products",
   isHidden: boolean
 ) => {
-  console.log(isHidden);
   const response = await fetch(URL + "/item/search", {
     method: "POST",
     body: JSON.stringify({ query_string, search_filter, isHidden }),

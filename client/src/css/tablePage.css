@@ -9,6 +9,10 @@
 .table-row:nth-child(even) {
   background: rgba(163, 163, 163, 0.171);
 }
+.table-row:hover,
+.table-row td:hover {
+  background-color: rgba(0, 119, 255, 0.15);
+}
 .table-page table thead tr td {
   position: relative;
 }

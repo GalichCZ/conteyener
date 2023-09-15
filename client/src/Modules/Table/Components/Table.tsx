@@ -19,6 +19,7 @@ import Search from "../../Search/Components/Search";
 import { UsersHandlerClass } from "@/Modules/UsersHandle/Functions/UsersHandler";
 import AuthContext from "@/store/auth-context";
 import useDebounce from "@/hooks/useDebounce";
+import { useIsHidden } from "@/hooks/useIsHidden";
 
 const ItemFuncs = new Item();
 const UsersHandler = new UsersHandlerClass();
@@ -39,7 +40,7 @@ export const Table: React.FunctionComponent = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState(1);
   const searchFilter = useAppSelector((state) => state.search.searchFilter);
-  const isHidden = location.pathname.includes("hidden");
+  const isHidden = useIsHidden();
 
   const [heights1, setHeights1] = useState<Array<number | null | undefined>>(
     []

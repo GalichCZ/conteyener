@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button, Checkbox } from "antd";
 import { timeConvert } from "../Functions/TableHandlers";
 import { MyInput } from "../../../components";
@@ -12,6 +12,7 @@ import {
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { DateNames, DateNamesType } from "../utils/enums";
 import { useGetItemFilters } from "@/hooks/useGetItemFilters";
+import { useIsHidden } from "@/hooks/useIsHidden";
 
 interface IProps {
   objectKey: string;
@@ -19,10 +20,9 @@ interface IProps {
 
 export const FilterList: React.FC<IProps> = ({ objectKey }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [keySearchValue, setKeySearchValue] = useState<string>("");
-  const isHidden = location.pathname.includes("hidden");
+  const isHidden = useIsHidden();
   const { values, error, isLoading } = useGetItemFilters(objectKey, isHidden);
   const [mapThrough, setMapThrough] = useState([]);
 

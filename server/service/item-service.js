@@ -27,14 +27,6 @@ function successReturn(result) {
   return { success: true, result };
 }
 
-function findNewElements(oldArray, newArray) {
-  const oldArraySet = new Set(oldArray);
-
-  const newElements = newArray.filter((element) => !oldArraySet.has(element));
-
-  return newElements;
-}
-
 function filterDuplicates(array) {
   return array.filter((element, index) => {
     return dataToFiltr.indexOf(element) === index && element !== null;
@@ -501,15 +493,56 @@ class ItemService {
         return res;
       });
 
-      const newArray = req.body.is_docs;
-      const newOrderNumbers = findNewElements(
-        item.order_number,
-        req.body.order_number
+      const newDocs = req.body.is_docs;
+
+      const oldOrderNumbers = item.order_number;
+      const newOrderNumbers = req.body.order_number;
+
+      const mapNumbersToChange = new Map(); //old, new
+
+      //checking what number should be changed and for what
+      newOrderNumbers.forEach((number, index) => {
+        if (
+          number !== oldOrderNumbers[index] &&
+          oldOrderNumbers[index] !== undefined
+        )
+          mapNumbersToChange.set(oldOrderNumbers[index], number);
+      });
+
+      //array of docs that will be saved
+      const changedDocs = [];
+
+      //changing all docs as it needs
+      if (mapNumbersToChange.size > 0) {
+        newDocs.forEach((doc) => {
+          const newOrderNumber = mapNumbersToChange.get(doc.order_number);
+          if (newOrderNumber) {
+            changedDocs.push({ ...doc, order_number: newOrderNumber });
+          } else {
+            changedDocs.push(doc);
+          }
+        });
+      }
+
+      const mapOfOldOrderNums = new Map(); //orderNumber, orderNumber
+      oldOrderNumbers.forEach((num) => {
+        mapOfOldOrderNums.set(num, num);
+      });
+
+      const mapOfChangedOrderNums = new Map(); //changedOrderNum, changedOrderNum
+      mapNumbersToChange.forEach((num, key) => {
+        mapOfChangedOrderNums.set(num, num);
+      });
+
+      const orderNumbersToAdd = newOrderNumbers.filter(
+        (num) =>
+          num !== mapOfOldOrderNums.get(num) &&
+          num !== mapOfChangedOrderNums.get(num)
       );
 
-      if (newOrderNumbers.length > 0) {
-        newOrderNumbers.forEach((number) => {
-          newArray.push({
+      if (orderNumbersToAdd.length > 0) {
+        orderNumbersToAdd.forEach((number) => {
+          changedDocs.push({
             PI: false,
             CI: false,
             PL: false,
@@ -551,7 +584,7 @@ class ItemService {
           port: req.body.port,
           is_ds: req.body.is_ds,
           fraht_account: req.body.fraht_account,
-          is_docs: req.body.is_docs,
+          is_docs: changedDocs,
           declaration_number: req.body.declaration_number,
           availability_of_ob: req.body.availability_of_ob,
           answer_of_ob: req.body.answer_of_ob,

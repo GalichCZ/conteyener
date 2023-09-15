@@ -74,6 +74,8 @@ export const FilterList: React.FC<IProps> = ({ objectKey }) => {
               value={el}
               onChange={onCheckHandler}
             >
+              {el === true && "+"}
+              {el === false && "-"}
               {DateNames[objectKey as DateNamesType] !== undefined
                 ? timeConvert(el)
                 : el}

@@ -90,7 +90,7 @@ export const Table: React.FunctionComponent = () => {
   };
 
   const getFilteredItems = async () => {
-    const data = await getItemsFilter(location.search);
+    const data = await getItemsFilter(location.search, isHidden);
     setItems(data.items);
     setCopyItems(data.items);
   };

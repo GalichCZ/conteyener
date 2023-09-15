@@ -163,6 +163,34 @@ class ItemService {
     }
   }
 
+  async getHiddenItems(page) {
+    try {
+      const perPage = 100;
+
+      const itemCount = await ItemSchema.countDocuments({
+        hidden: true,
+      }).exec();
+
+      const totalPages = Math.ceil(itemCount / perPage);
+      const skipDocuments = (page - 1) * perPage;
+
+      const items = await ItemSchema.find({ hidden: true })
+        .skip(skipDocuments)
+        .limit(perPage)
+        .exec();
+
+      return { items, totalPages };
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nGET HIDDEN ITEMS ERROR:\n${error}`
+      );
+      console.log(error);
+      return error;
+    }
+  }
+
   /**
    * create api request that returns all values of exact key
    * get requesrt
@@ -193,11 +221,12 @@ class ItemService {
     }
   }
 
-  async getItemsFilter(query_keys) {
+  async getItemsFilter(query_keys, isHidden) {
     try {
       console.log("hi");
+      const valuesToMatch = [null, ""];
       let isAggregate = false;
-      let query = { hidden: false };
+      let query = { hidden: isHidden };
       const isArrayPole = (key) =>
         key === "declaration_number" ||
         key === "order_number" ||
@@ -223,7 +252,7 @@ class ItemService {
           ]);
         }
         if (query_keys[key] === "null") {
-          query[key] = { $eq: null };
+          query[key] = { $in: valuesToMatch };
         } else if (query_keys[key] === "not_null") {
           query[key] = { $ne: null };
         } else {
@@ -244,24 +273,6 @@ class ItemService {
       );
       console.log(error);
       return { success: false, error };
-    }
-  }
-
-  async getHiddenItems() {
-    try {
-      const items = await ItemSchema.find({
-        hidden: true,
-      }).exec();
-
-      return items;
-    } catch (error) {
-      SendBotMessage(
-        `${dayjs(new Date()).format(
-          "MMMM D, YYYY h:mm A"
-        )}\nGET HIDDEN ITEMS ERROR:\n${error}`
-      );
-      console.log(error);
-      return error;
     }
   }
 

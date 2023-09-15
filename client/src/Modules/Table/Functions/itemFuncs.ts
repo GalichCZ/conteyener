@@ -19,8 +19,8 @@ export class Item {
     return response;
   }
 
-  async getHiddenItems() {
-    const response = await fetch(URL + "/item/hidden")
+  async getHiddenItems(page: number) {
+    const response = await fetch(URL + `/item/hidden/${page}`)
       .then((res) => res.json())
       .then((data) => {
         return data;
@@ -173,8 +173,11 @@ export const findItemsBySearch = async (
   return response;
 };
 
-export const getItemsFilter = async (filter_query: string) => {
-  const response = await fetch(URL + `/filter${filter_query}`)
+export const getItemsFilter = async (
+  filter_query: string,
+  isHidden: boolean
+) => {
+  const response = await fetch(URL + `/filter/${isHidden}/${filter_query}`)
     .then((res) => res.json())
     .then((data) => {
       return data;

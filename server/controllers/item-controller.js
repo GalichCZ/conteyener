@@ -49,8 +49,26 @@ class ItemController {
     res.json(result);
   }
 
+  async updateFormulaDatesAfterUpload(req, res) {
+    const dataForChanges = req.body;
+    const { success, error } = await ItemService.updateFormulaDatesAfterUpload(
+      dataForChanges
+    );
+    if (success) res.sendStatus(200);
+    else res.status(500).json(error);
+  }
+
   async updateFormulaDates(req, res) {
-    const result = await ItemService.updateFormulaDates(req.body._id, req);
+    const newDate = req.body.newDate;
+    const deliveryChannel = req.body.delivery_channel;
+    const dateType = req.body.dateType;
+    const _id = req.body._id;
+    const result = await ItemService.updateFormulaDates(
+      _id,
+      dateType,
+      newDate,
+      deliveryChannel
+    );
 
     if (result) res.sendStatus(200);
     else res.status(500).json({ message: "server error" });
@@ -64,8 +82,6 @@ class ItemController {
 
   async updateItem(req, res) {
     const response = await ItemService.updateItem(req);
-
-    console.log(response);
 
     if (response.success) res.status(200).json({ success: response.success });
     else res.status(400).json({ error: response.error });
@@ -112,7 +128,6 @@ class ItemController {
                 { stock_place_name: query },
               ],
               hidden: isHidden,
-              // $text: { $search: req.body.query_string },
             }).exec()
           : [];
 
@@ -206,9 +221,14 @@ class ItemController {
   }
 
   async uploadExcel(req, res) {
-    const result = ItemService.uploadExcel(req.file.path);
+    const { lastDatesMap, success, error } = await ItemService.uploadExcel(
+      req.file.path
+    );
 
-    res.sendStatus(200);
+    //return item id and last added data
+
+    if (success) res.status(200).json(lastDatesMap);
+    else res.status(500).json(error);
   }
 
   async findByKeyValue(req, res) {
@@ -220,8 +240,6 @@ class ItemController {
 
   async uploadGlobal(req, res) {
     const result = await ItemService.uploadGlobal(req.file.path);
-
-    console.log(result);
 
     if (result.success) res.status(200).json(result.response);
     else res.status(400).json({ error: result.error });

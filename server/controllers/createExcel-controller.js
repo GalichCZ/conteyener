@@ -8,7 +8,6 @@ class FileController {
   }
 
   async downloadFile(req, res) {
-    console.log("download");
     const result = await excelService.downloadFile(req.params.fileName);
     if (result.success) res.download(result.filePath);
     else res.status(400).json(result.error);

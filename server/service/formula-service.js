@@ -142,14 +142,14 @@ class FormulaService {
     }
   }
 
-  async updateFormulaDates(req, item) {
+  async updateFormulaDates(newDate, dateType, item, deliveryChannel) {
     try {
-      const dateType = req.body.dateType;
+      console.log(deliveryChannel);
       const delivery_channel = await DeliveryChannelSchema.findById(
-        item.delivery_channel
+        deliveryChannel
       ).exec();
       if (dateType === 1) {
-        const eta = req.body.eta;
+        const eta = newDate;
         const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
         const declaration_issue_date = dayjs(date_do).add(
           delivery_channel.declaration_issue_date,
@@ -188,7 +188,7 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 2) {
-        const date_do = req.body.date_do;
+        const date_do = newDate;
         const declaration_issue_date = dayjs(date_do).add(
           delivery_channel.declaration_issue_date,
           "day"
@@ -226,7 +226,7 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 3) {
-        const declaration_issue_date = req.body.declaration_issue_date;
+        const declaration_issue_date = newDate;
         const train_depart_date = dayjs(declaration_issue_date).add(
           delivery_channel.train_depart_date,
           "day"
@@ -260,7 +260,7 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 4) {
-        const train_depart_date = req.body.train_depart_date;
+        const train_depart_date = newDate;
         const train_arrive_date = dayjs(train_depart_date).add(
           delivery_channel.train_arrive_date,
           "day"
@@ -290,7 +290,7 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 5) {
-        const train_arrive_date = req.body.train_arrive_date;
+        const train_arrive_date = newDate;
         const store_arrive_date = dayjs(train_arrive_date).add(
           delivery_channel.store_arrive_date,
           "day"
@@ -318,7 +318,7 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 6) {
-        const store_arrive_date = req.body.store_arrive_date;
+        const store_arrive_date = newDate;
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,
           date_do: delivery_channel.date_do === 0 ? null : item.date_do,

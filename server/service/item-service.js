@@ -12,6 +12,7 @@ const {
   splitStrings,
   castToNum,
 } = require("../utils/tableDataHandle");
+const { getDateNameByType } = require("../utils/getDateNameByType");
 
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
@@ -215,7 +216,6 @@ class ItemService {
 
   async getItemsFilter(query_keys, isHidden) {
     try {
-      console.log("hi");
       const valuesToMatch = [null, ""];
       let isAggregate = false;
       let query = { hidden: isHidden };
@@ -255,7 +255,6 @@ class ItemService {
         ? await ItemSchema.aggregate(query).exec()
         : await ItemSchema.find(query).exec();
 
-      console.log(items);
       return { success: true, items };
     } catch (error) {
       SendBotMessage(
@@ -283,14 +282,72 @@ class ItemService {
     }
   }
 
-  async updateFormulaDates(_id, req) {
+  async updateFormulaDatesAfterUpload(dataForChanges) {
+    try {
+      const result = dataForChanges.map(async (data) => {
+        const { _id, delivery_channel, newDate, dateType } = data;
+        const dateName = getDateNameByType(dateType);
+        const query = {};
+        query[dateName] = null;
+        const item = await ItemSchema.findById(_id).exec();
+        if (newDate === null) {
+          await ItemSchema.updateOne({ _id }, query);
+        } else {
+          const {
+            eta,
+            eta_update,
+            date_do,
+            date_do_update,
+            declaration_issue_date,
+            declaration_issue_date_update,
+            train_depart_date,
+            train_depart_date_update,
+            train_arrive_date,
+            train_arrive_date_update,
+            store_arrive_date,
+            store_arrive_date_update,
+          } = await FormulaService.updateFormulaDates(
+            newDate,
+            dateType,
+            item,
+            delivery_channel
+          );
+
+          await ItemSchema.updateOne(
+            { _id },
+            {
+              eta,
+              eta_update,
+              date_do,
+              date_do_update,
+              declaration_issue_date,
+              declaration_issue_date_update,
+              train_depart_date,
+              train_depart_date_update,
+              train_arrive_date,
+              train_arrive_date_update,
+              store_arrive_date,
+              store_arrive_date_update,
+            }
+          );
+        }
+      });
+
+      await Promise.all(result);
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    }
+  }
+
+  async updateFormulaDates(_id, dateType, newDate, deliveryChannel) {
     try {
       const item = await ItemSchema.findById(_id).exec();
-      const keys = Object.keys(req.body);
-      const queryKey = keys[keys.length - 1];
+      const dateName = getDateNameByType(dateType);
       const query = {};
-      query[queryKey] = null;
-      if (req.body[keys[keys.length - 1]] === null) {
+      query[dateName] = null;
+      if (newDate === null) {
         await ItemSchema.updateOne({ _id }, query);
       } else {
         const {
@@ -306,7 +363,12 @@ class ItemService {
           train_arrive_date_update,
           store_arrive_date,
           store_arrive_date_update,
-        } = await FormulaService.updateFormulaDates(req, item);
+        } = await FormulaService.updateFormulaDates(
+          newDate,
+          dateType,
+          item,
+          deliveryChannel
+        );
 
         await ItemSchema.updateOne(
           { _id },
@@ -358,7 +420,6 @@ class ItemService {
       } else {
         let delivery_channel = "";
         let etd = null;
-        console.log(req.body);
 
         if (req.body.etd) etd = req.body.etd;
         else if (item.etd) etd = item.etd;
@@ -415,8 +476,6 @@ class ItemService {
           `Повторяющийся № заказа: ${duplicatesOrder.duplicates}`
         );
       }
-
-      console.log(_id);
 
       const duplicateContainerNumber = await checkDuplicates(
         req.body.container_number,
@@ -661,6 +720,36 @@ class ItemService {
     }
   }
 
+  getLastChangedData(bid) {
+    let dateName = null;
+    let dateType = null;
+    if (checkDate(bid["ETD"])) {
+      dateName = "ETD";
+      dateType = 1;
+    }
+    if (checkDate(bid["ETA"])) {
+      dateName = "ETA";
+      dateType = 2;
+    }
+    if (checkDate(bid["Дата выпуска декларации"])) {
+      dateName = "Дата выпуска декларации";
+      dateType = 3;
+    }
+    if (checkDate(bid["Дата отправки по ЖД"])) {
+      dateName = "Дата отправки по ЖД";
+      dateType = 4;
+    }
+    if (checkDate(bid["Дата прибытия по ЖД"])) {
+      dateName = "Дата прибытия по ЖД";
+      dateType = 5;
+    }
+    if (checkDate(bid["Дата прибытия на склад"])) {
+      dateName = "Дата прибытия на склад";
+      dateType = 6;
+    }
+    return { dateType, dateName };
+  }
+
   async uploadExcel(file) {
     try {
       const json = await FileService.createFile(file);
@@ -672,9 +761,21 @@ class ItemService {
       const filteredContainers = containerNums.filter(
         (num) => num !== null && num !== undefined
       );
-      console.log(filteredContainers);
+
+      const lastDatesMap = []; //id, last changed date, delivery channel
 
       const itemsUpdate = filteredContainers.map(async (num, index) => {
+        const item = await ItemSchema.findOne({ container_number: num });
+        const { dateType, dateName } = this.getLastChangedData(json[0][index]);
+
+        const objectToAdd = {};
+        objectToAdd["_id"] = item._id;
+        objectToAdd["delivery_channel"] = item.delivery_channel;
+        objectToAdd["newDate"] = json[0][index][dateName];
+        objectToAdd["dateType"] = dateType;
+
+        lastDatesMap.push(objectToAdd);
+
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
           {
@@ -729,9 +830,11 @@ class ItemService {
                 : false,
           }
         );
-
-        Promise.all(itemsUpdate);
       });
+
+      await Promise.all(itemsUpdate);
+
+      return { success: true, lastDatesMap };
     } catch (error) {
       console.log(error);
       return { success: false, error };

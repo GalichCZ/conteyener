@@ -104,7 +104,6 @@ class StockPlaceService {
 
   async deleteStockPlace(_id) {
     try {
-      console.log(_id);
       await ItemSchema.updateMany(
         { stock_place: _id },
         { stock_place: null, stock_place_name: "" }

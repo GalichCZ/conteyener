@@ -1,7 +1,8 @@
+import { useUpdateDates } from "@/hooks/useUpdateDates";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 const URL = import.meta.env.VITE_API_URL;
 type Anchor = "top" | "left" | "bottom" | "right";
@@ -12,6 +13,10 @@ interface Props {
 }
 
 export const UploadFile: FC<Props> = ({ onClose, anchor }) => {
+  const [itemsToUpdate, setItemsToUpdate] = useState<[]>([]);
+
+  const { status, loading, error } = useUpdateDates(itemsToUpdate);
+
   const props: UploadProps = {
     name: "file",
     action: URL + "/item/upload",
@@ -20,9 +25,10 @@ export const UploadFile: FC<Props> = ({ onClose, anchor }) => {
     },
     onChange(info) {
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
       }
       if (info.file.status === "done") {
+        console.log(info.file.response);
+        setItemsToUpdate(info.file.response);
         message.success(`${info.file.name} file uploaded successfully`);
         onClose(anchor, false);
       } else if (info.file.status === "error") {

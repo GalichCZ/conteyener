@@ -14,6 +14,10 @@ router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);
 router.get("/api/item/hideall", ItemController.hideDelivered);
 //post
 router.post("/api/item/search", ItemController.findItemsBySearch);
+router.post(
+  "/api/item/updateDates",
+  ItemController.updateFormulaDatesAfterUpload
+);
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);
 router.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
 router.post("/api/item/global", FileWare, ItemController.uploadGlobal);

@@ -37,7 +37,6 @@ class ProductService {
           product: [...ids, ...beforeId.product],
         });
 
-        console.log(ids);
         return res;
       });
     } catch (error) {

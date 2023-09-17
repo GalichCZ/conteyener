@@ -194,19 +194,8 @@ export interface TechStoreData {
 }
 
 export interface FormulaDateUpdate {
-  eta?: Date | string | null;
-  date_do?: Date | string | null;
-  declaration_issue_date?: Date | string | null;
-  train_depart_date?: Date | string | null;
-  train_arrive_date?: Date | string | null;
-  store_arrive_date?: Date | string | null;
   _id: string;
-  eta_update?: boolean;
-  date_do_update?: boolean;
-  declaration_issue_date_update?: boolean;
-  train_depart_date_update?: boolean;
-  train_arrive_date_update?: boolean;
-  store_arrive_date_update?: boolean;
+  newDate: string | undefined | null;
   dateType: number;
   delivery_channel: string;
 }

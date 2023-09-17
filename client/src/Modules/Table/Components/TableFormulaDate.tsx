@@ -27,6 +27,7 @@ export const TableFormulaDate = () => {
     _id: "",
     dateType,
     delivery_channel,
+    newDate: "",
   });
 
   const handleOk = async () => {
@@ -36,6 +37,7 @@ export const TableFormulaDate = () => {
       _id: "",
       dateType: 0,
       delivery_channel: "",
+      newDate: "",
     });
   };
 
@@ -45,6 +47,7 @@ export const TableFormulaDate = () => {
       _id: "",
       dateType: 0,
       delivery_channel: "",
+      newDate: "",
     });
   };
 
@@ -61,10 +64,16 @@ export const TableFormulaDate = () => {
     if (open) {
       switch (dateType) {
         case 1:
-          setData({ ...data, _id, dateType, delivery_channel, eta: value });
+          setData({
+            ...data,
+            _id,
+            dateType,
+            delivery_channel,
+            newDate: value,
+          });
           break;
         case 2:
-          setData({ ...data, _id, dateType, delivery_channel, date_do: value });
+          setData({ ...data, _id, dateType, delivery_channel, newDate: value });
           break;
         case 3:
           setData({
@@ -72,7 +81,7 @@ export const TableFormulaDate = () => {
             _id,
             dateType,
             delivery_channel,
-            declaration_issue_date: value,
+            newDate: value,
           });
           break;
         case 4:
@@ -81,7 +90,7 @@ export const TableFormulaDate = () => {
             _id,
             dateType,
             delivery_channel,
-            train_depart_date: value,
+            newDate: value,
           });
           break;
         case 5:
@@ -90,7 +99,7 @@ export const TableFormulaDate = () => {
             _id,
             dateType,
             delivery_channel,
-            train_arrive_date: value,
+            newDate: value,
           });
           break;
         case 6:
@@ -99,7 +108,7 @@ export const TableFormulaDate = () => {
             _id,
             dateType,
             delivery_channel,
-            store_arrive_date: value,
+            newDate: value,
           });
           break;
         default:
@@ -122,16 +131,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                eta: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={data.eta === null ? null : moment(data.eta)}
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                eta: null,
+                newDate: null,
               })
             }
           />
@@ -144,16 +153,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                date_do: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={data.date_do === null ? null : moment(data.date_do)}
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                date_do: null,
+                newDate: null,
               })
             }
           />
@@ -166,20 +175,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                declaration_issue_date: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={
-              data.declaration_issue_date === null
-                ? null
-                : moment(data.declaration_issue_date)
-            }
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                declaration_issue_date: null,
+                newDate: null,
               })
             }
           />
@@ -192,20 +197,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                train_depart_date: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={
-              data.train_depart_date === null
-                ? null
-                : moment(data.train_depart_date)
-            }
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                train_depart_date: null,
+                newDate: null,
               })
             }
           />
@@ -218,20 +219,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                train_arrive_date: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={
-              data.train_arrive_date === null
-                ? null
-                : moment(data.train_arrive_date)
-            }
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                train_arrive_date: null,
+                newDate: null,
               })
             }
           />
@@ -244,20 +241,16 @@ export const TableFormulaDate = () => {
             onChange={(date, dateString) => {
               setData({
                 ...data,
-                store_arrive_date: date?.toISOString(),
+                newDate: date?.toISOString(),
               });
             }}
-            value={
-              data.store_arrive_date === null
-                ? null
-                : moment(data.store_arrive_date)
-            }
+            value={data.newDate === null ? null : moment(data.newDate)}
           />
           <CloseOutlined
             onClick={() =>
               setData({
                 ...data,
-                store_arrive_date: null,
+                newDate: null,
               })
             }
           />

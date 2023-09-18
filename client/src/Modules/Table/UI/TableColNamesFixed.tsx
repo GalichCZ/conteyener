@@ -106,10 +106,7 @@ export const TableColNamesFixed: React.FC<ITableColProps> = ({
       </thead>
       {popupData && (
         <div ref={popupRef} id="popup">
-          <FilterList
-            dataToFiltr={popupData.dataToFiltr}
-            objectKey={popupData.key}
-          />
+          <FilterList objectKey={popupData.key} />
         </div>
       )}
     </>

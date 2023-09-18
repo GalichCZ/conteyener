@@ -771,13 +771,6 @@ class ItemService {
 
         lastDatesMap.push(objectToAdd);
 
-        console.log(tableRow);
-        console.log(tableRow["Дата готовности"], "initial value");
-        console.log(
-          checkDate(tableRow["Дата готовности"]),
-          "value after function call"
-        );
-
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
           {

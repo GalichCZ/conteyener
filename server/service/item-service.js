@@ -28,12 +28,6 @@ function successReturn(result) {
   return { success: true, result };
 }
 
-function filterDuplicates(array) {
-  return array.filter((element, index) => {
-    return dataToFiltr.indexOf(element) === index && element !== null;
-  });
-}
-
 class ItemService {
   async createItem(req) {
     try {
@@ -765,13 +759,14 @@ class ItemService {
       const lastDatesMap = []; //id, last changed date, delivery channel
 
       const itemsUpdate = filteredContainers.map(async (num, index) => {
+        const tableRow = json[0][index];
         const item = await ItemSchema.findOne({ container_number: num });
-        const { dateType, dateName } = this.getLastChangedData(json[0][index]);
+        const { dateType, dateName } = this.getLastChangedData(tableRow);
 
         const objectToAdd = {};
         objectToAdd["_id"] = item._id;
         objectToAdd["delivery_channel"] = item.delivery_channel;
-        objectToAdd["newDate"] = json[0][index][dateName];
+        objectToAdd["newDate"] = tableRow[dateName];
         objectToAdd["dateType"] = dateType;
 
         lastDatesMap.push(objectToAdd);
@@ -779,53 +774,56 @@ class ItemService {
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
           {
-            delivery_method: json[0][index]["Способ доставки"],
-            direction: json[0][index]["Направление"],
-            store_name: json[0][index]["Склад"],
-            agent: json[0][index]["Агент"],
-            place_of_dispatch: json[0][index]["Место отправки"],
-            line: json[0][index]["Линия"], //
-            ready_date: checkDate(json[0][index]["Дата готовности"]),
-            load_date: checkDate(json[0][index]["Дата загрузки"]),
-            etd: checkDate(json[0][index]["ETD"]),
-            eta: checkDate(json[0][index]["ETA"]),
-            date_do: checkDate(json[0][index]["Дата ДО"]),
-            port: json[0][index]["Порт"],
-            declaration_number: splitStrings(
-              json[0][index]["Номер декларации"]
-            ),
+            delivery_method:
+              tableRow["Способ доставки"] === null
+                ? ""
+                : tableRow["Способ доставки"],
+            direction: tableRow["Направление"],
+            store_name: tableRow["Склад"],
+            agent: tableRow["Агент"] === null ? "" : tableRow["Агент"],
+            place_of_dispatch:
+              tableRow["Место отправки"] === null
+                ? ""
+                : tableRow["Место отправки"],
+            line: tableRow["Линия"] === null ? "" : tableRow["Линия"],
+            ready_date: checkDate(tableRow["Дата готовности"]),
+            load_date: checkDate(tableRow["Дата загрузки"]),
+            etd: checkDate(tableRow["ETD"]),
+            eta: checkDate(tableRow["ETA"]),
+            date_do: checkDate(tableRow["Дата ДО"]),
+            port: tableRow["Порт"] === null ? "" : tableRow["Порт"],
+            declaration_number: splitStrings(tableRow["Номер декларации"]),
             declaration_issue_date: checkDate(
-              json[0][index]["Дата выпуска декларации"]
+              tableRow["Дата выпуска декларации"]
             ),
-            expeditor: json[0][index]["Экспедитор"],
-            destination_station: json[0][index]["Станция прибытия"],
-            km_to_dist: castToNum(
-              json[0][index]["Осталось км до ст. назначения"]
-            ),
-            train_depart_date: checkDate(json[0][index]["Дата отправки по ЖД"]),
-            train_arrive_date: checkDate(json[0][index]["Дата прибытия по ЖД"]),
-            pickup: json[0][index]["Автовывоз"],
-            store_arrive_date: checkDate(
-              json[0][index]["Дата прибытия на склад"]
-            ),
-            eta_update:
-              checkDate(json[0][index]["ETA"]) !== null ? true : false,
+            expeditor:
+              tableRow["Экспедитор"] === null ? "" : tableRow["Экспедитор"],
+            destination_station:
+              tableRow["Станция прибытия"] === null
+                ? ""
+                : tableRow["Станция прибытия"],
+            km_to_dist: castToNum(tableRow["Осталось км до ст. назначения"]),
+            train_depart_date: checkDate(tableRow["Дата отправки по ЖД"]),
+            train_arrive_date: checkDate(tableRow["Дата прибытия по ЖД"]),
+            pickup: tableRow["Автовывоз"] === null ? "" : tableRow["Автовывоз"],
+            store_arrive_date: checkDate(tableRow["Дата прибытия на склад"]),
+            eta_update: checkDate(tableRow["ETA"]) !== null ? true : false,
             date_do_update:
-              checkDate(json[0][index]["Дата ДО"]) !== null ? true : false,
+              checkDate(tableRow["Дата ДО"]) !== null ? true : false,
             declaration_issue_date_update:
-              checkDate(json[0][index]["Дата выпуска декларации"]) !== null
+              checkDate(tableRow["Дата выпуска декларации"]) !== null
                 ? true
                 : false,
             train_depart_date_update:
-              checkDate(json[0][index]["Дата отправки по ЖД"]) !== null
+              checkDate(tableRow["Дата отправки по ЖД"]) !== null
                 ? true
                 : false,
             train_arrive_date_update:
-              checkDate(json[0][index]["Дата прибытия по ЖД"]) !== null
+              checkDate(tableRow["Дата прибытия по ЖД"]) !== null
                 ? true
                 : false,
             store_arrive_date_update:
-              checkDate(json[0][index]["Дата прибытия на склад"]) !== null
+              checkDate(tableRow["Дата прибытия на склад"]) !== null
                 ? true
                 : false,
           }

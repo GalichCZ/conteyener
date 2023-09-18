@@ -144,7 +144,6 @@ class FormulaService {
 
   async updateFormulaDates(newDate, dateType, item, deliveryChannel) {
     try {
-      console.log(deliveryChannel);
       const delivery_channel = await DeliveryChannelSchema.findById(
         deliveryChannel
       ).exec();

@@ -225,8 +225,6 @@ class ItemController {
       req.file.path
     );
 
-    //return item id and last added data
-
     if (success) res.status(200).json(lastDatesMap);
     else res.status(500).json(error);
   }

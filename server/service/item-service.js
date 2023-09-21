@@ -201,7 +201,9 @@ class ItemService {
         : valuesArrays;
       return {
         success: true,
-        values: this.removeDuplicates(values.filter((val) => val !== null)),
+        values: this.removeDuplicates(
+          values.filter((val) => val !== null && val !== undefined)
+        ),
       };
     } catch (error) {
       return { success: false, error };

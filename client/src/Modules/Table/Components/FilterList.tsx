@@ -32,7 +32,6 @@ export const FilterList: React.FC<IProps> = ({ objectKey }) => {
 
   useEffect(() => {
     if (keySearchValue) {
-      console.log(keySearchValue);
       setMapThrough(
         values.filter((val: string) =>
           val.toLowerCase().includes(keySearchValue.toLowerCase())

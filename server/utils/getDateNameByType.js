@@ -6,12 +6,14 @@ class DateNameByType {
       case 2:
         return "eta";
       case 3:
-        return "declaration_issue_date";
+        return "date_do";
       case 4:
-        return "train_depart_date";
+        return "declaration_issue_date";
       case 5:
-        return "train_arrive_date";
+        return "train_depart_date";
       case 6:
+        return "train_arrive_date";
+      case 7:
         return "store_arrive_date";
     }
   }

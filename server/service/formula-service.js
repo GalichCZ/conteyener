@@ -148,7 +148,8 @@ class FormulaService {
         deliveryChannel
       ).exec();
       if (dateType === 1) {
-        const eta = newDate;
+        const etd = newDate;
+        const eta = dayjs(etd).add(delivery_channel.eta, "day");
         const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
         const declaration_issue_date = dayjs(date_do).add(
           delivery_channel.declaration_issue_date,
@@ -187,6 +188,45 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 2) {
+        const eta = newDate;
+        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
+        const declaration_issue_date = dayjs(date_do).add(
+          delivery_channel.declaration_issue_date,
+          "day"
+        );
+        const train_depart_date = dayjs(declaration_issue_date).add(
+          delivery_channel.train_depart_date,
+          "day"
+        );
+        const train_arrive_date = dayjs(train_depart_date).add(
+          delivery_channel.train_arrive_date,
+          "day"
+        );
+        const store_arrive_date = dayjs(train_arrive_date).add(
+          delivery_channel.store_arrive_date,
+          "day"
+        );
+        return {
+          eta: delivery_channel.eta === 0 ? null : eta,
+          date_do: delivery_channel.date_do === 0 ? null : date_do,
+          declaration_issue_date:
+            delivery_channel.declaration_issue_date === 0
+              ? null
+              : declaration_issue_date,
+          train_arrive_date:
+            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
+          train_depart_date:
+            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
+          store_arrive_date:
+            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
+          eta_update: true,
+          date_do_update: false,
+          declaration_issue_date_update: false,
+          train_depart_date_update: false,
+          train_arrive_date_update: false,
+          store_arrive_date_update: false,
+        };
+      } else if (dateType === 3) {
         const date_do = newDate;
         const declaration_issue_date = dayjs(date_do).add(
           delivery_channel.declaration_issue_date,
@@ -224,7 +264,7 @@ class FormulaService {
           train_arrive_date_update: false,
           store_arrive_date_update: false,
         };
-      } else if (dateType === 3) {
+      } else if (dateType === 4) {
         const declaration_issue_date = newDate;
         const train_depart_date = dayjs(declaration_issue_date).add(
           delivery_channel.train_depart_date,
@@ -258,7 +298,7 @@ class FormulaService {
           train_arrive_date_update: false,
           store_arrive_date_update: false,
         };
-      } else if (dateType === 4) {
+      } else if (dateType === 5) {
         const train_depart_date = newDate;
         const train_arrive_date = dayjs(train_depart_date).add(
           delivery_channel.train_arrive_date,
@@ -288,7 +328,7 @@ class FormulaService {
           train_arrive_date_update: false,
           store_arrive_date_update: false,
         };
-      } else if (dateType === 5) {
+      } else if (dateType === 6) {
         const train_arrive_date = newDate;
         const store_arrive_date = dayjs(train_arrive_date).add(
           delivery_channel.store_arrive_date,
@@ -316,7 +356,7 @@ class FormulaService {
           train_arrive_date_update: true,
           store_arrive_date_update: false,
         };
-      } else if (dateType === 6) {
+      } else if (dateType === 7) {
         const store_arrive_date = newDate;
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,

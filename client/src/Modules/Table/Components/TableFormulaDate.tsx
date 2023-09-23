@@ -111,6 +111,15 @@ export const TableFormulaDate = () => {
             newDate: value,
           });
           break;
+        case 7:
+          setData({
+            ...data,
+            _id,
+            dateType,
+            delivery_channel,
+            newDate: value,
+          });
+          break;
         default:
           break;
       }
@@ -124,7 +133,7 @@ export const TableFormulaDate = () => {
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      {dateType === 1 && (
+      {dateType === 2 && (
         <Form.Item label="ETA">
           <DatePicker
             format="DD/MM/YYYY"
@@ -146,7 +155,7 @@ export const TableFormulaDate = () => {
           />
         </Form.Item>
       )}
-      {dateType === 2 && (
+      {dateType === 3 && (
         <Form.Item label="Дата ДО">
           <DatePicker
             format="DD/MM/YYYY"
@@ -168,7 +177,7 @@ export const TableFormulaDate = () => {
           />
         </Form.Item>
       )}
-      {dateType === 3 && (
+      {dateType === 4 && (
         <Form.Item label="Дата выпуска декларации">
           <DatePicker
             format="DD/MM/YYYY"
@@ -190,7 +199,7 @@ export const TableFormulaDate = () => {
           />
         </Form.Item>
       )}
-      {dateType === 4 && (
+      {dateType === 5 && (
         <Form.Item label="Дата отправки по ЖД">
           <DatePicker
             format="DD/MM/YYYY"
@@ -212,7 +221,7 @@ export const TableFormulaDate = () => {
           />
         </Form.Item>
       )}
-      {dateType === 5 && (
+      {dateType === 6 && (
         <Form.Item label="Дата прибытия по ЖД">
           <DatePicker
             format="DD/MM/YYYY"
@@ -234,7 +243,7 @@ export const TableFormulaDate = () => {
           />
         </Form.Item>
       )}
-      {dateType === 6 && (
+      {dateType === 7 && (
         <Form.Item label="Дата прибытия на склад">
           <DatePicker
             format="DD/MM/YYYY"

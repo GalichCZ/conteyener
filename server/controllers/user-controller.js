@@ -105,12 +105,6 @@ class UserController {
     try {
       const users = await UserSchema.find();
 
-      const me = await UserSchema.findById(req.params._id);
-
-      const newUsers = users.filter(
-        (user) => user._id.toString() !== me._id.toString()
-      );
-
       res.json(users);
     } catch (error) {
       console.log(error);

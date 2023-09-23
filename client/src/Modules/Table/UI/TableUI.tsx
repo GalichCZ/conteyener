@@ -400,7 +400,7 @@ const TableUI: React.FC<ITableUi> = ({
                     dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
-                      1,
+                      2,
                       item._id,
                       item.delivery_channel,
                       item.eta
@@ -429,7 +429,7 @@ const TableUI: React.FC<ITableUi> = ({
                       dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
-                        2,
+                        3,
                         item._id,
                         item.delivery_channel,
                         item.date_do
@@ -514,7 +514,7 @@ const TableUI: React.FC<ITableUi> = ({
                     dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
-                      3,
+                      4,
                       item._id,
                       item.delivery_channel,
                       item.declaration_issue_date
@@ -594,7 +594,7 @@ const TableUI: React.FC<ITableUi> = ({
                       dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
-                        4,
+                        5,
                         item._id,
                         item.delivery_channel,
                         item.train_depart_date
@@ -620,7 +620,7 @@ const TableUI: React.FC<ITableUi> = ({
                       dateChangeHandler &&
                       dateChangeHandler(
                         dispatch,
-                        5,
+                        6,
                         item._id,
                         item.delivery_channel,
                         item.train_arrive_date
@@ -651,7 +651,7 @@ const TableUI: React.FC<ITableUi> = ({
                     dateChangeHandler &&
                     dateChangeHandler(
                       dispatch,
-                      6,
+                      7,
                       item._id,
                       item.delivery_channel,
                       item.store_arrive_date

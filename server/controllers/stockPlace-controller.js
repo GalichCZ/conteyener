@@ -42,7 +42,9 @@ class StockPlaceController {
     const result = await StockPlaceService.updateTechStores(
       req.body._id,
       req.body.address,
-      req.body.name
+      req.body.name,
+      req.body.contact,
+      req.body.note
     );
 
     res.json(result);

@@ -8,6 +8,6 @@ router.get("/api/user/:userId", UserController.getMe);
 router.get("/api/users", UserController.getUsers);
 router.get("/api/activate/:link", UserController.activate);
 router.delete("/api/user/:email", UserController.deleteUser);
-router.post("/api/auth/signin", UserController.registration);
+router.post("/api/auth/signup", UserController.registration);
 
 module.exports = router;

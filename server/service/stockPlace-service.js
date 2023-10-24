@@ -74,7 +74,7 @@ class StockPlaceService {
     }
   }
 
-  async updateTechStores(_id, address, name) {
+  async updateTechStores(_id, address, name, contact, note) {
     try {
       await StockPlaceSchema.findByIdAndUpdate(
         {

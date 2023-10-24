@@ -43,7 +43,7 @@ class ItemService {
 
       if (duplicatesOrder.isDuplicate) {
         return errorReturn(
-          `Повторяющийся № заказа: ${duplicatesOrder.duplicates}`
+          `Повторяющийся № заказа: ${duplicatesOrder.duplicate.join(", ")}`
         );
       }
 
@@ -96,7 +96,8 @@ class ItemService {
 
   async updateDocs(req) {
     try {
-      const item = await ItemSchema.findById(req.body._id);
+      console.log(req.body);
+      const item = await ItemSchema.findById(req.body.bidId);
 
       const oldArray = item.is_docs;
 
@@ -106,7 +107,10 @@ class ItemService {
           : doc
       );
 
-      await ItemSchema.updateOne({ _id: req.body._id }, { is_docs: newArray });
+      await ItemSchema.updateOne(
+        { _id: req.body.bidId },
+        { is_docs: newArray }
+      );
 
       return { success: true };
     } catch (error) {
@@ -123,7 +127,7 @@ class ItemService {
   async getItems(page) {
     try {
       const _page = page === "0" ? 1 : page;
-      const perPage = 100;
+      const perPage = 50;
       const itemCount = await ItemSchema.countDocuments({
         hidden: false,
       }).exec();
@@ -135,6 +139,8 @@ class ItemService {
       const items = await ItemSchema.find({
         hidden: false,
       })
+        .populate("store", "name")
+        .populate("stock_place", "name")
         .skip(skipDocuments)
         .limit(perPage)
         .exec();
@@ -152,7 +158,7 @@ class ItemService {
 
   async getHiddenItems(page) {
     try {
-      const perPage = 100;
+      const perPage = 50;
 
       const itemCount = await ItemSchema.countDocuments({
         hidden: true,
@@ -408,16 +414,16 @@ class ItemService {
 
   async calculateDates(req) {
     try {
-      const _id = req.body.itemId;
+      const _id = req.body.bidId;
       const item = await ItemSchema.findById(_id);
 
-      if (req.body.etd === null) {
-        await ItemSchema.updateOne({ _id }, { etd: req.body.etd });
+      if (req.body.date === null) {
+        await ItemSchema.updateOne({ _id }, { etd: req.body.date });
       } else {
         let delivery_channel = "";
         let etd = null;
 
-        if (req.body.etd) etd = req.body.etd;
+        if (req.body.date) etd = req.body.date;
         else if (item.etd) etd = item.etd;
         else etd = null;
 
@@ -509,11 +515,14 @@ class ItemService {
         );
       }
 
+      //TODO: fix declarations
       const duplicatesDeclaration = await checkDuplicatesArray(
         req.body.declaration_number,
         "declaration_number",
         _id
       );
+
+      console.log(duplicatesDeclaration);
 
       if (duplicatesDeclaration.isDuplicate) {
         return errorReturn(

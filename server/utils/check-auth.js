@@ -10,7 +10,8 @@ class CheckAuth {
         req.userId = decoded._id;
         next();
       } catch (error) {
-        return res.status(403).json({ message: "Bad token" });
+        console.log(error);
+        return res.status(403).json({ message: "Bad token from trycatch" });
       }
     } else return res.status(403).json({ message: "No token" });
   }

@@ -6,6 +6,7 @@ const MailService = require("../service/mail-service");
 
 class UserController {
   async registration(req, res) {
+    //TODO: add check for existing email
     try {
       const password = req.body.password;
       const salt = await bcrypt.genSalt(10);
@@ -40,7 +41,7 @@ class UserController {
 
       const { password_hash, ...userData } = user._doc;
 
-      res.json({ ...userData, token });
+      res.json({ user: { ...userData }, token });
     } catch (error) {
       console.log(error);
       res.json("Oops, something goes wrong...");
@@ -50,6 +51,8 @@ class UserController {
   async login(req, res) {
     try {
       const user = await UserSchema.findOne({ email: req.body.email });
+
+      console.log(user);
 
       if (!user)
         return res
@@ -74,7 +77,7 @@ class UserController {
         }
       );
       const { password_hash, ...userData } = user._doc;
-      res.json({ ...userData, token });
+      res.json({ user: { ...userData }, token });
     } catch (error) {
       console.log(error);
       res.json("Oops, something goes wrong...");

@@ -5,7 +5,6 @@ const ItemService = require("../service/item-service");
 const ItemSchema = require("../models/item-model");
 const ProductSchema = require("../models/product-model");
 const UserSchema = require("../models/user-model");
-const dayjs = require("dayjs");
 
 class ItemController {
   async itemCreate(req, res) {
@@ -17,7 +16,7 @@ class ItemController {
     const item = await ItemService.createItem(req);
 
     if (item.success) return res.sendStatus(200);
-    else return res.status(400).json({ error: item.error });
+    else return res.status(400).json({ message: item.error });
   }
 
   async getItems(req, res) {
@@ -59,10 +58,10 @@ class ItemController {
   }
 
   async updateFormulaDates(req, res) {
-    const newDate = req.body.newDate;
+    const newDate = req.body.date;
     const deliveryChannel = req.body.delivery_channel;
-    const dateType = req.body.dateType;
-    const _id = req.body._id;
+    const dateType = req.body.date_type;
+    const _id = req.body.bidId;
     const result = await ItemService.updateFormulaDates(
       _id,
       dateType,

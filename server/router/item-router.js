@@ -19,10 +19,10 @@ router.post(
   ItemController.updateFormulaDatesAfterUpload
 );
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);
-router.post("/api/item", CheckAuth.checkToken, ItemController.itemCreate);
+router.post("/api/bid", CheckAuth.checkToken, ItemController.itemCreate);
 router.post("/api/item/global", FileWare, ItemController.uploadGlobal);
 //patch
-router.patch("/api/item", ItemController.updateItem);
+router.patch("/api/bid", ItemController.updateItem);
 router.patch("/api/item/comment", ItemController.updateComment);
 router.patch("/api/item/distance", ItemController.updateDistance);
 router.patch("/api/item/date", ItemController.updateFormulaDates);

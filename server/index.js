@@ -8,7 +8,7 @@ const ProductSchema = require("./models/product-model");
 
 dotenv.config();
 
-const url = process.env.DB_URL; //"mongodb://localhost:27018";
+const url = "mongodb://localhost:27017"; //process.env.DB_URL; ;
 const PORT = 4444;
 
 const app = express();

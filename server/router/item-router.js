@@ -7,7 +7,10 @@ const router = new Router();
 
 //get
 router.get("/api/item/hidden/:page", ItemController.getHiddenItems);
-router.get("/api/item/:page", ItemController.getItems);
+router.get(
+  "/api/item/:page/:search_query/:search_filter",
+  ItemController.getItems
+);
 router.get("/api/filter/key", ItemController.getKeyFilters);
 router.get("/api/filter/:isHidden", ItemController.getItemsFilter);
 router.get("/api/item/:key/:keyValue", ItemController.findByKeyValue);

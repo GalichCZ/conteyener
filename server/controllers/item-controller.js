@@ -20,11 +20,28 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    const { items, totalPages } = await ItemService.getItems(req.params.page);
-    res.json({
-      items,
-      totalPages,
-    });
+    console.log(req.query);
+    const { timeStamp, ...filters } = req.query;
+    const query_string = req.params.search_query;
+    const search_filter = req.params.search_filter;
+    if (filters) {
+      const result = await ItemService.getItemsFilter(filters, false);
+      if (result.success) res.status(200).json({ items: result.items });
+      else res.status(400).json(result.error);
+    } else if (query_string !== "null") {
+      const result = await ItemService.findItemsBySearch(
+        query_string,
+        search_filter,
+        false
+      );
+      res.json({ items: result });
+    } else {
+      const { items, totalPages } = await ItemService.getItems(req.params.page);
+      res.json({
+        items,
+        totalPages,
+      });
+    }
   }
 
   async calculateDates(req, res) {

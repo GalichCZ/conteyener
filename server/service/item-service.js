@@ -1,5 +1,6 @@
 const ItemSchema = require("../models/item-model");
 const TechStoreSchema = require("../models/techStore-model");
+const ProductSchema = require("../models/product-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
 const FileService = require("./file-service");
@@ -213,6 +214,101 @@ class ItemService {
       };
     } catch (error) {
       return { success: false, error };
+    }
+  }
+
+  async findItemsBySearch(query_string, search_filter, isHidden) {
+    try {
+      const regex = new RegExp(query_string, "i");
+      const query = { $regex: regex };
+
+      const items =
+        search_filter === "other"
+          ? await ItemSchema.find({
+              $or: [
+                { inside_number: query },
+                { proform_number: query },
+                { order_number: query },
+                { simple_product_name: query },
+                { providers: query },
+                { importers: query },
+                { container_number: query },
+                { container_type: query },
+                { conditions: query },
+                { direction: query },
+                { store_name: query },
+                { agent: query },
+                { fraht: query },
+                { fraht_account: query },
+                { place_of_dispatch: query },
+                { delivery_method: query },
+                { line: query },
+                { port: query },
+                { declaration_number: query },
+                { expeditor: query },
+                { destination_station: query },
+                { pickup: query },
+                { stock_place_name: query },
+                { stock_place_name: query },
+              ],
+              hidden: isHidden,
+            }).exec()
+          : [];
+
+      if (items.length === 0) {
+        const query = { $regex: regex };
+
+        const products = await ProductSchema.find({
+          $or: [
+            { hs_code: query },
+            { article: query },
+            { trade_mark: query },
+            { model: query },
+            { modification: query },
+            { product_name: query },
+            { manufacturer: query },
+          ],
+        }).exec();
+
+        const itemIds = products.map((product) => {
+          return product.item_id;
+        });
+        const uniqueIds = itemIds.filter((element, index) => {
+          return itemIds.indexOf(element) === index;
+        });
+        const getItems = uniqueIds.map(async (id) => {
+          return await ItemSchema.findById(id);
+        });
+        return this.test(getItems, isHidden)
+          .then((filteredArray) => {
+            return filteredArray;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            return [];
+          });
+
+        console.log(a);
+      } else {
+        return items.filter(
+          (item) => item !== null && item.hidden === isHidden
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  async test(getItems, isHidden) {
+    try {
+      const result = await Promise.all(getItems);
+      const filteredResults = result.filter(
+        (res) => res !== null && res.hidden === isHidden
+      );
+      return filteredResults;
+    } catch (error) {
+      return [];
     }
   }
 

@@ -86,16 +86,25 @@ class UserController {
 
   async getMe(req, res) {
     try {
-      const user = await UserSchema.findById(req.params.userId);
+      const userId = req.userId;
+      const user = await UserSchema.findById(userId);
 
       if (!user) return res.status(404).json({ message: "not found" });
 
-      const { passwordHash, ...userData } = user._doc;
+      const { _id, first_name, last_name, email, role, is_activated } =
+        user._doc;
 
-      res.json({
-        success: true,
-        ...userData,
-      });
+      const userDto = {
+        _id,
+        first_name,
+        last_name,
+        email,
+        role,
+        is_activated,
+      };
+      //TODO: make automap
+
+      res.json({ user: userDto });
     } catch (error) {
       console.log(error);
       res.status(500).json({

@@ -125,12 +125,12 @@ class ItemService {
     }
   }
 
-  async getItems(page) {
+  async getItems(page, hidden) {
     try {
       const _page = page === "0" ? 1 : page;
       const perPage = 50;
       const itemCount = await ItemSchema.countDocuments({
-        hidden: false,
+        hidden,
       }).exec();
 
       const totalPages = Math.ceil(itemCount / perPage);
@@ -138,7 +138,7 @@ class ItemService {
       const skipDocuments = (_page - 1) * perPage;
 
       const items = await ItemSchema.find({
-        hidden: false,
+        hidden,
       })
         .populate("store", "name")
         .populate("stock_place", "name")
@@ -221,7 +221,6 @@ class ItemService {
     try {
       const regex = new RegExp(query_string, "i");
       const query = { $regex: regex };
-
       const items =
         search_filter === "other"
           ? await ItemSchema.find({
@@ -252,7 +251,10 @@ class ItemService {
                 { stock_place_name: query },
               ],
               hidden: isHidden,
-            }).exec()
+            })
+              .populate("store", "name")
+              .populate("stock_place", "name")
+              .exec()
           : [];
 
       if (items.length === 0) {
@@ -277,7 +279,9 @@ class ItemService {
           return itemIds.indexOf(element) === index;
         });
         const getItems = uniqueIds.map(async (id) => {
-          return await ItemSchema.findById(id);
+          return await ItemSchema.findById(id)
+            .populate("store", "name")
+            .populate("stock_place", "name");
         });
         return this.test(getItems, isHidden)
           .then((filteredArray) => {
@@ -287,8 +291,6 @@ class ItemService {
             console.error("Error:", error);
             return [];
           });
-
-        console.log(a);
       } else {
         return items.filter(
           (item) => item !== null && item.hidden === isHidden
@@ -350,8 +352,14 @@ class ItemService {
         }
       });
       const items = isAggregate
-        ? await ItemSchema.aggregate(query).exec()
-        : await ItemSchema.find(query).exec();
+        ? await ItemSchema.aggregate(query)
+            .populate("store", "name")
+            .populate("stock_place", "name")
+            .exec()
+        : await ItemSchema.find(query)
+            .populate("store", "name")
+            .populate("stock_place", "name")
+            .exec();
 
       return { success: true, items };
     } catch (error) {
@@ -368,7 +376,7 @@ class ItemService {
   async hideItem(req) {
     try {
       const _id = req.body._id;
-      return await ItemSchema.updateOne({ _id }, { hidden: req.body.hidden });
+      return await ItemSchema.updateOne({ _id }, { hidden: true });
     } catch (error) {
       console.log(error);
       SendBotMessage(
@@ -618,8 +626,6 @@ class ItemService {
         _id
       );
 
-      console.log(duplicatesDeclaration);
-
       if (duplicatesDeclaration.isDuplicate) {
         return errorReturn(
           `Повторяющийся № декларации: ${duplicatesDeclaration.duplicates}`
@@ -653,56 +659,20 @@ class ItemService {
         return res;
       });
 
-      const newDocs = req.body.is_docs;
-
+      const docs = req.body.is_docs;
+      const newDocs = [];
       const oldOrderNumbers = item.order_number;
       const newOrderNumbers = req.body.order_number;
 
-      const mapNumbersToChange = new Map(); //old, new
-
-      //checking what number should be changed and for what
-      newOrderNumbers.forEach((number, index) => {
-        if (
-          number !== oldOrderNumbers[index] &&
-          oldOrderNumbers[index] !== undefined
-        )
-          mapNumbersToChange.set(oldOrderNumbers[index], number);
-      });
-
-      //array of docs that will be saved
-      const changedDocs = [];
-
-      //changing all docs as it needs
-      if (mapNumbersToChange.size > 0) {
-        newDocs.forEach((doc) => {
-          const newOrderNumber = mapNumbersToChange.get(doc.order_number);
-          if (newOrderNumber) {
-            changedDocs.push({ ...doc, order_number: newOrderNumber });
-          } else {
-            changedDocs.push(doc);
-          }
+      if (oldOrderNumbers.length < newOrderNumbers.length) {
+        const missedOrders = newOrderNumbers.filter(
+          (order) => !oldOrderNumbers.includes(order)
+        );
+        docs.forEach((doc) => {
+          newDocs.push(doc);
         });
-      }
-
-      const mapOfOldOrderNums = new Map(); //orderNumber, orderNumber
-      oldOrderNumbers.forEach((num) => {
-        mapOfOldOrderNums.set(num, num);
-      });
-
-      const mapOfChangedOrderNums = new Map(); //changedOrderNum, changedOrderNum
-      mapNumbersToChange.forEach((num, key) => {
-        mapOfChangedOrderNums.set(num, num);
-      });
-
-      const orderNumbersToAdd = newOrderNumbers.filter(
-        (num) =>
-          num !== mapOfOldOrderNums.get(num) &&
-          num !== mapOfChangedOrderNums.get(num)
-      );
-
-      if (orderNumbersToAdd.length > 0) {
-        orderNumbersToAdd.forEach((number) => {
-          changedDocs.push({
+        missedOrders.forEach((order) =>
+          newDocs.push({
             PI: false,
             CI: false,
             PL: false,
@@ -712,8 +682,21 @@ class ItemService {
             instruction: false,
             ED: false,
             bill: false,
-            order_number: number,
-          });
+            order_number: order,
+          })
+        );
+      } else if (oldOrderNumbers.length > newOrderNumbers.length) {
+        const missedOrders = oldOrderNumbers.filter(
+          (order) => !newOrderNumbers.includes(order)
+        );
+        const filteredDocs = docs.filter(
+          (doc) => !missedOrders.includes(doc.order_number)
+        );
+        filteredDocs.map((doc) => newDocs.push(doc));
+      } else {
+        //fix
+        docs.forEach((doc, index) => {
+          newDocs.push({ ...doc, order_number: newOrderNumbers[index] });
         });
       }
 
@@ -744,7 +727,7 @@ class ItemService {
           port: req.body.port,
           is_ds: req.body.is_ds,
           fraht_account: req.body.fraht_account,
-          is_docs: changedDocs,
+          is_docs: newDocs,
           declaration_number: req.body.declaration_number,
           availability_of_ob: req.body.availability_of_ob,
           answer_of_ob: req.body.answer_of_ob,

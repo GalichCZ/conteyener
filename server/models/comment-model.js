@@ -11,7 +11,6 @@ const CommentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Item",
   },
-  creator_name: Object,
 });
 
 module.exports = mongoose.model("Comment", CommentSchema);

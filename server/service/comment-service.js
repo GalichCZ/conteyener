@@ -5,14 +5,11 @@ const dayjs = require("dayjs");
 class CommentService {
   async createComment(req, creator) {
     try {
-      const user = await UserSchema.findById(creator);
-
       const doc = await new CommentSchema({
         comment_date: req.body.comment_date,
         comment_text: req.body.comment_text,
         comment_creator: creator,
         comment_item: req.body.comment_item,
-        creator_name: user,
       });
 
       const comment = await doc.save();
@@ -33,7 +30,11 @@ class CommentService {
     try {
       const comments = await CommentSchema.find({
         comment_item: req.params.comment_item,
-      }).exec();
+      })
+        .populate("comment_creator", "first_name last_name")
+        .exec();
+
+      console.log(comments);
 
       return { comments, success: true };
     } catch (error) {

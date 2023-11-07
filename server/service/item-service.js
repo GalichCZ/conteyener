@@ -695,6 +695,7 @@ class ItemService {
         filteredDocs.map((doc) => newDocs.push(doc));
       } else {
         //fix
+        //make from order number object like {order_number:string, uuid:string} - not the best idea, will affect full client
         docs.forEach((doc, index) => {
           newDocs.push({ ...doc, order_number: newOrderNumbers[index] });
         });

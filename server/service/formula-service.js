@@ -9,48 +9,80 @@ class FormulaService {
           _delivery_channel
         ).exec();
 
-        const eta = dayjs(_etd).add(delivery_channel.eta, "day");
+        const eta = dayjs(_etd)
+          .add(delivery_channel.eta, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
         const date_do = !item.eta_update
-          ? dayjs(eta).add(delivery_channel.date_do, "day")
-          : dayjs(item.eta).add(delivery_channel.date_do, "day");
+          ? dayjs(eta)
+              .add(delivery_channel.date_do, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0)
+          : dayjs(item.eta)
+              .add(delivery_channel.date_do, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0);
 
         const declaration_issue_date = !item.date_do_update
-          ? dayjs(date_do).add(delivery_channel.declaration_issue_date, "day")
+          ? dayjs(date_do)
+              .add(delivery_channel.declaration_issue_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0)
           : dayjs(item.date_do).add(
               delivery_channel.declaration_issue_date,
               "day"
             );
 
         const train_depart_date = !item.declaration_issue_date_update
-          ? dayjs(declaration_issue_date).add(
-              delivery_channel.train_depart_date,
-              "day"
-            )
-          : dayjs(item.declaration_issue_date).add(
-              delivery_channel.train_depart_date,
-              "day"
-            );
+          ? dayjs(declaration_issue_date)
+              .add(delivery_channel.train_depart_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0)
+          : dayjs(item.declaration_issue_date)
+              .add(delivery_channel.train_depart_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0);
 
         const train_arrive_date = !item.train_depart_date_update
-          ? dayjs(train_depart_date).add(
-              delivery_channel.train_arrive_date,
-              "day"
-            )
-          : dayjs(item.train_depart_date).add(
-              delivery_channel.train_arrive_date,
-              "day"
-            );
+          ? dayjs(train_depart_date)
+              .add(delivery_channel.train_arrive_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0)
+          : dayjs(item.train_depart_date)
+              .add(delivery_channel.train_arrive_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0);
 
         const store_arrive_date = !item.train_arrive_date
-          ? dayjs(train_arrive_date).add(
-              delivery_channel.store_arrive_date,
-              "day"
-            )
-          : dayjs(item.train_arrive_date).add(
-              delivery_channel.store_arrive_date,
-              "day"
-            );
+          ? dayjs(train_arrive_date)
+              .add(delivery_channel.store_arrive_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0)
+          : dayjs(item.train_arrive_date)
+              .add(delivery_channel.store_arrive_date, "day")
+              .set("hour", 13)
+              .set("minute", 0)
+              .set("second", 0)
+              .set("millisecond", 0);
 
         return {
           eta,
@@ -85,29 +117,47 @@ class FormulaService {
           _delivery_channel
         ).exec();
 
-        const eta = dayjs(_etd).add(delivery_channel.eta, "day");
+        const eta = dayjs(_etd)
+          .add(delivery_channel.eta, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
+        const date_do = dayjs(eta)
+          .add(delivery_channel.date_do, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
+        const declaration_issue_date = dayjs(date_do)
+          .add(delivery_channel.declaration_issue_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
+        const train_depart_date = dayjs(declaration_issue_date)
+          .add(delivery_channel.train_depart_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
 
         return {
           eta: delivery_channel.eta === 0 ? null : eta,
@@ -149,24 +199,42 @@ class FormulaService {
       ).exec();
       if (dateType === 1) {
         const etd = newDate;
-        const eta = dayjs(etd).add(delivery_channel.eta, "day");
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const eta = dayjs(etd)
+          .add(delivery_channel.eta, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const date_do = dayjs(eta)
+          .add(delivery_channel.date_do, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const declaration_issue_date = dayjs(date_do)
+          .add(delivery_channel.declaration_issue_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_depart_date = dayjs(declaration_issue_date)
+          .add(delivery_channel.train_depart_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : eta,
           date_do: delivery_channel.date_do === 0 ? null : date_do,
@@ -189,23 +257,36 @@ class FormulaService {
         };
       } else if (dateType === 2) {
         const eta = newDate;
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const date_do = dayjs(eta)
+          .add(delivery_channel.date_do, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const declaration_issue_date = dayjs(date_do)
+          .add(delivery_channel.declaration_issue_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_depart_date = dayjs(declaration_issue_date)
+          .add(delivery_channel.train_depart_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : eta,
           date_do: delivery_channel.date_do === 0 ? null : date_do,
@@ -228,22 +309,30 @@ class FormulaService {
         };
       } else if (dateType === 3) {
         const date_do = newDate;
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const declaration_issue_date = dayjs(date_do)
+          .add(delivery_channel.declaration_issue_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_depart_date = dayjs(declaration_issue_date)
+          .add(delivery_channel.train_depart_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,
           date_do: delivery_channel.date_do === 0 ? null : date_do,
@@ -266,18 +355,24 @@ class FormulaService {
         };
       } else if (dateType === 4) {
         const declaration_issue_date = newDate;
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const train_depart_date = dayjs(declaration_issue_date)
+          .add(delivery_channel.train_depart_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,
           date_do: delivery_channel.date_do === 0 ? null : item.date_do,
@@ -300,14 +395,18 @@ class FormulaService {
         };
       } else if (dateType === 5) {
         const train_depart_date = newDate;
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const train_arrive_date = dayjs(train_depart_date)
+          .add(delivery_channel.train_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,
           date_do: delivery_channel.date_do === 0 ? null : item.date_do,
@@ -330,10 +429,12 @@ class FormulaService {
         };
       } else if (dateType === 6) {
         const train_arrive_date = newDate;
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const store_arrive_date = dayjs(train_arrive_date)
+          .add(delivery_channel.store_arrive_date, "day")
+          .set("hour", 13)
+          .set("minute", 0)
+          .set("second", 0)
+          .set("millisecond", 0);
         return {
           eta: delivery_channel.eta === 0 ? null : item.eta,
           date_do: delivery_channel.date_do === 0 ? null : item.date_do,

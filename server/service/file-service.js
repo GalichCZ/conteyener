@@ -18,8 +18,18 @@ class FileService {
         }
         return XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
       });
+      const cols = workbook.Sheets[workbook.SheetNames[0]];
+      const colNames = Object.keys(cols)
+        .filter((name) => name[name.length - 1] === "1")
+        .map((name) => cols[name].v);
 
-      return worksheet;
+      const json = worksheet[0].map((i) => {
+        const row = {};
+        colNames.forEach((name) => (row[name] = i[name] ? i[name] : null));
+        return row;
+      });
+
+      return { json, colNames };
     } catch (error) {
       console.log(error);
       SendBotMessage(

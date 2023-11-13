@@ -14,7 +14,7 @@ const {
   castToNum,
 } = require("../utils/tableDataHandle");
 const { getDateNameByType } = require("../utils/getDateNameByType");
-
+const { BidColumns, datesColumns } = require("../enums/bidColumns.enum");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
 dayjs.extend(customParseFormat);
@@ -392,6 +392,11 @@ class ItemService {
     try {
       const result = dataForChanges.map(async (data) => {
         const { _id, delivery_channel, newDate, dateType } = data;
+
+        if (!newDate) {
+          return;
+        }
+
         const dateName = getDateNameByType(dateType);
         const query = {};
         query[dateName] = null;
@@ -443,6 +448,12 @@ class ItemService {
 
       return { success: true };
     } catch (error) {
+      console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DATES AFTER UPLOAD ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }
@@ -498,6 +509,11 @@ class ItemService {
       return { message: "success" };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE FORMULA DATES ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -512,6 +528,11 @@ class ItemService {
       );
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE COMMENT ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -837,9 +858,9 @@ class ItemService {
 
   async uploadExcel(file) {
     try {
-      const json = await FileService.createFile(file);
+      const { json, colNames } = await FileService.createFile(file);
 
-      const containerNums = json[0].map((item) => {
+      const containerNums = json.map((item) => {
         return item["Номер контейнера"];
       });
 
@@ -850,74 +871,55 @@ class ItemService {
       const lastDatesMap = []; //id, last changed date, delivery channel
 
       const itemsUpdate = filteredContainers.map(async (num, index) => {
-        const tableRow = json[0][index];
+        const tableRow = json[index];
+
+        const requestObject = {};
+
         const item = await ItemSchema.findOne({ container_number: num });
         const { dateType, dateName } = this.getLastChangedData(tableRow);
 
-        const objectToAdd = {};
-        objectToAdd["_id"] = item._id;
-        objectToAdd["delivery_channel"] = item.delivery_channel;
-        objectToAdd["newDate"] = tableRow[dateName];
-        objectToAdd["dateType"] = dateType;
+        if (item) {
+          const objectToAdd = {};
+          objectToAdd["_id"] = item._id;
+          objectToAdd["delivery_channel"] = item.delivery_channel;
+          objectToAdd["newDate"] = tableRow[dateName];
+          objectToAdd["dateType"] = dateType;
 
-        lastDatesMap.push(objectToAdd);
+          lastDatesMap.push(objectToAdd);
+        }
+
+        const dateNames = Object.keys(datesColumns);
+
+        //colNames, enum
+        Object.keys(BidColumns).forEach((col) => {
+          const isCol = colNames.includes(col);
+          if (isCol) {
+            const isDate = dateNames.includes(col);
+
+            const isDecl = BidColumns[col] === "declaration_number";
+
+            if (isDecl) {
+              requestObject[BidColumns[col]] = splitStrings(tableRow[col]);
+            } else if (isDate && datesColumns[col]) {
+              console.log(checkDate(tableRow[col]));
+              requestObject[datesColumns[col]] =
+                checkDate(tableRow[col]) !== null;
+            } else {
+              console.log(
+                checkDate(tableRow[col])?.toLocaleDateString("en-US", {
+                  timeZone: "Europe/Moscow",
+                })
+              );
+              requestObject[BidColumns[col]] = isDate
+                ? checkDate(tableRow[col])
+                : tableRow[col];
+            }
+          }
+        });
 
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
-          {
-            delivery_method:
-              tableRow["Способ доставки"] === null
-                ? ""
-                : tableRow["Способ доставки"],
-            direction: tableRow["Направление"],
-            store_name: tableRow["Склад"],
-            agent: tableRow["Агент"] === null ? "" : tableRow["Агент"],
-            place_of_dispatch:
-              tableRow["Место отправки"] === null
-                ? ""
-                : tableRow["Место отправки"],
-            line: tableRow["Линия"] === null ? "" : tableRow["Линия"],
-            ready_date: checkDate(tableRow["Дата готовности"]),
-            load_date: checkDate(tableRow["Дата загрузки"]),
-            etd: checkDate(tableRow["ETD"]),
-            eta: checkDate(tableRow["ETA"]),
-            date_do: checkDate(tableRow["Дата ДО"]),
-            port: tableRow["Порт"] === null ? "" : tableRow["Порт"],
-            declaration_number: splitStrings(tableRow["Номер декларации"]),
-            declaration_issue_date: checkDate(
-              tableRow["Дата выпуска декларации"]
-            ),
-            expeditor:
-              tableRow["Экспедитор"] === null ? "" : tableRow["Экспедитор"],
-            destination_station:
-              tableRow["Станция прибытия"] === null
-                ? ""
-                : tableRow["Станция прибытия"],
-            km_to_dist: castToNum(tableRow["Осталось км до ст. назначения"]),
-            train_depart_date: checkDate(tableRow["Дата отправки по ЖД"]),
-            train_arrive_date: checkDate(tableRow["Дата прибытия по ЖД"]),
-            pickup: tableRow["Автовывоз"] === null ? "" : tableRow["Автовывоз"],
-            store_arrive_date: checkDate(tableRow["Дата прибытия на склад"]),
-            eta_update: checkDate(tableRow["ETA"]) !== null ? true : false,
-            date_do_update:
-              checkDate(tableRow["Дата ДО"]) !== null ? true : false,
-            declaration_issue_date_update:
-              checkDate(tableRow["Дата выпуска декларации"]) !== null
-                ? true
-                : false,
-            train_depart_date_update:
-              checkDate(tableRow["Дата отправки по ЖД"]) !== null
-                ? true
-                : false,
-            train_arrive_date_update:
-              checkDate(tableRow["Дата прибытия по ЖД"]) !== null
-                ? true
-                : false,
-            store_arrive_date_update:
-              checkDate(tableRow["Дата прибытия на склад"]) !== null
-                ? true
-                : false,
-          }
+          requestObject
         );
       });
 
@@ -926,6 +928,11 @@ class ItemService {
       return { success: true, lastDatesMap };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nLOAD EXCEL ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }
@@ -958,56 +965,101 @@ class ItemService {
       const items = json[0].map(async (item) => {
         const doc = new ItemSchema({
           request_date: checkDate(item["Дата заявки"]),
+
           inside_number: splitStrings(item["Внутренний номер"]),
+
           proform_number: splitStrings(item["Номер проформы"]),
+
           order_number: splitStrings(item["Номер заказа"]),
+
           container_number: item["Номер контейнера"],
           /*----------------------------------------*/
           simple_product_name: splitStrings(item["Товар"]),
+
           delivery_method: item["Способ доставки"],
+
           providers: splitStrings(item["Поставщик"]),
+
           importers: splitStrings(item["Импортер"]),
+
           conditions: splitStrings(item["Условия поставки"]),
+
           direction: item["Направление"],
+
           store_name: item["Склад"],
+
           agent: item["Агент"],
+
           container_type: item["Тип контейенра"],
+
           place_of_dispatch: item["Место отправки"],
+
           line: item["Линия"],
+
           ready_date: checkDate(item["Дата готовности"]),
+
           load_date: checkDate(item["Дата загрузки"]),
+
           etd: checkDate(item["ETD"]),
+
           eta: checkDate(item["ETA"]),
+
           release: checkDate(item["Релиз"]),
+
           bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+
           td: checkBoolean(item["ТД"]),
+
           date_do: checkDate(item["Дата ДО"]),
+
           port: item["Порт"],
+
           is_docs: isDocsHandler(item["Номер заказа"]),
+
           is_ds: checkBoolean(item["Д/С для подачи"]),
+
           fraht_account: item["Фрахтовый счет"],
+
           declaration_number: splitStrings(item["Номер декларации"]),
+
           declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+
           availability_of_ob: checkDate(item["Наличие ОБ"]),
+
           answer_of_ob: checkDate(item["Ответ ОБ"]),
+
           expeditor: item["Экспедитор"],
+
           destination_station: item["Станция прибытия"],
+
           km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+
           train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+
           train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+
           pickup: item["Автовывоз"],
+
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+
           stock_place_name: item["Сток Сдачи"],
+
           eta_update: checkDate(item["ETA"]) !== null ? true : false,
+
           date_do_update: checkDate(item["Дата ДО"]) !== null ? true : false,
+
           declaration_issue_date_update:
             checkDate(item["Дата выпуска декларации"]) !== null ? true : false,
+
           train_depart_date_update:
             checkDate(item["Дата отправки по ЖД"]) !== null ? true : false,
+
           train_arrive_date_update:
             checkDate(item["Дата прибытия по ЖД"]) !== null ? true : false,
+
           store_arrive_date_update:
             checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
+
           hidden:
             checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
         });

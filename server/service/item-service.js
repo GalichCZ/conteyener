@@ -3,6 +3,8 @@ const TechStoreSchema = require("../models/techStore-model");
 const ProductSchema = require("../models/product-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
+const StoreRepository = require("../repositories/store.repository");
+const ItemRepository = require("../repositories/item.repository");
 const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
@@ -14,6 +16,8 @@ const {
   castToNum,
 } = require("../utils/tableDataHandle");
 const { getDateNameByType } = require("../utils/getDateNameByType");
+const { createDocsArray } = require("../utils/createDocsArray");
+const { clearString } = require("../utils/clearString");
 const { BidColumns, datesColumns } = require("../enums/bidColumns.enum");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
@@ -393,7 +397,7 @@ class ItemService {
       const result = dataForChanges.map(async (data) => {
         const { _id, delivery_channel, newDate, dateType } = data;
 
-        if (!newDate) {
+        if (!newDate || !delivery_channel) {
           return;
         }
 
@@ -681,46 +685,10 @@ class ItemService {
       });
 
       const docs = req.body.is_docs;
-      const newDocs = [];
       const oldOrderNumbers = item.order_number;
       const newOrderNumbers = req.body.order_number;
 
-      if (oldOrderNumbers.length < newOrderNumbers.length) {
-        const missedOrders = newOrderNumbers.filter(
-          (order) => !oldOrderNumbers.includes(order)
-        );
-        docs.forEach((doc) => {
-          newDocs.push(doc);
-        });
-        missedOrders.forEach((order) =>
-          newDocs.push({
-            PI: false,
-            CI: false,
-            PL: false,
-            SS_DS: false,
-            contract_agrees: false,
-            cost_agrees: false,
-            instruction: false,
-            ED: false,
-            bill: false,
-            order_number: order,
-          })
-        );
-      } else if (oldOrderNumbers.length > newOrderNumbers.length) {
-        const missedOrders = oldOrderNumbers.filter(
-          (order) => !newOrderNumbers.includes(order)
-        );
-        const filteredDocs = docs.filter(
-          (doc) => !missedOrders.includes(doc.order_number)
-        );
-        filteredDocs.map((doc) => newDocs.push(doc));
-      } else {
-        //fix
-        //make from order number object like {order_number:string, uuid:string} - not the best idea, will affect full client
-        docs.forEach((doc, index) => {
-          newDocs.push({ ...doc, order_number: newOrderNumbers[index] });
-        });
-      }
+      const newDocs = createDocsArray(docs, oldOrderNumbers, newOrderNumbers);
 
       await ItemSchema.updateOne(
         {
@@ -868,6 +836,8 @@ class ItemService {
         (num) => num !== null && num !== undefined
       );
 
+      console.log({filteredContainers, json});
+
       const lastDatesMap = []; //id, last changed date, delivery channel
 
       const itemsUpdate = filteredContainers.map(async (num, index) => {
@@ -891,7 +861,7 @@ class ItemService {
         const dateNames = Object.keys(datesColumns);
 
         //colNames, enum
-        Object.keys(BidColumns).forEach((col) => {
+        for (const col of Object.keys(BidColumns)) {
           const isCol = colNames.includes(col);
           if (isCol) {
             const isDate = dateNames.includes(col);
@@ -900,22 +870,23 @@ class ItemService {
 
             if (isDecl) {
               requestObject[BidColumns[col]] = splitStrings(tableRow[col]);
-            } else if (isDate && datesColumns[col]) {
-              console.log(checkDate(tableRow[col]));
+            }
+            else if (BidColumns[col] === "store") {
+                requestObject[BidColumns[col]] = await StoreRepository.getStoreByName(tableRow[col]);
+            }
+            else if (isDate && datesColumns[col]) {
+              requestObject[BidColumns[col]] = checkDate(tableRow[col])
               requestObject[datesColumns[col]] =
                 checkDate(tableRow[col]) !== null;
             } else {
-              console.log(
-                checkDate(tableRow[col])?.toLocaleDateString("en-US", {
-                  timeZone: "Europe/Moscow",
-                })
-              );
               requestObject[BidColumns[col]] = isDate
                 ? checkDate(tableRow[col])
-                : tableRow[col];
+                : clearString(tableRow[col]);
             }
           }
-        });
+        }
+
+        console.log(requestObject);
 
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
@@ -939,6 +910,8 @@ class ItemService {
 
   async uploadGlobal(file) {
     try {
+      await ItemRepository.deleteAllItems()
+
       const json = await FileService.createFile(file);
 
       function isDocsHandler(order_number) {
@@ -962,114 +935,115 @@ class ItemService {
         return isDocsArray;
       }
 
-      const items = json[0].map(async (item) => {
-        const doc = new ItemSchema({
-          request_date: checkDate(item["Дата заявки"]),
+      // const items = json[0].map(async (item) => {
+      //   const doc = new ItemSchema({
+      //     request_date: checkDate(item["Дата заявки"]),
+      //
+      //     inside_number: splitStrings(item["Внутренний номер"]),
+      //
+      //     proform_number: splitStrings(item["Номер проформы"]),
+      //
+      //     order_number: splitStrings(item["Номер заказа"]),
+      //
+      //     container_number: item["Номер контейнера"],
+      //     /*----------------------------------------*/
+      //     simple_product_name: splitStrings(item["Товар"]),
+      //
+      //     delivery_method: item["Способ доставки"],
+      //
+      //     providers: splitStrings(item["Поставщик"]),
+      //
+      //     importers: splitStrings(item["Импортер"]),
+      //
+      //     conditions: splitStrings(item["Условия поставки"]),
+      //
+      //     direction: item["Направление"],
+      //
+      //     store_name: item["Склад"],
+      //
+      //     agent: item["Агент"],
+      //
+      //     container_type: item["Тип контейенра"],
+      //
+      //     place_of_dispatch: item["Место отправки"],
+      //
+      //     line: item["Линия"],
+      //
+      //     ready_date: checkDate(item["Дата готовности"]),
+      //
+      //     load_date: checkDate(item["Дата загрузки"]),
+      //
+      //     etd: checkDate(item["ETD"]),
+      //
+      //     eta: checkDate(item["ETA"]),
+      //
+      //     release: checkDate(item["Релиз"]),
+      //
+      //     bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+      //
+      //     td: checkBoolean(item["ТД"]),
+      //
+      //     date_do: checkDate(item["Дата ДО"]),
+      //
+      //     port: item["Порт"],
+      //
+      //     is_docs: isDocsHandler(item["Номер заказа"]),
+      //
+      //     is_ds: checkBoolean(item["Д/С для подачи"]),
+      //
+      //     fraht_account: item["Фрахтовый счет"],
+      //
+      //     declaration_number: splitStrings(item["Номер декларации"]),
+      //
+      //     declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+      //
+      //     availability_of_ob: checkDate(item["Наличие ОБ"]),
+      //
+      //     answer_of_ob: checkDate(item["Ответ ОБ"]),
+      //
+      //     expeditor: item["Экспедитор"],
+      //
+      //     destination_station: item["Станция прибытия"],
+      //
+      //     km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+      //
+      //     train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+      //
+      //     train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+      //
+      //     pickup: item["Автовывоз"],
+      //
+      //     store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+      //
+      //     stock_place_name: item["Сток Сдачи"],
+      //
+      //     eta_update: checkDate(item["ETA"]) !== null,
+      //
+      //     date_do_update: checkDate(item["Дата ДО"]) !== null,
+      //
+      //     declaration_issue_date_update:
+      //       checkDate(item["Дата выпуска декларации"]) !== null,
+      //
+      //     train_depart_date_update:
+      //       checkDate(item["Дата отправки по ЖД"]) !== null,
+      //
+      //     train_arrive_date_update:
+      //       checkDate(item["Дата прибытия по ЖД"]) !== null,
+      //
+      //     store_arrive_date_update:
+      //       checkDate(item["Дата прибытия на склад"]) !== null,
+      //
+      //     hidden:
+      //       checkDate(item["Дата прибытия на склад"]) !== null,
+      //   });
+      //   const docs = await doc.save();
+      //   return docs;
+      // });
 
-          inside_number: splitStrings(item["Внутренний номер"]),
+      // const response = Promise.all(items).then(async (result) => {});
 
-          proform_number: splitStrings(item["Номер проформы"]),
-
-          order_number: splitStrings(item["Номер заказа"]),
-
-          container_number: item["Номер контейнера"],
-          /*----------------------------------------*/
-          simple_product_name: splitStrings(item["Товар"]),
-
-          delivery_method: item["Способ доставки"],
-
-          providers: splitStrings(item["Поставщик"]),
-
-          importers: splitStrings(item["Импортер"]),
-
-          conditions: splitStrings(item["Условия поставки"]),
-
-          direction: item["Направление"],
-
-          store_name: item["Склад"],
-
-          agent: item["Агент"],
-
-          container_type: item["Тип контейенра"],
-
-          place_of_dispatch: item["Место отправки"],
-
-          line: item["Линия"],
-
-          ready_date: checkDate(item["Дата готовности"]),
-
-          load_date: checkDate(item["Дата загрузки"]),
-
-          etd: checkDate(item["ETD"]),
-
-          eta: checkDate(item["ETA"]),
-
-          release: checkDate(item["Релиз"]),
-
-          bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
-
-          td: checkBoolean(item["ТД"]),
-
-          date_do: checkDate(item["Дата ДО"]),
-
-          port: item["Порт"],
-
-          is_docs: isDocsHandler(item["Номер заказа"]),
-
-          is_ds: checkBoolean(item["Д/С для подачи"]),
-
-          fraht_account: item["Фрахтовый счет"],
-
-          declaration_number: splitStrings(item["Номер декларации"]),
-
-          declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
-
-          availability_of_ob: checkDate(item["Наличие ОБ"]),
-
-          answer_of_ob: checkDate(item["Ответ ОБ"]),
-
-          expeditor: item["Экспедитор"],
-
-          destination_station: item["Станция прибытия"],
-
-          km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
-
-          train_depart_date: checkDate(item["Дата отправки по ЖД"]),
-
-          train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
-
-          pickup: item["Автовывоз"],
-
-          store_arrive_date: checkDate(item["Дата прибытия на склад"]),
-
-          stock_place_name: item["Сток Сдачи"],
-
-          eta_update: checkDate(item["ETA"]) !== null ? true : false,
-
-          date_do_update: checkDate(item["Дата ДО"]) !== null ? true : false,
-
-          declaration_issue_date_update:
-            checkDate(item["Дата выпуска декларации"]) !== null ? true : false,
-
-          train_depart_date_update:
-            checkDate(item["Дата отправки по ЖД"]) !== null ? true : false,
-
-          train_arrive_date_update:
-            checkDate(item["Дата прибытия по ЖД"]) !== null ? true : false,
-
-          store_arrive_date_update:
-            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
-
-          hidden:
-            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
-        });
-        const docs = await doc.save();
-        return docs;
-      });
-
-      const response = Promise.all(items).then(async (result) => {});
-
-      return successReturn(response);
+      console.log(json)
+      return successReturn(json);
     } catch (error) {
       console.log(error);
       return errorReturn(error);

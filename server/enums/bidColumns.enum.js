@@ -1,7 +1,7 @@
 const BidColumns = {
   "Способ доставки": "delivery_method",
   Направление: "direction",
-  Склад: "store_name",
+  Склад: "store",
   Агент: "agent",
   "Место отправки": "place_of_dispatch",
   Линия: "line",

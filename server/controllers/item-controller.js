@@ -276,6 +276,36 @@ class ItemController {
       console.log(error);
     }
   }
+
+  async mockData(req, res) {
+    try {
+      const times = req.body.times;
+
+      const data = Array.from({length: times}).map( async (_, index) => {
+        const doc = await new ItemSchema({
+          request_date: new Date(),
+          order_number: new Date().getTime(),
+          simple_product_name: "test",
+          delivery_method: "test",
+          providers: ["test"],
+          importers: ["test"],
+          conditions: ["test"],
+          agent: "test",
+          direction: "test",
+          container_type: "test",
+          place_of_dispatch: "test",
+        });
+
+        await doc.save();
+      });
+
+      await Promise.all(data)
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = new ItemController();

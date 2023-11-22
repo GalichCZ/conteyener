@@ -1,4 +1,5 @@
 const dayjs = require("dayjs");
+const {clearString} = require("./clearString");
 
 class TableDataHandle {
   checkBoolean(value) {
@@ -14,8 +15,10 @@ class TableDataHandle {
   }
 
   splitStrings(value) {
-    if (value !== undefined && typeof value === "string")
-      return value.split("\n");
+    if (value !== undefined && typeof value === "string"){
+      const arr = value.split("\n");
+      return arr.map((item) => clearString(item))
+    }
     else return [];
   }
 

@@ -5,6 +5,9 @@ const FileWare = require("../utils/file-ware");
 
 const router = new Router();
 
+//TODO: add script that will clear all data from tabs spaces and new lines
+//  and add script that will find all stores by name and add them to items
+
 //post
 router.post("/api/item/upload", FileWare, ItemController.uploadExcel);
 router.post("/api/item/search", ItemController.findItemsBySearch);
@@ -14,6 +17,7 @@ router.post(
 );
 router.post("/api/bid", CheckAuth.checkToken, ItemController.itemCreate);
 router.post("/api/item/global", FileWare, ItemController.uploadGlobal);
+router.post("/api/item/mock", ItemController.mockData);
 //get
 router.get("/api/item/hidden/:page", ItemController.getHiddenItems);
 router.post("/api/item/:page", ItemController.getItems);

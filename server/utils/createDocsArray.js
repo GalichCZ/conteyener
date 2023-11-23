@@ -6,6 +6,27 @@ function createDocsArray (docs, oldOrderNumbers, newOrderNumbers) {
         const missedOrders = newOrderNumbers.filter(
             (order) => !oldOrderNumbers.includes(order)
         );
+        if(missedOrders.length > oldOrderNumbers.length) {
+            oldOrderNumbers.forEach((order, index) => {
+                newDocs.push({...docs[index], order_number: missedOrders[index]})
+                missedOrders.shift();
+            })
+            missedOrders.forEach((order) =>
+                newDocs.push({
+                    PI: false,
+                    CI: false,
+                    PL: false,
+                    SS_DS: false,
+                    contract_agrees: false,
+                    cost_agrees: false,
+                    instruction: false,
+                    ED: false,
+                    bill: false,
+                    order_number: order,
+                })
+            );
+            return newDocs;
+        }
         docs.forEach((doc) => {
             newDocs.push(doc);
         });

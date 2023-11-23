@@ -41,8 +41,10 @@ class ItemService {
         _id: req.body.store,
       }).exec();
 
+      const orderNumbers = Object.values(req.body.order_number).map(order => order.order_number);
+
       const duplicatesOrder = await checkDuplicates(
-        req.body.order_number,
+          orderNumbers,
         "order_number"
       );
 
@@ -54,7 +56,7 @@ class ItemService {
 
       const isDocsArray = [];
 
-      req.body.order_number.map((num) => {
+      orderNumbers.map((num) => {
         isDocsArray.push({
           PI: false,
           CI: false,
@@ -71,7 +73,7 @@ class ItemService {
 
       const doc = await new ItemSchema({
         request_date: req.body.request_date,
-        order_number: req.body.order_number,
+        order_number: orderNumbers,
         simple_product_name: req.body.simple_product_name,
         delivery_method,
         providers: req.body.providers,
@@ -596,8 +598,10 @@ class ItemService {
       const _id = req.body._id;
       const item = await ItemSchema.findById(_id).exec();
 
+      const orderNumbers = Object.values(req.body.order_number).map(order => order.order_number);
+
       const duplicatesOrder = await checkDuplicatesArray(
-        req.body.order_number,
+        orderNumbers,
         "order_number",
         _id
       );
@@ -686,9 +690,7 @@ class ItemService {
 
       const docs = req.body.is_docs;
       const oldOrderNumbers = item.order_number;
-      const newOrderNumbers = req.body.order_number;
-
-      const newDocs = createDocsArray(docs, oldOrderNumbers, newOrderNumbers);
+      const newDocs = createDocsArray(docs, oldOrderNumbers, orderNumbers);
 
       await ItemSchema.updateOne(
         {
@@ -696,7 +698,7 @@ class ItemService {
         },
         {
           request_date: req.body.request_date,
-          order_number: req.body.order_number,
+          order_number: orderNumbers,
           inside_number: req.body.inside_number,
           proform_number: req.body.proform_number,
           container_number: req.body.container_number,
@@ -832,11 +834,11 @@ class ItemService {
         return item["Номер контейнера"];
       });
 
+      console.log(json)
+
       const filteredContainers = containerNums.filter(
         (num) => num !== null && num !== undefined
       );
-
-      console.log({filteredContainers, json});
 
       const lastDatesMap = []; //id, last changed date, delivery channel
 
@@ -886,8 +888,6 @@ class ItemService {
           }
         }
 
-        console.log(requestObject);
-
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
           requestObject
@@ -912,7 +912,7 @@ class ItemService {
     try {
       await ItemRepository.deleteAllItems()
 
-      const json = await FileService.createFile(file);
+      const json = await FileService.createFileOld(file);
 
       function isDocsHandler(order_number) {
         const orders = splitStrings(order_number);
@@ -935,115 +935,114 @@ class ItemService {
         return isDocsArray;
       }
 
-      // const items = json[0].map(async (item) => {
-      //   const doc = new ItemSchema({
-      //     request_date: checkDate(item["Дата заявки"]),
-      //
-      //     inside_number: splitStrings(item["Внутренний номер"]),
-      //
-      //     proform_number: splitStrings(item["Номер проформы"]),
-      //
-      //     order_number: splitStrings(item["Номер заказа"]),
-      //
-      //     container_number: item["Номер контейнера"],
-      //     /*----------------------------------------*/
-      //     simple_product_name: splitStrings(item["Товар"]),
-      //
-      //     delivery_method: item["Способ доставки"],
-      //
-      //     providers: splitStrings(item["Поставщик"]),
-      //
-      //     importers: splitStrings(item["Импортер"]),
-      //
-      //     conditions: splitStrings(item["Условия поставки"]),
-      //
-      //     direction: item["Направление"],
-      //
-      //     store_name: item["Склад"],
-      //
-      //     agent: item["Агент"],
-      //
-      //     container_type: item["Тип контейенра"],
-      //
-      //     place_of_dispatch: item["Место отправки"],
-      //
-      //     line: item["Линия"],
-      //
-      //     ready_date: checkDate(item["Дата готовности"]),
-      //
-      //     load_date: checkDate(item["Дата загрузки"]),
-      //
-      //     etd: checkDate(item["ETD"]),
-      //
-      //     eta: checkDate(item["ETA"]),
-      //
-      //     release: checkDate(item["Релиз"]),
-      //
-      //     bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
-      //
-      //     td: checkBoolean(item["ТД"]),
-      //
-      //     date_do: checkDate(item["Дата ДО"]),
-      //
-      //     port: item["Порт"],
-      //
-      //     is_docs: isDocsHandler(item["Номер заказа"]),
-      //
-      //     is_ds: checkBoolean(item["Д/С для подачи"]),
-      //
-      //     fraht_account: item["Фрахтовый счет"],
-      //
-      //     declaration_number: splitStrings(item["Номер декларации"]),
-      //
-      //     declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
-      //
-      //     availability_of_ob: checkDate(item["Наличие ОБ"]),
-      //
-      //     answer_of_ob: checkDate(item["Ответ ОБ"]),
-      //
-      //     expeditor: item["Экспедитор"],
-      //
-      //     destination_station: item["Станция прибытия"],
-      //
-      //     km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
-      //
-      //     train_depart_date: checkDate(item["Дата отправки по ЖД"]),
-      //
-      //     train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
-      //
-      //     pickup: item["Автовывоз"],
-      //
-      //     store_arrive_date: checkDate(item["Дата прибытия на склад"]),
-      //
-      //     stock_place_name: item["Сток Сдачи"],
-      //
-      //     eta_update: checkDate(item["ETA"]) !== null,
-      //
-      //     date_do_update: checkDate(item["Дата ДО"]) !== null,
-      //
-      //     declaration_issue_date_update:
-      //       checkDate(item["Дата выпуска декларации"]) !== null,
-      //
-      //     train_depart_date_update:
-      //       checkDate(item["Дата отправки по ЖД"]) !== null,
-      //
-      //     train_arrive_date_update:
-      //       checkDate(item["Дата прибытия по ЖД"]) !== null,
-      //
-      //     store_arrive_date_update:
-      //       checkDate(item["Дата прибытия на склад"]) !== null,
-      //
-      //     hidden:
-      //       checkDate(item["Дата прибытия на склад"]) !== null,
-      //   });
-      //   const docs = await doc.save();
-      //   return docs;
-      // });
+      const items = json[0].map(async (item) => {
+        const doc = new ItemSchema({
+          request_date: checkDate(item["Дата заявки"]),
 
-      // const response = Promise.all(items).then(async (result) => {});
+          inside_number: splitStrings(item["Внутренний номер"]),
 
-      console.log(json)
-      return successReturn(json);
+          proform_number: splitStrings(item["Номер проформы"]),
+
+          order_number: splitStrings(item["Номер заказа"]),
+
+          container_number: item["Номер контейнера"],
+          /*----------------------------------------*/
+          simple_product_name: splitStrings(item["Товар"]),
+
+          delivery_method: item["Способ доставки"],
+
+          providers: splitStrings(item["Поставщик"]),
+
+          importers: splitStrings(item["Импортер"]),
+
+          conditions: splitStrings(item["Условия поставки"]),
+
+          direction: item["Направление"],
+
+          store_name: item["Склад"],
+
+          agent: item["Агент"],
+
+          container_type: item["Тип контейенра"],
+
+          place_of_dispatch: item["Место отправки"],
+
+          line: item["Линия"],
+
+          ready_date: checkDate(item["Дата готовности"]),
+
+          load_date: checkDate(item["Дата загрузки"]),
+
+          etd: checkDate(item["ETD"]),
+
+          eta: checkDate(item["ETA"]),
+
+          release: checkDate(item["Релиз"]),
+
+          bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+
+          td: checkBoolean(item["ТД"]),
+
+          date_do: checkDate(item["Дата ДО"]),
+
+          port: item["Порт"],
+
+          is_docs: isDocsHandler(item["Номер заказа"]),
+
+          is_ds: checkBoolean(item["Д/С для подачи"]),
+
+          fraht_account: item["Фрахтовый счет"],
+
+          declaration_number: splitStrings(item["Номер декларации"]),
+
+          declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+
+          availability_of_ob: checkDate(item["Наличие ОБ"]),
+
+          answer_of_ob: checkDate(item["Ответ ОБ"]),
+
+          expeditor: item["Экспедитор"],
+
+          destination_station: item["Станция прибытия"],
+
+          km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+
+          train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+
+          train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+
+          pickup: item["Автовывоз"],
+
+          store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+
+          stock_place_name: item["Сток Сдачи"],
+
+          eta_update: checkDate(item["ETA"]) !== null,
+
+          date_do_update: checkDate(item["Дата ДО"]) !== null,
+
+          declaration_issue_date_update:
+            checkDate(item["Дата выпуска декларации"]) !== null,
+
+          train_depart_date_update:
+            checkDate(item["Дата отправки по ЖД"]) !== null,
+
+          train_arrive_date_update:
+            checkDate(item["Дата прибытия по ЖД"]) !== null,
+
+          store_arrive_date_update:
+            checkDate(item["Дата прибытия на склад"]) !== null,
+
+          hidden:
+            checkDate(item["Дата прибытия на склад"]) !== null,
+        });
+        const docs = await doc.save();
+        return docs;
+      });
+
+      const response = Promise.all(items).then(async (result) => {});
+
+      return successReturn(response);
     } catch (error) {
       console.log(error);
       return errorReturn(error);

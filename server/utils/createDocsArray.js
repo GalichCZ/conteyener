@@ -1,7 +1,24 @@
 
 function createDocsArray (docs, oldOrderNumbers, newOrderNumbers) {
     const newDocs = [];
-
+    console.log({docs, oldOrderNumbers, newOrderNumbers});
+    if(docs.length === 0) {
+        newOrderNumbers.forEach((order) =>
+            newDocs.push({
+                PI: false,
+                CI: false,
+                PL: false,
+                SS_DS: false,
+                contract_agrees: false,
+                cost_agrees: false,
+                instruction: false,
+                ED: false,
+                bill: false,
+                order_number: order,
+            })
+        );
+        return newDocs;
+    }
     if (oldOrderNumbers.length < newOrderNumbers.length) {
         const missedOrders = newOrderNumbers.filter(
             (order) => !oldOrderNumbers.includes(order)
@@ -48,6 +65,9 @@ function createDocsArray (docs, oldOrderNumbers, newOrderNumbers) {
         const missedOrders = oldOrderNumbers.filter(
             (order) => !newOrderNumbers.includes(order)
         );
+        if(missedOrders.join('') === oldOrderNumbers.join('')) {
+            return null
+        }
         const filteredDocs = docs.filter(
             (doc) => !missedOrders.includes(doc.order_number)
         );

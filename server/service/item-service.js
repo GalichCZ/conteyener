@@ -103,7 +103,6 @@ class ItemService {
 
   async updateDocs(req) {
     try {
-      console.log(req.body);
       const item = await ItemSchema.findById(req.body.bidId);
 
       const oldArray = item.is_docs;
@@ -691,6 +690,9 @@ class ItemService {
       const docs = req.body.is_docs;
       const oldOrderNumbers = item.order_number;
       const newDocs = createDocsArray(docs, oldOrderNumbers, orderNumbers);
+      if(newDocs === null) {
+        return { success: false, error:"Такой способ изменения № заказа приведет к потере документов для подачи, изменения НЕ сохранены" };
+      }
 
       await ItemSchema.updateOne(
         {

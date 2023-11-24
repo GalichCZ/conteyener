@@ -2,6 +2,7 @@ const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
 const FileService = require("../service/file-service");
 const FormulaService = require("../service/formula-service");
+const ItemRepository = require("../repositories/item.repository");
 class TestController {
   async testDeclaration(req, res) {
     const response = await DeclarationService.createDeclarationStatus(req);
@@ -40,6 +41,15 @@ class TestController {
       req.body.etd
     );
     res.json(response);
+  }
+
+  async writeAllDocs(req, res) {
+    const items = await ItemRepository.getSpecificItem({ $expr: {
+        $and: [
+          { $gt: [{ $size: "$order_number" }, 0] },  // order_number array length > 0
+          { $eq: [{ $size: "$is_docs" }, 0] }        // is_docs array length === 0
+        ]
+      }});
   }
 }
 

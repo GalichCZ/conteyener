@@ -9,7 +9,6 @@ class CheckDuplicates {
           _id: { $ne: id },
         };
         query[key] = item;
-        console.log(query);
         return await ItemSchema.find(query);
       })
     );

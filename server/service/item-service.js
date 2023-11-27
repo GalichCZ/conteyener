@@ -4,6 +4,7 @@ const ProductSchema = require("../models/product-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
 const StoreRepository = require("../repositories/store.repository");
+const StockRepository = require("../repositories/stockPlace.repository");
 const ItemRepository = require("../repositories/item.repository");
 const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
@@ -836,8 +837,6 @@ class ItemService {
         return item["Номер контейнера"];
       });
 
-      console.log(json)
-
       const filteredContainers = containerNums.filter(
         (num) => num !== null && num !== undefined
       );
@@ -961,15 +960,15 @@ class ItemService {
 
           direction: item["Направление"],
 
-          store_name: item["Склад"],
+          store: await StoreRepository.getStoreByName(item["Склад"]),
 
-          agent: item["Агент"],
+          agent: clearString(item["Агент"]),
 
-          container_type: item["Тип контейенра"],
+          container_type: clearString(item["Тип контейенра"]),
 
-          place_of_dispatch: item["Место отправки"],
+          place_of_dispatch: clearString(item["Место отправки"]),
 
-          line: item["Линия"],
+          line: clearString(item["Линия"]),
 
           ready_date: checkDate(item["Дата готовности"]),
 
@@ -987,7 +986,7 @@ class ItemService {
 
           date_do: checkDate(item["Дата ДО"]),
 
-          port: item["Порт"],
+          port: clearString(item["Порт"]),
 
           is_docs: isDocsHandler(item["Номер заказа"]),
 
@@ -1005,7 +1004,7 @@ class ItemService {
 
           expeditor: item["Экспедитор"],
 
-          destination_station: item["Станция прибытия"],
+          destination_station: clearString(item["Станция прибытия"]),
 
           km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
 
@@ -1013,11 +1012,11 @@ class ItemService {
 
           train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
 
-          pickup: item["Автовывоз"],
+          pickup: clearString(item["Автовывоз"]),
 
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
 
-          stock_place_name: item["Сток Сдачи"],
+          stock_place: await StockRepository.getStockPlaceByName(item["Сток Сдачи"]),
 
           eta_update: checkDate(item["ETA"]) !== null,
 
@@ -1038,8 +1037,7 @@ class ItemService {
           hidden:
             checkDate(item["Дата прибытия на склад"]) !== null,
         });
-        const docs = await doc.save();
-        return docs;
+        return await doc.save();
       });
 
       const response = Promise.all(items).then(async (result) => {});

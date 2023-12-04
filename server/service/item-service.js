@@ -145,7 +145,7 @@ class ItemService {
 
       const items = await ItemSchema.find({
         hidden,
-      })
+      }).sort({request_date: 1})
         .populate("store", "name")
         .populate("stock_place", "name")
         .skip(skipDocuments)
@@ -174,7 +174,7 @@ class ItemService {
       const totalPages = Math.ceil(itemCount / perPage);
       const skipDocuments = (page - 1) * perPage;
 
-      const items = await ItemSchema.find({ hidden: true })
+      const items = await ItemSchema.find({ hidden: true }).sort({request_date: 1})
         .skip(skipDocuments)
         .limit(perPage)
         .exec();
@@ -257,7 +257,7 @@ class ItemService {
                 { stock_place_name: query },
               ],
               hidden: isHidden,
-            })
+            }).sort({request_date: 1})
               .populate("store", "name")
               .populate("stock_place", "name")
               .exec()
@@ -285,7 +285,7 @@ class ItemService {
           return itemIds.indexOf(element) === index;
         });
         const getItems = uniqueIds.map(async (id) => {
-          return await ItemSchema.findById(id)
+          return await ItemSchema.findById(id).sort({request_date: 1})
             .populate("store", "name")
             .populate("stock_place", "name");
         });
@@ -300,7 +300,7 @@ class ItemService {
       } else {
         return items.filter(
           (item) => item !== null && item.hidden === isHidden
-        );
+        )
       }
     } catch (error) {
       console.log(error);
@@ -311,10 +311,9 @@ class ItemService {
   async test(getItems, isHidden) {
     try {
       const result = await Promise.all(getItems);
-      const filteredResults = result.filter(
+      return result.filter(
         (res) => res !== null && res.hidden === isHidden
       );
-      return filteredResults;
     } catch (error) {
       return [];
     }
@@ -358,11 +357,11 @@ class ItemService {
         }
       });
       const items = isAggregate
-        ? await ItemSchema.aggregate(query)
+        ? await ItemSchema.aggregate(query).sort({request_date: 1})
             .populate("store", "name")
             .populate("stock_place", "name")
             .exec()
-        : await ItemSchema.find(query)
+        : await ItemSchema.find(query).sort({request_date: 1})
             .populate("store", "name")
             .populate("stock_place", "name")
             .exec();

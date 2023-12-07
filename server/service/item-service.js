@@ -5,6 +5,7 @@ const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
 const StoreRepository = require("../repositories/store.repository");
 const StockRepository = require("../repositories/stockPlace.repository");
+const DeliveryChannelRepository = require("../repositories/deliveryChannel.repository");
 const ItemRepository = require("../repositories/item.repository");
 const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
@@ -146,6 +147,7 @@ class ItemService {
       const items = await ItemSchema.find({
         hidden,
       }).sort({request_date: 1})
+        .populate("delivery_channel", "name")
         .populate("store", "name")
         .populate("stock_place", "name")
         .skip(skipDocuments)
@@ -258,6 +260,7 @@ class ItemService {
               ],
               hidden: isHidden,
             }).sort({request_date: 1})
+              .populate("delivery_channel", "name")
               .populate("store", "name")
               .populate("stock_place", "name")
               .exec()
@@ -286,6 +289,7 @@ class ItemService {
         });
         const getItems = uniqueIds.map(async (id) => {
           return await ItemSchema.findById(id).sort({request_date: 1})
+            .populate("delivery_channel", "name")
             .populate("store", "name")
             .populate("stock_place", "name");
         });
@@ -358,10 +362,12 @@ class ItemService {
       });
       const items = isAggregate
         ? await ItemSchema.aggregate(query).sort({request_date: 1})
+            .populate("delivery_channel", "name")
             .populate("store", "name")
             .populate("stock_place", "name")
             .exec()
         : await ItemSchema.find(query).sort({request_date: 1})
+            .populate("delivery_channel", "name")
             .populate("store", "name")
             .populate("stock_place", "name")
             .exec();
@@ -959,7 +965,9 @@ class ItemService {
 
           direction: item["Направление"],
 
-          store: await StoreRepository.getStoreByName(item["Склад"]),
+          store: (await StoreRepository.getStoreByName(item["Склад"]))?._id,
+
+          delivery_channel: (await DeliveryChannelRepository.getDeliveryChannelByName(item["Канал поставки"]))?._id,
 
           agent: clearString(item["Агент"]),
 
@@ -1015,7 +1023,7 @@ class ItemService {
 
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
 
-          stock_place: await StockRepository.getStockPlaceByName(item["Сток Сдачи"]),
+          stock_place: (await StockRepository.getStockPlaceByName(item["Сток Сдачи"]))?._id,
 
           eta_update: checkDate(item["ETA"]) !== null,
 

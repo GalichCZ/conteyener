@@ -12,6 +12,7 @@ class FileService {
   async createFile(file) {
     try {
       const items = await ItemSchema.find({ hidden: false })
+        .populate("delivery_channel", "name")
         .populate("store", "name")
         .populate("stock_place", "name")
         .exec();
@@ -21,7 +22,7 @@ class FileService {
           "Внутренний номер": await this.arrayToString(item.inside_number),
           "Номер проформы": await this.arrayToString(item.proform_number),
           "Номер заказа": await this.arrayToString(item.order_number),
-          "Номер Контейнера": item.container_number,
+          "Номер контейнера": item.container_number,
           Товар: await this.arrayToString(item.simple_product_name),
           "Способ Доставки": item.delivery_method,
           Поставщик: await this.arrayToString(item.providers),
@@ -33,7 +34,7 @@ class FileService {
           "Тип контейенра": item.container_type,
           "Место отправки": item.place_of_dispatch,
           Линия: item.line,
-          "Дата готовности": formatDate(item.ready_date),
+          "Дата готовности\t": formatDate(item.ready_date),
           "Дата загрузки": formatDate(item.load_date),
           ETD: formatDate(item.etd),
           ETA: formatDate(item.eta),

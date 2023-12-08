@@ -554,7 +554,21 @@ class ItemService {
       const item = await ItemSchema.findById(_id);
 
       if (req.body.date === null) {
-        await ItemSchema.updateOne({ _id }, { etd: req.body.date });
+        await ItemSchema.updateOne({ _id }, {
+            etd: req.body.date,
+            eta: null,
+            date_do: null,
+            declaration_issue_date: null,
+            train_depart_date: null,
+            train_arrive_date: null,
+            store_arrive_date: null,
+            store_arrive_date_update: false,
+            train_arrive_date_update: false,
+            train_depart_date_update: false,
+            declaration_issue_date_update: false,
+            date_do_update: false,
+            eta_update: false,
+        });
       } else {
         let delivery_channel = "";
         let etd = null;

@@ -20,9 +20,7 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    const { timeStamp } = req.query;
     const filtersMap = req.body.filtersMap;
-    console.log(filtersMap);
     const query_string = req.body.search_query;
     const search_filter = req.body.search_filter;
     const hidden = req.body.hidden;

@@ -11,7 +11,7 @@ class FormulaService {
 
         const eta = dayjs(_etd)
           .add(delivery_channel.eta, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -19,13 +19,13 @@ class FormulaService {
         const date_do = !item.eta_update
           ? dayjs(eta)
               .add(delivery_channel.date_do, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0)
           : dayjs(item.eta)
               .add(delivery_channel.date_do, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0);
@@ -33,7 +33,7 @@ class FormulaService {
         const declaration_issue_date = !item.date_do_update
           ? dayjs(date_do)
               .add(delivery_channel.declaration_issue_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0)
@@ -45,13 +45,13 @@ class FormulaService {
         const train_depart_date = !item.declaration_issue_date_update
           ? dayjs(declaration_issue_date)
               .add(delivery_channel.train_depart_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0)
           : dayjs(item.declaration_issue_date)
               .add(delivery_channel.train_depart_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0);
@@ -59,13 +59,13 @@ class FormulaService {
         const train_arrive_date = !item.train_depart_date_update
           ? dayjs(train_depart_date)
               .add(delivery_channel.train_arrive_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0)
           : dayjs(item.train_depart_date)
               .add(delivery_channel.train_arrive_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0);
@@ -73,13 +73,13 @@ class FormulaService {
         const store_arrive_date = !item.train_arrive_date
           ? dayjs(train_arrive_date)
               .add(delivery_channel.store_arrive_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0)
           : dayjs(item.train_arrive_date)
               .add(delivery_channel.store_arrive_date, "day")
-              .set("hour", 13)
+              .set("hour", 12)
               .set("minute", 0)
               .set("second", 0)
               .set("millisecond", 0);
@@ -119,42 +119,42 @@ class FormulaService {
 
         const eta = dayjs(_etd)
           .add(delivery_channel.eta, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
 
         const date_do = dayjs(eta)
           .add(delivery_channel.date_do, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
 
         const declaration_issue_date = dayjs(date_do)
           .add(delivery_channel.declaration_issue_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
 
         const train_depart_date = dayjs(declaration_issue_date)
           .add(delivery_channel.train_depart_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
 
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
 
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -201,37 +201,37 @@ class FormulaService {
         const etd = newDate;
         const eta = dayjs(etd)
           .add(delivery_channel.eta, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const date_do = dayjs(eta)
           .add(delivery_channel.date_do, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const declaration_issue_date = dayjs(date_do)
           .add(delivery_channel.declaration_issue_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_depart_date = dayjs(declaration_issue_date)
           .add(delivery_channel.train_depart_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -259,31 +259,31 @@ class FormulaService {
         const eta = newDate;
         const date_do = dayjs(eta)
           .add(delivery_channel.date_do, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const declaration_issue_date = dayjs(date_do)
           .add(delivery_channel.declaration_issue_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_depart_date = dayjs(declaration_issue_date)
           .add(delivery_channel.train_depart_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -311,25 +311,25 @@ class FormulaService {
         const date_do = newDate;
         const declaration_issue_date = dayjs(date_do)
           .add(delivery_channel.declaration_issue_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_depart_date = dayjs(declaration_issue_date)
           .add(delivery_channel.train_depart_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -357,19 +357,19 @@ class FormulaService {
         const declaration_issue_date = newDate;
         const train_depart_date = dayjs(declaration_issue_date)
           .add(delivery_channel.train_depart_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -397,13 +397,13 @@ class FormulaService {
         const train_depart_date = newDate;
         const train_arrive_date = dayjs(train_depart_date)
           .add(delivery_channel.train_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);
@@ -431,7 +431,7 @@ class FormulaService {
         const train_arrive_date = newDate;
         const store_arrive_date = dayjs(train_arrive_date)
           .add(delivery_channel.store_arrive_date, "day")
-          .set("hour", 13)
+          .set("hour", 12)
           .set("minute", 0)
           .set("second", 0)
           .set("millisecond", 0);

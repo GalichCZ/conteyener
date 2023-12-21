@@ -74,7 +74,7 @@ class ItemService {
       });
 
       const doc = await new ItemSchema({
-        request_date: req.body.request_date,
+        request_date: checkDate(req.body.request_date),
         order_number: orderNumbers,
         simple_product_name: req.body.simple_product_name,
         delivery_method,
@@ -201,7 +201,9 @@ class ItemService {
    */
 
   removeDuplicates(arr) {
-    return arr.filter((item, index) => arr.indexOf(item) === index);
+    const isDate = arr[0] instanceof Date;
+    const stringArr = isDate ? arr.map(item=>item.toISOString()) : arr;
+    return [...new Set(stringArr)]
   }
 
   async getKeyFilters(key_name, isHidden) {
@@ -209,11 +211,12 @@ class ItemService {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
         key_name
-      );
+      ).sort({[key_name]: 1}).exec();
       const valuesArrays = declarationNumbers.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
         : valuesArrays;
+
       return {
         success: true,
         values: this.removeDuplicates(
@@ -323,41 +326,6 @@ class ItemService {
     }
   }
 
-  /*
-  * {
-      proform_number: [
-        'QTT20230614\r',
-        'QTT20230613-1\r',
-        'QTT20230625',
-        'RS003-23',
-       'JLV20230920',
-        'DUC23-NOV1\r'
-      ],
-      delivery_method: [ 'Море', 'Поезд' ]
-    }
-  * */
-
-  /*
-  * [
-      {
-        container_number: [
-          'TCNU9867805',
-          'TCNU7058139',
-          'TCNU9865973',
-          'TCNU7063773',
-          'TCNU8227151'
-        ]
-      },
-      {
-        order_number: [
-          '21LTJX3972-13',
-          '21LTJX3972-19',
-          '21LTJX3972-22A',
-          '21LTJX3972-23'
-        ]
-      }
-    ]
-  * */
   async getItemsFilter(query_keys, isHidden) {
     try {
       const objectForQuery = {};
@@ -636,13 +604,13 @@ class ItemService {
             _id,
           },
           {
-            etd,
-            eta: formulaRes.eta,
-            date_do: formulaRes.date_do,
-            declaration_issue_date: formulaRes.declaration_issue_date,
-            train_depart_date: formulaRes.train_depart_date,
-            train_arrive_date: formulaRes.train_arrive_date,
-            store_arrive_date: formulaRes.store_arrive_date,
+            etd: checkDate(etd),
+            eta: checkDate(formulaRes.eta),
+            date_do: checkDate(formulaRes.date_do),
+            declaration_issue_date: checkDate(formulaRes.declaration_issue_date),
+            train_depart_date: checkDate(formulaRes.train_depart_date),
+            train_arrive_date: checkDate(formulaRes.train_arrive_date),
+            store_arrive_date: checkDate(formulaRes.store_arrive_date),
             delivery_channel,
           }
         );
@@ -762,7 +730,7 @@ class ItemService {
           _id,
         },
         {
-          request_date: req.body.request_date,
+          request_date: checkDate(req.body.request_date),
           order_number: orderNumbers,
           inside_number: req.body.inside_number,
           proform_number: req.body.proform_number,
@@ -776,9 +744,9 @@ class ItemService {
           agent: req.body.agent,
           place_of_dispatch: req.body.place_of_dispatch,
           line: req.body.line,
-          ready_date: req.body.ready_date,
-          load_date: req.body.load_date,
-          release: req.body.release,
+          ready_date: checkDate(req.body.ready_date),
+          load_date: checkDate(req.body.load_date),
+          release: checkDate(req.body.release),
           bl_smgs_cmr: req.body.bl_smgs_cmr,
           td: req.body.td,
           port: req.body.port,
@@ -786,8 +754,8 @@ class ItemService {
           fraht_account: req.body.fraht_account,
           is_docs: newDocs,
           declaration_number: req.body.declaration_number,
-          availability_of_ob: req.body.availability_of_ob,
-          answer_of_ob: req.body.answer_of_ob,
+          availability_of_ob: checkDate(req.body.availability_of_ob),
+          answer_of_ob: checkDate(req.body.answer_of_ob),
           direction: req.body.direction,
           expeditor: req.body.expeditor,
           destination_station: req.body.destination_station,

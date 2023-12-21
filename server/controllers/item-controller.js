@@ -20,26 +20,32 @@ class ItemController {
   }
 
   async getItems(req, res) {
-    const { timeStamp, ...filters } = req.query;
+    const { timeStamp } = req.query;
+    const filtersMap = req.body.filtersMap;
+    console.log(filtersMap);
     const query_string = req.body.search_query;
     const search_filter = req.body.search_filter;
     const hidden = req.body.hidden;
-    if (Object.keys(filters).length > 0) {
-      const result = await ItemService.getItemsFilter(filters, hidden);
+    if (filtersMap.length > 0) {
+      const result = await ItemService.getItemsFilter(filtersMap, hidden);
+
       if (result.success) res.status(200).json({ items: result.items });
       else res.status(400).json(result.error);
+
     } else if (query_string !== "null") {
       const result = await ItemService.findItemsBySearch(
         query_string,
         search_filter,
         hidden
       );
+
       res.json({ items: result });
     } else {
       const { items, totalPages } = await ItemService.getItems(
         req.params.page,
         hidden
       );
+
       res.json({
         items,
         totalPages,

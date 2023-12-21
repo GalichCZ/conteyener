@@ -323,8 +323,50 @@ class ItemService {
     }
   }
 
+  /*
+  * {
+      proform_number: [
+        'QTT20230614\r',
+        'QTT20230613-1\r',
+        'QTT20230625',
+        'RS003-23',
+       'JLV20230920',
+        'DUC23-NOV1\r'
+      ],
+      delivery_method: [ 'Море', 'Поезд' ]
+    }
+  * */
+
+  /*
+  * [
+      {
+        container_number: [
+          'TCNU9867805',
+          'TCNU7058139',
+          'TCNU9865973',
+          'TCNU7063773',
+          'TCNU8227151'
+        ]
+      },
+      {
+        order_number: [
+          '21LTJX3972-13',
+          '21LTJX3972-19',
+          '21LTJX3972-22A',
+          '21LTJX3972-23'
+        ]
+      }
+    ]
+  * */
   async getItemsFilter(query_keys, isHidden) {
     try {
+      const objectForQuery = {};
+
+      query_keys.forEach((key) => {
+        const keyName = Object.keys(key)[0];
+        objectForQuery[keyName] = key[keyName];
+      })
+
       const valuesToMatch = [null, ""];
       let isAggregate = false;
       let query = { hidden: isHidden };
@@ -337,10 +379,10 @@ class ItemService {
         key === "providers" ||
         key === "importers" ||
         key === "conditions";
-      Object.keys(query_keys).forEach((key) => {
-        if (query_keys[key] === "null" && isArrayPole(key)) {
+      Object.keys(objectForQuery).forEach((key) => {
+        if (objectForQuery[key] === "null" && isArrayPole(key)) {
           return (query[key] = { $size: 0 });
-        } else if (query_keys[key] === "not_null" && isArrayPole(key)) {
+        } else if (objectForQuery[key] === "not_null" && isArrayPole(key)) {
           isAggregate = true;
           return (query = [
             {
@@ -352,14 +394,15 @@ class ItemService {
             },
           ]);
         }
-        if (query_keys[key] === "null") {
+        if (objectForQuery[key] === "null") {
           query[key] = { $in: valuesToMatch };
-        } else if (query_keys[key] === "not_null") {
+        } else if (objectForQuery[key] === "not_null") {
           query[key] = { $ne: null };
         } else {
-          query[key] = { $in: query_keys[key] };
+          query[key] = { $in: objectForQuery[key] };
         }
       });
+
       const items = isAggregate
         ? await ItemSchema.aggregate(query).sort({request_date: 1})
             .populate("delivery_channel", "name")

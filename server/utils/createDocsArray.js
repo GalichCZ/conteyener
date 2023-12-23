@@ -1,7 +1,6 @@
 
 function createDocsArray (docs, oldOrderNumbers, newOrderNumbers) {
     const newDocs = [];
-    console.log({docs, oldOrderNumbers, newOrderNumbers});
     if(docs.length === 0) {
         newOrderNumbers.forEach((order) =>
             newDocs.push({

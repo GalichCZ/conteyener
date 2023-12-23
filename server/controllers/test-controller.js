@@ -3,6 +3,10 @@ const ProductService = require("../service/product-service");
 const FileService = require("../service/file-service");
 const FormulaService = require("../service/formula-service");
 const ItemRepository = require("../repositories/item.repository");
+const {
+  checkDate,
+} = require("../utils/tableDataHandle");
+
 class TestController {
   async testDeclaration(req, res) {
     const response = await DeclarationService.createDeclarationStatus(req);
@@ -50,6 +54,39 @@ class TestController {
           { $eq: [{ $size: "$is_docs" }, 0] }        // is_docs array length === 0
         ]
       }});
+  }
+
+  async datesTimeChange(req, res) {
+    const items = await ItemRepository.getAllItems();
+
+    //need to use function checkDate for all date poles in item and save them
+    const promises = items.map(async (item) => {
+      const result = await ItemRepository.updateItemById(item._id, {
+        request_date: checkDate(item.request_date),
+        ready_date: checkDate(item.ready_date),
+        load_date: checkDate(item.load_date),
+        etd: checkDate(item.etd),
+        eta: checkDate(item.eta),
+        release: checkDate(item.release),
+        date_do: checkDate(item.date_do),
+        declaration_issue_date: checkDate(item.declaration_issue_date),
+        availability_of_ob: checkDate(item.availability_of_ob),
+        answer_of_ob: checkDate(item.answer_of_ob),
+        train_depart_date: checkDate(item.train_depart_date),
+        train_arrive_date: checkDate(item.train_arrive_date),
+        store_arrive_date: checkDate(item.store_arrive_date),
+      });
+      if (result !== true) res.json({ message: `error ${result}` });
+    })
+
+    await Promise.all(promises);
+
+    res.json({ message: "success" });
+  }
+
+  async getAllItems(req, res) {
+    const items = await ItemRepository.getAllItems();
+    res.json(items);
   }
 }
 

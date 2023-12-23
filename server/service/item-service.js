@@ -74,7 +74,7 @@ class ItemService {
       });
 
       const doc = await new ItemSchema({
-        request_date: req.body.request_date,
+        request_date: checkDate(req.body.request_date),
         order_number: orderNumbers,
         simple_product_name: req.body.simple_product_name,
         delivery_method,
@@ -201,7 +201,9 @@ class ItemService {
    */
 
   removeDuplicates(arr) {
-    return arr.filter((item, index) => arr.indexOf(item) === index);
+    const isDate = arr[0] instanceof Date;
+    const stringArr = isDate ? arr.map(item=>item.toISOString()) : arr;
+    return [...new Set(stringArr)]
   }
 
   async getKeyFilters(key_name, isHidden) {
@@ -209,11 +211,12 @@ class ItemService {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
         key_name
-      );
+      ).sort({[key_name]: 1}).exec();
       const valuesArrays = declarationNumbers.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
         : valuesArrays;
+
       return {
         success: true,
         values: this.removeDuplicates(
@@ -325,6 +328,13 @@ class ItemService {
 
   async getItemsFilter(query_keys, isHidden) {
     try {
+      const objectForQuery = {};
+
+      query_keys.forEach((key) => {
+        const keyName = Object.keys(key)[0];
+        objectForQuery[keyName] = key[keyName];
+      })
+
       const valuesToMatch = [null, ""];
       let isAggregate = false;
       let query = { hidden: isHidden };
@@ -337,10 +347,10 @@ class ItemService {
         key === "providers" ||
         key === "importers" ||
         key === "conditions";
-      Object.keys(query_keys).forEach((key) => {
-        if (query_keys[key] === "null" && isArrayPole(key)) {
+      Object.keys(objectForQuery).forEach((key) => {
+        if (objectForQuery[key] === "null" && isArrayPole(key)) {
           return (query[key] = { $size: 0 });
-        } else if (query_keys[key] === "not_null" && isArrayPole(key)) {
+        } else if (objectForQuery[key] === "not_null" && isArrayPole(key)) {
           isAggregate = true;
           return (query = [
             {
@@ -352,14 +362,15 @@ class ItemService {
             },
           ]);
         }
-        if (query_keys[key] === "null") {
+        if (objectForQuery[key] === "null") {
           query[key] = { $in: valuesToMatch };
-        } else if (query_keys[key] === "not_null") {
+        } else if (objectForQuery[key] === "not_null") {
           query[key] = { $ne: null };
         } else {
-          query[key] = { $in: query_keys[key] };
+          query[key] = { $in: objectForQuery[key] };
         }
       });
+
       const items = isAggregate
         ? await ItemSchema.aggregate(query).sort({request_date: 1})
             .populate("delivery_channel", "name")
@@ -593,13 +604,13 @@ class ItemService {
             _id,
           },
           {
-            etd,
-            eta: formulaRes.eta,
-            date_do: formulaRes.date_do,
-            declaration_issue_date: formulaRes.declaration_issue_date,
-            train_depart_date: formulaRes.train_depart_date,
-            train_arrive_date: formulaRes.train_arrive_date,
-            store_arrive_date: formulaRes.store_arrive_date,
+            etd: checkDate(etd),
+            eta: checkDate(formulaRes.eta),
+            date_do: checkDate(formulaRes.date_do),
+            declaration_issue_date: checkDate(formulaRes.declaration_issue_date),
+            train_depart_date: checkDate(formulaRes.train_depart_date),
+            train_arrive_date: checkDate(formulaRes.train_arrive_date),
+            store_arrive_date: checkDate(formulaRes.store_arrive_date),
             delivery_channel,
           }
         );
@@ -719,7 +730,7 @@ class ItemService {
           _id,
         },
         {
-          request_date: req.body.request_date,
+          request_date: checkDate(req.body.request_date),
           order_number: orderNumbers,
           inside_number: req.body.inside_number,
           proform_number: req.body.proform_number,
@@ -733,9 +744,9 @@ class ItemService {
           agent: req.body.agent,
           place_of_dispatch: req.body.place_of_dispatch,
           line: req.body.line,
-          ready_date: req.body.ready_date,
-          load_date: req.body.load_date,
-          release: req.body.release,
+          ready_date: checkDate(req.body.ready_date),
+          load_date: checkDate(req.body.load_date),
+          release: checkDate(req.body.release),
           bl_smgs_cmr: req.body.bl_smgs_cmr,
           td: req.body.td,
           port: req.body.port,
@@ -743,8 +754,8 @@ class ItemService {
           fraht_account: req.body.fraht_account,
           is_docs: newDocs,
           declaration_number: req.body.declaration_number,
-          availability_of_ob: req.body.availability_of_ob,
-          answer_of_ob: req.body.answer_of_ob,
+          availability_of_ob: checkDate(req.body.availability_of_ob),
+          answer_of_ob: checkDate(req.body.answer_of_ob),
           direction: req.body.direction,
           expeditor: req.body.expeditor,
           destination_station: req.body.destination_station,

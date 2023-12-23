@@ -9,9 +9,10 @@ class TableDataHandle {
 
   checkDate(value) {
     if (!value) return null;
-    if (value instanceof Date) return value;
+    if (value instanceof Date) return new Date(value.setHours(12, 0, 0, 0));
     if (typeof value === "number") return null;
-    if (value.includes(".")) return new Date(dayjs(value, "DD.MM.YYYY"));
+    if (typeof value !== "object" && value.includes(".")) return new Date (new Date(dayjs(value, "DD.MM.YYYY")).setHours(12, 0, 0, 0));
+    return new Date(new Date(value).setHours(12, 0, 0, 0));
   }
 
   splitStrings(value) {

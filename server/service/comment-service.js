@@ -34,8 +34,6 @@ class CommentService {
         .populate("comment_creator", "first_name last_name")
         .exec();
 
-      console.log(comments);
-
       return { comments, success: true };
     } catch (error) {
       console.log("COMMENT GET ERROR: ", error);

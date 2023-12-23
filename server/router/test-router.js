@@ -11,5 +11,7 @@ router.get(
   "/api/test/declaration/:declaration_number",
   TestController.getTestDeclaration
 );
+router.patch("/api/test/datesTimeChange", TestController.datesTimeChange);
+router.get("/api/test/getAllItems", TestController.getAllItems)
 
 module.exports = router;

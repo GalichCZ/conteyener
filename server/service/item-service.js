@@ -338,6 +338,7 @@ class ItemService {
       const valuesToMatch = [null, ""];
       let isAggregate = false;
       let query = { hidden: isHidden };
+
       const isArrayPole = (key) =>
         key === "declaration_number" ||
         key === "order_number" ||
@@ -347,7 +348,29 @@ class ItemService {
         key === "providers" ||
         key === "importers" ||
         key === "conditions";
+
+      const ascDescSort = {}
+
       Object.keys(objectForQuery).forEach((key) => {
+        if (key === 'is_docs') {
+          const elemMatch = {}
+          const names = {
+            PI: "PI",
+            CI: "CI",
+            PL: "PL",
+            SS_DS: "SS_DS",
+            CONTRACT_AGREES: "contract_agrees",
+            COST_AGREES: "cost_agrees",
+            INSTRUCTION: "instruction",
+            ED: "ED",
+            BILL: "bill",
+          }
+          objectForQuery[key].forEach(fieldName => (elemMatch[names[fieldName]] = true));
+          return query[key] = {
+              $elemMatch: elemMatch
+          }
+        }
+
         if (objectForQuery[key] === "null" && isArrayPole(key)) {
           return (query[key] = { $size: 0 });
         } else if (objectForQuery[key] === "not_null" && isArrayPole(key)) {
@@ -362,6 +385,11 @@ class ItemService {
             },
           ]);
         }
+
+        if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
+          return ascDescSort[key] = objectForQuery[key];
+        }
+
         if (objectForQuery[key] === "null") {
           query[key] = { $in: valuesToMatch };
         } else if (objectForQuery[key] === "not_null") {

@@ -24,7 +24,7 @@ class ItemController {
     const query_string = req.body.search_query;
     const search_filter = req.body.search_filter;
     const hidden = req.body.hidden;
-    if (filtersMap.length > 0) {
+    if (filtersMap && filtersMap.length > 0) {
       const result = await ItemService.getItemsFilter(filtersMap, hidden);
 
       if (result.success) res.status(200).json({ items: result.items });

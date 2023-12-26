@@ -225,6 +225,7 @@ class ItemService {
       const booleans = {
         bl_smgs_cmr:"bl_smgs_cmr",
         td:"td",
+        is_ds:"is_ds",
       }
 
       function sort() {

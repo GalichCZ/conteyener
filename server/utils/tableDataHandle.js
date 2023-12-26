@@ -8,6 +8,7 @@ class TableDataHandle {
   }
 
   checkDate(value) {
+    if (value === "-" || value === "+") return null;
     if (!value) return null;
     if (value instanceof Date) return new Date(value.setHours(12, 0, 0, 0));
     if (typeof value === "number") return null;

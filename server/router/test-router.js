@@ -13,5 +13,6 @@ router.get(
 );
 router.patch("/api/test/datesTimeChange", TestController.datesTimeChange);
 router.get("/api/test/getAllItems", TestController.getAllItems)
+router.post("/api/test/clearStrings", TestController.clearStrings)
 
 module.exports = router;

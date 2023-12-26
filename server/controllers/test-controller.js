@@ -84,6 +84,43 @@ class TestController {
     res.json({ message: "success" });
   }
 
+  async clearStrings(req, res) {
+    const item = await ItemRepository.getAllItems();
+
+    function clearString(str) {
+      if(!str || typeof str !== "string") return;
+      const cleanFromR = str.replace(/[\r]+/g, '');
+      const clearFromEmpty = cleanFromR === "" ? cleanFromR.replace("", "-") : cleanFromR
+      // const test = clearFromEmpty.length > 1 && clearFromEmpty[0] === "-" ? clearFromEmpty.replace("-", "") : clearFromEmpty;
+      return clearFromEmpty.trim();
+    }
+
+    const promises = item.map(async (item) => {
+      const result = await ItemRepository.updateItemById(item._id, {
+        proform_number: item?.proform_number.map((str) => clearString(str)),
+        order_number: item?.order_number.map((str) => clearString(str)),
+        is_docs: item?.is_docs.map((doc) => ({...doc, order_number: clearString(doc.order_number)})),
+        inside_number: item?.inside_number.map((str) => clearString(str)),
+        container_number: clearString(item?.container_number),
+        container_type: clearString(item?.container_type),
+        simple_product_name: item?.simple_product_name.map((str) => clearString(str)),
+        providers: item?.providers.map((str) => clearString(str)),
+        importers: item?.importers.map((str) => clearString(str)),
+        conditions: clearString(item?.conditions),
+        direction: clearString(item?.direction),
+        agent: clearString(item?.agent),
+        place_of_dispatch: clearString(item?.place_of_dispatch),
+        delivery_method: clearString(item?.delivery_method),
+        declaration_number: item?.declaration_number.map((str) => clearString(str)),
+      })
+      if (result !== true) res.json({ message: `error ${result}` });
+    })
+
+    await Promise.all(promises);
+
+    res.json({ message: "success" });
+  }
+
   async getAllItems(req, res) {
     const items = await ItemRepository.getAllItems();
     res.json(items);

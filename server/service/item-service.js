@@ -211,17 +211,19 @@ class ItemService {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
         key_name
-      ).sort({[key_name]: 1}).exec();
+      ).exec();
       const valuesArrays = declarationNumbers.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
         : valuesArrays;
 
+      const clearArr = this.removeDuplicates(values.filter((val) => val !== null && val !== undefined))
+
+      const sortedData = clearArr.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+
       return {
         success: true,
-        values: this.removeDuplicates(
-          values.filter((val) => val !== null && val !== undefined)
-        ),
+        values: sortedData
       };
     } catch (error) {
       return { success: false, error };
@@ -332,7 +334,16 @@ class ItemService {
 
       query_keys.forEach((key) => {
         const keyName = Object.keys(key)[0];
-        objectForQuery[keyName] = key[keyName];
+        const hasNull = key[keyName].includes("null");
+        const hasNotNull = key[keyName].includes("not_null");
+        const whatToSet = hasNull ? "null" : "not_null";
+
+        if(hasNull || hasNotNull) {
+          objectForQuery[keyName] = whatToSet;
+        }
+        else {
+          objectForQuery[keyName] = key[keyName];
+        }
       })
 
       const valuesToMatch = [null, ""];
@@ -386,25 +397,48 @@ class ItemService {
           ]);
         }
 
-        if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
-          return ascDescSort[key] = objectForQuery[key];
-        }
+        // if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
+        //   return ascDescSort[key] = objectForQuery[key];
+        // }
 
         if (objectForQuery[key] === "null") {
           query[key] = { $in: valuesToMatch };
         } else if (objectForQuery[key] === "not_null") {
-          query[key] = { $ne: null };
+           query[key] = { $ne: null };
         } else {
-          query[key] = { $in: objectForQuery[key] };
+           query[key] = { $in: objectForQuery[key] };
         }
       });
 
       const items = isAggregate
-        ? await ItemSchema.aggregate(query).sort({request_date: 1})
-            .populate("delivery_channel", "name")
-            .populate("store", "name")
-            .populate("stock_place", "name")
-            .exec()
+        ? await ItemSchema.aggregate([
+            ...query,
+            { $sort: { request_date: 1 } },
+            {
+              $lookup: {
+                from: 'delivery_channels',
+                localField: 'delivery_channel',
+                foreignField: '_id',
+                as: 'delivery_channel'
+              }
+            },
+            {
+              $lookup: {
+                from: 'stores',
+                localField: 'store',
+                foreignField: '_id',
+                as: 'store'
+              }
+            },
+            {
+              $lookup: {
+                from: 'stock_places',
+                localField: 'stock_place',
+                foreignField: '_id',
+                as: 'stock_place'
+              }
+            },
+          ]).exec()
         : await ItemSchema.find(query).sort({request_date: 1})
             .populate("delivery_channel", "name")
             .populate("store", "name")

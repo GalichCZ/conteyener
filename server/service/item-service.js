@@ -211,7 +211,10 @@ class ItemService {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
         key_name
-      ).exec();
+      ).populate("delivery_channel", "name")
+          .populate("store", "name")
+          .populate("stock_place", "name")
+          .exec();
       const valuesArrays = declarationNumbers.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
@@ -219,7 +222,22 @@ class ItemService {
 
       const clearArr = this.removeDuplicates(values.filter((val) => val !== null && val !== undefined))
 
-      const sortedData = clearArr.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+      const booleans = {
+        bl_smgs_cmr:"bl_smgs_cmr",
+        td:"td",
+      }
+
+      function sort() {
+        if(key_name === "km_to_dist"){
+          return clearArr.sort((a, b) => a - b)
+        }
+        if(booleans[key_name]){
+          return clearArr
+        }
+        return clearArr.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+      }
+
+      const sortedData = sort()
 
       return {
         success: true,
@@ -376,7 +394,7 @@ class ItemService {
             ED: "ED",
             BILL: "bill",
           }
-          objectForQuery[key].forEach(fieldName => (elemMatch[names[fieldName]] = true));
+          objectForQuery[key].forEach(fieldName => (elemMatch[names[fieldName]] = false));
           return query[key] = {
               $elemMatch: elemMatch
           }

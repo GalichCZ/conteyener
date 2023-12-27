@@ -395,9 +395,19 @@ class ItemService {
             ED: "ED",
             BILL: "bill",
           }
-          objectForQuery[key].forEach(fieldName => (elemMatch[names[fieldName]] = false));
+          if(objectForQuery[key] === 'null') {
+            Object.values(names).forEach(name => elemMatch[name]=false)
+          } else if (objectForQuery[key] === 'not_null'){
+            Object.values(names).forEach(name => elemMatch[name]=true)
+          }
+          else {
+            objectForQuery[key].forEach(fieldName => {
+              elemMatch[names[fieldName]] = false
+            })
+          }
+
           return query[key] = {
-              $elemMatch: elemMatch
+            $elemMatch: elemMatch
           }
         }
 
@@ -405,6 +415,22 @@ class ItemService {
           return (query[key] = { $size: 0 });
         } else if (objectForQuery[key] === "not_null" && isArrayPole(key)) {
           isAggregate = true;
+          if(Object.keys(query).length > 0){
+            const match = {}
+            Object.keys(query).map((item) =>
+                match[item] = query[item]
+            )
+            return query = [
+              {
+                $match: {
+                  ...match,
+                  $expr: {
+                    $gt: [{ $size: `$${key}` }, 0],
+                  },
+                }
+              }
+            ]
+          }
           return (query = [
             {
               $match: {
@@ -421,10 +447,31 @@ class ItemService {
         // }
 
         if (objectForQuery[key] === "null") {
+          if(Array.isArray(query)){
+            const object = {}
+            object[key] = { $in: valuesToMatch }
+            const match = query.find(item => Object.keys(item)[0] === '$match');
+            Object.keys(object).forEach(item => match['$match'][item] = object[item])
+            return
+          }
           query[key] = { $in: valuesToMatch };
         } else if (objectForQuery[key] === "not_null") {
-           query[key] = { $ne: null };
+          if(Array.isArray(query)) {
+            const object = {}
+            object[key] = {$ne: null}
+            const match = query.find(item => Object.keys(item)[0] === '$match');
+            Object.keys(object).forEach(item => match['$match'][item] = object[item])
+            return
+          }
+          query[key] = { $ne: null };
         } else {
+           if(Array.isArray(query)){
+             const object = {}
+             object[key] = { $in: objectForQuery[key] }
+             const match = query.find(item => Object.keys(item)[0] === '$match');
+             Object.keys(object).forEach(item => match['$match'][item] = object[item])
+             return
+           }
            query[key] = { $in: objectForQuery[key] };
         }
       });

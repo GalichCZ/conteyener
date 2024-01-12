@@ -314,6 +314,14 @@ class ItemController {
       console.log(error);
     }
   }
+
+  async partUpload(req, res) {
+    const result = await ItemService.partUpload(req.file.path);
+
+    if (result.success) res.status(200).json(result.response);
+    else res.status(400).json({ error: result.error });
+  }
+
 }
 
 module.exports = new ItemController();

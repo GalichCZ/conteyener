@@ -1082,32 +1082,30 @@ class ItemService {
     }
   }
 
-  async uploadGlobal(file) {
+  isDocsHandler(order_number) {
+    const orders = splitStrings(order_number);
+    const isDocsArray = [];
+
+    orders.map((num) => {
+      isDocsArray.push({
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+        order_number: num,
+      });
+    });
+    return isDocsArray;
+  }
+
+  async partUpload(file) {
     try {
-      await ItemRepository.deleteAllItems()
-
       const json = await FileService.createFileOld(file);
-
-      function isDocsHandler(order_number) {
-        const orders = splitStrings(order_number);
-        const isDocsArray = [];
-
-        orders.map((num) => {
-          isDocsArray.push({
-            PI: false,
-            CI: false,
-            PL: false,
-            SS_DS: false,
-            contract_agrees: false,
-            cost_agrees: false,
-            instruction: false,
-            ED: false,
-            bill: false,
-            order_number: num,
-          });
-        });
-        return isDocsArray;
-      }
 
       const items = json[0].map(async (item) => {
         const doc = new ItemSchema({
@@ -1163,7 +1161,127 @@ class ItemService {
 
           port: clearString(item["Порт"]),
 
-          is_docs: isDocsHandler(item["Номер заказа"]),
+          is_docs: this.isDocsHandler(item["Номер заказа"]),
+
+          is_ds: checkBoolean(item["Д/С для подачи"]),
+
+          fraht_account: item["Фрахтовый счет"],
+
+          declaration_number: splitStrings(item["Номер декларации"]),
+
+          declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+
+          availability_of_ob: checkDate(item["Наличие ОБ"]),
+
+          answer_of_ob: checkDate(item["Ответ ОБ"]),
+
+          expeditor: item["Экспедитор"],
+
+          destination_station: clearString(item["Станция прибытия"]),
+
+          km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+
+          train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+
+          train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+
+          pickup: clearString(item["Автовывоз"]),
+
+          store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+
+          stock_place: (await StockRepository.getStockPlaceByName(item["Сток Сдачи"]))?._id,
+
+          eta_update: checkDate(item["ETA"]) !== null,
+
+          date_do_update: checkDate(item["Дата ДО"]) !== null,
+
+          declaration_issue_date_update:
+              checkDate(item["Дата выпуска декларации"]) !== null,
+
+          train_depart_date_update:
+              checkDate(item["Дата отправки по ЖД"]) !== null,
+
+          train_arrive_date_update:
+              checkDate(item["Дата прибытия по ЖД"]) !== null,
+
+          store_arrive_date_update:
+              checkDate(item["Дата прибытия на склад"]) !== null,
+
+          hidden:
+              checkDate(item["Дата прибытия на склад"]) !== null,
+        });
+        return await doc.save();
+      });
+
+      const response = Promise.all(items).then(async (result) => {});
+
+      return successReturn(response);
+    } catch (error) {
+      console.log(error);
+      return errorReturn(error);
+    }
+  }
+  async uploadGlobal(file) {
+    try {
+      await ItemRepository.deleteAllItems()
+
+      const json = await FileService.createFileOld(file);
+
+      const items = json[0].map(async (item) => {
+        const doc = new ItemSchema({
+          request_date: checkDate(item["Дата заявки"]),
+
+          inside_number: splitStrings(item["Внутренний номер"]),
+
+          proform_number: splitStrings(item["Номер проформы"]),
+
+          order_number: splitStrings(item["Номер заказа"]),
+
+          container_number: item["Номер контейнера"],
+          /*----------------------------------------*/
+          simple_product_name: splitStrings(item["Товар"]),
+
+          delivery_method: item["Способ доставки"],
+
+          providers: splitStrings(item["Поставщик"]),
+
+          importers: splitStrings(item["Импортер"]),
+
+          conditions: splitStrings(item["Условия поставки"]),
+
+          direction: item["Направление"],
+
+          store: (await StoreRepository.getStoreByName(item["Склад"]))?._id,
+
+          delivery_channel: (await DeliveryChannelRepository.getDeliveryChannelByName(item["Канал поставки"]))?._id,
+
+          agent: clearString(item["Агент"]),
+
+          container_type: clearString(item["Тип контейенра"]),
+
+          place_of_dispatch: clearString(item["Место отправки"]),
+
+          line: clearString(item["Линия"]),
+
+          ready_date: checkDate(item["Дата готовности"]),
+
+          load_date: checkDate(item["Дата загрузки"]),
+
+          etd: checkDate(item["ETD"]),
+
+          eta: checkDate(item["ETA"]),
+
+          release: checkDate(item["Релиз"]),
+
+          bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+
+          td: checkBoolean(item["ТД"]),
+
+          date_do: checkDate(item["Дата ДО"]),
+
+          port: clearString(item["Порт"]),
+
+          is_docs: this.isDocsHandler(item["Номер заказа"]),
 
           is_ds: checkBoolean(item["Д/С для подачи"]),
 

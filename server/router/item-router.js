@@ -18,6 +18,7 @@ router.post(
 router.post("/api/bid", CheckAuth.checkToken, ItemController.itemCreate);
 router.post("/api/item/global", FileWare, ItemController.uploadGlobal);
 router.post("/api/item/mock", ItemController.mockData);
+router.post("/api/item/part-upload", FileWare, ItemController.partUpload)
 //get
 router.get("/api/item/hidden/:page", ItemController.getHiddenItems);
 router.post("/api/item/:page", ItemController.getItems);

@@ -1,7 +1,6 @@
 const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
 const ItemService = require("../service/item-service");
-
 const ItemSchema = require("../models/item-model");
 const ProductSchema = require("../models/product-model");
 const UserSchema = require("../models/user-model");
@@ -219,10 +218,15 @@ class ItemController {
 
   async getKeyFilters(req, res) {
     const key_name = req.query.key_name;
+    const has_filters = req.query.has_filters === 'true';
+    /*
+    * TODO: add redis to store last filtered data, so when user gets next keys, he get it from filtered data
+    * */
     const isHidden = req.query.isHidden === "true";
     const { values, success, error } = await ItemService.getKeyFilters(
       key_name,
-      isHidden
+      isHidden,
+      has_filters
     );
     if (success) res.status(200).json({ values });
     else res.status(400).json(error);

@@ -23,6 +23,7 @@ const { clearString } = require("../utils/clearString");
 const { BidColumns, datesColumns } = require("../enums/bidColumns.enum");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
+const redisClient = require("../providers/redis");
 dayjs.extend(customParseFormat);
 
 function errorReturn(error) {
@@ -206,7 +207,7 @@ class ItemService {
     return [...new Set(stringArr)]
   }
 
-  async getKeyFilters(key_name, isHidden) {
+  async getKeyFilters(key_name, isHidden, has_filters) {
     try {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
@@ -215,7 +216,13 @@ class ItemService {
           .populate("store", "name")
           .populate("stock_place", "name")
           .exec();
-      const valuesArrays = declarationNumbers.map((num) => num[key_name]);
+
+      const cache = await redisClient.get('filtered_bids')
+      const cachedBids = JSON.parse(cache)
+
+      const mapValues = has_filters ? cachedBids : declarationNumbers
+
+      const valuesArrays = mapValues.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
         : valuesArrays;
@@ -379,7 +386,7 @@ class ItemService {
         key === "importers" ||
         key === "conditions";
 
-      const ascDescSort = {}
+      let ascDescSort = {}
 
       Object.keys(objectForQuery).forEach((key) => {
         if (key === 'is_docs') {
@@ -442,9 +449,10 @@ class ItemService {
           ]);
         }
 
-        // if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
-        //   return ascDescSort[key] = objectForQuery[key];
-        // }
+        if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
+          const isAsc = objectForQuery[key].includes('asc')
+          return ascDescSort = isAsc ? {[key]: 1} : { [key]: -1 };
+        }
 
         if (objectForQuery[key] === "null") {
           if(Array.isArray(query)){
@@ -476,10 +484,13 @@ class ItemService {
         }
       });
 
+      const orderSortKey = Object.keys(ascDescSort)[0]
+      const orderSortValue = ascDescSort[orderSortKey];
+
       const items = isAggregate
         ? await ItemSchema.aggregate([
             ...query,
-            { $sort: { request_date: 1 } },
+            { $sort: { [orderSortKey]: orderSortValue } },
             {
               $lookup: {
                 from: 'delivery_channels',
@@ -505,11 +516,15 @@ class ItemService {
               }
             },
           ]).exec()
-        : await ItemSchema.find(query).sort({request_date: 1})
+        : await ItemSchema.find(query).sort({[orderSortKey]: orderSortValue })
             .populate("delivery_channel", "name")
             .populate("store", "name")
             .populate("stock_place", "name")
             .exec();
+
+      console.log({[orderSortKey]: orderSortValue})
+
+      await redisClient.set('filtered_bids', JSON.stringify(items))
 
       return { success: true, items };
     } catch (error) {
@@ -790,7 +805,7 @@ class ItemService {
 
       if (duplicatesInside.isDuplicate) {
         return errorReturn(
-          `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
+            `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
         );
       }
 

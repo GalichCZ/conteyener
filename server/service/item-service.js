@@ -1,7 +1,12 @@
 const ItemSchema = require("../models/item-model");
 const TechStoreSchema = require("../models/techStore-model");
+const ProductSchema = require("../models/product-model");
 const FormulaService = require("./formula-service");
 const ProductService = require("./product-service");
+const StoreRepository = require("../repositories/store.repository");
+const StockRepository = require("../repositories/stockPlace.repository");
+const DeliveryChannelRepository = require("../repositories/deliveryChannel.repository");
+const ItemRepository = require("../repositories/item.repository");
 const FileService = require("./file-service");
 const StockPlaceSchema = require("../models/stockPlace-model");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
@@ -13,9 +18,12 @@ const {
   castToNum,
 } = require("../utils/tableDataHandle");
 const { getDateNameByType } = require("../utils/getDateNameByType");
-
+const { createDocsArray } = require("../utils/createDocsArray");
+const { clearString } = require("../utils/clearString");
+const { BidColumns, datesColumns } = require("../enums/bidColumns.enum");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
+const redisClient = require("../providers/redis");
 dayjs.extend(customParseFormat);
 
 function errorReturn(error) {
@@ -36,20 +44,22 @@ class ItemService {
         _id: req.body.store,
       }).exec();
 
+      const orderNumbers = Object.values(req.body.order_number).map(order => order.order_number);
+
       const duplicatesOrder = await checkDuplicates(
-        req.body.order_number,
+          orderNumbers,
         "order_number"
       );
 
       if (duplicatesOrder.isDuplicate) {
         return errorReturn(
-          `Повторяющийся № заказа: ${duplicatesOrder.duplicates}`
+          `Повторяющийся № заказа: ${duplicatesOrder.duplicate.join(", ")}`
         );
       }
 
       const isDocsArray = [];
 
-      req.body.order_number.map((num) => {
+      orderNumbers.map((num) => {
         isDocsArray.push({
           PI: false,
           CI: false,
@@ -65,8 +75,8 @@ class ItemService {
       });
 
       const doc = await new ItemSchema({
-        request_date: req.body.request_date,
-        order_number: req.body.order_number,
+        request_date: checkDate(req.body.request_date),
+        order_number: orderNumbers,
         simple_product_name: req.body.simple_product_name,
         delivery_method,
         providers: req.body.providers,
@@ -96,7 +106,7 @@ class ItemService {
 
   async updateDocs(req) {
     try {
-      const item = await ItemSchema.findById(req.body._id);
+      const item = await ItemSchema.findById(req.body.bidId);
 
       const oldArray = item.is_docs;
 
@@ -106,7 +116,10 @@ class ItemService {
           : doc
       );
 
-      await ItemSchema.updateOne({ _id: req.body._id }, { is_docs: newArray });
+      await ItemSchema.updateOne(
+        { _id: req.body.bidId },
+        { is_docs: newArray }
+      );
 
       return { success: true };
     } catch (error) {
@@ -120,12 +133,12 @@ class ItemService {
     }
   }
 
-  async getItems(page) {
+  async getItems(page, hidden) {
     try {
       const _page = page === "0" ? 1 : page;
-      const perPage = 100;
+      const perPage = 50;
       const itemCount = await ItemSchema.countDocuments({
-        hidden: false,
+        hidden,
       }).exec();
 
       const totalPages = Math.ceil(itemCount / perPage);
@@ -133,8 +146,11 @@ class ItemService {
       const skipDocuments = (_page - 1) * perPage;
 
       const items = await ItemSchema.find({
-        hidden: false,
-      })
+        hidden,
+      }).sort({request_date: 1})
+        .populate("delivery_channel", "name")
+        .populate("store", "name")
+        .populate("stock_place", "name")
         .skip(skipDocuments)
         .limit(perPage)
         .exec();
@@ -152,7 +168,7 @@ class ItemService {
 
   async getHiddenItems(page) {
     try {
-      const perPage = 100;
+      const perPage = 50;
 
       const itemCount = await ItemSchema.countDocuments({
         hidden: true,
@@ -161,7 +177,7 @@ class ItemService {
       const totalPages = Math.ceil(itemCount / perPage);
       const skipDocuments = (page - 1) * perPage;
 
-      const items = await ItemSchema.find({ hidden: true })
+      const items = await ItemSchema.find({ hidden: true }).sort({request_date: 1})
         .skip(skipDocuments)
         .limit(perPage)
         .exec();
@@ -186,35 +202,180 @@ class ItemService {
    */
 
   removeDuplicates(arr) {
-    return arr.filter((item, index) => arr.indexOf(item) === index);
+    const isDate = arr[0] instanceof Date;
+    const stringArr = isDate ? arr.map(item=>item.toISOString()) : arr;
+    return [...new Set(stringArr)]
   }
 
-  async getKeyFilters(key_name, isHidden) {
+  async getKeyFilters(key_name, isHidden, has_filters) {
     try {
       const declarationNumbers = await ItemSchema.find(
         { hidden: isHidden },
         key_name
-      );
-      const valuesArrays = declarationNumbers.map((num) => num[key_name]);
+      ).populate("delivery_channel", "name")
+          .populate("store", "name")
+          .populate("stock_place", "name")
+          .exec();
+
+      const cache = await redisClient.get('filtered_bids')
+      const cachedBids = JSON.parse(cache)
+
+      const mapValues = has_filters ? cachedBids : declarationNumbers
+
+      const valuesArrays = mapValues.map((num) => num[key_name]);
       const values = Array.isArray(valuesArrays[0])
         ? [].concat(...valuesArrays)
         : valuesArrays;
+
+      const clearArr = this.removeDuplicates(values.filter((val) => val !== null && val !== undefined))
+
+      const booleans = {
+        bl_smgs_cmr:"bl_smgs_cmr",
+        td:"td",
+        is_ds:"is_ds",
+      }
+
+      function sort() {
+        if(key_name === "km_to_dist"){
+          return clearArr.sort((a, b) => a - b)
+        }
+        if(booleans[key_name]){
+          return clearArr
+        }
+        return clearArr.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+      }
+
+      const sortedData = sort()
+
       return {
         success: true,
-        values: this.removeDuplicates(
-          values.filter((val) => val !== null && val !== undefined)
-        ),
+        values: sortedData
       };
     } catch (error) {
       return { success: false, error };
     }
   }
 
+  async findItemsBySearch(query_string, search_filter, isHidden) {
+    try {
+      const regex = new RegExp(query_string, "i");
+      const query = { $regex: regex };
+      const items =
+        search_filter === "other"
+          ? await ItemSchema.find({
+              $or: [
+                { inside_number: query },
+                { proform_number: query },
+                { order_number: query },
+                { simple_product_name: query },
+                { providers: query },
+                { importers: query },
+                { container_number: query },
+                { container_type: query },
+                { conditions: query },
+                { direction: query },
+                { store_name: query },
+                { agent: query },
+                { fraht: query },
+                { fraht_account: query },
+                { place_of_dispatch: query },
+                { delivery_method: query },
+                { line: query },
+                { port: query },
+                { declaration_number: query },
+                { expeditor: query },
+                { destination_station: query },
+                { pickup: query },
+                { stock_place_name: query },
+                { stock_place_name: query },
+              ],
+              hidden: isHidden,
+            }).sort({request_date: 1})
+              .populate("delivery_channel", "name")
+              .populate("store", "name")
+              .populate("stock_place", "name")
+              .exec()
+          : [];
+
+      if (items.length === 0) {
+        const query = { $regex: regex };
+
+        const products = await ProductSchema.find({
+          $or: [
+            { hs_code: query },
+            { article: query },
+            { trade_mark: query },
+            { model: query },
+            { modification: query },
+            { product_name: query },
+            { manufacturer: query },
+          ],
+        }).exec();
+
+        const itemIds = products.map((product) => {
+          return product.item_id;
+        });
+        const uniqueIds = itemIds.filter((element, index) => {
+          return itemIds.indexOf(element) === index;
+        });
+        const getItems = uniqueIds.map(async (id) => {
+          return await ItemSchema.findById(id).sort({request_date: 1})
+            .populate("delivery_channel", "name")
+            .populate("store", "name")
+            .populate("stock_place", "name");
+        });
+        return this.test(getItems, isHidden)
+          .then((filteredArray) => {
+            return filteredArray;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            return [];
+          });
+      } else {
+        return items.filter(
+          (item) => item !== null && item.hidden === isHidden
+        )
+      }
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  async test(getItems, isHidden) {
+    try {
+      const result = await Promise.all(getItems);
+      return result.filter(
+        (res) => res !== null && res.hidden === isHidden
+      );
+    } catch (error) {
+      return [];
+    }
+  }
+
   async getItemsFilter(query_keys, isHidden) {
     try {
+      const objectForQuery = {};
+
+      query_keys.forEach((key) => {
+        const keyName = Object.keys(key)[0];
+        const hasNull = key[keyName].includes("null");
+        const hasNotNull = key[keyName].includes("not_null");
+        const whatToSet = hasNull ? "null" : "not_null";
+
+        if(hasNull || hasNotNull) {
+          objectForQuery[keyName] = whatToSet;
+        }
+        else {
+          objectForQuery[keyName] = key[keyName];
+        }
+      })
+
       const valuesToMatch = [null, ""];
       let isAggregate = false;
       let query = { hidden: isHidden };
+
       const isArrayPole = (key) =>
         key === "declaration_number" ||
         key === "order_number" ||
@@ -224,11 +385,59 @@ class ItemService {
         key === "providers" ||
         key === "importers" ||
         key === "conditions";
-      Object.keys(query_keys).forEach((key) => {
-        if (query_keys[key] === "null" && isArrayPole(key)) {
+
+      let ascDescSort = {}
+
+      Object.keys(objectForQuery).forEach((key) => {
+        if (key === 'is_docs') {
+          const elemMatch = {}
+          const names = {
+            PI: "PI",
+            CI: "CI",
+            PL: "PL",
+            SS_DS: "SS_DS",
+            CONTRACT_AGREES: "contract_agrees",
+            COST_AGREES: "cost_agrees",
+            INSTRUCTION: "instruction",
+            ED: "ED",
+            BILL: "bill",
+          }
+          if(objectForQuery[key] === 'null') {
+            Object.values(names).forEach(name => elemMatch[name]=false)
+          } else if (objectForQuery[key] === 'not_null'){
+            Object.values(names).forEach(name => elemMatch[name]=true)
+          }
+          else {
+            objectForQuery[key].forEach(fieldName => {
+              elemMatch[names[fieldName]] = false
+            })
+          }
+
+          return query[key] = {
+            $elemMatch: elemMatch
+          }
+        }
+
+        if (objectForQuery[key] === "null" && isArrayPole(key)) {
           return (query[key] = { $size: 0 });
-        } else if (query_keys[key] === "not_null" && isArrayPole(key)) {
+        } else if (objectForQuery[key] === "not_null" && isArrayPole(key)) {
           isAggregate = true;
+          if(Object.keys(query).length > 0){
+            const match = {}
+            Object.keys(query).map((item) =>
+                match[item] = query[item]
+            )
+            return query = [
+              {
+                $match: {
+                  ...match,
+                  $expr: {
+                    $gt: [{ $size: `$${key}` }, 0],
+                  },
+                }
+              }
+            ]
+          }
           return (query = [
             {
               $match: {
@@ -239,17 +448,83 @@ class ItemService {
             },
           ]);
         }
-        if (query_keys[key] === "null") {
+
+        if (objectForQuery[key].includes('asc') || objectForQuery[key].includes('desc')) {
+          const isAsc = objectForQuery[key].includes('asc')
+          return ascDescSort = isAsc ? {[key]: 1} : { [key]: -1 };
+        }
+
+        if (objectForQuery[key] === "null") {
+          if(Array.isArray(query)){
+            const object = {}
+            object[key] = { $in: valuesToMatch }
+            const match = query.find(item => Object.keys(item)[0] === '$match');
+            Object.keys(object).forEach(item => match['$match'][item] = object[item])
+            return
+          }
           query[key] = { $in: valuesToMatch };
-        } else if (query_keys[key] === "not_null") {
+        } else if (objectForQuery[key] === "not_null") {
+          if(Array.isArray(query)) {
+            const object = {}
+            object[key] = {$ne: null}
+            const match = query.find(item => Object.keys(item)[0] === '$match');
+            Object.keys(object).forEach(item => match['$match'][item] = object[item])
+            return
+          }
           query[key] = { $ne: null };
         } else {
-          query[key] = { $in: query_keys[key] };
+           if(Array.isArray(query)){
+             const object = {}
+             object[key] = { $in: objectForQuery[key] }
+             const match = query.find(item => Object.keys(item)[0] === '$match');
+             Object.keys(object).forEach(item => match['$match'][item] = object[item])
+             return
+           }
+           query[key] = { $in: objectForQuery[key] };
         }
       });
+
+      const orderSortKey = Object.keys(ascDescSort)[0]
+      const orderSortValue = ascDescSort[orderSortKey];
+
       const items = isAggregate
-        ? await ItemSchema.aggregate(query).exec()
-        : await ItemSchema.find(query).exec();
+        ? await ItemSchema.aggregate([
+            ...query,
+            { $sort: { [orderSortKey]: orderSortValue } },
+            {
+              $lookup: {
+                from: 'delivery_channels',
+                localField: 'delivery_channel',
+                foreignField: '_id',
+                as: 'delivery_channel'
+              }
+            },
+            {
+              $lookup: {
+                from: 'stores',
+                localField: 'store',
+                foreignField: '_id',
+                as: 'store'
+              }
+            },
+            {
+              $lookup: {
+                from: 'stock_places',
+                localField: 'stock_place',
+                foreignField: '_id',
+                as: 'stock_place'
+              }
+            },
+          ]).exec()
+        : await ItemSchema.find(query).sort({[orderSortKey]: orderSortValue })
+            .populate("delivery_channel", "name")
+            .populate("store", "name")
+            .populate("stock_place", "name")
+            .exec();
+
+      console.log({[orderSortKey]: orderSortValue})
+
+      await redisClient.set('filtered_bids', JSON.stringify(items))
 
       return { success: true, items };
     } catch (error) {
@@ -266,7 +541,7 @@ class ItemService {
   async hideItem(req) {
     try {
       const _id = req.body._id;
-      return await ItemSchema.updateOne({ _id }, { hidden: req.body.hidden });
+      return await ItemSchema.updateOne({ _id }, { hidden: true });
     } catch (error) {
       console.log(error);
       SendBotMessage(
@@ -282,6 +557,11 @@ class ItemService {
     try {
       const result = dataForChanges.map(async (data) => {
         const { _id, delivery_channel, newDate, dateType } = data;
+
+        if (!newDate || !delivery_channel) {
+          return;
+        }
+
         const dateName = getDateNameByType(dateType);
         const query = {};
         query[dateName] = null;
@@ -333,6 +613,12 @@ class ItemService {
 
       return { success: true };
     } catch (error) {
+      console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE DATES AFTER UPLOAD ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }
@@ -388,6 +674,11 @@ class ItemService {
       return { message: "success" };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE FORMULA DATES ERROR:\n${error}`
+      );
       return error;
     }
   }
@@ -402,22 +693,41 @@ class ItemService {
       );
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nUPDATE COMMENT ERROR:\n${error}`
+      );
       return error;
     }
   }
 
   async calculateDates(req) {
     try {
-      const _id = req.body.itemId;
+      const _id = req.body.bidId;
       const item = await ItemSchema.findById(_id);
 
-      if (req.body.etd === null) {
-        await ItemSchema.updateOne({ _id }, { etd: req.body.etd });
+      if (req.body.date === null) {
+        await ItemSchema.updateOne({ _id }, {
+            etd: req.body.date,
+            eta: null,
+            date_do: null,
+            declaration_issue_date: null,
+            train_depart_date: null,
+            train_arrive_date: null,
+            store_arrive_date: null,
+            store_arrive_date_update: false,
+            train_arrive_date_update: false,
+            train_depart_date_update: false,
+            declaration_issue_date_update: false,
+            date_do_update: false,
+            eta_update: false,
+        });
       } else {
         let delivery_channel = "";
         let etd = null;
 
-        if (req.body.etd) etd = req.body.etd;
+        if (req.body.date) etd = req.body.date;
         else if (item.etd) etd = item.etd;
         else etd = null;
 
@@ -437,13 +747,13 @@ class ItemService {
             _id,
           },
           {
-            etd,
-            eta: formulaRes.eta,
-            date_do: formulaRes.date_do,
-            declaration_issue_date: formulaRes.declaration_issue_date,
-            train_depart_date: formulaRes.train_depart_date,
-            train_arrive_date: formulaRes.train_arrive_date,
-            store_arrive_date: formulaRes.store_arrive_date,
+            etd: checkDate(etd),
+            eta: checkDate(formulaRes.eta),
+            date_do: checkDate(formulaRes.date_do),
+            declaration_issue_date: checkDate(formulaRes.declaration_issue_date),
+            train_depart_date: checkDate(formulaRes.train_depart_date),
+            train_arrive_date: checkDate(formulaRes.train_arrive_date),
+            store_arrive_date: checkDate(formulaRes.store_arrive_date),
             delivery_channel,
           }
         );
@@ -461,8 +771,10 @@ class ItemService {
       const _id = req.body._id;
       const item = await ItemSchema.findById(_id).exec();
 
+      const orderNumbers = Object.values(req.body.order_number).map(order => order.order_number);
+
       const duplicatesOrder = await checkDuplicatesArray(
-        req.body.order_number,
+        orderNumbers,
         "order_number",
         _id
       );
@@ -493,7 +805,7 @@ class ItemService {
 
       if (duplicatesInside.isDuplicate) {
         return errorReturn(
-          `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
+            `Повторяющийся внутренний №: ${duplicatesInside.duplicates}`
         );
       }
 
@@ -509,6 +821,7 @@ class ItemService {
         );
       }
 
+      //TODO: fix declarations
       const duplicatesDeclaration = await checkDuplicatesArray(
         req.body.declaration_number,
         "declaration_number",
@@ -548,68 +861,11 @@ class ItemService {
         return res;
       });
 
-      const newDocs = req.body.is_docs;
-
+      const docs = req.body.is_docs;
       const oldOrderNumbers = item.order_number;
-      const newOrderNumbers = req.body.order_number;
-
-      const mapNumbersToChange = new Map(); //old, new
-
-      //checking what number should be changed and for what
-      newOrderNumbers.forEach((number, index) => {
-        if (
-          number !== oldOrderNumbers[index] &&
-          oldOrderNumbers[index] !== undefined
-        )
-          mapNumbersToChange.set(oldOrderNumbers[index], number);
-      });
-
-      //array of docs that will be saved
-      const changedDocs = [];
-
-      //changing all docs as it needs
-      if (mapNumbersToChange.size > 0) {
-        newDocs.forEach((doc) => {
-          const newOrderNumber = mapNumbersToChange.get(doc.order_number);
-          if (newOrderNumber) {
-            changedDocs.push({ ...doc, order_number: newOrderNumber });
-          } else {
-            changedDocs.push(doc);
-          }
-        });
-      }
-
-      const mapOfOldOrderNums = new Map(); //orderNumber, orderNumber
-      oldOrderNumbers.forEach((num) => {
-        mapOfOldOrderNums.set(num, num);
-      });
-
-      const mapOfChangedOrderNums = new Map(); //changedOrderNum, changedOrderNum
-      mapNumbersToChange.forEach((num, key) => {
-        mapOfChangedOrderNums.set(num, num);
-      });
-
-      const orderNumbersToAdd = newOrderNumbers.filter(
-        (num) =>
-          num !== mapOfOldOrderNums.get(num) &&
-          num !== mapOfChangedOrderNums.get(num)
-      );
-
-      if (orderNumbersToAdd.length > 0) {
-        orderNumbersToAdd.forEach((number) => {
-          changedDocs.push({
-            PI: false,
-            CI: false,
-            PL: false,
-            SS_DS: false,
-            contract_agrees: false,
-            cost_agrees: false,
-            instruction: false,
-            ED: false,
-            bill: false,
-            order_number: number,
-          });
-        });
+      const newDocs = createDocsArray(docs, oldOrderNumbers, orderNumbers);
+      if(newDocs === null) {
+        return { success: false, error:"Такой способ изменения № заказа приведет к потере документов для подачи, изменения НЕ сохранены" };
       }
 
       await ItemSchema.updateOne(
@@ -617,8 +873,8 @@ class ItemService {
           _id,
         },
         {
-          request_date: req.body.request_date,
-          order_number: req.body.order_number,
+          request_date: checkDate(req.body.request_date),
+          order_number: orderNumbers,
           inside_number: req.body.inside_number,
           proform_number: req.body.proform_number,
           container_number: req.body.container_number,
@@ -631,18 +887,18 @@ class ItemService {
           agent: req.body.agent,
           place_of_dispatch: req.body.place_of_dispatch,
           line: req.body.line,
-          ready_date: req.body.ready_date,
-          load_date: req.body.load_date,
-          release: req.body.release,
+          ready_date: checkDate(req.body.ready_date),
+          load_date: checkDate(req.body.load_date),
+          release: checkDate(req.body.release),
           bl_smgs_cmr: req.body.bl_smgs_cmr,
           td: req.body.td,
           port: req.body.port,
           is_ds: req.body.is_ds,
           fraht_account: req.body.fraht_account,
-          is_docs: changedDocs,
+          is_docs: newDocs,
           declaration_number: req.body.declaration_number,
-          availability_of_ob: req.body.availability_of_ob,
-          answer_of_ob: req.body.answer_of_ob,
+          availability_of_ob: checkDate(req.body.availability_of_ob),
+          answer_of_ob: checkDate(req.body.answer_of_ob),
           direction: req.body.direction,
           expeditor: req.body.expeditor,
           destination_station: req.body.destination_station,
@@ -748,9 +1004,9 @@ class ItemService {
 
   async uploadExcel(file) {
     try {
-      const json = await FileService.createFile(file);
+      const { json, colNames } = await FileService.createFile(file);
 
-      const containerNums = json[0].map((item) => {
+      const containerNums = json.map((item) => {
         return item["Номер контейнера"];
       });
 
@@ -761,74 +1017,54 @@ class ItemService {
       const lastDatesMap = []; //id, last changed date, delivery channel
 
       const itemsUpdate = filteredContainers.map(async (num, index) => {
-        const tableRow = json[0][index];
+        const tableRow = json[index];
+
+        const requestObject = {};
+
         const item = await ItemSchema.findOne({ container_number: num });
         const { dateType, dateName } = this.getLastChangedData(tableRow);
 
-        const objectToAdd = {};
-        objectToAdd["_id"] = item._id;
-        objectToAdd["delivery_channel"] = item.delivery_channel;
-        objectToAdd["newDate"] = tableRow[dateName];
-        objectToAdd["dateType"] = dateType;
+        if (item) {
+          const objectToAdd = {};
+          objectToAdd["_id"] = item._id;
+          objectToAdd["delivery_channel"] = item.delivery_channel;
+          objectToAdd["newDate"] = tableRow[dateName];
+          objectToAdd["dateType"] = dateType;
 
-        lastDatesMap.push(objectToAdd);
+          lastDatesMap.push(objectToAdd);
+        }
+
+        const dateNames = Object.keys(datesColumns);
+
+        //colNames, enum
+        for (const col of Object.keys(BidColumns)) {
+          const isCol = colNames.includes(col);
+          if (isCol) {
+            const isDate = dateNames.includes(col);
+
+            const isDecl = BidColumns[col] === "declaration_number";
+
+            if (isDecl) {
+              requestObject[BidColumns[col]] = splitStrings(tableRow[col]);
+            }
+            else if (BidColumns[col] === "store") {
+                requestObject[BidColumns[col]] = await StoreRepository.getStoreByName(tableRow[col]);
+            }
+            else if (isDate && datesColumns[col]) {
+              requestObject[BidColumns[col]] = checkDate(tableRow[col])
+              requestObject[datesColumns[col]] =
+                checkDate(tableRow[col]) !== null;
+            } else {
+              requestObject[BidColumns[col]] = isDate
+                ? checkDate(tableRow[col])
+                : clearString(tableRow[col]);
+            }
+          }
+        }
 
         await ItemSchema.findOneAndUpdate(
           { container_number: num, hidden: false },
-          {
-            delivery_method:
-              tableRow["Способ доставки"] === null
-                ? ""
-                : tableRow["Способ доставки"],
-            direction: tableRow["Направление"],
-            store_name: tableRow["Склад"],
-            agent: tableRow["Агент"] === null ? "" : tableRow["Агент"],
-            place_of_dispatch:
-              tableRow["Место отправки"] === null
-                ? ""
-                : tableRow["Место отправки"],
-            line: tableRow["Линия"] === null ? "" : tableRow["Линия"],
-            ready_date: checkDate(tableRow["Дата готовности"]),
-            load_date: checkDate(tableRow["Дата загрузки"]),
-            etd: checkDate(tableRow["ETD"]),
-            eta: checkDate(tableRow["ETA"]),
-            date_do: checkDate(tableRow["Дата ДО"]),
-            port: tableRow["Порт"] === null ? "" : tableRow["Порт"],
-            declaration_number: splitStrings(tableRow["Номер декларации"]),
-            declaration_issue_date: checkDate(
-              tableRow["Дата выпуска декларации"]
-            ),
-            expeditor:
-              tableRow["Экспедитор"] === null ? "" : tableRow["Экспедитор"],
-            destination_station:
-              tableRow["Станция прибытия"] === null
-                ? ""
-                : tableRow["Станция прибытия"],
-            km_to_dist: castToNum(tableRow["Осталось км до ст. назначения"]),
-            train_depart_date: checkDate(tableRow["Дата отправки по ЖД"]),
-            train_arrive_date: checkDate(tableRow["Дата прибытия по ЖД"]),
-            pickup: tableRow["Автовывоз"] === null ? "" : tableRow["Автовывоз"],
-            store_arrive_date: checkDate(tableRow["Дата прибытия на склад"]),
-            eta_update: checkDate(tableRow["ETA"]) !== null ? true : false,
-            date_do_update:
-              checkDate(tableRow["Дата ДО"]) !== null ? true : false,
-            declaration_issue_date_update:
-              checkDate(tableRow["Дата выпуска декларации"]) !== null
-                ? true
-                : false,
-            train_depart_date_update:
-              checkDate(tableRow["Дата отправки по ЖД"]) !== null
-                ? true
-                : false,
-            train_arrive_date_update:
-              checkDate(tableRow["Дата прибытия по ЖД"]) !== null
-                ? true
-                : false,
-            store_arrive_date_update:
-              checkDate(tableRow["Дата прибытия на склад"]) !== null
-                ? true
-                : false,
-          }
+          requestObject
         );
       });
 
@@ -837,93 +1073,264 @@ class ItemService {
       return { success: true, lastDatesMap };
     } catch (error) {
       console.log(error);
+      SendBotMessage(
+        `${dayjs(new Date()).format(
+          "MMMM D, YYYY h:mm A"
+        )}\nLOAD EXCEL ERROR:\n${error}`
+      );
       return { success: false, error };
     }
   }
 
-  async uploadGlobal(file) {
+  isDocsHandler(order_number) {
+    const orders = splitStrings(order_number);
+    const isDocsArray = [];
+
+    orders.map((num) => {
+      isDocsArray.push({
+        PI: false,
+        CI: false,
+        PL: false,
+        SS_DS: false,
+        contract_agrees: false,
+        cost_agrees: false,
+        instruction: false,
+        ED: false,
+        bill: false,
+        order_number: num,
+      });
+    });
+    return isDocsArray;
+  }
+
+  async partUpload(file) {
     try {
-      const json = await FileService.createFile(file);
-
-      function isDocsHandler(order_number) {
-        const orders = splitStrings(order_number);
-        const isDocsArray = [];
-
-        orders.map((num) => {
-          isDocsArray.push({
-            PI: false,
-            CI: false,
-            PL: false,
-            SS_DS: false,
-            contract_agrees: false,
-            cost_agrees: false,
-            instruction: false,
-            ED: false,
-            bill: false,
-            order_number: num,
-          });
-        });
-        return isDocsArray;
-      }
+      const json = await FileService.createFileOld(file);
 
       const items = json[0].map(async (item) => {
         const doc = new ItemSchema({
           request_date: checkDate(item["Дата заявки"]),
+
           inside_number: splitStrings(item["Внутренний номер"]),
+
           proform_number: splitStrings(item["Номер проформы"]),
+
           order_number: splitStrings(item["Номер заказа"]),
+
           container_number: item["Номер контейнера"],
           /*----------------------------------------*/
           simple_product_name: splitStrings(item["Товар"]),
+
           delivery_method: item["Способ доставки"],
+
           providers: splitStrings(item["Поставщик"]),
+
           importers: splitStrings(item["Импортер"]),
+
           conditions: splitStrings(item["Условия поставки"]),
+
           direction: item["Направление"],
-          store_name: item["Склад"],
-          agent: item["Агент"],
-          container_type: item["Тип контейенра"],
-          place_of_dispatch: item["Место отправки"],
-          line: item["Линия"],
+
+          store: (await StoreRepository.getStoreByName(item["Склад"]))?._id,
+
+          delivery_channel: (await DeliveryChannelRepository.getDeliveryChannelByName(item["Канал поставки"]))?._id,
+
+          agent: clearString(item["Агент"]),
+
+          container_type: clearString(item["Тип контейенра"]),
+
+          place_of_dispatch: clearString(item["Место отправки"]),
+
+          line: clearString(item["Линия"]),
+
           ready_date: checkDate(item["Дата готовности"]),
+
           load_date: checkDate(item["Дата загрузки"]),
+
           etd: checkDate(item["ETD"]),
+
           eta: checkDate(item["ETA"]),
+
           release: checkDate(item["Релиз"]),
+
           bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+
           td: checkBoolean(item["ТД"]),
+
           date_do: checkDate(item["Дата ДО"]),
-          port: item["Порт"],
-          is_docs: isDocsHandler(item["Номер заказа"]),
+
+          port: clearString(item["Порт"]),
+
+          is_docs: this.isDocsHandler(item["Номер заказа"]),
+
           is_ds: checkBoolean(item["Д/С для подачи"]),
+
           fraht_account: item["Фрахтовый счет"],
+
           declaration_number: splitStrings(item["Номер декларации"]),
+
           declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+
           availability_of_ob: checkDate(item["Наличие ОБ"]),
+
           answer_of_ob: checkDate(item["Ответ ОБ"]),
+
           expeditor: item["Экспедитор"],
-          destination_station: item["Станция прибытия"],
+
+          destination_station: clearString(item["Станция прибытия"]),
+
           km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+
           train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+
           train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
-          pickup: item["Автовывоз"],
+
+          pickup: clearString(item["Автовывоз"]),
+
           store_arrive_date: checkDate(item["Дата прибытия на склад"]),
-          stock_place_name: item["Сток Сдачи"],
-          eta_update: checkDate(item["ETA"]) !== null ? true : false,
-          date_do_update: checkDate(item["Дата ДО"]) !== null ? true : false,
+
+          stock_place: (await StockRepository.getStockPlaceByName(item["Сток Сдачи"]))?._id,
+
+          eta_update: checkDate(item["ETA"]) !== null,
+
+          date_do_update: checkDate(item["Дата ДО"]) !== null,
+
           declaration_issue_date_update:
-            checkDate(item["Дата выпуска декларации"]) !== null ? true : false,
+              checkDate(item["Дата выпуска декларации"]) !== null,
+
           train_depart_date_update:
-            checkDate(item["Дата отправки по ЖД"]) !== null ? true : false,
+              checkDate(item["Дата отправки по ЖД"]) !== null,
+
           train_arrive_date_update:
-            checkDate(item["Дата прибытия по ЖД"]) !== null ? true : false,
+              checkDate(item["Дата прибытия по ЖД"]) !== null,
+
           store_arrive_date_update:
-            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
+              checkDate(item["Дата прибытия на склад"]) !== null,
+
           hidden:
-            checkDate(item["Дата прибытия на склад"]) !== null ? true : false,
+              checkDate(item["Дата прибытия на склад"]) !== null,
         });
-        const docs = await doc.save();
-        return docs;
+        return await doc.save();
+      });
+
+      const response = Promise.all(items).then(async (result) => {});
+
+      return successReturn(response);
+    } catch (error) {
+      console.log(error);
+      return errorReturn(error);
+    }
+  }
+  async uploadGlobal(file) {
+    try {
+      await ItemRepository.deleteAllItems()
+
+      const json = await FileService.createFileOld(file);
+
+      const items = json[0].map(async (item) => {
+        const doc = new ItemSchema({
+          request_date: checkDate(item["Дата заявки"]),
+
+          inside_number: splitStrings(item["Внутренний номер"]),
+
+          proform_number: splitStrings(item["Номер проформы"]),
+
+          order_number: splitStrings(item["Номер заказа"]),
+
+          container_number: item["Номер контейнера"],
+          /*----------------------------------------*/
+          simple_product_name: splitStrings(item["Товар"]),
+
+          delivery_method: item["Способ доставки"],
+
+          providers: splitStrings(item["Поставщик"]),
+
+          importers: splitStrings(item["Импортер"]),
+
+          conditions: splitStrings(item["Условия поставки"]),
+
+          direction: item["Направление"],
+
+          store: (await StoreRepository.getStoreByName(item["Склад"]))?._id,
+
+          delivery_channel: (await DeliveryChannelRepository.getDeliveryChannelByName(item["Канал поставки"]))?._id,
+
+          agent: clearString(item["Агент"]),
+
+          container_type: clearString(item["Тип контейенра"]),
+
+          place_of_dispatch: clearString(item["Место отправки"]),
+
+          line: clearString(item["Линия"]),
+
+          ready_date: checkDate(item["Дата готовности"]),
+
+          load_date: checkDate(item["Дата загрузки"]),
+
+          etd: checkDate(item["ETD"]),
+
+          eta: checkDate(item["ETA"]),
+
+          release: checkDate(item["Релиз"]),
+
+          bl_smgs_cmr: checkBoolean(item["BL/СМГС/CMR"]),
+
+          td: checkBoolean(item["ТД"]),
+
+          date_do: checkDate(item["Дата ДО"]),
+
+          port: clearString(item["Порт"]),
+
+          is_docs: this.isDocsHandler(item["Номер заказа"]),
+
+          is_ds: checkBoolean(item["Д/С для подачи"]),
+
+          fraht_account: item["Фрахтовый счет"],
+
+          declaration_number: splitStrings(item["Номер декларации"]),
+
+          declaration_issue_date: checkDate(item["Дата выпуска декларации"]),
+
+          availability_of_ob: checkDate(item["Наличие ОБ"]),
+
+          answer_of_ob: checkDate(item["Ответ ОБ"]),
+
+          expeditor: item["Экспедитор"],
+
+          destination_station: clearString(item["Станция прибытия"]),
+
+          km_to_dist: castToNum(item["Осталось км до ст. назначения"]),
+
+          train_depart_date: checkDate(item["Дата отправки по ЖД"]),
+
+          train_arrive_date: checkDate(item["Дата прибытия по ЖД"]),
+
+          pickup: clearString(item["Автовывоз"]),
+
+          store_arrive_date: checkDate(item["Дата прибытия на склад"]),
+
+          stock_place: (await StockRepository.getStockPlaceByName(item["Сток Сдачи"]))?._id,
+
+          eta_update: checkDate(item["ETA"]) !== null,
+
+          date_do_update: checkDate(item["Дата ДО"]) !== null,
+
+          declaration_issue_date_update:
+            checkDate(item["Дата выпуска декларации"]) !== null,
+
+          train_depart_date_update:
+            checkDate(item["Дата отправки по ЖД"]) !== null,
+
+          train_arrive_date_update:
+            checkDate(item["Дата прибытия по ЖД"]) !== null,
+
+          store_arrive_date_update:
+            checkDate(item["Дата прибытия на склад"]) !== null,
+
+          hidden:
+            checkDate(item["Дата прибытия на склад"]) !== null,
+        });
+        return await doc.save();
       });
 
       const response = Promise.all(items).then(async (result) => {});

@@ -6,6 +6,7 @@ const MailService = require("../service/mail-service");
 
 class UserController {
   async registration(req, res) {
+    //TODO: add check for existing email
     try {
       const password = req.body.password;
       const salt = await bcrypt.genSalt(10);
@@ -40,7 +41,7 @@ class UserController {
 
       const { password_hash, ...userData } = user._doc;
 
-      res.json({ ...userData, token });
+      res.json({ user: { ...userData }, token });
     } catch (error) {
       console.log(error);
       res.json("Oops, something goes wrong...");
@@ -74,7 +75,7 @@ class UserController {
         }
       );
       const { password_hash, ...userData } = user._doc;
-      res.json({ ...userData, token });
+      res.json({ user: { ...userData }, token });
     } catch (error) {
       console.log(error);
       res.json("Oops, something goes wrong...");
@@ -83,16 +84,25 @@ class UserController {
 
   async getMe(req, res) {
     try {
-      const user = await UserSchema.findById(req.params.userId);
+      const userId = req.userId;
+      const user = await UserSchema.findById(userId);
 
       if (!user) return res.status(404).json({ message: "not found" });
 
-      const { passwordHash, ...userData } = user._doc;
+      const { _id, first_name, last_name, email, role, is_activated } =
+        user._doc;
 
-      res.json({
-        success: true,
-        ...userData,
-      });
+      const userDto = {
+        _id,
+        first_name,
+        last_name,
+        email,
+        role,
+        is_activated,
+      };
+      //TODO: make automap
+
+      res.json({ user: userDto });
     } catch (error) {
       console.log(error);
       res.status(500).json({

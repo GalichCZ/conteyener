@@ -55,22 +55,22 @@ class DeliveryChannelService {
     try {
       await DeliveryChannelSchema.findByIdAndUpdate(
         {
-          _id: req.body.channelUpdate._id,
+          _id: req.body._id,
         },
         {
-          name: req.body.channelUpdate.name,
-          eta: req.body.channelUpdate.eta,
-          date_do: req.body.channelUpdate.date_do,
-          declaration_issue_date: req.body.channelUpdate.declaration_issue_date,
-          train_depart_date: req.body.channelUpdate.train_depart_date,
-          train_arrive_date: req.body.channelUpdate.train_arrive_date,
-          store_arrive_date: req.body.channelUpdate.store_arrive_date,
+          name: req.body.name,
+          eta: req.body.eta,
+          date_do: req.body.date_do,
+          declaration_issue_date: req.body.declaration_issue_date,
+          train_depart_date: req.body.train_depart_date,
+          train_arrive_date: req.body.train_arrive_date,
+          store_arrive_date: req.body.store_arrive_date,
         }
       );
 
       const itemsToUpdate = await ItemSchema.find({
         etd: { $ne: null },
-        delivery_channel: req.body.channelUpdate._id,
+        delivery_channel: req.body._id,
       });
 
       const updateDates = itemsToUpdate.map(async (item) => {

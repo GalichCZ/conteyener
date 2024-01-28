@@ -36,7 +36,6 @@ class DeclarationService {
   async getDeclarationStatus(declaration_number) {
     try {
       const doc = await DeclarationSchema.find({ declaration_number });
-
       if (doc) return doc;
     } catch (error) {
       console.log(error);

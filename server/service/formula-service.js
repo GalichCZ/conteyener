@@ -1,7 +1,14 @@
 const DeliveryChannelSchema = require("../models/deliveryChannel-model");
 const { SendBotMessage } = require("./bot-service");
 const dayjs = require("dayjs");
+const { setTime } = require("../utils/setTime")
+const { addDayToDate } = require("../utils/addDayToDate");
 class FormulaService {
+
+  calculateDates (startDate, daysToAdd) {
+    return daysToAdd === 0 ? null : addDayToDate(startDate, daysToAdd);
+  };
+  
   async updatedDateFormula(_etd, _delivery_channel, item) {
     try {
       if (_delivery_channel && _etd) {
@@ -9,48 +16,22 @@ class FormulaService {
           _delivery_channel
         ).exec();
 
-        const eta = dayjs(_etd).add(delivery_channel.eta, "day");
+        const calculateDate = (baseDate, fetchedDate, valueToAdd) => {
+          return baseDate ? addDayToDate(baseDate, fetchedDate) : addDayToDate(valueToAdd, fetchedDate)
+        }
 
-        const date_do = !item.eta_update
-          ? dayjs(eta).add(delivery_channel.date_do, "day")
-          : dayjs(item.eta).add(delivery_channel.date_do, "day");
+        const eta = setTime(dayjs(_etd)
+          .add(delivery_channel.eta, "day"))
 
-        const declaration_issue_date = !item.date_do_update
-          ? dayjs(date_do).add(delivery_channel.declaration_issue_date, "day")
-          : dayjs(item.date_do).add(
-              delivery_channel.declaration_issue_date,
-              "day"
-            );
+        const date_do = calculateDate(item.eta_update, delivery_channel.date_do, eta)
 
-        const train_depart_date = !item.declaration_issue_date_update
-          ? dayjs(declaration_issue_date).add(
-              delivery_channel.train_depart_date,
-              "day"
-            )
-          : dayjs(item.declaration_issue_date).add(
-              delivery_channel.train_depart_date,
-              "day"
-            );
+        const declaration_issue_date = calculateDate(item.date_do_update, delivery_channel.declaration_issue_date, date_do)
 
-        const train_arrive_date = !item.train_depart_date_update
-          ? dayjs(train_depart_date).add(
-              delivery_channel.train_arrive_date,
-              "day"
-            )
-          : dayjs(item.train_depart_date).add(
-              delivery_channel.train_arrive_date,
-              "day"
-            );
+        const train_depart_date = calculateDate(item.declaration_issue_date_update, delivery_channel.train_depart_date, declaration_issue_date)
 
-        const store_arrive_date = !item.train_arrive_date
-          ? dayjs(train_arrive_date).add(
-              delivery_channel.store_arrive_date,
-              "day"
-            )
-          : dayjs(item.train_arrive_date).add(
-              delivery_channel.store_arrive_date,
-              "day"
-            );
+        const train_arrive_date = calculateDate(item.train_depart_date_update, delivery_channel.train_arrive_date, train_depart_date)
+
+        const store_arrive_date = calculateDate(item.train_arrive_date_update, delivery_channel.store_arrive_date, train_arrive_date)
 
         return {
           eta,
@@ -85,43 +66,20 @@ class FormulaService {
           _delivery_channel
         ).exec();
 
-        const eta = dayjs(_etd).add(delivery_channel.eta, "day");
-
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
-
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const eta = this.calculateDates(_etd, delivery_channel.eta)
+        const date_do = this.calculateDates(eta, delivery_channel.date_do);
+        const declaration_issue_date = this.calculateDates(date_do, delivery_channel.declaration_issue_date);
+        const train_depart_date = this.calculateDates(declaration_issue_date, delivery_channel.train_depart_date);
+        const train_arrive_date = this.calculateDates(train_depart_date, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
 
         return {
-          eta: delivery_channel.eta === 0 ? null : eta,
-          date_do: delivery_channel.date_do === 0 ? null : date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
+          eta,
+          date_do,
+          declaration_issue_date,
+          train_arrive_date,
+          train_depart_date,
+          store_arrive_date,
         };
       } else {
         return {
@@ -147,40 +105,40 @@ class FormulaService {
       const delivery_channel = await DeliveryChannelSchema.findById(
         deliveryChannel
       ).exec();
+
+      const {
+        eta_update,
+        date_do_update,
+        declaration_issue_date_update,
+        train_depart_date_update,
+        train_arrive_date_update,
+        eta: etaOld,
+        date_do: dateDoOld,
+        declaration_issue_date: declarationIssueDateOld,
+        train_depart_date: trainDepartDateOld,
+        train_arrive_date: trainArriveDateOld,
+      } = item
+
+      const returnOldDate = (days, oldDate) => {
+        return days === 0 ? null : oldDate
+      }
+
       if (dateType === 1) {
-        const etd = newDate;
-        const eta = dayjs(etd).add(delivery_channel.eta, "day");
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const eta = this.calculateDates(newDate, delivery_channel.eta)
+        const date_do = this.calculateDates(eta, delivery_channel.date_do);
+        const declaration_issue_date = this.calculateDates(date_do, delivery_channel.declaration_issue_date);
+        const train_depart_date = this.calculateDates(declaration_issue_date, delivery_channel.train_depart_date);
+        const train_arrive_date = this.calculateDates(train_depart_date, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
+
         return {
-          eta: delivery_channel.eta === 0 ? null : eta,
-          date_do: delivery_channel.date_do === 0 ? null : date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: true,
+          eta,
+          date_do,
+          declaration_issue_date,
+          train_arrive_date,
+          train_depart_date,
+          store_arrive_date,
+          eta_update: false,
           date_do_update: false,
           declaration_issue_date_update: false,
           train_depart_date_update: false,
@@ -188,37 +146,19 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 2) {
-        const eta = newDate;
-        const date_do = dayjs(eta).add(delivery_channel.date_do, "day");
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const date_do = this.calculateDates(newDate, delivery_channel.date_do);
+        const declaration_issue_date = this.calculateDates(date_do, delivery_channel.declaration_issue_date);
+        const train_depart_date = this.calculateDates(declaration_issue_date, delivery_channel.train_depart_date);
+        const train_arrive_date = this.calculateDates(train_depart_date, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
+
         return {
-          eta: delivery_channel.eta === 0 ? null : eta,
-          date_do: delivery_channel.date_do === 0 ? null : date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
+          eta: returnOldDate(delivery_channel.eta, newDate),
+          date_do,
+          declaration_issue_date,
+          train_arrive_date,
+          train_depart_date,
+          store_arrive_date,
           eta_update: true,
           date_do_update: false,
           declaration_issue_date_update: false,
@@ -227,37 +167,18 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 3) {
-        const date_do = newDate;
-        const declaration_issue_date = dayjs(date_do).add(
-          delivery_channel.declaration_issue_date,
-          "day"
-        );
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const declaration_issue_date = this.calculateDates(newDate, delivery_channel.declaration_issue_date);
+        const train_depart_date = this.calculateDates(declaration_issue_date, delivery_channel.train_depart_date);
+        const train_arrive_date = this.calculateDates(train_depart_date, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
         return {
-          eta: delivery_channel.eta === 0 ? null : item.eta,
-          date_do: delivery_channel.date_do === 0 ? null : date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: item.eta_update,
+          eta: returnOldDate(delivery_channel.eta, etaOld),
+          date_do: returnOldDate(delivery_channel.date_do, newDate),
+          declaration_issue_date,
+          train_arrive_date,
+          train_depart_date,
+          store_arrive_date,
+          eta_update: eta_update,
           date_do_update: true,
           declaration_issue_date_update: false,
           train_depart_date_update: false,
@@ -265,121 +186,69 @@ class FormulaService {
           store_arrive_date_update: false,
         };
       } else if (dateType === 4) {
-        const declaration_issue_date = newDate;
-        const train_depart_date = dayjs(declaration_issue_date).add(
-          delivery_channel.train_depart_date,
-          "day"
-        );
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const train_depart_date = this.calculateDates(newDate, delivery_channel.train_depart_date);
+        const train_arrive_date = this.calculateDates(train_depart_date, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
         return {
-          eta: delivery_channel.eta === 0 ? null : item.eta,
-          date_do: delivery_channel.date_do === 0 ? null : item.date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: item.eta_update,
-          date_do_update: item.date_do_update,
+          eta: returnOldDate(delivery_channel.eta, etaOld),
+          date_do: returnOldDate(delivery_channel.date_do, dateDoOld),
+          declaration_issue_date: returnOldDate(delivery_channel.declaration_issue_date, newDate),
+          train_arrive_date,
+          train_depart_date,
+          store_arrive_date,
+          eta_update,
+          date_do_update,
           declaration_issue_date_update: true,
           train_depart_date_update: false,
           train_arrive_date_update: false,
           store_arrive_date_update: false,
         };
       } else if (dateType === 5) {
-        const train_depart_date = newDate;
-        const train_arrive_date = dayjs(train_depart_date).add(
-          delivery_channel.train_arrive_date,
-          "day"
-        );
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const train_arrive_date = this.calculateDates(newDate, delivery_channel.train_arrive_date);
+        const store_arrive_date = this.calculateDates(train_arrive_date, delivery_channel.store_arrive_date);
         return {
-          eta: delivery_channel.eta === 0 ? null : item.eta,
-          date_do: delivery_channel.date_do === 0 ? null : item.date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : item.declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0 ? null : train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: item.eta_update,
-          date_do_update: item.date_do_update,
-          declaration_issue_date_update: item.declaration_issue_date_update,
+          eta: returnOldDate(delivery_channel.eta, etaOld),
+          date_do: returnOldDate(delivery_channel.date_do, dateDoOld),
+          declaration_issue_date: returnOldDate(delivery_channel.declaration_issue_date, declarationIssueDateOld),
+          train_depart_date: returnOldDate(delivery_channel.train_depart_date, newDate),
+          train_arrive_date,
+          store_arrive_date,
+          eta_update,
+          date_do_update,
+          declaration_issue_date_update,
           train_depart_date_update: true,
           train_arrive_date_update: false,
           store_arrive_date_update: false,
         };
       } else if (dateType === 6) {
-        const train_arrive_date = newDate;
-        const store_arrive_date = dayjs(train_arrive_date).add(
-          delivery_channel.store_arrive_date,
-          "day"
-        );
+        const store_arrive_date = this.calculateDates(newDate, delivery_channel.store_arrive_date);
         return {
-          eta: delivery_channel.eta === 0 ? null : item.eta,
-          date_do: delivery_channel.date_do === 0 ? null : item.date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : item.declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0 ? null : train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0
-              ? null
-              : item.train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: item.eta_update,
-          date_do_update: item.date_do_update,
-          declaration_issue_date_update: item.declaration_issue_date_update,
-          train_depart_date_update: item.train_depart_date_update,
+          eta: returnOldDate(delivery_channel.eta, etaOld),
+          date_do: returnOldDate(delivery_channel.date_do, dateDoOld),
+          declaration_issue_date: returnOldDate(delivery_channel.declaration_issue_date, declarationIssueDateOld),
+          train_depart_date: returnOldDate(delivery_channel.train_depart_date, trainDepartDateOld),
+          train_arrive_date: returnOldDate(delivery_channel.train_arrive_date, newDate),
+          store_arrive_date,
+          eta_update,
+          date_do_update,
+          declaration_issue_date_update,
+          train_depart_date_update,
           train_arrive_date_update: true,
           store_arrive_date_update: false,
         };
       } else if (dateType === 7) {
-        const store_arrive_date = newDate;
         return {
-          eta: delivery_channel.eta === 0 ? null : item.eta,
-          date_do: delivery_channel.date_do === 0 ? null : item.date_do,
-          declaration_issue_date:
-            delivery_channel.declaration_issue_date === 0
-              ? null
-              : item.declaration_issue_date,
-          train_arrive_date:
-            delivery_channel.train_arrive_date === 0
-              ? null
-              : item.train_arrive_date,
-          train_depart_date:
-            delivery_channel.train_depart_date === 0
-              ? null
-              : item.train_depart_date,
-          store_arrive_date:
-            delivery_channel.store_arrive_date === 0 ? null : store_arrive_date,
-          eta_update: item.eta_update,
-          date_do_update: item.date_do_update,
-          declaration_issue_date_update: item.declaration_issue_date_update,
-          train_depart_date_update: item.train_depart_date_update,
-          train_arrive_date_update: item.train_arrive_date_update,
+          eta: returnOldDate(delivery_channel.eta, etaOld),
+          date_do: returnOldDate(delivery_channel.date_do, dateDoOld),
+          declaration_issue_date: returnOldDate(delivery_channel.declaration_issue_date, declarationIssueDateOld),
+          train_depart_date: returnOldDate(delivery_channel.train_depart_date, trainDepartDateOld),
+          train_arrive_date: returnOldDate(delivery_channel.train_arrive_date, trainArriveDateOld),
+          store_arrive_date:returnOldDate(delivery_channel.store_arrive_date, newDate),
+          eta_update,
+          date_do_update,
+          declaration_issue_date_update,
+          train_depart_date_update,
+          train_arrive_date_update,
           store_arrive_date_update: true,
         };
       }

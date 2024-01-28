@@ -1,11 +1,9 @@
 const DeclarationService = require("../service/declaration-service");
 const ProductService = require("../service/product-service");
 const ItemService = require("../service/item-service");
-
 const ItemSchema = require("../models/item-model");
 const ProductSchema = require("../models/product-model");
 const UserSchema = require("../models/user-model");
-const dayjs = require("dayjs");
 
 class ItemController {
   async itemCreate(req, res) {
@@ -17,15 +15,39 @@ class ItemController {
     const item = await ItemService.createItem(req);
 
     if (item.success) return res.sendStatus(200);
-    else return res.status(400).json({ error: item.error });
+    else return res.status(400).json({ message: item.error });
   }
 
   async getItems(req, res) {
-    const { items, totalPages } = await ItemService.getItems(req.params.page);
-    res.json({
-      items,
-      totalPages,
-    });
+    const filtersMap = req.body.filtersMap;
+    const query_string = req.body.search_query;
+    const search_filter = req.body.search_filter;
+    const hidden = req.body.hidden;
+    if (filtersMap && filtersMap.length > 0) {
+      const result = await ItemService.getItemsFilter(filtersMap, hidden);
+
+      if (result.success) res.status(200).json({ items: result.items });
+      else res.status(400).json(result.error);
+
+    } else if (query_string !== "null") {
+      const result = await ItemService.findItemsBySearch(
+        query_string,
+        search_filter,
+        hidden
+      );
+
+      res.json({ items: result });
+    } else {
+      const { items, totalPages } = await ItemService.getItems(
+        req.params.page,
+        hidden
+      );
+
+      res.json({
+        items,
+        totalPages,
+      });
+    }
   }
 
   async calculateDates(req, res) {
@@ -59,10 +81,10 @@ class ItemController {
   }
 
   async updateFormulaDates(req, res) {
-    const newDate = req.body.newDate;
+    const newDate = req.body.date;
     const deliveryChannel = req.body.delivery_channel;
-    const dateType = req.body.dateType;
-    const _id = req.body._id;
+    const dateType = req.body.date_type;
+    const _id = req.body.bidId;
     const result = await ItemService.updateFormulaDates(
       _id,
       dateType,
@@ -196,10 +218,15 @@ class ItemController {
 
   async getKeyFilters(req, res) {
     const key_name = req.query.key_name;
+    const has_filters = req.query.has_filters === 'true';
+    /*
+    * TODO: add redis to store last filtered data, so when user gets next keys, he get it from filtered data
+    * */
     const isHidden = req.query.isHidden === "true";
     const { values, success, error } = await ItemService.getKeyFilters(
       key_name,
-      isHidden
+      isHidden,
+      has_filters
     );
     if (success) res.status(200).json({ values });
     else res.status(400).json(error);
@@ -257,6 +284,44 @@ class ItemController {
       console.log(error);
     }
   }
+
+  async mockData(req, res) {
+    try {
+      const times = req.body.times;
+
+      const data = Array.from({length: times}).map( async (_, index) => {
+        const doc = await new ItemSchema({
+          request_date: new Date(),
+          order_number: new Date().getTime(),
+          simple_product_name: "test",
+          delivery_method: "test",
+          providers: ["test"],
+          importers: ["test"],
+          conditions: ["test"],
+          agent: "test",
+          direction: "test",
+          container_type: "test",
+          place_of_dispatch: "test",
+        });
+
+        await doc.save();
+      });
+
+      await Promise.all(data)
+
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async partUpload(req, res) {
+    const result = await ItemService.partUpload(req.file.path);
+
+    if (result.success) res.status(200).json(result.response);
+    else res.status(400).json({ error: result.error });
+  }
+
 }
 
 module.exports = new ItemController();

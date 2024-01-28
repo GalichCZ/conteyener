@@ -47,8 +47,9 @@ const ItemSchema = new mongoose.Schema(
       ref: "TechStore",
     },
     delivery_channel: {
-      type: String,
-      default: "",
+      default: null,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "DeliveryChannel",
     },
     product: [
       {

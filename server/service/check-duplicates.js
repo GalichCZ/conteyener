@@ -35,11 +35,11 @@ class CheckDuplicates {
       hidden: false,
       _id: { $ne: id },
     };
+    if (!value) return { isDuplicate: false };
     query[key] = value;
     const item = await ItemSchema.find(query).exec();
 
-    if (item.length > 0 && item[0].container_number !== null)
-      return { isDuplicate: true, duplicate: item[0][key] };
+    if (item.length > 0) return { isDuplicate: true, duplicate: item[0][key] };
     else return { isDuplicate: false };
   }
 }

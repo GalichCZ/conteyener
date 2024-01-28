@@ -5,10 +5,11 @@ const dotenv = require("dotenv");
 const routers = require("./router/index");
 const ItemSchema = require("./models/item-model");
 const ProductSchema = require("./models/product-model");
+const redisClient = require('./providers/redis')
 
 dotenv.config();
 
-const url = process.env.DB_URL; //"mongodb://localhost:27018";
+const url = process.env.DB_URL; ;
 const PORT = 4444;
 
 const app = express();
@@ -29,6 +30,11 @@ const start = async () => {
     await app.listen(PORT, () => {
       console.log("Server started on " + PORT);
     });
+
+    await redisClient.connect().then(()=>{
+      console.log(`🟥 REDIS CONNECTED`)
+    })
+
     await mongoose
       .connect(url)
       .then(() => console.log("DB IS OK"))

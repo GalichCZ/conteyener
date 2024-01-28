@@ -3,8 +3,8 @@ const {clearString} = require("./clearString");
 
 class TableDataHandle {
   checkBoolean(value) {
-    if (value === "+") return true;
-    return false;
+    return value === "+";
+
   }
 
   checkDate(value) {
@@ -26,8 +26,7 @@ class TableDataHandle {
 
   castToNum(value) {
     if (value && typeof value === "string") {
-      const number = parseInt(value.replace(/[^\d.-]/g, ""));
-      return number;
+      return parseInt(value.replace(/[^\d.-]/g, ""));
     } else return value;
   }
 }

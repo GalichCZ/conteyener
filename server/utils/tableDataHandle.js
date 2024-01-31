@@ -4,7 +4,6 @@ const {clearString} = require("./clearString");
 class TableDataHandle {
   checkBoolean(value) {
     return value === "+";
-
   }
 
   checkDate(value) {

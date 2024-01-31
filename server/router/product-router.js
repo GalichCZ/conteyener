@@ -8,6 +8,7 @@ router.post(
   FileWare,
   ProductController.createProduct
 );
+router.post("/api/product/hand/:id/:simple_product_name", ProductController.createProductHand)
 router.post("/api/product", ProductController.getProducts);
 router.get(
   "/api/product/:item_id/:simple_product_name",

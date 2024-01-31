@@ -13,6 +13,34 @@ class ProductController {
     res.json(response);
   }
 
+  async createProductHand(req, res) {
+    try{
+      const product = req.body.product
+      const itemId = req.params.id
+      const simpleName = req.params.simple_product_name
+
+      if (!itemId) {
+        res.status(400).json({message: "no item id"})
+        return
+      }
+      if (!simpleName) {
+        res.status(400).json({message: "no simple name"})
+        return
+      }
+      if (!product) {
+        res.status(400).json({message: "no product body"})
+        return
+      }
+
+      await ProductService.createProductHand(product, itemId, simpleName)
+
+      res.sendStatus(200)
+    } catch (e) {
+      console.log(e)
+      res.status(500).json("Oops... Something goes wrong")
+    }
+  }
+
   async getProduct(req, res) {
     const response = await ProductService.getProduct(
       req.params.item_id,

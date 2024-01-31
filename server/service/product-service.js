@@ -49,6 +49,23 @@ class ProductService {
     }
   }
 
+  async createProductHand(product, itemId, simpleName) {
+    try {
+      const beforeId = await ItemSchema.findById(itemId).exec();
+      const newProduct = await ProductSchema.create({...product, simple_name:simpleName, item_id: itemId})
+
+      await ItemSchema.findByIdAndUpdate(itemId, {product: [newProduct._id, ...beforeId.product]})
+    } catch (e) {
+      SendBotMessage(
+          `${dayjs(new Date()).format(
+              "MMMM D, YYYY h:mm A"
+          )}\nCREATE HAND PRODUCT ERROR:\n${e}`
+      );
+      console.log(e)
+      throw new Error(e)
+    }
+  }
+
   async updateProduct(item_id, file, simple_name, old_name) {
     try {
       const res = await ProductSchema.updateMany(

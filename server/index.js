@@ -9,7 +9,7 @@ const redisClient = require('./providers/redis')
 
 dotenv.config();
 
-const url = process.env.DB_URL; ;
+const url = process.env.DB_URL;
 const PORT = 4444;
 
 const app = express();

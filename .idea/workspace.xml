@@ -5,17 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57980f89-251c-429d-8cb2-66b41660cfa9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/controllers/product-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/controllers/product-controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/router/product-router.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/router/product-router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/migrations/item-product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/models/item-model.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/models/item-model.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/router/test-router.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/router/test-router.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/service/product-service.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/service/product-service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/utils/tableDataHandle.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/utils/tableDataHandle.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,6 +53,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -76,7 +84,9 @@
       <updated>1706448793543</updated>
       <workItem from="1706448795153" duration="5946000" />
       <workItem from="1706608913832" duration="10000" />
-      <workItem from="1706626909870" duration="4767000" />
+      <workItem from="1706626909870" duration="5697000" />
+      <workItem from="1706716240092" duration="9026000" />
+      <workItem from="1706813740450" duration="2543000" />
     </task>
     <servers />
   </component>

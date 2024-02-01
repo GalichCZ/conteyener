@@ -33,10 +33,12 @@ class ProductService {
           return i._id;
         });
         const beforeId = await ItemSchema.findById(item_id).exec();
+        const productsAdded = beforeId.product_has_added ? beforeId.product_has_added : {}
+        productsAdded[simple_product_name] = true
         await ItemSchema.findByIdAndUpdate(item_id, {
           product: [...ids, ...beforeId.product],
+          product_has_added: productsAdded
         });
-
         return res;
       });
     } catch (error) {
@@ -54,7 +56,11 @@ class ProductService {
       const beforeId = await ItemSchema.findById(itemId).exec();
       const newProduct = await ProductSchema.create({...product, simple_name:simpleName, item_id: itemId})
 
-      await ItemSchema.findByIdAndUpdate(itemId, {product: [newProduct._id, ...beforeId.product]})
+      const productsAdded = beforeId.product_has_added ? beforeId.product_has_added : {}
+
+      productsAdded[simpleName] = true
+
+      await ItemSchema.findByIdAndUpdate(itemId, {product: [newProduct._id, ...beforeId.product], product_has_added: productsAdded})
     } catch (e) {
       SendBotMessage(
           `${dayjs(new Date()).format(
@@ -68,10 +74,25 @@ class ProductService {
 
   async updateProduct(item_id, file, simple_name, old_name) {
     try {
-      const res = await ProductSchema.updateMany(
+      await ProductSchema.updateMany(
         { item_id, simple_name: old_name },
         { simple_name }
       );
+
+      const item = await ItemSchema.findById(item_id).exec();
+
+      const oldProductHasAddedValue = item.product_has_added ? item.product_has_added[old_name] : false
+
+      if(item.product_has_added && item.product_has_added[old_name] !== undefined) {
+        delete item.product_has_added[old_name]
+      }
+
+      const newProductHasAdded = item.product_has_added
+
+      newProductHasAdded[simple_name] = oldProductHasAddedValue
+
+      await ItemSchema.findByIdAndUpdate(item_id, {product_has_added: newProductHasAdded})
+
     } catch (error) {
       SendBotMessage(
         `${dayjs(new Date()).format(
@@ -120,11 +141,15 @@ class ProductService {
       await ProductSchema.findByIdAndDelete({ _id: product_id });
       const products = await ProductSchema.find({ item_id: itemId }).exec();
 
+      const item = await ItemSchema.findById(itemId).exec()
+
       const newIds = products.map((prod) => {
         return prod._id;
       });
 
-      await ItemSchema.findByIdAndUpdate(itemId, { product: newIds });
+      // const product_has_added = newIds.length === 0 ? {} : item.product_has_added
+
+      await ItemSchema.findByIdAndUpdate(itemId, { product: newIds});
 
       return { success: true };
     } catch (error) {

@@ -26,6 +26,10 @@ const ItemSchema = new mongoose.Schema(
     simple_product_name: {
       type: Array,
     },
+    product_has_added: {
+      type: Object,
+      default: {}
+    },
     providers: {
       type: Array,
     },

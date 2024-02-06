@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conteyener-deployment
+  labels:
+    app: nodeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeapp
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+      - name: nodeserver
+        image: daniilgalitksii/conteyener-server:latest
+        ports:
+        - containerPort: 4444
+        env:
+        - name: DB_URL
+          value: "mongodb://mongo-service:27017"
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PASSWORD
+          value: "password"
+        - name: REDIS_PORT
+          value: "6379"
+      - name: mongo
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
+

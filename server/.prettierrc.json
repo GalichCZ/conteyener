@@ -1,0 +1,9 @@
+{
+  "trailingComma": "es5",
+  "semi": false,
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "importOrder": ["^[./]"],
+  "endOfLine": "lf",
+  "printWidth": 100
+}

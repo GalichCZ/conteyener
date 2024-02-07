@@ -3,3 +3,4 @@ uploads
 .env
 backupExcels
 package-lock.json
+.idea

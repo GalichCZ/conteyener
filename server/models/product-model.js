@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const ProductSchema = new mongoose.Schema(
   {
     simple_name: { type: String, index: true },
     hs_code: { type: String, index: true },
-    article: { type: String, index: true },
+    article_ved: { type: String, index: true },
+    article_erp: { type: String, index: true },
     trade_mark: { type: String, index: true },
     model: { type: String, index: true },
     modification: { type: String, index: true },
@@ -22,23 +23,23 @@ const ProductSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-);
+)
 
 ProductSchema.index({
-  hs_code: "text",
-  article: "text",
-  trade_mark: "text",
-  model: "text",
-  modification: "text",
-  product_name: "text",
-  manufacturer: "text",
-  quantity_pieces: "text",
-  quantity_places: "text",
-  piece_price: "text",
-  total_price: "text",
-  weight_net: "text",
-  weight_gross: "text",
-  cbm: "text",
-});
+  hs_code: 'text',
+  article: 'text',
+  trade_mark: 'text',
+  model: 'text',
+  modification: 'text',
+  product_name: 'text',
+  manufacturer: 'text',
+  quantity_pieces: 'text',
+  quantity_places: 'text',
+  piece_price: 'text',
+  total_price: 'text',
+  weight_net: 'text',
+  weight_gross: 'text',
+  cbm: 'text',
+})
 
-module.exports = mongoose.model("Product", ProductSchema);
+module.exports = mongoose.model('Product', ProductSchema)

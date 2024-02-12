@@ -82,26 +82,26 @@ class FormulaService {
         const eta = this.calculateDates(_etd, delivery_channel.eta)
         if (eta) lastNotNull = eta
 
-        const startEta = eta ? eta : lastNotNull
+        const startEta = eta || lastNotNull
         const date_do = this.calculateDates(startEta, delivery_channel.date_do)
         if (date_do) lastNotNull = date_do
 
-        const startDo = date_do ? date_do : lastNotNull
+        const startDo = date_do || lastNotNull
         const declaration_issue_date = this.calculateDates(
           startDo,
           delivery_channel.declaration_issue_date
         )
         if (declaration_issue_date) lastNotNull = declaration_issue_date
 
-        const startDecl = declaration_issue_date ? declaration_issue_date : lastNotNull
+        const startDecl = declaration_issue_date || lastNotNull
         const train_depart_date = this.calculateDates(startDecl, delivery_channel.train_depart_date)
         if (train_depart_date) lastNotNull = train_depart_date
 
-        const startDep = train_depart_date ? train_depart_date : lastNotNull
+        const startDep = train_depart_date || lastNotNull
         const train_arrive_date = this.calculateDates(startDep, delivery_channel.train_arrive_date)
         if (train_arrive_date) lastNotNull = train_arrive_date
 
-        const startArr = train_arrive_date ? train_arrive_date : lastNotNull
+        const startArr = train_arrive_date || lastNotNull
         const store_arrive_date = this.calculateDates(startArr, delivery_channel.store_arrive_date)
 
         return {

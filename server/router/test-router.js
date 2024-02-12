@@ -14,6 +14,6 @@ router.patch('/api/test/datesTimeChange', TestController.datesTimeChange)
 router.get('/api/test/getAllItems', TestController.getAllItems)
 router.post('/api/test/clearStrings', TestController.clearStrings)
 router.get('/api/test/migrate_items', addHasAddedProducts)
-router.get('/api/test/migrate_products', updateArticleData)
+router.get('/api/test/migrate_products', TestController.migrateProducts)
 
 module.exports = router

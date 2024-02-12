@@ -6,6 +6,7 @@ const ItemRepository = require("../repositories/item.repository");
 const {
   checkDate,
 } = require("../utils/tableDataHandle");
+const {updateArticleData} = require("../migrations/product-migration");
 
 class TestController {
   async testDeclaration(req, res) {
@@ -124,6 +125,16 @@ class TestController {
   async getAllItems(req, res) {
     const items = await ItemRepository.getAllItems();
     res.json(items);
+  }
+
+  async migrateProducts(req, res) {
+      try {
+        await updateArticleData()
+        res.status(200).json({message: "success"})
+      } catch (e) {
+        console.log(e)
+        res.status(500).json(e)
+      }
   }
 }
 

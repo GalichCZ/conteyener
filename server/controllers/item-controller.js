@@ -285,6 +285,23 @@ class ItemController {
     }
   }
 
+  async unhideItem(req, res) {
+      try {
+        const bidId = req.body.bidId;
+
+        if (!bidId) {
+          res.status(400).json({ error: "bidId is required" });
+        }
+
+        await ItemService.unhideItem(bidId)
+
+        res.sendStatus(200);
+      } catch (e) {
+        console.log(e);
+        res.status(500).json(e);
+      }
+  }
+
   async mockData(req, res) {
     try {
       const times = req.body.times;

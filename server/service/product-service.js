@@ -9,7 +9,8 @@ class ProductService {
       const products = file[0].map(async (product) => {
         const doc = new ProductSchema({
           hs_code: product["HS CODE"],
-          article: product.ARTICLE,
+          article_ved: product.ARTICLE,
+          article_erp: '',
           trade_mark: product["TRADE MARK"],
           product_name: product["NAME OF GOODS"],
           model: product.MODEL,

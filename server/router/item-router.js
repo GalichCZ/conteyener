@@ -32,9 +32,11 @@ router.patch("/api/item/comment", ItemController.updateComment);
 router.patch("/api/item/distance", ItemController.updateDistance);
 router.patch("/api/item/date", ItemController.updateFormulaDates);
 router.patch("/api/item/hide", ItemController.hideItem);
+router.patch("/api/item/unhide", ItemController.unhideItem);
 router.patch("/api/item/calculate", ItemController.calculateDates);
 router.patch("/api/item/docs", ItemController.updateDocs);
 //delete
 router.delete("/api/item/:_id", ItemController.deleteItem);
 
 module.exports = router;
+

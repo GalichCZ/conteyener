@@ -522,6 +522,18 @@ class ItemService {
     }
   }
 
+  async unhideItem(bidId) {
+    try {
+      return await ItemSchema.updateOne({ _id: bidId }, { hidden: false })
+    } catch (error) {
+      console.log(error)
+      SendBotMessage(
+          `${dayjs(new Date()).format('MMMM D, YYYY h:mm A')}\nHIDE ITEM ERROR:\n${error}`
+      )
+      throw new Error(error)
+    }
+  }
+
   async updateFormulaDatesAfterUpload(dataForChanges) {
     try {
       const result = dataForChanges.map(async (data) => {

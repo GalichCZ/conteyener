@@ -2,8 +2,7 @@ const { Router } = require('express')
 const router = new Router()
 const TestController = require('../controllers/test-controller')
 const FileWare = require('../utils/file-ware')
-const { addHasAddedProducts } = require('../migrations/item-product')
-const { updateArticleData } = require('../migrations/product-migration')
+const { addHasAddedProducts, addActualStoreNames } = require('../migrations/item-product')
 
 router.post('/api/test/formula', TestController.testFormula)
 router.patch('/api/test/product', TestController.testUpdateProduct)
@@ -15,5 +14,6 @@ router.get('/api/test/getAllItems', TestController.getAllItems)
 router.post('/api/test/clearStrings', TestController.clearStrings)
 router.get('/api/test/migrate_items', addHasAddedProducts)
 router.get('/api/test/migrate_products', TestController.migrateProducts)
+router.get('/api/test/migrate_products/stores', addActualStoreNames)
 
 module.exports = router

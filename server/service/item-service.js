@@ -33,6 +33,28 @@ function successReturn(result) {
 }
 
 class ItemService {
+  PRODUCT_KEYS = {
+    PI: 'PI',
+    CI: 'CI',
+    PL: 'PL',
+    SS_DS: 'SS_DS',
+    CONTRACT_AGREES: 'contract_agrees',
+    COST_AGREES: 'cost_agrees',
+    INSTRUCTION: 'instruction',
+    ED: 'ED',
+    BILL: 'bill',
+  }
+
+  isArrayPole = (key) =>
+      key === 'declaration_number' ||
+      key === 'order_number' ||
+      key === 'proform_number' ||
+      key === 'inside_number' ||
+      key === 'simple_product_name' ||
+      key === 'providers' ||
+      key === 'importers' ||
+      key === 'conditions'
+
   async createItem(req) {
     try {
       const delivery_method = req.body.delivery_method
@@ -351,39 +373,18 @@ class ItemService {
       let isAggregate = false
       let query = { hidden: isHidden }
 
-      const isArrayPole = (key) =>
-        key === 'declaration_number' ||
-        key === 'order_number' ||
-        key === 'proform_number' ||
-        key === 'inside_number' ||
-        key === 'simple_product_name' ||
-        key === 'providers' ||
-        key === 'importers' ||
-        key === 'conditions'
-
       let ascDescSort = {}
 
       Object.keys(objectForQuery).forEach((key) => {
         if (key === 'is_docs') {
           const elemMatch = {}
-          const names = {
-            PI: 'PI',
-            CI: 'CI',
-            PL: 'PL',
-            SS_DS: 'SS_DS',
-            CONTRACT_AGREES: 'contract_agrees',
-            COST_AGREES: 'cost_agrees',
-            INSTRUCTION: 'instruction',
-            ED: 'ED',
-            BILL: 'bill',
-          }
           if (objectForQuery[key] === 'null') {
-            Object.values(names).forEach((name) => (elemMatch[name] = false))
+            Object.values(this.PRODUCT_KEYS).forEach((name) => (elemMatch[name] = false))
           } else if (objectForQuery[key] === 'not_null') {
-            Object.values(names).forEach((name) => (elemMatch[name] = true))
+            Object.values(this.PRODUCT_KEYS).forEach((name) => (elemMatch[name] = true))
           } else {
             objectForQuery[key].forEach((fieldName) => {
-              elemMatch[names[fieldName]] = false
+              elemMatch[this.PRODUCT_KEYS[fieldName]] = false
             })
           }
 
@@ -392,9 +393,9 @@ class ItemService {
           })
         }
 
-        if (objectForQuery[key] === 'null' && isArrayPole(key)) {
+        if (objectForQuery[key] === 'null' && this.isArrayPole(key)) {
           return (query[key] = { $size: 0 })
-        } else if (objectForQuery[key] === 'not_null' && isArrayPole(key)) {
+        } else if (objectForQuery[key] === 'not_null' && this.isArrayPole(key)) {
           isAggregate = true
           if (Object.keys(query).length > 0) {
             const match = {}

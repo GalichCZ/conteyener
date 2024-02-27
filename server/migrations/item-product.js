@@ -17,4 +17,14 @@ const addHasAddedProducts = async () => {
     }
 }
 
-module.exports = {addHasAddedProducts}
+const addActualStoreNames = async (req, res) => {
+    const items = await ItemSchema.find().populate('store', 'name').exec()
+    for (const item of items) {
+        if(item.store && item.store.name) {
+            await ItemSchema.findByIdAndUpdate(item._id, {store_name: item.store.name})
+        }
+    }
+    res.status(200).json({message: "success"})
+}
+
+module.exports = {addHasAddedProducts, addActualStoreNames}

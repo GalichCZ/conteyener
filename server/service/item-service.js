@@ -46,14 +46,14 @@ class ItemService {
   }
 
   isArrayPole = (key) =>
-      key === 'declaration_number' ||
-      key === 'order_number' ||
-      key === 'proform_number' ||
-      key === 'inside_number' ||
-      key === 'simple_product_name' ||
-      key === 'providers' ||
-      key === 'importers' ||
-      key === 'conditions'
+    key === 'declaration_number' ||
+    key === 'order_number' ||
+    key === 'proform_number' ||
+    key === 'inside_number' ||
+    key === 'simple_product_name' ||
+    key === 'providers' ||
+    key === 'importers' ||
+    key === 'conditions'
 
   async createItem(req) {
     try {
@@ -460,8 +460,9 @@ class ItemService {
       const orderSortKey = Object.keys(ascDescSort)[0]
       const orderSortValue = ascDescSort[orderSortKey]
 
-      const items = isAggregate
-        ? await ItemSchema.aggregate([
+      function getQuery() {
+        if (isAggregate && orderSortValue && orderSortKey) {
+          return [
             ...query,
             { $sort: { [orderSortKey]: orderSortValue } },
             {
@@ -488,7 +489,40 @@ class ItemService {
                 as: 'stock_place',
               },
             },
-          ]).exec()
+          ]
+        } else {
+          return [
+            ...query,
+            {
+              $lookup: {
+                from: 'delivery_channels',
+                localField: 'delivery_channel',
+                foreignField: '_id',
+                as: 'delivery_channel',
+              },
+            },
+            {
+              $lookup: {
+                from: 'stores',
+                localField: 'store',
+                foreignField: '_id',
+                as: 'store',
+              },
+            },
+            {
+              $lookup: {
+                from: 'stock_places',
+                localField: 'stock_place',
+                foreignField: '_id',
+                as: 'stock_place',
+              },
+            },
+          ]
+        }
+      }
+
+      const items = isAggregate
+        ? await ItemSchema.aggregate(getQuery()).exec()
         : await ItemSchema.find(query)
             .sort({ [orderSortKey]: orderSortValue })
             .populate('delivery_channel', 'name')
@@ -529,7 +563,7 @@ class ItemService {
     } catch (error) {
       console.log(error)
       SendBotMessage(
-          `${dayjs(new Date()).format('MMMM D, YYYY h:mm A')}\nHIDE ITEM ERROR:\n${error}`
+        `${dayjs(new Date()).format('MMMM D, YYYY h:mm A')}\nHIDE ITEM ERROR:\n${error}`
       )
       throw new Error(error)
     }

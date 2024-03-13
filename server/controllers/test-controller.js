@@ -1,64 +1,60 @@
-const DeclarationService = require("../service/declaration-service");
-const ProductService = require("../service/product-service");
-const FileService = require("../service/file-service");
-const FormulaService = require("../service/formula-service");
-const ItemRepository = require("../repositories/item.repository");
-const {
-  checkDate,
-} = require("../utils/tableDataHandle");
-const {updateArticleData} = require("../migrations/product-migration");
+const DeclarationService = require('../service/declaration-service')
+const ProductService = require('../service/product-service')
+const FileService = require('../service/file-service')
+const FormulaService = require('../service/formula-service')
+const ItemRepository = require('../repositories/item.repository')
+const { checkDate } = require('../utils/tableDataHandle')
+const { clearString } = require('../utils/clearString')
+const { updateArticleData } = require('../migrations/product-migration')
 
 class TestController {
   async testDeclaration(req, res) {
-    const response = await DeclarationService.createDeclarationStatus(req);
+    const response = await DeclarationService.createDeclarationStatus(req)
 
-    res.json(response);
+    res.json(response)
   }
 
   async getTestDeclaration(req, res) {
-    const response = await DeclarationService.getDeclarationStatus(
-      req.params.declaration_number
-    );
+    const response = await DeclarationService.getDeclarationStatus(req.params.declaration_number)
 
-    if (response) res.json(response);
-    else res.status(404).json({ message: "no declarations found" });
+    if (response) res.json(response)
+    else res.status(404).json({ message: 'no declarations found' })
   }
 
   async testProduct(req, res) {
-    const products = await FileService.createFile(req.file.path);
-    const response = await ProductService.createProduct(products);
+    const products = await FileService.createFile(req.file.path)
+    const response = await ProductService.createProduct(products)
 
-    res.json(response);
+    res.json(response)
   }
 
   async testUpdateProduct(req, res) {
-    await ProductService.deleteProduct("637ce24055d01524f399e853");
+    await ProductService.deleteProduct('637ce24055d01524f399e853')
 
-    const products = await FileService.createFile(req.file.path);
-    const response = await ProductService.createProduct(products);
+    const products = await FileService.createFile(req.file.path)
+    const response = await ProductService.createProduct(products)
 
-    res.json(response);
+    res.json(response)
   }
 
   async testFormula(req, res) {
-    const response = await FormulaService.dateFormula(
-      req.body.delivery_method,
-      req.body.etd
-    );
-    res.json(response);
+    const response = await FormulaService.dateFormula(req.body.delivery_method, req.body.etd)
+    res.json(response)
   }
 
   async writeAllDocs(req, res) {
-    const items = await ItemRepository.getSpecificItem({ $expr: {
+    const items = await ItemRepository.getSpecificItem({
+      $expr: {
         $and: [
-          { $gt: [{ $size: "$order_number" }, 0] },  // order_number array length > 0
-          { $eq: [{ $size: "$is_docs" }, 0] }        // is_docs array length === 0
-        ]
-      }});
+          { $gt: [{ $size: '$order_number' }, 0] }, // order_number array length > 0
+          { $eq: [{ $size: '$is_docs' }, 0] }, // is_docs array length === 0
+        ],
+      },
+    })
   }
 
   async datesTimeChange(req, res) {
-    const items = await ItemRepository.getAllItems();
+    const items = await ItemRepository.getAllItems()
 
     //need to use function checkDate for all date poles in item and save them
     const promises = items.map(async (item) => {
@@ -76,66 +72,63 @@ class TestController {
         train_depart_date: checkDate(item.train_depart_date),
         train_arrive_date: checkDate(item.train_arrive_date),
         store_arrive_date: checkDate(item.store_arrive_date),
-      });
-      if (result !== true) res.json({ message: `error ${result}` });
+      })
+      if (result !== true) res.json({ message: `error ${result}` })
     })
 
-    await Promise.all(promises);
+    await Promise.all(promises)
 
-    res.json({ message: "success" });
+    res.json({ message: 'success' })
   }
 
   async clearStrings(req, res) {
-    const item = await ItemRepository.getAllItems();
-
-    function clearString(str) {
-      if(!str || typeof str !== "string") return;
-      const cleanFromR = str.replace(/[\r]+/g, '');
-      const clearFromEmpty = cleanFromR === "" ? cleanFromR.replace("", "-") : cleanFromR
-      // const test = clearFromEmpty.length > 1 && clearFromEmpty[0] === "-" ? clearFromEmpty.replace("-", "") : clearFromEmpty;
-      return clearFromEmpty.trim();
-    }
+    const item = await ItemRepository.getAllItems()
 
     const promises = item.map(async (item) => {
       const result = await ItemRepository.updateItemById(item._id, {
         proform_number: item?.proform_number.map((str) => clearString(str)),
         order_number: item?.order_number.map((str) => clearString(str)),
-        is_docs: item?.is_docs.map((doc) => ({...doc, order_number: clearString(doc.order_number)})),
+        is_docs: item?.is_docs.map((doc) => ({
+          ...doc,
+          order_number: clearString(doc.order_number),
+        })),
         inside_number: item?.inside_number.map((str) => clearString(str)),
         container_number: clearString(item?.container_number),
         container_type: clearString(item?.container_type),
         simple_product_name: item?.simple_product_name.map((str) => clearString(str)),
         providers: item?.providers.map((str) => clearString(str)),
         importers: item?.importers.map((str) => clearString(str)),
-        conditions: clearString(item?.conditions),
+        conditions: item?.conditions.map((str) => clearString(str)),
         direction: clearString(item?.direction),
         agent: clearString(item?.agent),
         place_of_dispatch: clearString(item?.place_of_dispatch),
         delivery_method: clearString(item?.delivery_method),
         declaration_number: item?.declaration_number.map((str) => clearString(str)),
       })
-      if (result !== true) res.json({ message: `error ${result}` });
+      if (result !== true) res.json({ message: `error ${result}` })
     })
 
-    await Promise.all(promises);
+    await Promise.all(promises)
 
-    res.json({ message: "success" });
+    res.json({ message: 'success' })
   }
 
   async getAllItems(req, res) {
-    const items = await ItemRepository.getAllItems();
-    res.json(items);
+    const items = await ItemRepository.getAllItems()
+    res.json(items)
   }
 
   async migrateProducts(req, res) {
-      try {
-        await updateArticleData()
-        res.status(200).json({message: "success"})
-      } catch (e) {
-        console.log(e)
-        res.status(500).json(e)
-      }
+    try {
+      await updateArticleData()
+      res.status(200).json({ message: 'success' })
+    } catch (e) {
+      console.log(e)
+      res.status(500).json(e)
+    }
   }
+
+  //ep that will use clearString function on all string fields and all strings that are in array or object
 }
 
-module.exports = new TestController();
+module.exports = new TestController()

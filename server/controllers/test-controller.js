@@ -82,35 +82,9 @@ class TestController {
   }
 
   async clearStrings(req, res) {
-    const item = await ItemRepository.getAllItems()
+    const result = await ItemRepository.cleaAllStringsInItems()
 
-    const promises = item.map(async (item) => {
-      const result = await ItemRepository.updateItemById(item._id, {
-        proform_number: item?.proform_number.map((str) => clearString(str)),
-        order_number: item?.order_number.map((str) => clearString(str)),
-        is_docs: item?.is_docs.map((doc) => ({
-          ...doc,
-          order_number: clearString(doc.order_number),
-        })),
-        inside_number: item?.inside_number.map((str) => clearString(str)),
-        container_number: clearString(item?.container_number),
-        container_type: clearString(item?.container_type),
-        simple_product_name: item?.simple_product_name.map((str) => clearString(str)),
-        providers: item?.providers.map((str) => clearString(str)),
-        importers: item?.importers.map((str) => clearString(str)),
-        conditions: item?.conditions.map((str) => clearString(str)),
-        direction: clearString(item?.direction),
-        agent: clearString(item?.agent),
-        place_of_dispatch: clearString(item?.place_of_dispatch),
-        delivery_method: clearString(item?.delivery_method),
-        declaration_number: item?.declaration_number.map((str) => clearString(str)),
-      })
-      if (result !== true) res.json({ message: `error ${result}` })
-    })
-
-    await Promise.all(promises)
-
-    res.json({ message: 'success' })
+    res.json(result)
   }
 
   async getAllItems(req, res) {

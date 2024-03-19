@@ -1046,6 +1046,8 @@ class ItemService {
 
       await Promise.all(itemsUpdate)
 
+      await ItemRepository.cleaAllStringsInItems()
+
       return { success: true, lastDatesMap }
     } catch (error) {
       console.log(error)
@@ -1186,6 +1188,8 @@ class ItemService {
 
       const response = Promise.all(items).then(async (result) => {})
 
+      await ItemRepository.cleaAllStringsInItems()
+
       return successReturn(response)
     } catch (error) {
       console.log(error)
@@ -1302,6 +1306,8 @@ class ItemService {
       })
 
       const response = Promise.all(items).then(async (result) => {})
+
+      await ItemRepository.cleaAllStringsInItems()
 
       return successReturn(response)
     } catch (error) {

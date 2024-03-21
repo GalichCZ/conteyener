@@ -3,6 +3,7 @@ const ProductService = require('../service/product-service')
 const FileService = require('../service/file-service')
 const FormulaService = require('../service/formula-service')
 const ItemRepository = require('../repositories/item.repository')
+const ExcelService = require('../service/createExcel-service')
 const { checkDate } = require('../utils/tableDataHandle')
 const { clearString } = require('../utils/clearString')
 const { updateArticleData } = require('../migrations/product-migration')
@@ -90,6 +91,45 @@ class TestController {
   async getAllItems(req, res) {
     const items = await ItemRepository.getAllItems()
     res.json(items)
+  }
+
+  async makeExcelForProducts(req, res) {
+    try {
+      const items = await ItemRepository.getAllItems()
+      const objectToExcel = []
+
+      for (const item of items) {
+        for (const str of item.simple_product_name) {
+          const product = await ProductService.getProduct(item._id.toString(), str)
+          console.log(product)
+          product.forEach((pr) => {
+            objectToExcel.push({
+              'Номер контейнера': item.container_number,
+              'Товар': str,
+              'Код ТН ВЭД': pr?.hs_code,
+              'Aртикул ВЭД': pr?.article_ved,
+              'Торговая марка': pr?.trade_mark,
+              'Наименование': pr?.product_name,
+              'Модель/Серия(Тип)': pr?.model,
+              'Модификация': pr?.modification,
+              'Кол-во штук': pr?.quantity_pieces,
+              'Кол-во мест': pr?.quantity_places,
+              'Цена за еденицу': pr?.piece_price,
+              'Общая сумма': pr?.total_price,
+              'Вес нетто': pr?.weight_net,
+              'Вес брутто': pr?.weight_gross,
+              'Объем': pr?.cbm,
+              'Производитель': pr?.manufacturer,
+            })
+          })
+        }
+      }
+      await ExcelService.createExcel(objectToExcel, 'products.xlsx')
+      await res.status(200).json({ message: 'success', objectToExcel })
+    } catch (e) {
+      console.log(e)
+      res.status(500).json(e)
+    }
   }
 
   async migrateProducts(req, res) {

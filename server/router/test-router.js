@@ -12,6 +12,7 @@ router.get('/api/test/declaration/:declaration_number', TestController.getTestDe
 router.patch('/api/test/datesTimeChange', TestController.datesTimeChange)
 router.get('/api/test/getAllItems', TestController.getAllItems)
 router.get('/api/test/clearStrings', TestController.clearStrings)
+router.get('/api/test/allProducts', TestController.makeExcelForProducts)
 router.get('/api/test/migrate_items', addHasAddedProducts)
 router.get('/api/test/migrate_products', TestController.migrateProducts)
 router.get('/api/test/migrate_products/stores', addActualStoreNames)

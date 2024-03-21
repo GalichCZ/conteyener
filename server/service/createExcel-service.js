@@ -111,6 +111,18 @@ class FileService {
       return { success: false, error }
     }
   }
+
+  async downloadProductsFile() {
+    try {
+      const filePath = `./products.xlsx`
+      return { success: true, filePath }
+    } catch (error) {
+      SendBotMessage(
+        `${dayjs(new Date()).format('MMMM D, YYYY h:mm A')}\nDOWNLOAD EXCEL FILE ERROR:\n${error}`
+      )
+      return { success: false, error }
+    }
+  }
 }
 
 module.exports = new FileService()

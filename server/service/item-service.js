@@ -286,7 +286,7 @@ class ItemService {
                 { expeditor: query },
                 { destination_station: query },
                 { pickup: query },
-                { stock_place_name: query },
+                { latest_comment: query },
                 { stock_place_name: query },
               ],
               hidden: isHidden,
@@ -457,14 +457,25 @@ class ItemService {
         }
       })
 
-      const orderSortKey = Object.keys(ascDescSort)[0]
+      let orderSortKey = Object.keys(ascDescSort)[0]
       const orderSortValue = ascDescSort[orderSortKey]
+
+      orderSortKey = orderSortKey === 'comment' ? 'latest_comment' : orderSortKey
+
+      if (query.comment) {
+        query['latest_comment'] = query.comment
+        delete query.comment
+      }
 
       function getQuery() {
         if (isAggregate && orderSortValue && orderSortKey) {
           return [
             ...query,
-            { $sort: { [orderSortKey]: orderSortValue } },
+            {
+              $sort: {
+                [orderSortKey]: orderSortValue,
+              },
+            },
             {
               $lookup: {
                 from: 'delivery_channels',
@@ -524,11 +535,15 @@ class ItemService {
       const items = isAggregate
         ? await ItemSchema.aggregate(getQuery()).exec()
         : await ItemSchema.find(query)
-            .sort({ [orderSortKey]: orderSortValue })
+            .sort({
+              [orderSortKey]: orderSortValue,
+            })
             .populate('delivery_channel', 'name')
             .populate('store', 'name')
             .populate('stock_place', 'name')
             .exec()
+
+      console.log({ items, query })
 
       const itemsToReturn = nullDatesToEnd(items, orderSortKey)
 

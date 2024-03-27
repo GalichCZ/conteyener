@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const ItemSchema = new mongoose.Schema(
   {
@@ -28,7 +28,7 @@ const ItemSchema = new mongoose.Schema(
     },
     product_has_added: {
       type: Object,
-      default: {}
+      default: {},
     },
     providers: {
       type: Array,
@@ -48,17 +48,17 @@ const ItemSchema = new mongoose.Schema(
     store: {
       default: null,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "TechStore",
+      ref: 'TechStore',
     },
     delivery_channel: {
       default: null,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "DeliveryChannel",
+      ref: 'DeliveryChannel',
     },
     product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: 'Product',
       },
     ],
     agent: {
@@ -168,77 +168,79 @@ const ItemSchema = new mongoose.Schema(
     },
     stock_place: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "StockPlace",
+      ref: 'StockPlace',
     },
     stock_place_name: String,
-    comment: String,
     fraht: String,
     bid: { type: Number, default: 0 },
     note: String,
     creator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     updator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     hidden: {
       type: Boolean,
       default: false,
     },
+    latest_comment: String,
+    latest_comment_id: String,
   },
   {
     timestamps: true,
   }
-);
+)
 
 ItemSchema.index(
   {
-    request_date: "text",
-    inside_number: "text",
-    proform_number: "text",
-    order_number: "text",
-    simple_product_name: "text",
-    providers: "text",
-    importers: "text",
-    container_number: "text",
-    container_type: "text",
-    conditions: "text",
-    direction: "text",
-    store_name: "text",
-    delivery_channel: "text",
-    agent: "text",
-    place_of_dispatch: "text",
-    delivery_method: "text",
-    line: "text",
-    ready_date: "text",
-    load_date: "text",
-    etd: "text",
-    eta: "text",
-    release: "text",
-    bl_smgs_cmr: "text",
-    td: "text",
-    date_do: "text",
-    port: "text",
-    is_ds: "text",
-    declaration_number: "text",
-    declaration_issue_date: "text",
-    declaration_status: "text",
-    answer_of_ob: "text",
-    expeditor: "text",
-    destination_station: "text",
-    km_to_dist: "text",
-    train_depart_date: "text",
-    train_arrive_date: "text",
-    pickup: "text",
-    store_arrive_date: "text",
-    stock_place_name: "text",
+    request_date: 'text',
+    inside_number: 'text',
+    proform_number: 'text',
+    order_number: 'text',
+    simple_product_name: 'text',
+    providers: 'text',
+    importers: 'text',
+    container_number: 'text',
+    container_type: 'text',
+    conditions: 'text',
+    direction: 'text',
+    store_name: 'text',
+    delivery_channel: 'text',
+    agent: 'text',
+    place_of_dispatch: 'text',
+    delivery_method: 'text',
+    line: 'text',
+    ready_date: 'text',
+    load_date: 'text',
+    etd: 'text',
+    eta: 'text',
+    release: 'text',
+    bl_smgs_cmr: 'text',
+    td: 'text',
+    date_do: 'text',
+    port: 'text',
+    is_ds: 'text',
+    declaration_number: 'text',
+    declaration_issue_date: 'text',
+    declaration_status: 'text',
+    answer_of_ob: 'text',
+    expeditor: 'text',
+    destination_station: 'text',
+    km_to_dist: 'text',
+    train_depart_date: 'text',
+    train_arrive_date: 'text',
+    pickup: 'text',
+    store_arrive_date: 'text',
+    stock_place_name: 'text',
+    latest_comment: 'text',
   },
   {
-    language_override: "simple",
-    default_language: "none",
+    language_override: 'simple',
+    default_language: 'none',
   }
-);
+)
 
-module.exports = mongoose.model("Item", ItemSchema);
+module.exports = mongoose.model('Item', ItemSchema)
